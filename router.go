@@ -3,61 +3,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	handler "github.com/keycasiter/3g_game/biz/handler"
 )
 
-const (
-	//请求路径
-	// 版本/模块/业务/动作 -> {version}/{module}/{biz}/{action}
-	PATH_IDL = "/%s/%s/%s/%s"
-
-	//版本
-	V1 = "v1"
-
-	//模块
-	MODULE_RESOURCE  = "resource"
-	MODULE_COLLOCATE = "collocate"
-	MODULE_USER      = "user"
-
-	//动作
-	ACTION_GET    = "get"
-	ACTION_ADD    = "add"
-	ACTION_UPDATE = "update"
-	ACTION_DELETE = "delete"
-)
-
-var (
-
-	/** 资源库 **/
-	//武将信息查询
-	GENERAL_QUERY = fmt.Sprint(PATH_IDL, V1, MODULE_RESOURCE, "general", ACTION_GET)
-	//特技查询
-	SPECIAL_TECH_QUERY = fmt.Sprint(PATH_IDL, V1, MODULE_RESOURCE, "special_tech", ACTION_GET)
-	//战法查询
-	TACTICS_QUERY = fmt.Sprint(PATH_IDL, V1, MODULE_RESOURCE, "tactics", ACTION_GET)
-	//装备查询
-	EQUIP_QUERY = fmt.Sprint(PATH_IDL, V1, MODULE_RESOURCE, "equip", ACTION_GET)
-	//兵书查询
-	ARM_BOOK_QUERY = fmt.Sprint(PATH_IDL, V1, MODULE_RESOURCE, "arm_book", ACTION_GET)
-
-	/** 配将 **/
-	//推荐阵容查询
-	COLLOCATE_RECOMMEND_QUERY = fmt.Sprint(PATH_IDL, V1, MODULE_COLLOCATE, "recommend", ACTION_GET)
-
-	/** 我的 **/
-	//个人信息查询
-	USER_INFO_QUERY = fmt.Sprint(PATH_IDL, V1, MODULE_USER, "info", ACTION_GET)
-	//个人配将记录查询
-	USER_COLLOCATE_RECORD_QUERY = fmt.Sprint(PATH_IDL, V1, MODULE_USER, "collocate/record", ACTION_GET)
-	//个人武将查询
-	USER_GENERAL_QUERY = fmt.Sprint(PATH_IDL, V1, MODULE_USER, "general", ACTION_GET)
-)
-
 // customizeRegister registers customize routers.
 func customizedRegister(r *server.Hertz) {
-
 	r.GET("/ping", handler.Ping)
 
 	// your code ...

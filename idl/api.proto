@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package api;
+
+import "google/protobuf/descriptor.proto";
+import "common.proto";
+
+option go_package = "/api";
+
+
+message CommonResp {
+  int32  status_code = 1;
+  string status_msg  = 2;
+}
+
+message MetadataGeneralPageableListRequest {
+}
+
+message MetadataGeneralPageableListResponse {
+  CommonResp                      common = 1;
+  repeated common.MetadataGeneral data   = 2;
+}
+
+service PersonService {
+  rpc MetadataGeneralPageableList(MetadataGeneralPageableListRequest) returns(MetadataGeneralPageableListResponse) {
+    option (api.get) = "/v1/resource/general/pageable_list";
+  }
+}

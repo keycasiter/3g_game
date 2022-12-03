@@ -1,0 +1,8 @@
+Mysql:
+
+Redis:
+
+Mongodb:
+  Uri: "mongodb://127.0.0.1:27017/3g_game"
+  Database: "3g_game"
+  ConnectTimeout: 3

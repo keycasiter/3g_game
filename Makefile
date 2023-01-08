@@ -1,2 +1,2 @@
 api:
-	hz new  -I idl -module github.com/keycasiter/3g_game -idl idl/api.proto
+	hz new -idl idl/api.thrift -module github.com/keycasiter/3g_game

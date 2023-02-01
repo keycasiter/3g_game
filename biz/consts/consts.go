@@ -7,13 +7,31 @@ const (
 	RUN_ENV_PROD = "prod"
 )
 
+// 对战阶段
+type BattlePhase int
+
+// 对战回合
+type BattleRound int
+
+// 武将等级
+type GeneralLevel int
+
+// 武将星级
+type GeneralStarLevel int
+
+// 武将缘分
+type Predestination int
+
+// 兵种能力
+type ArmsAbility int
+
+/** 对战相关 **/
 const (
-	/** 对战相关 **/
 	// 对战阶段
 	Battle_Phase_Prepare  = 1 //准备阶段
 	Battle_Phase_Fighting = 2 //对阵阶段
 
-	//回合
+	//对战回合
 	Battle_Round_First   = 1 //第一回合
 	Battle_Round_Second  = 2 //第二回合
 	Battle_Round_Third   = 3 //第三回合
@@ -22,8 +40,10 @@ const (
 	Battle_Round_Sixth   = 6 //第六回合
 	Battle_Round_Seventh = 7 //第七回合
 	Battle_Round_Eighth  = 8 //第八回合
+)
 
-	/** 武将相关 **/
+/** 武将相关 **/
+const (
 	// 性别
 	Gender_Male   = 1 //男
 	Gender_Female = 2 //女
@@ -66,7 +86,15 @@ const (
 	GeneralTag_Pawn          = 13 // 卒
 	GeneralTag_Celestials    = 14 // 仙
 
-	/** 战法相关 **/
+	// 兵种适性
+	ArmsAbility_S = 1 // S级
+	ArmsAbility_A = 2 // A级
+	ArmsAbility_B = 3 // B级
+	ArmsAbility_C = 4 // C级
+)
+
+/** 战法相关 **/
+const (
 	// 战法类型
 	TacticsType_Active        = 1 // 主动
 	TacticsType_Passive       = 2 // 被动
@@ -98,8 +126,10 @@ const (
 	ArmType_Archers   = 3 //弓兵
 	ArmType_Spearman  = 4 //枪兵
 	ArmType_Apparatus = 5 //器械
+)
 
-	/** 装备相关 **/
+/** 装备相关 **/
+const (
 	// 装备品质
 	EquipLevel_S = 1 //珍品
 	EquipLevel_A = 1 //上品

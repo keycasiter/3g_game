@@ -39,13 +39,23 @@ func (*MetadataGeneralContext) Find(ctx context.Context, m bson.M) (*po.Metadata
 	return result, nil
 }
 
-func (*MetadataGeneralContext) Find(ctx context.Context, m bson.M) (*po.MetadataGeneral, error) {
-	var result []*po.MetadataGeneral
-	err := Mongodb3gGame.Collection(METADATA_GENERAL_COLLECTION).Find(ctx, m).Decode(&result)
+func (*MetadataGeneralContext) FindAll(ctx context.Context, m bson.M) ([]*po.MetadataGeneral, error) {
+	list := make([]*po.MetadataGeneral, 0)
+	cursor, err := Mongodb3gGame.Collection(METADATA_GENERAL_COLLECTION).Find(ctx, m)
 	if err != nil {
 		hlog.CtxErrorf(ctx, "%s find err:%v", METADATA_GENERAL_COLLECTION, err)
-		return result, err
+		return list, err
 	}
-	hlog.CtxInfof(ctx, "%s find succ，objId:%v", METADATA_GENERAL_COLLECTION, result.Id)
-	return result, nil
+	// 遍历数据
+	for cursor.TryNext(ctx) {
+		vo := &po.MetadataGeneral{}
+		err := cursor.Decode(&vo)
+		if err != nil {
+			hlog.CtxErrorf(ctx, "%s result decode err:%v", METADATA_GENERAL_COLLECTION, err)
+			return list, err
+		}
+		list = append(list, vo)
+	}
+	hlog.CtxInfof(ctx, "%s find succ，size:%d", METADATA_GENERAL_COLLECTION, len(list))
+	return list, nil
 }

@@ -25,6 +25,9 @@ type Predestination int
 // 兵种能力
 type ArmsAbility int
 
+// 兵种类型
+type ArmType int
+
 /** 对战相关 **/
 const (
 	// 对战阶段

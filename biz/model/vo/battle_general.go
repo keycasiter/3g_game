@@ -19,15 +19,13 @@ type BattleGeneral struct {
 type BattleGeneralAddition struct {
 	//1. 武将加成
 	//1.a. 加点加成
-	AbilityAttrAddition po.AbilityAttr
+	AbilityAttr po.AbilityAttr
 	//1.b. 等级加成
 	GeneralLevel consts.GeneralLevel
 	//1.c. 红度加成
 	GeneralStarLevel consts.GeneralStarLevel
 	//1.d. 缘分加成
 	Predestination consts.Predestination
-	//1.e. 兵种适性加成
-	ArmsAbility consts.ArmsAbility
 	//2. 装备加成
 	//TODO
 	//3. 特技加成

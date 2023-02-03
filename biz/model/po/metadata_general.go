@@ -16,27 +16,27 @@ type MetadataGeneral struct {
 
 //能力属性
 type AbilityAttr struct {
-	ForceBase        string `bson:"force_base"`
-	ForceRate        string `bson:"force_rate"`
-	IntelligenceBase string `bson:"intelligence_base"`
-	IntelligenceRate string `bson:"intelligence_rate"`
-	CharmBase        string `bson:"charm_base"`
-	CharmRate        string `bson:"charm_rate"`
-	CommandBase      string `bson:"command_base"`
-	CommandRate      string `bson:"command_rate"`
-	PoliticsBase     string `bson:"politics_base"`
-	PoliticsRate     string `bson:"politics_rate"`
-	SpeedBase        string `bson:"speed_base"`
-	SpeedRate        string `bson:"speed_rate"`
+	ForceBase        float64 `bson:"force_base"`
+	ForceRate        float64 `bson:"force_rate"`
+	IntelligenceBase float64 `bson:"intelligence_base"`
+	IntelligenceRate float64 `bson:"intelligence_rate"`
+	CharmBase        float64 `bson:"charm_base"`
+	CharmRate        float64 `bson:"charm_rate"`
+	CommandBase      float64 `bson:"command_base"`
+	CommandRate      float64 `bson:"command_rate"`
+	PoliticsBase     float64 `bson:"politics_base"`
+	PoliticsRate     float64 `bson:"politics_rate"`
+	SpeedBase        float64 `bson:"speed_base"`
+	SpeedRate        float64 `bson:"speed_rate"`
 }
 
 //兵种属性
 type ArmsAttr struct {
-	Cavalry   string `bson:"cavalry"`
-	Mauler    string `bson:"mauler"`
-	Archers   string `bson:"archers"`
-	Spearman  string `bson:"spearman"`
-	Apparatus string `bson:"apparatus"`
+	Cavalry   int `bson:"cavalry"`
+	Mauler    int `bson:"mauler"`
+	Archers   int `bson:"archers"`
+	Spearman  int `bson:"spearman"`
+	Apparatus int `bson:"apparatus"`
 }
 
 //战法资料

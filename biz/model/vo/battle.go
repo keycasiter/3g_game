@@ -5,7 +5,13 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/po"
 )
 
-// 对战信息
+//对战队伍信息
+type BattleTeam struct {
+	ArmType        consts.ArmType
+	BattleGenerals []*BattleGeneral
+}
+
+// 对战武将信息
 type BattleGeneral struct {
 	//基础信息
 	BaseInfo *po.MetadataGeneral

@@ -124,6 +124,7 @@ const (
 	TacticsTarget_Team_Group   = 4 //友军单体
 
 	// 兵种
+	ArmType_Unknow    = 0 //未知
 	ArmType_Cavalry   = 1 //骑兵
 	ArmType_Mauler    = 2 //盾兵
 	ArmType_Archers   = 3 //弓兵

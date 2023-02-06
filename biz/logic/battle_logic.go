@@ -10,15 +10,11 @@ import (
 
 //req
 type BattleLogicContextRequest struct {
-	/** 对战阶段 **/
-	BattlePhase consts.BattlePhase
-	/** 回合信息 **/
-	BattleRound consts.BattleRound
-	/** 武将信息 **/
-	// 出战武将信息
-	FightingGenerals []*vo.BattleGeneral
-	// 对战武将信息
-	EnemyGenerals []*vo.BattleGeneral
+	/** 队伍信息 **/
+	// 出战队伍信息
+	FightingTeam *vo.BattleTeam
+	// 对战队伍信息
+	EnemyTeam *vo.BattleTeam
 }
 
 //resp
@@ -85,6 +81,7 @@ func (runCtx *BattleLogicContext) handleAbilityAttrAddition(general *vo.BattleGe
 	//速度加成
 	general.BaseInfo.AbilityAttr.SpeedBase =
 		general.BaseInfo.AbilityAttr.SpeedBase + general.Addition.AbilityAttr.SpeedBase
+
 }
 
 //武将等级处理
@@ -108,59 +105,70 @@ func (runCtx *BattleLogicContext) handleGeneralLevel(general *vo.BattleGeneral) 
 }
 
 //兵种适性处理
-func (runCtx *BattleLogicContext) handleArmAbility(general *vo.BattleGeneral) {
-	switch general.ArmType {
+func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, general *vo.BattleGeneral) {
+	armType := consts.ArmType_Unknow
+	switch teamArmType {
 	//骑兵
 	case consts.ArmType_Cavalry:
+		armType = general.BaseInfo.ArmsAttr.Cavalry
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Cavalry, general.BaseInfo.AbilityAttr)
 	//盾兵
 	case consts.ArmType_Mauler:
+		armType = general.BaseInfo.ArmsAttr.Mauler
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Mauler, general.BaseInfo.AbilityAttr)
 	//弓兵
 	case consts.ArmType_Archers:
+		armType = general.BaseInfo.ArmsAttr.Archers
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Archers, general.BaseInfo.AbilityAttr)
 	//枪兵
 	case consts.ArmType_Spearman:
+		armType = general.BaseInfo.ArmsAttr.Spearman
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Spearman, general.BaseInfo.AbilityAttr)
 	//器械
 	case consts.ArmType_Apparatus:
+		armType = general.BaseInfo.ArmsAttr.Apparatus
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Apparatus, general.BaseInfo.AbilityAttr)
 	}
+
+	hlog.CtxInfof(runCtx.Ctx, "[%s]的【 %s 】兵种适性为【 %s 】，属性调整为原来的%s",
+		general.BaseInfo.Name,
+		util.TranslateArmType(teamArmType),
+		util.TranslateArmsAbility(consts.ArmsAbility(armType)),
+		util.TranslateArmsAbilityAddition(consts.ArmsAbility(armType)),
+	)
 }
 
 func (runCtx *BattleLogicContext) processBattlePreparePhase() {
-	//出战武将
-	for _, general := range runCtx.ReqParam.FightingGenerals {
-		//士气加成
-		//武将加点加成
-		runCtx.handleAbilityAttrAddition(general)
-		//武将等级加成
-		runCtx.handleGeneralLevel(general)
-		//红度加成
-		//缘分加成
-		//兵种适性加成
-		runCtx.handleArmAbility(general)
-		//装备加成
-		//特技加成
+	//出战武将加成处理
+	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
+		runCtx.handleGeneralAddition(runCtx.ReqParam.FightingTeam.ArmType, general)
 	}
 
-	//对战武将
-	for _, general := range runCtx.ReqParam.EnemyGenerals {
-		//士气加成
-		//武将加点加成
-		runCtx.handleAbilityAttrAddition(general)
-		//武将等级加成
-		runCtx.handleGeneralLevel(general)
-		//红度加成
-		//缘分加成
-		//兵种适性加成
-		runCtx.handleArmAbility(general)
-		//装备加成
-		//特技加成
+	//对战武将加成处理
+	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
+		runCtx.handleGeneralAddition(runCtx.ReqParam.EnemyTeam.ArmType, general)
 	}
 
-	hlog.CtxInfof(runCtx.Ctx, "fighting general => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.FightingGenerals))
-	hlog.CtxInfof(runCtx.Ctx, "enemy general => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.EnemyGenerals))
+	hlog.CtxInfof(runCtx.Ctx, "fighting team => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.FightingTeam))
+	hlog.CtxInfof(runCtx.Ctx, "enemy team => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.EnemyTeam))
+}
+
+func (runCtx *BattleLogicContext) handleGeneralAddition(armType consts.ArmType, general *vo.BattleGeneral) {
+	//国土效果
+	//TODO 部队兵力不足可携带兵力上限的65%，国土效果不生效
+	//士气加成
+	//TODO 士气满不影响任何东西，不满100，则降低伤害，其余不影响；
+	//看了下战报分析了下，每减少0.1士气，降低伤害比例是0.07%，如果0士气则降低70%伤害，其余不影响
+	//兵种适性加成
+	runCtx.handleArmAbility(armType, general)
+	//武将加点加成
+	runCtx.handleAbilityAttrAddition(general)
+	//武将等级加成
+	runCtx.handleGeneralLevel(general)
+	//红度加成
+	//缘分加成
+	//装备加成
+	//特技加成
 }
 
 func (runCtx *BattleLogicContext) processBattleFightingPhase() {

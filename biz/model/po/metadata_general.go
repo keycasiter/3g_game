@@ -4,9 +4,9 @@ package po
 type MetadataGeneral struct {
 	Id          string       `bson:"_id"`
 	Name        string       `bson:"name"`
-	Gender      string       `bson:"gender"`
-	Group       string       `bson:"group"`
-	GeneralTag  []string     `bson:"general_tag"`
+	Gender      int          `bson:"gender"`
+	Group       int          `bson:"group"`
+	GeneralTag  []int        `bson:"general_tag"`
 	AvatarUri   string       `bson:"avatar_uri"`
 	AbilityAttr *AbilityAttr `bson:"ability_attr"`
 	ArmsAttr    *ArmsAttr    `bson:"arms_attr"`

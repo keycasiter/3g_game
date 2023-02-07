@@ -48,3 +48,18 @@ func TranslateArmsAbilityAddition(armsAbility consts.ArmsAbility) string {
 	}
 	return "未知兵种适性"
 }
+
+//阵营转义
+func TranslateGroup(group consts.Group) string {
+	switch group {
+	case consts.Group_WeiGuo:
+		return "魏"
+	case consts.Group_ShuGuo:
+		return "蜀"
+	case consts.Group_WuGuo:
+		return "吴"
+	case consts.Group_QunXiong:
+		return "群%"
+	}
+	return "未知阵营"
+}

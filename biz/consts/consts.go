@@ -28,6 +28,9 @@ type ArmsAbility int
 // 兵种类型
 type ArmType int
 
+// 阵营
+type Group int
+
 /** 对战相关 **/
 const (
 	// 对战阶段
@@ -52,6 +55,7 @@ const (
 	Gender_Female = 2 //女
 
 	// 武将阵营
+	Group_Unknow   = 0 //未知
 	Group_WeiGuo   = 1 //魏国
 	Group_ShuGuo   = 2 //蜀国
 	Group_WuGuo    = 3 //吴国

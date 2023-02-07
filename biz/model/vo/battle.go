@@ -7,8 +7,14 @@ import (
 
 //对战队伍信息
 type BattleTeam struct {
-	ArmType        consts.ArmType
+	//队伍兵种
+	ArmType consts.ArmType
+	//队伍武将信息
 	BattleGenerals []*BattleGeneral
+	//兵战科技-属性加成
+	BuildingTechAttrAddition BuildingTechAttrAddition
+	//协力科技-阵营加成
+	BuildingTechGroupAddition BuildingTechGroupAddition
 }
 
 // 对战武将信息
@@ -36,4 +42,20 @@ type BattleGeneralAddition struct {
 	//TODO
 	//3. 特技加成
 	//TODO
+}
+
+// 建筑科技属性加成
+type BuildingTechAttrAddition struct {
+	ForceAddition        float64
+	IntelligenceAddition float64
+	CommandAddition      float64
+	SpeedAddition        float64
+}
+
+// 建筑科技阵营加成
+type BuildingTechGroupAddition struct {
+	GroupWeiGuoRate   float64
+	GroupShuGuoRate   float64
+	GroupWuGuoRate    float64
+	GroupQunXiongRate float64
 }

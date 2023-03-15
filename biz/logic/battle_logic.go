@@ -235,6 +235,7 @@ func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, g
 	)
 }
 
+// 对战准备阶段处理
 func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 	//出战武将加成处理
 	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
@@ -248,8 +249,8 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 		runCtx.handleTeamAddition(runCtx.ReqParam.EnemyTeam)
 	}
 
-	hlog.CtxInfof(runCtx.Ctx, "fighting team => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.FightingTeam))
-	hlog.CtxInfof(runCtx.Ctx, "enemy team => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.EnemyTeam))
+	//hlog.CtxInfof(runCtx.Ctx, "fighting team => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.FightingTeam))
+	//hlog.CtxInfof(runCtx.Ctx, "enemy team => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.EnemyTeam))
 }
 
 func (runCtx *BattleLogicContext) handleGeneralAddition(team *vo.BattleTeam, general *vo.BattleGeneral) {
@@ -266,10 +267,10 @@ func (runCtx *BattleLogicContext) handleGeneralAddition(team *vo.BattleTeam, gen
 	runCtx.handleAbilityAttrAddition(general)
 	//武将等级加成
 	runCtx.handleGeneralLevel(general)
-	//红度加成
 	//缘分加成
 	//装备加成
 	//特技加成
+	//兵书加成
 }
 
 func (runCtx *BattleLogicContext) handleTeamAddition(team *vo.BattleTeam) {
@@ -280,6 +281,7 @@ func (runCtx *BattleLogicContext) handleTeamAddition(team *vo.BattleTeam) {
 	//3.兵种-科技加成 TODO
 }
 
+// 对战对阵阶段处理
 func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 
 }

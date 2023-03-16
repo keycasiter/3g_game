@@ -32,6 +32,13 @@ func TestDamage(t *testing.T) {
 	//即武将伤害只与双方属性差值有关。
 	//该公式将在第三部分【武将伤害】中详细说明。
 
-	dmg := TotalDamage(7200, 320, 86, 1.109, 0, 0, 0, 0, 0, 0)
+	//dmg := TotalDamage(4907, 320, 86, 1.109, 0, 0, 0, 0, 0, 0)
+	//fmt.Printf("dmg: %d\n", dmg)
+}
+
+func TestTotalDamage(t *testing.T) {
+	dmg := TotalDamage(2900, 44, 84, 0.075, 0.167)
 	fmt.Printf("dmg: %d\n", dmg)
+	dmg = dmg + FluctuateDamage(dmg)
+	fmt.Printf("wave dmg: %d\n", dmg)
 }

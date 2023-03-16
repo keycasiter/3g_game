@@ -82,6 +82,7 @@ func FluctuateDamage(dmg int64) int64 {
 }
 
 //总伤害计算
+// ref: https://baijiahao.baidu.com/s?id=1748672336647348844
 //@num 我方携带兵力
 //@atk 兵刃伤害：我方武将武力；谋略伤害：我方武将智力
 //@def 兵刃防御：我方武将智力；谋略防御：我方武将智力

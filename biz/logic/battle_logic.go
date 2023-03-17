@@ -25,6 +25,7 @@ type BattleLogicContextResponse struct {
 
 // 对战上下文环境
 type BattleLogicContext struct {
+	/** DSL数据 **/
 	//上下文
 	Ctx context.Context
 	// 入参

@@ -7,6 +7,7 @@ import (
 
 //对战队伍信息
 type BattleTeam struct {
+	/** 队伍基础信息 **/
 	//队伍兵种
 	ArmType consts.ArmType
 	//队伍武将信息
@@ -15,6 +16,9 @@ type BattleTeam struct {
 	BuildingTechAttrAddition BuildingTechAttrAddition
 	//协力科技-阵营加成
 	BuildingTechGroupAddition BuildingTechGroupAddition
+
+	/** 队伍对战中信息 **/
+
 }
 
 // 对战武将信息
@@ -58,4 +62,12 @@ type BuildingTechGroupAddition struct {
 	GroupShuGuoRate   float64
 	GroupWuGuoRate    float64
 	GroupQunXiongRate float64
+}
+
+// 对战队伍效果
+type BattlingTeamEffect struct {
+}
+
+// 对战武将效果
+type BattlingGeneralEffect struct {
 }

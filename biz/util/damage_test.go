@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-//测试伤害计算
+// 测试伤害计算
 func TestDamage(t *testing.T) {
 	//============ 总伤害公式 =============
 	//dmg(A->B) = （f1 + f2）*(1 + Inc_A -Dec_A) * (1 + Inc_B - Dec_B) * R * (1 + Crt) * ri

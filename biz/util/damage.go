@@ -75,19 +75,19 @@ import (
 //	return cast.ToInt64(dmg)
 //}
 
-//浮动伤害计算
-//@desc: -10% ~ 10% 伤害浮动
+// 浮动伤害计算
+// @desc: -10% ~ 10% 伤害浮动
 func FluctuateDamage(dmg int64) int64 {
 	return cast.ToInt64(cast.ToFloat64(dmg) * Random(-0.1, 0.1))
 }
 
-//总伤害计算
+// 总伤害计算
 // ref: https://baijiahao.baidu.com/s?id=1748672336647348844
-//@num 我方携带兵力
-//@atk 兵刃伤害：我方武将武力；谋略伤害：我方武将智力
-//@def 兵刃防御：我方武将智力；谋略防御：我方武将智力
-//@inc 伤害增益比例
-//@dec 伤害减益比例
+// @num 我方携带兵力
+// @atk 兵刃伤害：我方武将武力；谋略伤害：我方武将智力
+// @def 兵刃防御：我方武将智力；谋略防御：我方武将智力
+// @inc 伤害增益比例
+// @dec 伤害减益比例
 func TotalDamage(num int64,
 	atk float64,
 	def float64,

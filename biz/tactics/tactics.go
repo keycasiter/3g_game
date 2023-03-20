@@ -24,8 +24,6 @@ type Tactics interface {
 	TacticsType() consts.TacticsType
 	//战法品质
 	TacticsLevel() consts.TacticsLevel
-	//战法目标
-	TacticsTarget() consts.TacticsTarget
 	//支持兵种
 	SupportArmTypes() []consts.ArmType
 
@@ -43,7 +41,9 @@ type Tactics interface {
 	//伤害范围
 	DamageRange() int64
 	//伤害锁定主将
-	IsDamage
+	IsDamageLockedMaster() bool
+	//伤害锁定副将
+	IsDamageLockedVice() bool
 	//增伤数值
 	IncrDamageNum() int64
 	//增伤率
@@ -80,6 +80,4 @@ type Tactics interface {
 	BuffEffect() consts.BuffEffectType
 	//是否可以普通攻击
 	IsGeneralAttack() bool
-	//是否已经触发
-	IsHasTrigger() bool
 }

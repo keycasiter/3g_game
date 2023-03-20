@@ -22,11 +22,11 @@ func (c ClearEyedAndMalicious) Init(generalId string, isMaster bool, currentRoun
 }
 
 func (c ClearEyedAndMalicious) Id() int64 {
-	return 1
+	return consts.ClearEyedAndMalicious
 }
 
 func (c ClearEyedAndMalicious) TacticsSource() consts.TacticsSource {
-	return consts.TacticsSource_Inherit
+	return consts.TacticsSource_SelfContained
 }
 
 func (c ClearEyedAndMalicious) TacticsType() consts.TacticsType {
@@ -35,10 +35,6 @@ func (c ClearEyedAndMalicious) TacticsType() consts.TacticsType {
 
 func (c ClearEyedAndMalicious) TacticsLevel() consts.TacticsLevel {
 	return consts.TacticsLevel_S
-}
-
-func (c ClearEyedAndMalicious) TacticsTarget() consts.TacticsTarget {
-	return consts.TacticsTarget_Team_Group
 }
 
 func (c ClearEyedAndMalicious) SupportArmTypes() []consts.ArmType {
@@ -60,33 +56,51 @@ func (c ClearEyedAndMalicious) DamageType() consts.DamageType {
 }
 
 func (c ClearEyedAndMalicious) DamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 1.54
+}
+
+func (c ClearEyedAndMalicious) DamageRange() int64 {
+	//第五回合起，80%概率
+	if c.currentRound >= consts.Battle_Round_Fifth && util.GenerateRate(0.8) {
+		// TODO 描述黑盒的，暂时设置为50%概率，伤害1～2个目标
+		if util.GenerateRate(0.5) {
+			return 1
+		}
+		return 2
+	}
+	return 0
+}
+
+func (c ClearEyedAndMalicious) IsDamageLockedMaster() bool {
+	return false
+}
+
+func (c ClearEyedAndMalicious) IsDamageLockedVice() bool {
+	return false
 }
 
 func (c ClearEyedAndMalicious) DamageNum() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) IncrDamageNum() int64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) IncrDamageRate() float64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) DecrDamageNum() int64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) DecrDamageRate() float64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) ResumeMilitaryStrengthRate() float64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) EnhancedStrategyDamageRate() float64 {
@@ -123,49 +137,45 @@ func (c ClearEyedAndMalicious) EnhancedWeaponDamageRate() float64 {
 }
 
 func (c ClearEyedAndMalicious) SuperposeNum() int64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) EvadeRate() float64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) IncrForceNum() float64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) IncrIntelligenceNum() float64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) IncrCommandNum() float64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) IncrSpeedNum() float64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) EffectNextRounds() int64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) FrozenNextRounds() int64 {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) DebuffEffect() consts.DebuffEffectType {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) BuffEffect() consts.BuffEffectType {
-	panic("implement me")
+	return 0
 }
 
 func (c ClearEyedAndMalicious) IsGeneralAttack() bool {
-	panic("implement me")
-}
-
-func (c ClearEyedAndMalicious) IsHasTrigger() bool {
-	panic("implement me")
+	return true
 }

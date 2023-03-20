@@ -11,3 +11,11 @@ func Random(min float64, max float64) float64 {
 	rand.Seed(time.Now().UnixNano())
 	return rand.Float64()*(max-min) + cast.ToFloat64(min)
 }
+
+func GenerateRate(rate float64) bool {
+	rand := Random(0, 1)
+	if rand >= 0 && rand <= 0.8 {
+		return true
+	}
+	return false
+}

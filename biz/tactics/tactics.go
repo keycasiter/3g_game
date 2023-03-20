@@ -3,7 +3,19 @@ package tactics
 import "github.com/keycasiter/3g_game/biz/consts"
 
 type Tactics interface {
+	// Init 初始化
+	//
+	Init(
+		//武将唯一ID
+		generalId string,
+		//是否主将
+		isMaster bool,
+		//当前对战回合
+		currentRound consts.BattleRound,
+	)
+
 	/** 基础属性 **/
+
 	//战法ID
 	Id() int64
 	//战法来源
@@ -22,10 +34,16 @@ type Tactics interface {
 	TriggerRate() float64
 
 	/** 回合属性 **/
-	//当前回合
-	CurrentRound(round consts.BattleRound)
 	//伤害类型
 	DamageType() consts.DamageType
+	//伤害率
+	DamageRate() float64
+	//伤害值
+	DamageNum() float64
+	//伤害范围
+	DamageRange() int64
+	//伤害锁定主将
+	IsDamage
 	//增伤数值
 	IncrDamageNum() int64
 	//增伤率
@@ -64,8 +82,4 @@ type Tactics interface {
 	IsGeneralAttack() bool
 	//是否已经触发
 	IsHasTrigger() bool
-
-	/** 武将属性 **/
-	//是否为主将
-	IsMasterGeneral(isMaster bool)
 }

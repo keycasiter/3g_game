@@ -1,20 +1,19 @@
 package tactics
 
-import "github.com/keycasiter/3g_game/biz/consts"
+import (
+	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/tactics/model"
+)
 
 // 战法名称：士别三日
 // 战法描述：战斗前3回合，无法进行普通攻击但获得30%概率规避效果
 // 第4回合提高自己68点智力，并对敌军全体造成谋略伤害(伤害率180%，受智力影响)
 type ThreeDaysOfSeparation struct {
-	generalId    string
-	isMaster     bool
-	currentRound consts.BattleRound
+	tacticsParams model.TacticsParams
 }
 
-func (t ThreeDaysOfSeparation) Init(generalId string, isMaster bool, currentRound consts.BattleRound) {
-	t.currentRound = currentRound
-	t.generalId = generalId
-	t.isMaster = isMaster
+func (t ThreeDaysOfSeparation) Init(tacticsParams model.TacticsParams) {
+	t.tacticsParams = tacticsParams
 }
 
 func (t ThreeDaysOfSeparation) Id() int64 {
@@ -53,7 +52,7 @@ func (t ThreeDaysOfSeparation) DamageType() consts.DamageType {
 
 func (t ThreeDaysOfSeparation) DamageRate() float64 {
 	//第四回合，对敌军全体造成谋略伤害，伤害率180%
-	if t.currentRound == consts.Battle_Round_Fourth {
+	if t.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
 		return 1.80
 	}
 	return 0
@@ -65,7 +64,7 @@ func (t ThreeDaysOfSeparation) DamageNum() float64 {
 
 func (t ThreeDaysOfSeparation) DamageRange() int64 {
 	//第四回合，对敌军全体造成谋略伤害
-	if t.currentRound == consts.Battle_Round_Fourth {
+	if t.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
 		return 3
 	}
 	return 0
@@ -121,7 +120,7 @@ func (t ThreeDaysOfSeparation) IncrForceNum() float64 {
 
 func (t ThreeDaysOfSeparation) IncrIntelligenceNum() float64 {
 	//第四回合开始提高68点智力
-	if t.currentRound == consts.Battle_Round_Fourth {
+	if t.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
 		return 68
 	}
 	return 0
@@ -153,7 +152,7 @@ func (t ThreeDaysOfSeparation) BuffEffect() consts.BuffEffectType {
 
 func (t ThreeDaysOfSeparation) IsGeneralAttack() bool {
 	//前3回合，无法进行普通攻击
-	if t.currentRound <= consts.Battle_Round_Third {
+	if t.tacticsParams.CurrentRound <= consts.Battle_Round_Third {
 		return false
 	}
 	return true

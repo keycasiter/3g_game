@@ -1,18 +1,13 @@
 package tactics
 
-import "github.com/keycasiter/3g_game/biz/consts"
+import (
+	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/tactics/model"
+)
 
 type Tactics interface {
 	// Init 初始化
-	//
-	Init(
-		//武将唯一ID
-		generalId string,
-		//是否主将
-		isMaster bool,
-		//当前对战回合
-		currentRound consts.BattleRound,
-	)
+	Init(tacticsParams model.TacticsParams)
 
 	/** 基础属性 **/
 

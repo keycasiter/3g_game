@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
@@ -10,15 +11,11 @@ import (
 // 第5回合起，每回合有80%概率对1-2个敌军单体造成谋略伤害(伤害154%，受智力影响)；
 // 自身为主将时，获得16%奇谋几率
 type ClearEyedAndMalicious struct {
-	generalId    string
-	isMaster     bool
-	currentRound consts.BattleRound
+	tacticsParams model.TacticsParams
 }
 
-func (c ClearEyedAndMalicious) Init(generalId string, isMaster bool, currentRound consts.BattleRound) {
-	c.generalId = generalId
-	c.isMaster = isMaster
-	c.currentRound = currentRound
+func (c ClearEyedAndMalicious) Init(tacticsParams model.TacticsParams) {
+	c.tacticsParams = tacticsParams
 }
 
 func (c ClearEyedAndMalicious) Id() int64 {
@@ -61,7 +58,7 @@ func (c ClearEyedAndMalicious) DamageRate() float64 {
 
 func (c ClearEyedAndMalicious) DamageRange() int64 {
 	//第五回合起，80%概率
-	if c.currentRound >= consts.Battle_Round_Fifth && util.GenerateRate(0.8) {
+	if c.tacticsParams.CurrentRound >= consts.Battle_Round_Fifth && util.GenerateRate(0.8) {
 		// TODO 描述黑盒的，暂时设置为50%概率，伤害1～2个目标
 		if util.GenerateRate(0.5) {
 			return 1
@@ -106,11 +103,11 @@ func (c ClearEyedAndMalicious) ResumeMilitaryStrengthRate() float64 {
 func (c ClearEyedAndMalicious) EnhancedStrategyDamageRate() float64 {
 	rate := float64(0)
 	//自身为主将，获得16%奇谋
-	if c.isMaster {
+	if c.tacticsParams.IsMaster {
 		rate += 0.16
 	}
 	//前4回合生效
-	if c.currentRound >= consts.Battle_Round_First && c.currentRound <= consts.Battle_Round_Fourth {
+	if c.tacticsParams.CurrentRound >= consts.Battle_Round_First && c.tacticsParams.CurrentRound <= consts.Battle_Round_Fourth {
 		// 触发概率80%
 		if util.GenerateRate(0.8) {
 			//奇谋率7%
@@ -124,7 +121,7 @@ func (c ClearEyedAndMalicious) EnhancedStrategyDamageRate() float64 {
 
 func (c ClearEyedAndMalicious) EnhancedWeaponDamageRate() float64 {
 	//前4回合生效
-	if c.currentRound >= consts.Battle_Round_First && c.currentRound <= consts.Battle_Round_Fourth {
+	if c.tacticsParams.CurrentRound >= consts.Battle_Round_First && c.tacticsParams.CurrentRound <= consts.Battle_Round_Fourth {
 		// 触发概率80%
 		if util.GenerateRate(0.8) {
 			//会心率7%

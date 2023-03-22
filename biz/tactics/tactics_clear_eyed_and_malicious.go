@@ -176,3 +176,7 @@ func (c ClearEyedAndMalicious) BuffEffect() consts.BuffEffectType {
 func (c ClearEyedAndMalicious) IsGeneralAttack() bool {
 	return true
 }
+
+func (c ClearEyedAndMalicious) EffectNextRoundDamageRate() float64 {
+	return 0
+}

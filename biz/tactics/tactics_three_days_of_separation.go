@@ -65,7 +65,7 @@ func (t ThreeDaysOfSeparation) DamageNum() float64 {
 func (t ThreeDaysOfSeparation) DamageRange() int64 {
 	//第四回合，对敌军全体造成谋略伤害
 	if t.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
-		return 3
+		return consts.GeneralNum_Three
 	}
 	return 0
 }
@@ -156,4 +156,8 @@ func (t ThreeDaysOfSeparation) IsGeneralAttack() bool {
 		return false
 	}
 	return true
+}
+
+func (c ThreeDaysOfSeparation) EffectNextRoundDamageRate() float64 {
+	return 0
 }

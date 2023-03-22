@@ -53,83 +53,68 @@ func (t TheSkyIsBlazing) DamageType() consts.DamageType {
 }
 
 func (t TheSkyIsBlazing) DamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	//伤害率102%
+	return 1.02
 }
 
 func (t TheSkyIsBlazing) DamageNum() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) DamageRange() int64 {
-	//TODO implement me
-	panic("implement me")
+	return consts.GeneralNum_Three
 }
 
 func (t TheSkyIsBlazing) IsDamageLockedMaster() bool {
-	//TODO implement me
-	panic("implement me")
+	return false
 }
 
 func (t TheSkyIsBlazing) IsDamageLockedVice() bool {
-	//TODO implement me
-	panic("implement me")
+	return false
 }
 
 func (t TheSkyIsBlazing) IncrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) IncrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) DecrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) DecrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) ResumeMilitaryStrengthRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) EnhancedStrategyDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) EnhancedWeaponDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) SuperposeNum() int64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) EvadeRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) IncrForceNum() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) IncrIntelligenceNum() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (t TheSkyIsBlazing) IncrCommandNum() float64 {
@@ -141,7 +126,7 @@ func (t TheSkyIsBlazing) IncrSpeedNum() float64 {
 }
 
 func (t TheSkyIsBlazing) EffectNextRounds() int64 {
-	return 0
+	return consts.Battle_Round_Second
 }
 
 func (t TheSkyIsBlazing) FrozenNextRounds() int64 {
@@ -149,7 +134,7 @@ func (t TheSkyIsBlazing) FrozenNextRounds() int64 {
 }
 
 func (t TheSkyIsBlazing) DebuffEffect() consts.DebuffEffectType {
-	return 0
+	return consts.DebuffEffectType_Firing
 }
 
 func (t TheSkyIsBlazing) BuffEffect() consts.BuffEffectType {
@@ -158,4 +143,9 @@ func (t TheSkyIsBlazing) BuffEffect() consts.BuffEffectType {
 
 func (t TheSkyIsBlazing) IsGeneralAttack() bool {
 	return true
+}
+
+func (t TheSkyIsBlazing) EffectNextRoundDamageRate() float64 {
+	//持续伤害率72%
+	return 0.72
 }

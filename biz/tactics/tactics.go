@@ -75,4 +75,6 @@ type Tactics interface {
 	BuffEffect() consts.BuffEffectType
 	//是否可以普通攻击
 	IsGeneralAttack() bool
+	//持续伤害率
+	EffectNextRoundDamageRate() float64
 }

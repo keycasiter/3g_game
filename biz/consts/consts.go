@@ -223,3 +223,12 @@ const (
 
 // 武将缘分
 type Predestination int
+
+// 武将数量
+type GeneralNum int
+
+const (
+	GeneralNum_One   = 1
+	GeneralNum_Two   = 2
+	GeneralNum_Three = 3
+)

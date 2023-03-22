@@ -1,6 +1,6 @@
 package consts
 
-//环境
+// 环境
 const (
 	RUN_ENV_DEV  = "dev"
 	RUN_ENV_TEST = "test"
@@ -21,6 +21,7 @@ type BattleRound int
 
 const (
 	//对战回合
+	Battle_Round_Unknow  = 0 //未知回合
 	Battle_Round_First   = 1 //第一回合
 	Battle_Round_Second  = 2 //第二回合
 	Battle_Round_Third   = 3 //第三回合
@@ -190,7 +191,7 @@ const (
 	DamageType_Strategy = 2 //谋略伤害
 )
 
-//负面效果
+// 负面效果
 type DebuffEffectType int
 
 const (
@@ -203,7 +204,7 @@ const (
 	DebuffEffectType_PoorHealth = 7 //虚弱（无法造成伤害）
 )
 
-//增益效果
+// 增益效果
 type BuffEffectType int
 
 // 武将等级

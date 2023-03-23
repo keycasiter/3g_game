@@ -171,8 +171,101 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			},
 		},
 	}
-	//装配战法
+	//麒麟弓
+	qiLinGong := []*po.MetadataGeneral{
+		{
+			Name:  "姜维",
+			Group: consts.Group_ShuGuo,
+			AbilityAttr: &po.AbilityAttr{
+				ForceBase:        0,
+				ForceRate:        0,
+				IntelligenceBase: 0,
+				IntelligenceRate: 0,
+				CharmBase:        0,
+				CharmRate:        0,
+				CommandBase:      0,
+				CommandRate:      0,
+				PoliticsBase:     0,
+				PoliticsRate:     0,
+				SpeedBase:        80,
+				SpeedRate:        0,
+			},
+			ArmsAttr: &po.ArmsAttr{
+				Cavalry:   consts.ArmsAbility_S,
+				Mauler:    consts.ArmsAbility_S,
+				Archers:   consts.ArmsAbility_S,
+				Spearman:  consts.ArmsAbility_S,
+				Apparatus: consts.ArmsAbility_S,
+			},
+		},
+		{
+			Name:  "庞统",
+			Group: consts.Group_ShuGuo,
+			AbilityAttr: &po.AbilityAttr{
+				ForceBase:        0,
+				ForceRate:        0,
+				IntelligenceBase: 0,
+				IntelligenceRate: 0,
+				CharmBase:        0,
+				CharmRate:        0,
+				CommandBase:      0,
+				CommandRate:      0,
+				PoliticsBase:     0,
+				PoliticsRate:     0,
+				SpeedBase:        44,
+				SpeedRate:        0,
+			},
+			ArmsAttr: &po.ArmsAttr{
+				Cavalry:   consts.ArmsAbility_S,
+				Mauler:    consts.ArmsAbility_S,
+				Archers:   consts.ArmsAbility_S,
+				Spearman:  consts.ArmsAbility_S,
+				Apparatus: consts.ArmsAbility_S,
+			},
+		},
+		{
+			Name:  "诸葛亮",
+			Group: consts.Group_ShuGuo,
+			AbilityAttr: &po.AbilityAttr{
+				ForceBase:        0,
+				ForceRate:        0,
+				IntelligenceBase: 0,
+				IntelligenceRate: 0,
+				CharmBase:        0,
+				CharmRate:        0,
+				CommandBase:      0,
+				CommandRate:      0,
+				PoliticsBase:     0,
+				PoliticsRate:     0,
+				SpeedBase:        20,
+				SpeedRate:        0,
+			},
+			ArmsAttr: &po.ArmsAttr{
+				Cavalry:   consts.ArmsAbility_S,
+				Mauler:    consts.ArmsAbility_S,
+				Archers:   consts.ArmsAbility_S,
+				Spearman:  consts.ArmsAbility_S,
+				Apparatus: consts.ArmsAbility_S,
+			},
+		},
+	}
+	//太尉盾战法
 	taiWeiDunTactics := []*po.Tactics{
+		{
+			Id:   0,
+			Name: "",
+		},
+		{
+			Id:   0,
+			Name: "",
+		},
+		{
+			Id:   0,
+			Name: "",
+		},
+	}
+	//麒麟弓战法
+	qiLinGongTactics := []*po.Tactics{
 		{
 			Id:   0,
 			Name: "",
@@ -209,27 +302,26 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 
 	//模拟对战双方属性
 	//我方
-
 	fightGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range taiWeiDun {
 		general.GeneralBattleType = consts.GeneralBattleType_Fighting
-		fightGenerals = append(fightGenerals, &vo.BattleGeneral{
+		vo := &vo.BattleGeneral{
 			BaseInfo:     general,
 			EquipTactics: taiWeiDunTactics,
 			Addition:     addition,
-		})
+		}
+		fightGenerals = append(fightGenerals, vo)
 	}
 	//敌人
-	taiWeiDun2 := make([]*po.MetadataGeneral, 0)
-	taiWeiDun2 = taiWeiDun2[0 : len(taiWeiDun)-1]
 	enemyGenerals := make([]*vo.BattleGeneral, 0)
-	for _, general := range taiWeiDun2 {
+	for _, general := range qiLinGong {
 		general.GeneralBattleType = consts.GeneralBattleType_Enemy
-		enemyGenerals = append(enemyGenerals, &vo.BattleGeneral{
+		vo := &vo.BattleGeneral{
 			BaseInfo:     general,
-			EquipTactics: taiWeiDunTactics,
+			EquipTactics: qiLinGongTactics,
 			Addition:     addition,
-		})
+		}
+		enemyGenerals = append(enemyGenerals, vo)
 	}
 
 	//############ 模拟对战 ###########

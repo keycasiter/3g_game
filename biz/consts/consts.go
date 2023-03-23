@@ -153,9 +153,19 @@ const (
 type GeneralBattleType int
 
 const (
-	GeneralBattleType_Fighting = 1
-	GeneralBattleType_Enemy    = 2
+	GeneralBattleType_Fighting GeneralBattleType = 1
+	GeneralBattleType_Enemy    GeneralBattleType = 2
 )
+
+func (g GeneralBattleType) String() string {
+	switch g {
+	case GeneralBattleType_Fighting:
+		return "我方"
+	case GeneralBattleType_Enemy:
+		return "敌方"
+	}
+	return ""
+}
 
 // 队伍类型
 type TeamType int

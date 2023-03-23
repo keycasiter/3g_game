@@ -149,6 +149,22 @@ const (
 	TacticsTarget_Team_Group   = 4 //友军单体
 )
 
+// 对战参战类型
+type GeneralBattleType int
+
+const (
+	GeneralBattleType_Fighting = 1
+	GeneralBattleType_Enemy    = 2
+)
+
+// 队伍类型
+type TeamType int
+
+const (
+	TeamType_Fighting = 1
+	TeamType_Enemy    = 2
+)
+
 // 兵种类型
 type ArmType int
 

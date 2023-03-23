@@ -1,7 +1,10 @@
 package po
 
+import "github.com/keycasiter/3g_game/biz/consts"
+
 // 武将资料
 type MetadataGeneral struct {
+	//mongodb 持久化字段
 	Id          string       `bson:"_id"`
 	Name        string       `bson:"name"`
 	Gender      int          `bson:"gender"`
@@ -12,9 +15,12 @@ type MetadataGeneral struct {
 	ArmsAttr    *ArmsAttr    `bson:"arms_attr"`
 	Tactics     *Tactics     `bson:"tactics"`
 	Biographies *Biographies `bson:"biographies"`
+
+	//业务字段
+	GeneralBattleType consts.GeneralBattleType
 }
 
-//能力属性
+// 能力属性
 type AbilityAttr struct {
 	ForceBase        float64 `bson:"force_base"`
 	ForceRate        float64 `bson:"force_rate"`
@@ -30,7 +36,7 @@ type AbilityAttr struct {
 	SpeedRate        float64 `bson:"speed_rate"`
 }
 
-//兵种属性
+// 兵种属性
 type ArmsAttr struct {
 	Cavalry   int `bson:"cavalry"`
 	Mauler    int `bson:"mauler"`
@@ -39,7 +45,7 @@ type ArmsAttr struct {
 	Apparatus int `bson:"apparatus"`
 }
 
-//战法资料
+// 战法资料
 type Tactics struct {
 	Id            int64  `bson:"id"`
 	Name          string `bson:"name"`
@@ -47,13 +53,13 @@ type Tactics struct {
 	Inherit       string `bson:"inherit"`
 }
 
-//列传资料
+// 列传资料
 type Biographies struct {
 	Desc           string            `bson:"desc"`
 	Predestination []*Predestination `bson:"predestination"`
 }
 
-//缘分资料
+// 缘分资料
 type Predestination struct {
 	Name         string   `bson:"name"`
 	ReferGeneral []string `bson:"refer_general"`

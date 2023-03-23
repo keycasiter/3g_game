@@ -5,9 +5,11 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/po"
 )
 
-//对战队伍信息
+// 对战队伍信息
 type BattleTeam struct {
 	/** 队伍基础信息 **/
+	//队伍类型
+	TeamType consts.TeamType
 	//队伍兵种
 	ArmType consts.ArmType
 	//队伍武将信息

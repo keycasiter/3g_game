@@ -6,9 +6,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
+	"sort"
 )
 
-//req
+// req
 type BattleLogicContextRequest struct {
 	/** 队伍信息 **/
 	// 出战队伍信息
@@ -17,7 +18,7 @@ type BattleLogicContextRequest struct {
 	EnemyTeam *vo.BattleTeam
 }
 
-//resp
+// resp
 type BattleLogicContextResponse struct {
 }
 
@@ -68,7 +69,7 @@ func (runCtx *BattleLogicContext) initMetadata() {
 
 }
 
-//属性加点处理
+// 属性加点处理
 func (runCtx *BattleLogicContext) handleAbilityAttrAddition(general *vo.BattleGeneral) {
 	//武力加成
 	general.BaseInfo.AbilityAttr.ForceBase =
@@ -85,7 +86,7 @@ func (runCtx *BattleLogicContext) handleAbilityAttrAddition(general *vo.BattleGe
 
 }
 
-//武将等级处理
+// 武将等级处理
 func (runCtx *BattleLogicContext) handleGeneralLevel(general *vo.BattleGeneral) {
 	//武力加成
 	general.BaseInfo.AbilityAttr.ForceBase =
@@ -105,7 +106,7 @@ func (runCtx *BattleLogicContext) handleGeneralLevel(general *vo.BattleGeneral) 
 			general.BaseInfo.AbilityAttr.SpeedRate*float64(general.Addition.GeneralLevel)
 }
 
-//武将标签处理
+// 武将标签处理
 func (runCtx *BattleLogicContext) handleGeneralTag(general *vo.BattleGeneral) {
 	//仙人：属性提高30%
 	for _, generalTag := range general.BaseInfo.GeneralTag {
@@ -125,7 +126,7 @@ func (runCtx *BattleLogicContext) handleGeneralTag(general *vo.BattleGeneral) {
 	}
 }
 
-//建筑科技-阵营加成处理
+// 建筑科技-阵营加成处理
 func (runCtx *BattleLogicContext) handleBuildingTechGroupAddition(team *vo.BattleTeam) {
 	//判断是否同阵营
 	group := consts.Group_Unknow
@@ -152,13 +153,13 @@ func (runCtx *BattleLogicContext) handleBuildingTechGroupAddition(team *vo.Battl
 
 	for _, general := range team.BattleGenerals {
 		//武力加成
-		general.BaseInfo.AbilityAttr.ForceBase = general.BaseInfo.AbilityAttr.ForceBase * additionRate
+		general.BaseInfo.AbilityAttr.ForceBase = general.BaseInfo.AbilityAttr.ForceBase * (1 + additionRate)
 		//智力加成
-		general.BaseInfo.AbilityAttr.IntelligenceBase = general.BaseInfo.AbilityAttr.IntelligenceBase * additionRate
+		general.BaseInfo.AbilityAttr.IntelligenceBase = general.BaseInfo.AbilityAttr.IntelligenceBase * (1 + additionRate)
 		//统率加成
-		general.BaseInfo.AbilityAttr.CommandBase = general.BaseInfo.AbilityAttr.CommandBase * additionRate
+		general.BaseInfo.AbilityAttr.CommandBase = general.BaseInfo.AbilityAttr.CommandBase * (1 + additionRate)
 		//速度加成
-		general.BaseInfo.AbilityAttr.SpeedBase = general.BaseInfo.AbilityAttr.SpeedBase * additionRate
+		general.BaseInfo.AbilityAttr.SpeedBase = general.BaseInfo.AbilityAttr.SpeedBase * (1 + additionRate)
 	}
 	hlog.CtxInfof(runCtx.Ctx, "[%s]队获得【%s】强化效果，属性提升了%d%s",
 		team.BattleGenerals[0].BaseInfo.Name,
@@ -168,7 +169,7 @@ func (runCtx *BattleLogicContext) handleBuildingTechGroupAddition(team *vo.Battl
 	)
 }
 
-//建筑科技-属性加成处理
+// 建筑科技-属性加成处理
 func (runCtx *BattleLogicContext) handleBuildingTechAttrAddition(team *vo.BattleTeam) {
 	for _, general := range team.BattleGenerals {
 		//武力加成
@@ -202,7 +203,7 @@ func (runCtx *BattleLogicContext) handleBuildingTechAttrAddition(team *vo.Battle
 	)
 }
 
-//兵种适性处理
+// 兵种适性处理
 func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, general *vo.BattleGeneral) {
 	armType := consts.ArmType_Unknow
 	switch teamArmType {
@@ -284,5 +285,32 @@ func (runCtx *BattleLogicContext) handleTeamAddition(team *vo.BattleTeam) {
 
 // 对战对阵阶段处理
 func (runCtx *BattleLogicContext) processBattleFightingPhase() {
+	//最多8回合
+	currentRound := consts.Battle_Round_Unknow
+	for i := 0; i < consts.Battle_Round_Eighth; i++ {
+		currentRound++
+		runCtx.processBattleFightingRound(consts.BattleRound(currentRound))
+	}
+}
 
+// 每回合对战处理
+func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts.BattleRound) {
+	var allGenerals vo.BattleGeneralsOrderBySpeed
+	allGenerals = append(allGenerals, runCtx.ReqParam.FightingTeam.BattleGenerals...)
+	allGenerals = append(allGenerals, runCtx.ReqParam.EnemyTeam.BattleGenerals...)
+
+	//1.判断执行优先级
+	//1.1 判断先攻战法生效
+	//判断是否有武将本回合有先攻战法生效
+	//for _, general := range allGenerals {
+	//	for _, tactic := range general.EquipTactics {
+	//	}
+	//}
+	//1.2 判断武将速度
+	//按速度排序，从快到慢
+	sort.Sort(allGenerals)
+	hlog.CtxInfof(runCtx.Ctx, "回合：%d", currentRound)
+	for _, general := range allGenerals {
+		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行", general.BaseInfo.GeneralBattleType, general.BaseInfo.Name)
+	}
 }

@@ -5,16 +5,16 @@ import "github.com/keycasiter/3g_game/biz/consts"
 // 武将资料
 type MetadataGeneral struct {
 	//mongodb 持久化字段
-	Id          string       `bson:"_id"`
-	Name        string       `bson:"name"`
-	Gender      int          `bson:"gender"`
-	Group       int          `bson:"group"`
-	GeneralTag  []int        `bson:"general_tag"`
-	AvatarUri   string       `bson:"avatar_uri"`
-	AbilityAttr *AbilityAttr `bson:"ability_attr"`
-	ArmsAttr    *ArmsAttr    `bson:"arms_attr"`
-	Tactics     *Tactics     `bson:"tactics"`
-	Biographies *Biographies `bson:"biographies"`
+	Id          string        `bson:"_id"`
+	Name        string        `bson:"name"`
+	Gender      consts.Gender `bson:"gender"`
+	Group       consts.Group  `bson:"group"`
+	GeneralTag  []int         `bson:"general_tag"`
+	AvatarUri   string        `bson:"avatar_uri"`
+	AbilityAttr *AbilityAttr  `bson:"ability_attr"`
+	ArmsAttr    *ArmsAttr     `bson:"arms_attr"`
+	Tactics     *Tactics      `bson:"tactics"`
+	Biographies *Biographies  `bson:"biographies"`
 
 	//业务字段
 	GeneralBattleType consts.GeneralBattleType
@@ -38,11 +38,11 @@ type AbilityAttr struct {
 
 // 兵种属性
 type ArmsAttr struct {
-	Cavalry   int `bson:"cavalry"`
-	Mauler    int `bson:"mauler"`
-	Archers   int `bson:"archers"`
-	Spearman  int `bson:"spearman"`
-	Apparatus int `bson:"apparatus"`
+	Cavalry   consts.ArmsAbility `bson:"cavalry"`
+	Mauler    consts.ArmsAbility `bson:"mauler"`
+	Archers   consts.ArmsAbility `bson:"archers"`
+	Spearman  consts.ArmsAbility `bson:"spearman"`
+	Apparatus consts.ArmsAbility `bson:"apparatus"`
 }
 
 // 战法资料

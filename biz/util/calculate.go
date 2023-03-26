@@ -6,7 +6,7 @@ import (
 )
 
 //计算武将兵种适性影响后的属性值
-func CalGeneralArmAbility(armAbility int, attr *po.AbilityAttr) {
+func CalGeneralArmAbility(armAbility consts.ArmsAbility, attr *po.AbilityAttr) {
 	switch armAbility {
 	case consts.ArmsAbility_S:
 		attr.IntelligenceBase = attr.IntelligenceBase * 1.2

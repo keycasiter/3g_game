@@ -110,7 +110,7 @@ func (runCtx *BattleLogicContext) handleGeneralLevel(general *vo.BattleGeneral) 
 func (runCtx *BattleLogicContext) handleGeneralTag(general *vo.BattleGeneral) {
 	//仙人：属性提高30%
 	for _, generalTag := range general.BaseInfo.GeneralTag {
-		switch generalTag {
+		switch consts.GeneralTag(generalTag) {
 		case consts.GeneralTag_Celestials:
 			//武力加成
 			general.BaseInfo.AbilityAttr.ForceBase = general.BaseInfo.AbilityAttr.ForceBase * 1.3
@@ -209,23 +209,23 @@ func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, g
 	switch teamArmType {
 	//骑兵
 	case consts.ArmType_Cavalry:
-		armType = general.BaseInfo.ArmsAttr.Cavalry
+		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Cavalry)
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Cavalry, general.BaseInfo.AbilityAttr)
 	//盾兵
 	case consts.ArmType_Mauler:
-		armType = general.BaseInfo.ArmsAttr.Mauler
+		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Mauler)
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Mauler, general.BaseInfo.AbilityAttr)
 	//弓兵
 	case consts.ArmType_Archers:
-		armType = general.BaseInfo.ArmsAttr.Archers
+		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Archers)
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Archers, general.BaseInfo.AbilityAttr)
 	//枪兵
 	case consts.ArmType_Spearman:
-		armType = general.BaseInfo.ArmsAttr.Spearman
+		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Spearman)
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Spearman, general.BaseInfo.AbilityAttr)
 	//器械
 	case consts.ArmType_Apparatus:
-		armType = general.BaseInfo.ArmsAttr.Apparatus
+		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Apparatus)
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Apparatus, general.BaseInfo.AbilityAttr)
 	}
 
@@ -287,7 +287,7 @@ func (runCtx *BattleLogicContext) handleTeamAddition(team *vo.BattleTeam) {
 func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 	//最多8回合
 	currentRound := consts.Battle_Round_Unknow
-	for i := 0; i < consts.Battle_Round_Eighth; i++ {
+	for i := 0; i < int(consts.Battle_Round_Eighth); i++ {
 		currentRound++
 		runCtx.processBattleFightingRound(consts.BattleRound(currentRound))
 	}
@@ -302,15 +302,17 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	//1.判断执行优先级
 	//1.1 判断先攻战法生效
 	//判断是否有武将本回合有先攻战法生效
-	//for _, general := range allGenerals {
-	//	for _, tactic := range general.EquipTactics {
-	//	}
-	//}
+	for _, general := range allGenerals {
+		for _, tactic := range general.EquipTactics {
+		}
+	}
 	//1.2 判断武将速度
 	//按速度排序，从快到慢
 	sort.Sort(allGenerals)
 	hlog.CtxInfof(runCtx.Ctx, "回合：%d", currentRound)
 	for _, general := range allGenerals {
-		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行", general.BaseInfo.GeneralBattleType, general.BaseInfo.Name)
+		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%f", general.BaseInfo.GeneralBattleType, general.BaseInfo.Name,
+			general.BaseInfo.AbilityAttr.SpeedBase)
+
 	}
 }

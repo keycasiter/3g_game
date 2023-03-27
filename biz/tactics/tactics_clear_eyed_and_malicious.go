@@ -10,31 +10,31 @@ import (
 // 战法描述：战斗前4回合，每回合有80%概率使自身获得7%攻心或奇谋几率(每种效果最多叠加2次)；
 // 第5回合起，每回合有80%概率对1-2个敌军单体造成谋略伤害(伤害154%，受智力影响)；
 // 自身为主将时，获得16%奇谋几率
-type ClearEyedAndMalicious struct {
+type ClearEyedAndMaliciousTactic struct {
 	tacticsParams model.TacticsParams
 }
 
-func (c ClearEyedAndMalicious) Init(tacticsParams model.TacticsParams) {
+func (c ClearEyedAndMaliciousTactic) Init(tacticsParams model.TacticsParams) {
 	c.tacticsParams = tacticsParams
 }
 
-func (c ClearEyedAndMalicious) Id() int64 {
-	return consts.ClearEyedAndMalicious
+func (c ClearEyedAndMaliciousTactic) Id() int64 {
+	return ClearEyedAndMalicious
 }
 
-func (c ClearEyedAndMalicious) TacticsSource() consts.TacticsSource {
+func (c ClearEyedAndMaliciousTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_SelfContained
 }
 
-func (c ClearEyedAndMalicious) TacticsType() consts.TacticsType {
+func (c ClearEyedAndMaliciousTactic) TacticsType() consts.TacticsType {
 	return consts.TacticsType_Command
 }
 
-func (c ClearEyedAndMalicious) TacticsLevel() consts.TacticsLevel {
+func (c ClearEyedAndMaliciousTactic) TacticsLevel() consts.TacticsLevel {
 	return consts.TacticsLevel_S
 }
 
-func (c ClearEyedAndMalicious) SupportArmTypes() []consts.ArmType {
+func (c ClearEyedAndMaliciousTactic) SupportArmTypes() []consts.ArmType {
 	return []consts.ArmType{
 		consts.ArmType_Cavalry,
 		consts.ArmType_Mauler,
@@ -44,63 +44,63 @@ func (c ClearEyedAndMalicious) SupportArmTypes() []consts.ArmType {
 	}
 }
 
-func (c ClearEyedAndMalicious) TriggerRate() float64 {
+func (c ClearEyedAndMaliciousTactic) TriggerRate() float64 {
 	return 100.00
 }
 
-func (c ClearEyedAndMalicious) DamageType() consts.DamageType {
+func (c ClearEyedAndMaliciousTactic) DamageType() consts.DamageType {
 	return consts.DamageType_Strategy
 }
 
-func (c ClearEyedAndMalicious) DamageRate() float64 {
+func (c ClearEyedAndMaliciousTactic) DamageRate() float64 {
 	return 1.54
 }
 
-func (c ClearEyedAndMalicious) DamageRange() int64 {
+func (c ClearEyedAndMaliciousTactic) DamageRange() consts.GeneralNum {
 	//第五回合起，80%概率
 	if c.tacticsParams.CurrentRound >= consts.Battle_Round_Fifth && util.GenerateRate(0.8) {
 		// TODO 描述黑盒的，暂时设置为50%概率，伤害1～2个目标
 		if util.GenerateRate(0.5) {
-			return 1
+			return consts.GeneralNum_One
 		}
-		return 2
+		return consts.GeneralNum_Two
 	}
-	return 0
+	return consts.GeneralNum_Unknow
 }
 
-func (c ClearEyedAndMalicious) IsDamageLockedMaster() bool {
+func (c ClearEyedAndMaliciousTactic) IsDamageLockedMaster() bool {
 	return false
 }
 
-func (c ClearEyedAndMalicious) IsDamageLockedVice() bool {
+func (c ClearEyedAndMaliciousTactic) IsDamageLockedVice() bool {
 	return false
 }
 
-func (c ClearEyedAndMalicious) DamageNum() float64 {
+func (c ClearEyedAndMaliciousTactic) DamageNum() float64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) IncrDamageNum() int64 {
+func (c ClearEyedAndMaliciousTactic) IncrDamageNum() int64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) IncrDamageRate() float64 {
+func (c ClearEyedAndMaliciousTactic) IncrDamageRate() float64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) DecrDamageNum() int64 {
+func (c ClearEyedAndMaliciousTactic) DecrDamageNum() int64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) DecrDamageRate() float64 {
+func (c ClearEyedAndMaliciousTactic) DecrDamageRate() float64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) ResumeMilitaryStrengthRate() float64 {
+func (c ClearEyedAndMaliciousTactic) ResumeMilitaryStrengthRate() float64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) EnhancedStrategyDamageRate() float64 {
+func (c ClearEyedAndMaliciousTactic) EnhancedStrategyDamageRate() float64 {
 	rate := float64(0)
 	//自身为主将，获得16%奇谋
 	if c.tacticsParams.IsMaster {
@@ -119,7 +119,7 @@ func (c ClearEyedAndMalicious) EnhancedStrategyDamageRate() float64 {
 	}
 }
 
-func (c ClearEyedAndMalicious) EnhancedWeaponDamageRate() float64 {
+func (c ClearEyedAndMaliciousTactic) EnhancedWeaponDamageRate() float64 {
 	//前4回合生效
 	if c.tacticsParams.CurrentRound >= consts.Battle_Round_First && c.tacticsParams.CurrentRound <= consts.Battle_Round_Fourth {
 		// 触发概率80%
@@ -133,50 +133,50 @@ func (c ClearEyedAndMalicious) EnhancedWeaponDamageRate() float64 {
 	}
 }
 
-func (c ClearEyedAndMalicious) SuperposeNum() int64 {
+func (c ClearEyedAndMaliciousTactic) SuperposeNum() int64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) EvadeRate() float64 {
+func (c ClearEyedAndMaliciousTactic) EvadeRate() float64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) IncrForceNum() float64 {
+func (c ClearEyedAndMaliciousTactic) IncrForceNum() float64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) IncrIntelligenceNum() float64 {
+func (c ClearEyedAndMaliciousTactic) IncrIntelligenceNum() float64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) IncrCommandNum() float64 {
+func (c ClearEyedAndMaliciousTactic) IncrCommandNum() float64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) IncrSpeedNum() float64 {
+func (c ClearEyedAndMaliciousTactic) IncrSpeedNum() float64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) EffectNextRounds() int64 {
+func (c ClearEyedAndMaliciousTactic) EffectNextRounds() int64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) FrozenNextRounds() int64 {
+func (c ClearEyedAndMaliciousTactic) FrozenNextRounds() int64 {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) DebuffEffect() consts.DebuffEffectType {
+func (c ClearEyedAndMaliciousTactic) DebuffEffect() consts.DebuffEffectType {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) BuffEffect() consts.BuffEffectType {
+func (c ClearEyedAndMaliciousTactic) BuffEffect() consts.BuffEffectType {
 	return 0
 }
 
-func (c ClearEyedAndMalicious) IsGeneralAttack() bool {
+func (c ClearEyedAndMaliciousTactic) IsGeneralAttack() bool {
 	return true
 }
 
-func (c ClearEyedAndMalicious) EffectNextRoundDamageRate() float64 {
+func (c ClearEyedAndMaliciousTactic) EffectNextRoundDamageRate() float64 {
 	return 0
 }

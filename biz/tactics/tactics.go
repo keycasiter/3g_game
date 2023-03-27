@@ -34,7 +34,7 @@ type Tactics interface {
 	//伤害值
 	DamageNum() float64
 	//伤害范围
-	DamageRange() int64
+	DamageRange() consts.GeneralNum
 	//伤害锁定主将
 	IsDamageLockedMaster() bool
 	//伤害锁定副将

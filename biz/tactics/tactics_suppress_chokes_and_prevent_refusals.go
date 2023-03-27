@@ -8,165 +8,165 @@ import (
 // 战法名称：镇扼防拒
 // 战法描述：每回合有50%概率（受智力影响）使我军单体（优先选除自己之外的副将）援护所有友军并获得休整状态（每回合恢复一次兵力，治疗率192%，受智力影响）
 // 持续1回合，同时使其在1回合内受到普通攻击时，有55%概率（受智力影响）移除攻击者的增益状态
-type SuppressChokesAndPreventRefusals struct {
+type SuppressChokesAndPreventRefusalsTactic struct {
 	tacticsParams model.TacticsParams
 }
 
-func (s SuppressChokesAndPreventRefusals) Init(tacticsParams model.TacticsParams) {
+func (s SuppressChokesAndPreventRefusalsTactic) Init(tacticsParams model.TacticsParams) {
 	s.tacticsParams = tacticsParams
 }
 
-func (s SuppressChokesAndPreventRefusals) Id() int64 {
+func (s SuppressChokesAndPreventRefusalsTactic) Id() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) TacticsSource() consts.TacticsSource {
+func (s SuppressChokesAndPreventRefusalsTactic) TacticsSource() consts.TacticsSource {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) TacticsType() consts.TacticsType {
+func (s SuppressChokesAndPreventRefusalsTactic) TacticsType() consts.TacticsType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) TacticsLevel() consts.TacticsLevel {
+func (s SuppressChokesAndPreventRefusalsTactic) TacticsLevel() consts.TacticsLevel {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) SupportArmTypes() []consts.ArmType {
+func (s SuppressChokesAndPreventRefusalsTactic) SupportArmTypes() []consts.ArmType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) TriggerRate() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) TriggerRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) DamageType() consts.DamageType {
+func (s SuppressChokesAndPreventRefusalsTactic) DamageType() consts.DamageType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) DamageRate() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) DamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) DamageNum() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) DamageNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) DamageRange() int64 {
+func (s SuppressChokesAndPreventRefusalsTactic) DamageRange() consts.GeneralNum {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) IsDamageLockedMaster() bool {
+func (s SuppressChokesAndPreventRefusalsTactic) IsDamageLockedMaster() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) IsDamageLockedVice() bool {
+func (s SuppressChokesAndPreventRefusalsTactic) IsDamageLockedVice() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) IncrDamageNum() int64 {
+func (s SuppressChokesAndPreventRefusalsTactic) IncrDamageNum() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) IncrDamageRate() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) IncrDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) DecrDamageNum() int64 {
+func (s SuppressChokesAndPreventRefusalsTactic) DecrDamageNum() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) DecrDamageRate() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) DecrDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) ResumeMilitaryStrengthRate() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) ResumeMilitaryStrengthRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) EnhancedStrategyDamageRate() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) EnhancedStrategyDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) EnhancedWeaponDamageRate() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) EnhancedWeaponDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) SuperposeNum() int64 {
+func (s SuppressChokesAndPreventRefusalsTactic) SuperposeNum() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) EvadeRate() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) EvadeRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) IncrForceNum() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) IncrForceNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) IncrIntelligenceNum() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) IncrIntelligenceNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) IncrCommandNum() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) IncrCommandNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) IncrSpeedNum() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) IncrSpeedNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) EffectNextRounds() int64 {
+func (s SuppressChokesAndPreventRefusalsTactic) EffectNextRounds() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) FrozenNextRounds() int64 {
+func (s SuppressChokesAndPreventRefusalsTactic) FrozenNextRounds() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) DebuffEffect() consts.DebuffEffectType {
+func (s SuppressChokesAndPreventRefusalsTactic) DebuffEffect() consts.DebuffEffectType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) BuffEffect() consts.BuffEffectType {
+func (s SuppressChokesAndPreventRefusalsTactic) BuffEffect() consts.BuffEffectType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) IsGeneralAttack() bool {
+func (s SuppressChokesAndPreventRefusalsTactic) IsGeneralAttack() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusals) EffectNextRoundDamageRate() float64 {
+func (s SuppressChokesAndPreventRefusalsTactic) EffectNextRoundDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }

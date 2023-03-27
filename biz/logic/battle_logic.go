@@ -5,6 +5,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/keycasiter/3g_game/biz/util"
 	"sort"
 )
@@ -302,17 +303,46 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	//1.判断执行优先级
 	//1.1 判断先攻战法生效
 	//判断是否有武将本回合有先攻战法生效
-	for _, general := range allGenerals {
-		for _, tactic := range general.EquipTactics {
-		}
-	}
+	//for _, general := range allGenerals {
+	//	for _, tactic := range general.EquipTactics {
+	//	}
+	//}
 	//1.2 判断武将速度
 	//按速度排序，从快到慢
 	sort.Sort(allGenerals)
 	hlog.CtxInfof(runCtx.Ctx, "回合：%d", currentRound)
 	for _, general := range allGenerals {
-		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%f", general.BaseInfo.GeneralBattleType, general.BaseInfo.Name,
+		//打印当前执行队伍、武将、速度
+		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", general.BaseInfo.GeneralBattleType, general.BaseInfo.Name,
 			general.BaseInfo.AbilityAttr.SpeedBase)
+		//执行当前武将战法
+		for _, tactic := range general.EquipTactics {
+			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.突击
 
+			//1.被动
+			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
+
+			}
+			//2.阵法
+			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
+
+			}
+			//3.兵种
+			if _, ok := tactics.ArmTacticsMap[tactic.Id]; ok {
+
+			}
+			//4.指挥
+			if _, ok := tactics.CommandTacticsMap[tactic.Id]; ok {
+
+			}
+			//5.主动
+			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
+
+			}
+			//6.突击
+			if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
+
+			}
+		}
 	}
 }

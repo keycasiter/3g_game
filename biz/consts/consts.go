@@ -288,7 +288,8 @@ type Predestination int
 type GeneralNum int
 
 const (
-	GeneralNum_One   GeneralNum = 1
-	GeneralNum_Two   GeneralNum = 2
-	GeneralNum_Three GeneralNum = 3
+	GeneralNum_Unknow GeneralNum = 0
+	GeneralNum_One    GeneralNum = 1
+	GeneralNum_Two    GeneralNum = 2
+	GeneralNum_Three  GeneralNum = 3
 )

@@ -8,165 +8,165 @@ import (
 // 战法名称：乱世奸雄
 // 战法描述：战斗中，使友军群体(2人)造成伤害提高16%（受智力影响），
 // 自己受到伤害降低18%（受智力影响），如果自己为主将，副将造成伤害时，会为主将恢复其伤害量10%的兵力
-type TraitorInTroubledTimes struct {
+type TraitorInTroubledTimesTactic struct {
 	tacticsParams model.TacticsParams
 }
 
-func (t TraitorInTroubledTimes) Init(tacticsParams model.TacticsParams) {
+func (t TraitorInTroubledTimesTactic) Init(tacticsParams model.TacticsParams) {
 	t.tacticsParams = tacticsParams
 }
 
-func (t TraitorInTroubledTimes) Id() int64 {
+func (t TraitorInTroubledTimesTactic) Id() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) TacticsSource() consts.TacticsSource {
+func (t TraitorInTroubledTimesTactic) TacticsSource() consts.TacticsSource {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) TacticsType() consts.TacticsType {
+func (t TraitorInTroubledTimesTactic) TacticsType() consts.TacticsType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) TacticsLevel() consts.TacticsLevel {
+func (t TraitorInTroubledTimesTactic) TacticsLevel() consts.TacticsLevel {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) SupportArmTypes() []consts.ArmType {
+func (t TraitorInTroubledTimesTactic) SupportArmTypes() []consts.ArmType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) TriggerRate() float64 {
+func (t TraitorInTroubledTimesTactic) TriggerRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) DamageType() consts.DamageType {
+func (t TraitorInTroubledTimesTactic) DamageType() consts.DamageType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) DamageRate() float64 {
+func (t TraitorInTroubledTimesTactic) DamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) DamageNum() float64 {
+func (t TraitorInTroubledTimesTactic) DamageNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) DamageRange() int64 {
+func (t TraitorInTroubledTimesTactic) DamageRange() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) IsDamageLockedMaster() bool {
+func (t TraitorInTroubledTimesTactic) IsDamageLockedMaster() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) IsDamageLockedVice() bool {
+func (t TraitorInTroubledTimesTactic) IsDamageLockedVice() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) IncrDamageNum() int64 {
+func (t TraitorInTroubledTimesTactic) IncrDamageNum() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) IncrDamageRate() float64 {
+func (t TraitorInTroubledTimesTactic) IncrDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) DecrDamageNum() int64 {
+func (t TraitorInTroubledTimesTactic) DecrDamageNum() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) DecrDamageRate() float64 {
+func (t TraitorInTroubledTimesTactic) DecrDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) ResumeMilitaryStrengthRate() float64 {
+func (t TraitorInTroubledTimesTactic) ResumeMilitaryStrengthRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) EnhancedStrategyDamageRate() float64 {
+func (t TraitorInTroubledTimesTactic) EnhancedStrategyDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) EnhancedWeaponDamageRate() float64 {
+func (t TraitorInTroubledTimesTactic) EnhancedWeaponDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) SuperposeNum() int64 {
+func (t TraitorInTroubledTimesTactic) SuperposeNum() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) EvadeRate() float64 {
+func (t TraitorInTroubledTimesTactic) EvadeRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) IncrForceNum() float64 {
+func (t TraitorInTroubledTimesTactic) IncrForceNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) IncrIntelligenceNum() float64 {
+func (t TraitorInTroubledTimesTactic) IncrIntelligenceNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) IncrCommandNum() float64 {
+func (t TraitorInTroubledTimesTactic) IncrCommandNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) IncrSpeedNum() float64 {
+func (t TraitorInTroubledTimesTactic) IncrSpeedNum() float64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) EffectNextRounds() int64 {
+func (t TraitorInTroubledTimesTactic) EffectNextRounds() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) FrozenNextRounds() int64 {
+func (t TraitorInTroubledTimesTactic) FrozenNextRounds() int64 {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) DebuffEffect() consts.DebuffEffectType {
+func (t TraitorInTroubledTimesTactic) DebuffEffect() consts.DebuffEffectType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) BuffEffect() consts.BuffEffectType {
+func (t TraitorInTroubledTimesTactic) BuffEffect() consts.BuffEffectType {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) IsGeneralAttack() bool {
+func (t TraitorInTroubledTimesTactic) IsGeneralAttack() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimes) EffectNextRoundDamageRate() float64 {
+func (t TraitorInTroubledTimesTactic) EffectNextRoundDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }

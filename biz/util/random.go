@@ -14,7 +14,7 @@ func Random(min float64, max float64) float64 {
 
 func GenerateRate(rate float64) bool {
 	rand := Random(0, 1)
-	if rand >= 0 && rand <= 0.8 {
+	if rand >= 0 && rand <= rate {
 		return true
 	}
 	return false

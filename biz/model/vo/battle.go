@@ -31,6 +31,8 @@ type BattleGeneral struct {
 	EquipTactics []*po.Tactics
 	//武将对战加成
 	Addition *BattleGeneralAddition
+	//是否主将
+	IsMaster bool
 }
 
 // 武将对战加成

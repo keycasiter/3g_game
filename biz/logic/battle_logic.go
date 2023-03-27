@@ -5,7 +5,9 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
-	"github.com/keycasiter/3g_game/biz/tactics"
+	"github.com/keycasiter/3g_game/biz/tactics/execute"
+	"github.com/keycasiter/3g_game/biz/tactics/holder"
+	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
 	"sort"
 )
@@ -312,35 +314,43 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	sort.Sort(allGenerals)
 	hlog.CtxInfof(runCtx.Ctx, "回合：%d", currentRound)
 	for _, general := range allGenerals {
+		//每轮战法参数准备
+		tacticsParams := model.TacticsParams{}
+		tacticsParams.CurrentRound = currentRound
+		tacticsParams.GeneralId = general.BaseInfo.Id
+		tacticsParams.IsMaster = general.IsMaster
+
 		//打印当前执行队伍、武将、速度
 		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", general.BaseInfo.GeneralBattleType, general.BaseInfo.Name,
 			general.BaseInfo.AbilityAttr.SpeedBase)
+
 		//执行当前武将战法
 		for _, tactic := range general.EquipTactics {
 			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.突击
 
 			//1.被动
-			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
-
+			if _, ok := holder.PassiveTacticsMap[tactic.Id]; ok {
+				handler := holder.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(handler, tacticsParams)
 			}
 			//2.阵法
-			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
+			if _, ok := holder.TroopsTacticsMap[tactic.Id]; ok {
 
 			}
 			//3.兵种
-			if _, ok := tactics.ArmTacticsMap[tactic.Id]; ok {
+			if _, ok := holder.ArmTacticsMap[tactic.Id]; ok {
 
 			}
 			//4.指挥
-			if _, ok := tactics.CommandTacticsMap[tactic.Id]; ok {
+			if _, ok := holder.CommandTacticsMap[tactic.Id]; ok {
 
 			}
 			//5.主动
-			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
+			if _, ok := holder.ActiveTacticsMap[tactic.Id]; ok {
 
 			}
 			//6.突击
-			if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
+			if _, ok := holder.AssaultTacticsMap[tactic.Id]; ok {
 
 			}
 		}

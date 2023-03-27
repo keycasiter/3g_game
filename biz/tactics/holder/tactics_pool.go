@@ -1,4 +1,6 @@
-package tactics
+package holder
+
+import "github.com/keycasiter/3g_game/biz/tactics"
 
 const (
 	//鹰视狼顾
@@ -40,24 +42,29 @@ var TroopsTacticsMap map[int64]bool
 // 兵种
 var ArmTacticsMap map[int64]bool
 
-// ** 战法池 **
-var TacticsMap = map[int64]Tactics{}
+// ** 战法处理器 **
+var TacticsHandlerMap = map[int64]tactics.Tactics{}
 
 func init() {
-	initTacticsPool()
+	initTacticsHandler()
 	initTacticsMap()
 }
 
-func initTacticsPool() {
-	TacticsMap[ClearEyedAndMalicious] = &ClearEyedAndMaliciousTactic{}
-	TacticsMap[ThreeDaysOfSeparation] = &ThreeDaysOfSeparationTactic{}
+func initTacticsHandler() {
+	TacticsHandlerMap[ClearEyedAndMalicious] = &tactics.ClearEyedAndMaliciousTactic{}
+	TacticsHandlerMap[ThreeDaysOfSeparation] = &tactics.ThreeDaysOfSeparationTactic{}
+	TacticsHandlerMap[TheSkyIsBlazing] = &tactics.TheSkyIsBlazingTactic{}
+	TacticsHandlerMap[TraitorInTroubledTimes] = &tactics.TraitorInTroubledTimesTactic{}
 }
 
 func initTacticsMap() {
+	//被动战法
+	PassiveTacticsMap[ClearEyedAndMalicious] = true
 	//指挥战法
 	CommandTacticsMap[OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[Demoralize] = true
 	CommandTacticsMap[ToKeepAndBeFirm] = true
 	CommandTacticsMap[Gallant] = true
 	CommandTacticsMap[TakeRefugeFromEnemies] = true
+
 }

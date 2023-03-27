@@ -267,6 +267,10 @@ const (
 // 增益效果
 type BuffEffectType int
 
+const (
+	BuffEffectType_Evade BuffEffectType = 1 //规避
+)
+
 // 武将等级
 type GeneralLevel int
 

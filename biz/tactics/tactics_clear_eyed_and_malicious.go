@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/tactics/holder"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
 )
@@ -19,7 +20,7 @@ func (c ClearEyedAndMaliciousTactic) Init(tacticsParams model.TacticsParams) {
 }
 
 func (c ClearEyedAndMaliciousTactic) Id() int64 {
-	return ClearEyedAndMalicious
+	return holder.ClearEyedAndMalicious
 }
 
 func (c ClearEyedAndMaliciousTactic) TacticsSource() consts.TacticsSource {

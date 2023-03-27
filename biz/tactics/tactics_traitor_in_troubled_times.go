@@ -61,7 +61,7 @@ func (t TraitorInTroubledTimesTactic) DamageNum() float64 {
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimesTactic) DamageRange() int64 {
+func (t TraitorInTroubledTimesTactic) DamageRange() consts.GeneralNum {
 	//TODO implement me
 	panic("implement me")
 }

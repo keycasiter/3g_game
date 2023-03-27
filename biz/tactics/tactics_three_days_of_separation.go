@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/tactics/holder"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
@@ -17,7 +18,7 @@ func (t ThreeDaysOfSeparationTactic) Init(tacticsParams model.TacticsParams) {
 }
 
 func (t ThreeDaysOfSeparationTactic) Id() int64 {
-	return ThreeDaysOfSeparation
+	return holder.ThreeDaysOfSeparation
 }
 
 func (t ThreeDaysOfSeparationTactic) TacticsSource() consts.TacticsSource {
@@ -144,7 +145,7 @@ func (t ThreeDaysOfSeparationTactic) DebuffEffect() consts.DebuffEffectType {
 }
 
 func (t ThreeDaysOfSeparationTactic) BuffEffect() consts.BuffEffectType {
-	return 0
+	return consts.BuffEffectType_Evade
 }
 
 func (t ThreeDaysOfSeparationTactic) IsGeneralAttack() bool {

@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/tactics/holder"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
@@ -18,7 +19,7 @@ func (t TheSkyIsBlazingTactic) Init(tacticsParams model.TacticsParams) {
 }
 
 func (t TheSkyIsBlazingTactic) Id() int64 {
-	return TheSkyIsBlazing
+	return holder.TheSkyIsBlazing
 }
 
 func (t TheSkyIsBlazingTactic) TacticsSource() consts.TacticsSource {
@@ -125,8 +126,8 @@ func (t TheSkyIsBlazingTactic) IncrSpeedNum() float64 {
 	return 0
 }
 
-func (t TheSkyIsBlazingTactic) EffectNextRounds() consts.BattleRound {
-	return consts.Battle_Round_Second
+func (t TheSkyIsBlazingTactic) EffectNextRounds() int64 {
+	return 2
 }
 
 func (t TheSkyIsBlazingTactic) FrozenNextRounds() int64 {

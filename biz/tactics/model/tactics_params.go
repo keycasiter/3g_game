@@ -9,6 +9,4 @@ type TacticsParams struct {
 	IsMaster bool
 	//当前回合
 	CurrentRound consts.BattleRound
-	//上一次触发战法的回合
-	LastTriggerRound consts.BattleRound
 }

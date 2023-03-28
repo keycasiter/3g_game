@@ -1,6 +1,4 @@
-package holder
-
-import "github.com/keycasiter/3g_game/biz/tactics"
+package tactics
 
 const (
 	//鹰视狼顾
@@ -43,7 +41,7 @@ var TroopsTacticsMap map[int64]bool
 var ArmTacticsMap map[int64]bool
 
 // ** 战法处理器 **
-var TacticsHandlerMap = map[int64]tactics.Tactics{}
+var TacticsHandlerMap = map[int64]Tactics{}
 
 func init() {
 	initTacticsHandler()
@@ -51,13 +49,17 @@ func init() {
 }
 
 func initTacticsHandler() {
-	TacticsHandlerMap[ClearEyedAndMalicious] = &tactics.ClearEyedAndMaliciousTactic{}
-	TacticsHandlerMap[ThreeDaysOfSeparation] = &tactics.ThreeDaysOfSeparationTactic{}
-	TacticsHandlerMap[TheSkyIsBlazing] = &tactics.TheSkyIsBlazingTactic{}
-	TacticsHandlerMap[TraitorInTroubledTimes] = &tactics.TraitorInTroubledTimesTactic{}
+	TacticsHandlerMap := make(map[int64]Tactics, 0)
+	TacticsHandlerMap[ClearEyedAndMalicious] = &ClearEyedAndMaliciousTactic{}
+	TacticsHandlerMap[ThreeDaysOfSeparation] = &ThreeDaysOfSeparationTactic{}
+	TacticsHandlerMap[TheSkyIsBlazing] = &TheSkyIsBlazingTactic{}
+	TacticsHandlerMap[TraitorInTroubledTimes] = &TraitorInTroubledTimesTactic{}
 }
 
 func initTacticsMap() {
+	PassiveTacticsMap := make(map[int64]bool, 0)
+	CommandTacticsMap := make(map[int64]bool, 0)
+
 	//被动战法
 	PassiveTacticsMap[ClearEyedAndMalicious] = true
 	//指挥战法

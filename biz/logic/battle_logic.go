@@ -5,8 +5,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
-	"github.com/keycasiter/3g_game/biz/tactics/holder"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
@@ -327,28 +327,28 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.突击
 
 			//1.被动
-			if _, ok := holder.PassiveTacticsMap[tactic.Id]; ok {
-				handler := holder.TacticsHandlerMap[tactic.Id]
+			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
+				handler := tactics.TacticsHandlerMap[tactic.Id]
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 			//2.阵法
-			if _, ok := holder.TroopsTacticsMap[tactic.Id]; ok {
+			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
 
 			}
 			//3.兵种
-			if _, ok := holder.ArmTacticsMap[tactic.Id]; ok {
+			if _, ok := tactics.ArmTacticsMap[tactic.Id]; ok {
 
 			}
 			//4.指挥
-			if _, ok := holder.CommandTacticsMap[tactic.Id]; ok {
+			if _, ok := tactics.CommandTacticsMap[tactic.Id]; ok {
 
 			}
 			//5.主动
-			if _, ok := holder.ActiveTacticsMap[tactic.Id]; ok {
+			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
 
 			}
 			//6.突击
-			if _, ok := holder.AssaultTacticsMap[tactic.Id]; ok {
+			if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
 
 			}
 		}

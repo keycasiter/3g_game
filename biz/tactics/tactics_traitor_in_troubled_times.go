@@ -116,11 +116,6 @@ func (t TraitorInTroubledTimesTactic) SuperposeNum() int64 {
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimesTactic) EvadeRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (t TraitorInTroubledTimesTactic) IncrForceNum() float64 {
 	//TODO implement me
 	panic("implement me")
@@ -167,6 +162,16 @@ func (t TraitorInTroubledTimesTactic) IsGeneralAttack() bool {
 }
 
 func (t TraitorInTroubledTimesTactic) EffectNextRoundDamageRate() float64 {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (t TraitorInTroubledTimesTactic) DebuffEffectRate() float64 {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (t TraitorInTroubledTimesTactic) BuffEffectRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }

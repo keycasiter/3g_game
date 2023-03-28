@@ -2,7 +2,6 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/tactics/holder"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
 )
@@ -20,7 +19,7 @@ func (c ClearEyedAndMaliciousTactic) Init(tacticsParams model.TacticsParams) {
 }
 
 func (c ClearEyedAndMaliciousTactic) Id() int64 {
-	return holder.ClearEyedAndMalicious
+	return ClearEyedAndMalicious
 }
 
 func (c ClearEyedAndMaliciousTactic) TacticsSource() consts.TacticsSource {
@@ -104,7 +103,7 @@ func (c ClearEyedAndMaliciousTactic) ResumeMilitaryStrengthRate() float64 {
 func (c ClearEyedAndMaliciousTactic) EnhancedStrategyDamageRate() float64 {
 	rate := float64(0)
 	//自身为主将，获得16%奇谋
-	if c.tacticsParams.IsMaster {
+	if c.tacticsParams.CurrentGeneral.IsMaster {
 		rate += 0.16
 	}
 	//前4回合生效
@@ -135,10 +134,6 @@ func (c ClearEyedAndMaliciousTactic) EnhancedWeaponDamageRate() float64 {
 }
 
 func (c ClearEyedAndMaliciousTactic) SuperposeNum() int64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) EvadeRate() float64 {
 	return 0
 }
 
@@ -180,4 +175,14 @@ func (c ClearEyedAndMaliciousTactic) IsGeneralAttack() bool {
 
 func (c ClearEyedAndMaliciousTactic) EffectNextRoundDamageRate() float64 {
 	return 0
+}
+
+func (c ClearEyedAndMaliciousTactic) DebuffEffectRate() float64 {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (c ClearEyedAndMaliciousTactic) BuffEffectRate() float64 {
+	//TODO implement me
+	panic("implement me")
 }

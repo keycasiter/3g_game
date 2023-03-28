@@ -2,7 +2,6 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/tactics/holder"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
@@ -19,7 +18,7 @@ func (t TheSkyIsBlazingTactic) Init(tacticsParams model.TacticsParams) {
 }
 
 func (t TheSkyIsBlazingTactic) Id() int64 {
-	return holder.TheSkyIsBlazing
+	return TheSkyIsBlazing
 }
 
 func (t TheSkyIsBlazingTactic) TacticsSource() consts.TacticsSource {
@@ -106,10 +105,6 @@ func (t TheSkyIsBlazingTactic) SuperposeNum() int64 {
 	return 0
 }
 
-func (t TheSkyIsBlazingTactic) EvadeRate() float64 {
-	return 0
-}
-
 func (t TheSkyIsBlazingTactic) IncrForceNum() float64 {
 	return 0
 }
@@ -149,4 +144,14 @@ func (t TheSkyIsBlazingTactic) IsGeneralAttack() bool {
 func (t TheSkyIsBlazingTactic) EffectNextRoundDamageRate() float64 {
 	//持续伤害率72%
 	return 0.72
+}
+
+func (t TheSkyIsBlazingTactic) DebuffEffectRate() float64 {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (t TheSkyIsBlazingTactic) BuffEffectRate() float64 {
+	//TODO implement me
+	panic("implement me")
 }

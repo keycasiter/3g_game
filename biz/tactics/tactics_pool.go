@@ -23,25 +23,25 @@ const (
 
 // ** 战法池，按类型划分 **
 // 主动
-var ActiveTacticsMap map[int64]bool
+var ActiveTacticsMap = make(map[int64]bool, 0)
 
 // 被动
-var PassiveTacticsMap map[int64]bool
+var PassiveTacticsMap = make(map[int64]bool, 0)
 
 // 指挥
-var CommandTacticsMap map[int64]bool
+var CommandTacticsMap = make(map[int64]bool, 0)
 
 // 突击
-var AssaultTacticsMap map[int64]bool
+var AssaultTacticsMap = make(map[int64]bool, 0)
 
 // 阵法
-var TroopsTacticsMap map[int64]bool
+var TroopsTacticsMap = make(map[int64]bool, 0)
 
 // 兵种
-var ArmTacticsMap map[int64]bool
+var ArmTacticsMap = make(map[int64]bool, 0)
 
 // ** 战法处理器 **
-var TacticsHandlerMap = map[int64]Tactics{}
+var TacticsHandlerMap = make(map[int64]Tactics, 0)
 
 func init() {
 	initTacticsHandler()
@@ -49,7 +49,6 @@ func init() {
 }
 
 func initTacticsHandler() {
-	TacticsHandlerMap := make(map[int64]Tactics, 0)
 	TacticsHandlerMap[ClearEyedAndMalicious] = &ClearEyedAndMaliciousTactic{}
 	TacticsHandlerMap[ThreeDaysOfSeparation] = &ThreeDaysOfSeparationTactic{}
 	TacticsHandlerMap[TheSkyIsBlazing] = &TheSkyIsBlazingTactic{}
@@ -57,11 +56,9 @@ func initTacticsHandler() {
 }
 
 func initTacticsMap() {
-	PassiveTacticsMap := make(map[int64]bool, 0)
-	CommandTacticsMap := make(map[int64]bool, 0)
-
 	//被动战法
 	PassiveTacticsMap[ClearEyedAndMalicious] = true
+	PassiveTacticsMap[ThreeDaysOfSeparation] = true
 	//指挥战法
 	CommandTacticsMap[OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[Demoralize] = true

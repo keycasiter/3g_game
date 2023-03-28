@@ -7,6 +7,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/dal/mongodb"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/kr/pretty"
 	"go.mongodb.org/mongo-driver/bson"
 	"testing"
@@ -252,16 +253,16 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	//太尉盾战法
 	taiWeiDunTactics := []*po.Tactics{
 		{
-			Id:   0,
-			Name: "",
+			Id:   tactics.ClearEyedAndMalicious,
+			Name: "鹰视狼顾",
 		},
 		{
-			Id:   0,
-			Name: "",
+			Id:   tactics.ThreeDaysOfSeparation,
+			Name: "士别三日",
 		},
 		{
-			Id:   0,
-			Name: "",
+			Id:   tactics.TheSkyIsBlazing,
+			Name: "熯天炽地",
 		},
 	}
 	//麒麟弓战法

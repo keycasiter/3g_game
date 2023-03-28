@@ -325,7 +325,6 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		//执行当前武将战法
 		for _, tactic := range currentGeneral.EquipTactics {
 			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.突击
-
 			//1.被动
 			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
@@ -333,23 +332,28 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			}
 			//2.阵法
 			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
-
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 			//3.兵种
 			if _, ok := tactics.ArmTacticsMap[tactic.Id]; ok {
-
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 			//4.指挥
 			if _, ok := tactics.CommandTacticsMap[tactic.Id]; ok {
-
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 			//5.主动
 			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
-
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 			//6.突击
 			if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
-
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 		}
 	}
@@ -368,6 +372,13 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.Bat
 	}
 	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
 		tacticsParams.EnemyGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
+	}
+	//初始化增益效果/负面效果
+	if tacticsParams.CurrentGeneral.BuffEffectMap == nil {
+		tacticsParams.CurrentGeneral.BuffEffectMap = make(map[consts.BuffEffectType]float64, 0)
+	}
+	if tacticsParams.CurrentGeneral.DeBuffEffectMap == nil {
+		tacticsParams.CurrentGeneral.DeBuffEffectMap = make(map[consts.DebuffEffectType]float64, 0)
 	}
 
 	return tacticsParams

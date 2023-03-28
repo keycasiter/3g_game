@@ -28,6 +28,8 @@ func TacticsExecute(ctx context.Context, tactics tactics.Tactics, tacticsParams 
 		//减益结算
 		tactics.DebuffEffect()
 
+		//奇谋/会心几率
+
 		//伤害结算
 		if tactics.DamageRate() > 0 || tactics.DamageNum() > 0 {
 			//伤害类型计算

@@ -55,8 +55,6 @@ type Tactics interface {
 	EnhancedWeaponDamageRate() float64
 	//可叠加次数
 	SuperposeNum() int64
-	//规避率
-	EvadeRate() float64
 	//提高武力
 	IncrForceNum() float64
 	//提高智力
@@ -71,8 +69,12 @@ type Tactics interface {
 	FrozenNextRounds() int64
 	//负面效果
 	DebuffEffect() consts.DebuffEffectType
+	//负面率
+	DebuffEffectRate() float64
 	//增益效果
 	BuffEffect() consts.BuffEffectType
+	//增益率
+	BuffEffectRate() float64
 	//是否可以普通攻击
 	IsGeneralAttack() bool
 	//持续伤害率

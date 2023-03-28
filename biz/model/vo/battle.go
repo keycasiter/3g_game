@@ -18,9 +18,6 @@ type BattleTeam struct {
 	BuildingTechAttrAddition BuildingTechAttrAddition
 	//协力科技-阵营加成
 	BuildingTechGroupAddition BuildingTechGroupAddition
-
-	/** 队伍对战中信息 **/
-
 }
 
 // 对战武将信息
@@ -33,6 +30,10 @@ type BattleGeneral struct {
 	Addition *BattleGeneralAddition
 	//是否主将
 	IsMaster bool
+	//增益效果
+	BuffEffectMap map[consts.BuffEffectType]float64
+	//负面效果
+	DeBuffEffectMap map[consts.DebuffEffectType]float64
 }
 
 // 武将对战加成

@@ -9,6 +9,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/holder"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 	"sort"
 )
 
@@ -292,7 +293,7 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 	currentRound := consts.Battle_Round_Unknow
 	for i := 0; i < int(consts.Battle_Round_Eighth); i++ {
 		currentRound++
-		runCtx.processBattleFightingRound(consts.BattleRound(currentRound))
+		runCtx.processBattleFightingRound(currentRound)
 	}
 }
 
@@ -313,25 +314,22 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	//按速度排序，从快到慢
 	sort.Sort(allGenerals)
 	hlog.CtxInfof(runCtx.Ctx, "回合：%d", currentRound)
-	for _, general := range allGenerals {
+	for _, currentGeneral := range allGenerals {
 		//每轮战法参数准备
-		tacticsParams := model.TacticsParams{}
-		tacticsParams.CurrentRound = currentRound
-		tacticsParams.GeneralId = general.BaseInfo.Id
-		tacticsParams.IsMaster = general.IsMaster
+		tacticsParams := runCtx.buildBattleRoundParams(currentRound, currentGeneral)
 
 		//打印当前执行队伍、武将、速度
-		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", general.BaseInfo.GeneralBattleType, general.BaseInfo.Name,
-			general.BaseInfo.AbilityAttr.SpeedBase)
+		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", currentGeneral.BaseInfo.GeneralBattleType, currentGeneral.BaseInfo.Name,
+			currentGeneral.BaseInfo.AbilityAttr.SpeedBase)
 
 		//执行当前武将战法
-		for _, tactic := range general.EquipTactics {
+		for _, tactic := range currentGeneral.EquipTactics {
 			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.突击
 
 			//1.被动
 			if _, ok := holder.PassiveTacticsMap[tactic.Id]; ok {
 				handler := holder.TacticsHandlerMap[tactic.Id]
-				execute.TacticsExecute(handler, tacticsParams)
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 			//2.阵法
 			if _, ok := holder.TroopsTacticsMap[tactic.Id]; ok {
@@ -355,4 +353,22 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			}
 		}
 	}
+}
+
+func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.BattleRound, currentGeneral *vo.BattleGeneral) model.TacticsParams {
+	tacticsParams := model.TacticsParams{}
+	tacticsParams.CurrentRound = currentRound
+	tacticsParams.CurrentGeneral = currentGeneral
+
+	//武将信息转map
+	tacticsParams.FightingGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
+	tacticsParams.EnemyGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
+	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
+		tacticsParams.FightingGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
+	}
+	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
+		tacticsParams.EnemyGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
+	}
+
+	return tacticsParams
 }

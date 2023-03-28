@@ -268,7 +268,8 @@ const (
 type BuffEffectType int
 
 const (
-	BuffEffectType_Evade BuffEffectType = 1 //规避
+	BuffEffectType_Unknow BuffEffectType = 0
+	BuffEffectType_Evade  BuffEffectType = 1 //规避
 )
 
 // 武将等级

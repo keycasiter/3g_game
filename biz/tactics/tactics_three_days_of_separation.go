@@ -60,8 +60,7 @@ func (t ThreeDaysOfSeparationTactic) DamageRate() float64 {
 }
 
 func (t ThreeDaysOfSeparationTactic) DamageRange() consts.GeneralNum {
-	//TODO implement me
-	panic("implement me")
+	return consts.GeneralNum_Unknow
 }
 
 func (t ThreeDaysOfSeparationTactic) DamageNum() float64 {
@@ -108,10 +107,6 @@ func (t ThreeDaysOfSeparationTactic) SuperposeNum() int64 {
 	return 0
 }
 
-func (t ThreeDaysOfSeparationTactic) EvadeRate() float64 {
-	return 0
-}
-
 func (t ThreeDaysOfSeparationTactic) IncrForceNum() float64 {
 	return 0
 }
@@ -145,7 +140,11 @@ func (t ThreeDaysOfSeparationTactic) DebuffEffect() consts.DebuffEffectType {
 }
 
 func (t ThreeDaysOfSeparationTactic) BuffEffect() consts.BuffEffectType {
-	return consts.BuffEffectType_Evade
+	//前3回合，获得30%规避
+	if t.tacticsParams.CurrentRound <= consts.Battle_Round_Third {
+		return consts.BuffEffectType_Evade
+	}
+	return consts.BuffEffectType_Unknow
 }
 
 func (t ThreeDaysOfSeparationTactic) IsGeneralAttack() bool {
@@ -157,5 +156,17 @@ func (t ThreeDaysOfSeparationTactic) IsGeneralAttack() bool {
 }
 
 func (c ThreeDaysOfSeparationTactic) EffectNextRoundDamageRate() float64 {
+	return 0
+}
+
+func (t ThreeDaysOfSeparationTactic) DebuffEffectRate() float64 {
+	return 0
+}
+
+func (t ThreeDaysOfSeparationTactic) BuffEffectRate() float64 {
+	//前3回合，获得30%规避
+	if t.tacticsParams.CurrentRound <= consts.Battle_Round_Third {
+		return 0.3
+	}
 	return 0
 }

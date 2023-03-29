@@ -6,7 +6,7 @@ import (
 )
 
 // 战法名称：镇扼防拒
-// 战法描述：每回合有50%概率（受智力影响）使我军单体（优先选除自己之外的副将）援护所有友军并获得休整状态（每回合恢复一次兵力，治疗率192%，受智力影响）
+// 战法描述：每回合有50%概率（受智力影响）使我军单体(优先选除自己之外的副将)援护所有友军并获得休整状态（每回合恢复一次兵力，治疗率192%，受智力影响），
 // 持续1回合，同时使其在1回合内受到普通攻击时，有55%概率（受智力影响）移除攻击者的增益状态
 type SuppressChokesAndPreventRefusalsTactic struct {
 	tacticsParams model.TacticsParams
@@ -42,8 +42,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) SupportArmTypes() []consts.ArmTy
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) TriggerRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 1
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) DamageType() consts.DamageType {
@@ -116,11 +115,6 @@ func (s SuppressChokesAndPreventRefusalsTactic) SuperposeNum() int64 {
 	panic("implement me")
 }
 
-func (s SuppressChokesAndPreventRefusalsTactic) EvadeRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (s SuppressChokesAndPreventRefusalsTactic) IncrForceNum() float64 {
 	//TODO implement me
 	panic("implement me")
@@ -156,7 +150,17 @@ func (s SuppressChokesAndPreventRefusalsTactic) DebuffEffect() consts.DebuffEffe
 	panic("implement me")
 }
 
+func (s SuppressChokesAndPreventRefusalsTactic) DebuffEffectRate() float64 {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s SuppressChokesAndPreventRefusalsTactic) BuffEffect() consts.BuffEffectType {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) BuffEffectRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }

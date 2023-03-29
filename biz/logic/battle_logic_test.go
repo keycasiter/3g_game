@@ -250,8 +250,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			},
 		},
 	}
-	//太尉盾战法
-	taiWeiDunTactics := []*po.Tactics{
+	//司马懿战法
+	siMaYiTactics := []*po.Tactics{
 		{
 			Id:   tactics.ClearEyedAndMalicious,
 			Name: "鹰视狼顾",
@@ -263,6 +263,36 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		{
 			Id:   tactics.TheSkyIsBlazing,
 			Name: "熯天炽地",
+		},
+	}
+	//曹操战法
+	caoCaoTactics := []*po.Tactics{
+		{
+			Id:   tactics.TraitorInTroubledTimes,
+			Name: "乱世奸雄",
+		},
+		{
+			Id:   tactics.Charming,
+			Name: "魅惑",
+		},
+		{
+			Id:   tactics.AppeaseArmyAndPeople,
+			Name: "抚揖军民",
+		},
+	}
+	//满宠战法
+	manChongTactics := []*po.Tactics{
+		{
+			Id:   tactics.SuppressChokesAndPreventRefusals,
+			Name: "镇扼防拒",
+		},
+		{
+			Id:   tactics.FrontalVectorArray,
+			Name: "锋矢阵",
+		},
+		{
+			Id:   tactics.Curettage,
+			Name: "刮骨疗毒",
 		},
 	}
 	//麒麟弓战法
@@ -306,12 +336,30 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	fightGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range taiWeiDun {
 		general.GeneralBattleType = consts.GeneralBattleType_Fighting
-		vo := &vo.BattleGeneral{
-			BaseInfo:     general,
-			EquipTactics: taiWeiDunTactics,
-			Addition:     addition,
+		switch general.Name {
+		case "司马懿":
+			vo := &vo.BattleGeneral{
+				BaseInfo:     general,
+				EquipTactics: siMaYiTactics,
+				Addition:     addition,
+			}
+			fightGenerals = append(fightGenerals, vo)
+		case "曹操":
+			vo := &vo.BattleGeneral{
+				BaseInfo:     general,
+				EquipTactics: caoCaoTactics,
+				Addition:     addition,
+			}
+			fightGenerals = append(fightGenerals, vo)
+		case "满宠":
+			vo := &vo.BattleGeneral{
+				BaseInfo:     general,
+				EquipTactics: manChongTactics,
+				Addition:     addition,
+			}
+			fightGenerals = append(fightGenerals, vo)
 		}
-		fightGenerals = append(fightGenerals, vo)
+
 	}
 	//敌人
 	enemyGenerals := make([]*vo.BattleGeneral, 0)

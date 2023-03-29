@@ -162,6 +162,16 @@ func (a AppeaseArmyAndPeopleTactic) BuffEffect() consts.BuffEffectType {
 	panic("implement me")
 }
 
+func (a AppeaseArmyAndPeopleTactic) DebuffEffectRate() float64 {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (a AppeaseArmyAndPeopleTactic) BuffEffectRate() float64 {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (a AppeaseArmyAndPeopleTactic) IsGeneralAttack() bool {
 	//TODO implement me
 	panic("implement me")

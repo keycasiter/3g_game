@@ -7,8 +7,7 @@ import (
 
 // 战法名称：魅惑
 // 战法描述：自己受到普通攻击时，有45%几率使攻击者进入混乱（攻击和战法无差别选择目标）、计穷（无法发动主动战法）、虚弱（无法造成伤害）状态的一种，
-// 持续1回合，
-// 自身为女性时，触发几率额外受智力影响
+// 持续1回合，自身为女性时，触发几率额外受智力影响
 type CharmingTactic struct {
 	tacticsParams model.TacticsParams
 }
@@ -117,11 +116,6 @@ func (c CharmingTactic) SuperposeNum() int64 {
 	panic("implement me")
 }
 
-func (c CharmingTactic) EvadeRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (c CharmingTactic) IncrForceNum() float64 {
 	//TODO implement me
 	panic("implement me")
@@ -157,7 +151,17 @@ func (c CharmingTactic) DebuffEffect() consts.DebuffEffectType {
 	panic("implement me")
 }
 
+func (c CharmingTactic) DebuffEffectRate() float64 {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (c CharmingTactic) BuffEffect() consts.BuffEffectType {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (c CharmingTactic) BuffEffectRate() float64 {
 	//TODO implement me
 	panic("implement me")
 }

@@ -19,6 +19,16 @@ const (
 	Gallant
 	//暂避其锋
 	TakeRefugeFromEnemies
+	//魅惑
+	Charming
+	//抚揖军民
+	AppeaseArmyAndPeople
+	//镇扼防拒
+	SuppressChokesAndPreventRefusals
+	//锋矢阵
+	FrontalVectorArray
+	//刮骨疗毒
+	Curettage
 )
 
 // ** 战法池，按类型划分 **
@@ -53,17 +63,30 @@ func initTacticsHandler() {
 	TacticsHandlerMap[ThreeDaysOfSeparation] = &ThreeDaysOfSeparationTactic{}
 	TacticsHandlerMap[TheSkyIsBlazing] = &TheSkyIsBlazingTactic{}
 	TacticsHandlerMap[TraitorInTroubledTimes] = &TraitorInTroubledTimesTactic{}
+	TacticsHandlerMap[Charming] = &CharmingTactic{}
+	TacticsHandlerMap[SuppressChokesAndPreventRefusals] = &SuppressChokesAndPreventRefusalsTactic{}
+	TacticsHandlerMap[AppeaseArmyAndPeople] = &AppeaseArmyAndPeopleTactic{}
+	TacticsHandlerMap[Curettage] = &CurettageTactic{}
+	TacticsHandlerMap[FrontalVectorArray] = &FrontalVectorArrayTactic{}
 }
 
 func initTacticsMap() {
 	//被动战法
-	PassiveTacticsMap[ClearEyedAndMalicious] = true
 	PassiveTacticsMap[ThreeDaysOfSeparation] = true
+	PassiveTacticsMap[Charming] = true
 	//指挥战法
 	CommandTacticsMap[OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[Demoralize] = true
 	CommandTacticsMap[ToKeepAndBeFirm] = true
 	CommandTacticsMap[Gallant] = true
 	CommandTacticsMap[TakeRefugeFromEnemies] = true
-
+	CommandTacticsMap[SuppressChokesAndPreventRefusals] = true
+	CommandTacticsMap[AppeaseArmyAndPeople] = true
+	CommandTacticsMap[TraitorInTroubledTimes] = true
+	PassiveTacticsMap[ClearEyedAndMalicious] = true
+	//阵法
+	TroopsTacticsMap[FrontalVectorArray] = true
+	//主动
+	ActiveTacticsMap[Curettage] = true
+	ActiveTacticsMap[TheSkyIsBlazing] = true
 }

@@ -7,7 +7,7 @@ import (
 
 func TestRandom(t *testing.T) {
 	for i := 0; i < 100; i++ {
-		fmt.Printf("%0.2f\n", Random(-0.1, 0.1))
+		fmt.Printf("%d\n", int(Random(0, 3)))
 	}
 }
 
@@ -25,4 +25,16 @@ func TestGenerateRate(t *testing.T) {
 		}
 	}
 	fmt.Printf("true:%d\nfalse:%d", tr, f)
+}
+
+func TestGenerateHitIdxArr(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		fmt.Printf("%v\n", GenerateHitIdxArr(2, 3))
+	}
+}
+
+func TestGenerateHitIdx(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		fmt.Printf("%v\n", GenerateHitIdx(3))
+	}
 }

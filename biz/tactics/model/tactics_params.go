@@ -1,11 +1,13 @@
 package model
 
 import (
+	"context"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
 
 type TacticsParams struct {
+	Ctx context.Context
 	// 当前回合
 	CurrentRound consts.BattleRound
 	// 当前武将

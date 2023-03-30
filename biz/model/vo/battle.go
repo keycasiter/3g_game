@@ -30,6 +30,8 @@ type BattleGeneral struct {
 	Addition *BattleGeneralAddition
 	//是否主将
 	IsMaster bool
+	//携带兵力
+	SoldiersNum int64
 	//增益效果
 	BuffEffectMap map[consts.BuffEffectType]float64
 	//负面效果

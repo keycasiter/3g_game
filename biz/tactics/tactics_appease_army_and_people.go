@@ -18,166 +18,27 @@ func (a AppeaseArmyAndPeopleTactic) Init(tacticsParams model.TacticsParams) {
 }
 
 func (a AppeaseArmyAndPeopleTactic) Id() int64 {
-	//TODO implement me
-	panic("implement me")
+	return AppeaseArmyAndPeople
 }
 
 func (a AppeaseArmyAndPeopleTactic) TacticsSource() consts.TacticsSource {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsSource_Event
 }
 
 func (a AppeaseArmyAndPeopleTactic) TacticsType() consts.TacticsType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) TacticsLevel() consts.TacticsLevel {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsType_Command
 }
 
 func (a AppeaseArmyAndPeopleTactic) SupportArmTypes() []consts.ArmType {
-	//TODO implement me
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
-func (a AppeaseArmyAndPeopleTactic) TriggerRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) DamageType() consts.DamageType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) DamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) DamageNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) DamageRange() consts.GeneralNum {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) IsDamageLockedMaster() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) IsDamageLockedVice() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) IncrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) IncrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) DecrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) DecrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) ResumeMilitaryStrengthRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) EnhancedStrategyDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) EnhancedWeaponDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) SuperposeNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) EvadeRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) IncrForceNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) IncrIntelligenceNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) IncrCommandNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) IncrSpeedNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) EffectNextRounds() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) FrozenNextRounds() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) DebuffEffect() consts.DebuffEffectType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) BuffEffect() consts.BuffEffectType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) DebuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) BuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) IsGeneralAttack() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (a AppeaseArmyAndPeopleTactic) EffectNextRoundDamageRate() float64 {
-	//TODO implement me
+func (a AppeaseArmyAndPeopleTactic) Handle() {
 	panic("implement me")
 }

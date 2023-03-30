@@ -1,8 +1,11 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 战法名称：镇扼防拒
@@ -17,160 +20,42 @@ func (s SuppressChokesAndPreventRefusalsTactic) Init(tacticsParams model.Tactics
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) Id() int64 {
-	//TODO implement me
-	panic("implement me")
+	return SuppressChokesAndPreventRefusals
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) TacticsSource() consts.TacticsSource {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) TacticsType() consts.TacticsType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) TacticsLevel() consts.TacticsLevel {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsType_Command
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) SupportArmTypes() []consts.ArmType {
-	//TODO implement me
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
-func (s SuppressChokesAndPreventRefusalsTactic) TriggerRate() float64 {
-	return 1
-}
+func (s SuppressChokesAndPreventRefusalsTactic) Handle() {
+	//每回合有50%概率（受智力影响）使我军单体(优先选除自己之外的副将)援护所有友军并获得休整状态（每回合恢复一次兵力，治疗率192%，受智力影响），
+	// 持续1回合，同时使其在1回合内受到普通攻击时，有55%概率（受智力影响）移除攻击者的增益状态
 
-func (s SuppressChokesAndPreventRefusalsTactic) DamageType() consts.DamageType {
-	//TODO implement me
-	panic("implement me")
-}
+	//获取自身智力
+	resumeSoldiersNum := cast.ToInt64(s.tacticsParams.CurrentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.92)
 
-func (s SuppressChokesAndPreventRefusalsTactic) DamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) DamageNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) DamageRange() consts.GeneralNum {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) IsDamageLockedMaster() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) IsDamageLockedVice() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) IncrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) IncrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) DecrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) DecrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) ResumeMilitaryStrengthRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) EnhancedStrategyDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) EnhancedWeaponDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) SuperposeNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) IncrForceNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) IncrIntelligenceNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) IncrCommandNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) IncrSpeedNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) EffectNextRounds() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) FrozenNextRounds() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) DebuffEffect() consts.DebuffEffectType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) DebuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) BuffEffect() consts.BuffEffectType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) BuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) IsGeneralAttack() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) EffectNextRoundDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	if util.GenerateRate(0.5) {
+		for id, general := range s.tacticsParams.FightingGeneralMap {
+			//优先其他副将
+			if !general.IsMaster && id != cast.ToInt64(s.tacticsParams.CurrentGeneral.BaseInfo.Id) {
+				//治疗
+				general.SoldiersNum, resumeSoldiersNum = util.ResumeSoldiersNum(general.SoldiersNum, resumeSoldiersNum)
+				hlog.CtxInfof(s.tacticsParams.Ctx, "恢复[%s]兵力[%d]", general.BaseInfo.Name, resumeSoldiersNum)
+			}
+		}
+	}
 }

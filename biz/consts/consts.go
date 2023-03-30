@@ -7,6 +7,14 @@ const (
 	RUN_ENV_PROD = "prod"
 )
 
+//兵力范围
+const (
+	//每个武将最低带兵数量
+	Min_Soldiers_Num_Per_General = 0
+	//每个武将最大带兵数量
+	Max_Soldiers_Num_Per_General = 10000
+)
+
 /** 对战相关 **/
 
 type BattlePhase int
@@ -247,6 +255,7 @@ const (
 type DamageType int
 
 const (
+	DamageType_None     DamageType = 0 //无伤害
 	DamageType_Weapon   DamageType = 1 //兵刃伤害
 	DamageType_Strategy DamageType = 2 //谋略伤害
 )
@@ -255,6 +264,7 @@ const (
 type DebuffEffectType int
 
 const (
+	DebuffEffectType_Unknow     DebuffEffectType = 0 //中毒
 	DebuffEffectType_Methysis   DebuffEffectType = 1 //中毒
 	DebuffEffectType_Firing     DebuffEffectType = 2 //灼烧
 	DebuffEffectType_Defect     DebuffEffectType = 3 //叛逃（受武力或智力最高一项影响，无视防御）

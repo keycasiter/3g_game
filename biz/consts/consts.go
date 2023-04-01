@@ -15,6 +15,16 @@ const (
 	Max_Soldiers_Num_Per_General = 10000
 )
 
+/** 武将属性 **/
+type AbilityAttr int
+
+const (
+	AbilityAttr_Force        AbilityAttr = 1 //武力
+	AbilityAttr_Intelligence AbilityAttr = 2 //智力
+	AbilityAttr_Command      AbilityAttr = 3 //统率
+	AbilityAttr_Speed        AbilityAttr = 4 //速度
+)
+
 /** 对战相关 **/
 
 type BattlePhase int
@@ -39,15 +49,16 @@ type BattleRound int
 
 const (
 	//对战回合
-	Battle_Round_Unknow  BattleRound = 0 //未知回合
-	Battle_Round_First   BattleRound = 1 //第一回合
-	Battle_Round_Second  BattleRound = 2 //第二回合
-	Battle_Round_Third   BattleRound = 3 //第三回合
-	Battle_Round_Fourth  BattleRound = 4 //第四回合
-	Battle_Round_Fifth   BattleRound = 5 //第五回合
-	Battle_Round_Sixth   BattleRound = 6 //第六回合
-	Battle_Round_Seventh BattleRound = 7 //第七回合
-	Battle_Round_Eighth  BattleRound = 8 //第八回合
+	Battle_Round_Unknow  BattleRound = 0  //未知回合
+	Battle_Round_First   BattleRound = 1  //第一回合
+	Battle_Round_Second  BattleRound = 2  //第二回合
+	Battle_Round_Third   BattleRound = 3  //第三回合
+	Battle_Round_Fourth  BattleRound = 4  //第四回合
+	Battle_Round_Fifth   BattleRound = 5  //第五回合
+	Battle_Round_Sixth   BattleRound = 6  //第六回合
+	Battle_Round_Seventh BattleRound = 7  //第七回合
+	Battle_Round_Eighth  BattleRound = 8  //第八回合
+	Battle_Round_Prepare BattleRound = -1 //准备回合
 )
 
 func (b BattleRound) String() string {
@@ -264,22 +275,41 @@ const (
 type DebuffEffectType int
 
 const (
-	DebuffEffectType_Unknow     DebuffEffectType = 0 //中毒
-	DebuffEffectType_Methysis   DebuffEffectType = 1 //中毒
-	DebuffEffectType_Firing     DebuffEffectType = 2 //灼烧
-	DebuffEffectType_Defect     DebuffEffectType = 3 //叛逃（受武力或智力最高一项影响，无视防御）
-	DebuffEffectType_Sandstorm  DebuffEffectType = 4 //沙暴
-	DebuffEffectType_Chaos      DebuffEffectType = 5 //混乱（攻击和战法无差别选择目标）
-	DebuffEffectType_NoScheme   DebuffEffectType = 6 //计穷（无法发动主动战法）
-	DebuffEffectType_PoorHealth DebuffEffectType = 7 //虚弱（无法造成伤害）
+	DebuffEffectType_Unknow                      DebuffEffectType = 0  //未知
+	DebuffEffectType_Methysis                    DebuffEffectType = 1  //中毒
+	DebuffEffectType_Firing                      DebuffEffectType = 2  //灼烧
+	DebuffEffectType_Defect                      DebuffEffectType = 3  //叛逃（受武力或智力最高一项影响，无视防御）
+	DebuffEffectType_Sandstorm                   DebuffEffectType = 4  //沙暴（每回合持续造成伤害）
+	DebuffEffectType_Chaos                       DebuffEffectType = 5  //混乱（攻击和战法无差别选择目标）
+	DebuffEffectType_NoStrategy                  DebuffEffectType = 6  //计穷（无法发动主动战法）
+	DebuffEffectType_PoorHealth                  DebuffEffectType = 7  //虚弱（无法造成伤害）
+	DebuffEffectType_WaterAttack                 DebuffEffectType = 8  //水攻（每回合持续造成伤害）
+	DebuffEffectType_SufferWeaponDamageImprove   DebuffEffectType = 9  //受到兵刃伤害增加
+	DebuffEffectType_SufferStrategyDamageImprove DebuffEffectType = 10 //受到谋略伤害增加
+	DebuffEffectType_LaunchWeaponDamageDeduce    DebuffEffectType = 11 //造成兵刃伤害减少
+	DebuffEffectType_LaunchStrategyDamageDeduce  DebuffEffectType = 12 //造成谋略伤害减少
+	DebuffEffectType_CanNotGeneralAttack         DebuffEffectType = 13 //无法普通攻击
 )
 
 // 增益效果
 type BuffEffectType int
 
 const (
-	BuffEffectType_Unknow BuffEffectType = 0
-	BuffEffectType_Evade  BuffEffectType = 1 //规避
+	BuffEffectType_Unknow                      BuffEffectType = 0
+	BuffEffectType_Evade                       BuffEffectType = 1  //规避
+	BuffEffectType_EnhanceWeapon               BuffEffectType = 2  //会心
+	BuffEffectType_EnhanceStrategy             BuffEffectType = 3  //奇谋
+	BuffEffectType_GroupAttack                 BuffEffectType = 4  //群攻
+	BuffEffectType_FirstAttack                 BuffEffectType = 5  //先攻
+	BuffEffectType_Rest                        BuffEffectType = 6  //休整
+	BuffEffectType_Defend                      BuffEffectType = 7  //抵御
+	BuffEffectType_ContinuousAttack            BuffEffectType = 8  //连击
+	BuffEffectType_StrikeBack                  BuffEffectType = 9  //反击
+	BuffEffectType_TacticsTriggerImprove       BuffEffectType = 10 //战法发动率提升
+	BuffEffectType_LaunchWeaponDamageImprove   BuffEffectType = 11 //造成兵刃伤害增加
+	BuffEffectType_LaunchStrategyDamageImprove BuffEffectType = 12 //造成谋略伤害增加
+	BuffEffectType_SufferWeaponDamageDeduce    BuffEffectType = 13 //受到兵刃伤害减少
+	BuffEffectType_SufferStrategyDamageDeduce  BuffEffectType = 14 //受到谋略伤害减少
 
 )
 
@@ -308,4 +338,40 @@ const (
 	GeneralNum_One    GeneralNum = 1
 	GeneralNum_Two    GeneralNum = 2
 	GeneralNum_Three  GeneralNum = 3
+)
+
+// 兵书类型
+type WarBookType int
+
+const (
+	WarBookType_Fighting          WarBookType = 1 //作战
+	WarBookType_TruthAndFalsehood WarBookType = 2 //虚实
+	WarBookType_MilitaryForm      WarBookType = 3 //军形
+	WarBookType_NineChanges       WarBookType = 4 //九变
+)
+
+// 兵书枚举
+type WarBookDetailType int
+
+const (
+	//作战
+	WarBookDetailType_TheOddAndTheRightCoexist WarBookDetailType = 1 //奇正相生
+	WarBookDetailType_BraveButNotBrave         WarBookDetailType = 2 //蛮勇非勇
+	WarBookDetailType_NotBraveWillDie          WarBookDetailType = 3 //不勇则死
+	WarBookDetailType_MilitaryAbility          WarBookDetailType = 4 //武略
+	WarBookDetailType_VictoriousBattle         WarBookDetailType = 5 //胜战
+	WarBookDetailType_PersistentSpirit         WarBookDetailType = 6 //执锐
+	WarBookDetailType_MilitaryStrategy         WarBookDetailType = 7 //文韬
+	WarBookDetailType_HideKnife                WarBookDetailType = 8 //藏刀
+	//虚实
+	//WarBookDetailType_BigPlanWithoutPlan WarBookDetailType = 9 //大谋不谋
+	//WarBookDetailType_BigPlanWithoutPlan WarBookDetailType = 10 //以治击乱
+	//WarBookDetailType_BigPlanWithoutPlan WarBookDetailType = 11 //攻其不备
+	//WarBookDetailType_BigPlanWithoutPlan WarBookDetailType = 12 //鬼谋
+	//WarBookDetailType_BigPlanWithoutPlan WarBookDetailType = 12 //妙算
+	//WarBookDetailType_BigPlanWithoutPlan WarBookDetailType = 12 //将威
+	//WarBookDetailType_BigPlanWithoutPlan WarBookDetailType = 12 //神机
+	//WarBookDetailType_BigPlanWithoutPlan WarBookDetailType = 12 //占卜
+	//军形
+	//九变
 )

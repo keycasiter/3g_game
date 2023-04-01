@@ -33,8 +33,8 @@ func TestGenerateHitIdxArr(t *testing.T) {
 	}
 }
 
-func TestGenerateHitIdx(t *testing.T) {
+func TestGenerateHitOneIdx(t *testing.T) {
 	for i := 0; i < 10; i++ {
-		fmt.Printf("%v\n", GenerateHitIdx(3))
+		fmt.Printf("%v\n", GenerateHitOneIdx(3))
 	}
 }

@@ -46,7 +46,7 @@ func GenerateHitIdxArr(hitNum, totalNum int) []int64 {
 }
 
 //生成total数中的索引返回
-func GenerateHitIdx(total int64) int64 {
+func GenerateHitOneIdx(total int) int64 {
 	rand := Random(0, float64(total))
 	return int64(rand)
 }

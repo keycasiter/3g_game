@@ -1,25 +1,28 @@
-package tactics
+package _interface
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-type Tactics interface {
+//战法通用
+type TacticsCommon interface {
 	// Init 初始化
 	Init(tacticsParams model.TacticsParams)
-
-	/** 基础属性 **/
-
 	//战法ID
 	Id() int64
+	//战法名称
+	Name() string
 	//战法来源
 	TacticsSource() consts.TacticsSource
 	//战法类型
 	TacticsType() consts.TacticsType
 	//支持兵种
 	SupportArmTypes() []consts.ArmType
-
-	//战法处理
-	Handle()
+	//发动概率
+	TriggerRate() float64
+	//累计普攻
+	AccumulateGeneralAttack() int
+	//累计战法
+	AccumulateTacticsAttack() int
 }

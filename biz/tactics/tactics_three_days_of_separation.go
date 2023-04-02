@@ -12,6 +12,66 @@ type ThreeDaysOfSeparationTactic struct {
 	tacticsParams model.TacticsParams
 }
 
+func (t ThreeDaysOfSeparationTactic) Name() string {
+	return "士别三日"
+}
+
+func (t ThreeDaysOfSeparationTactic) BuffEffect() map[int64]map[consts.BuffEffectType]map[consts.BattleRound]float64 {
+	currentGeneralId := t.tacticsParams.CurrentGeneral.BaseInfo.Id
+	return map[int64]map[consts.BuffEffectType]map[consts.BattleRound]float64{
+		currentGeneralId: {
+			//第4回合，提高自己68点智力
+			consts.BuffEffectType_IncrIntelligence: {
+				consts.Battle_Round_Fourth: 68,
+			},
+			//战斗前3回合,获得30%概率规避效果
+			consts.BuffEffectType_Evade: {
+				consts.Battle_Round_First:  0.3,
+				consts.Battle_Round_Second: 0.3,
+				consts.Battle_Round_Third:  0.3,
+			},
+		},
+	}
+	return nil
+}
+
+func (t ThreeDaysOfSeparationTactic) DebuffEffect() map[int64]map[consts.DebuffEffectType]map[consts.BattleRound]float64 {
+	//战斗前3回合，无法进行普通攻击
+	currentGeneralId := t.tacticsParams.CurrentGeneral.BaseInfo.Id
+	return map[int64]map[consts.DebuffEffectType]map[consts.BattleRound]float64{
+		currentGeneralId: {
+			consts.DebuffEffectType_CanNotGeneralAttack: {
+				consts.Battle_Round_First:  1.0,
+				consts.Battle_Round_Second: 1.0,
+				consts.Battle_Round_Third:  1.0,
+			},
+		},
+	}
+}
+
+func (t ThreeDaysOfSeparationTactic) Damage() map[int64]map[consts.BattleRound]map[consts.DamageType]float64 {
+	//第四回合，对敌军全体造成谋略伤害(伤害率180%，受智力影响)
+	mm := make(map[int64]map[consts.BattleRound]map[consts.DamageType]float64, 0)
+	//找到敌军全体武将进行伤害输出
+	for _, general := range t.tacticsParams.EnemyGeneralMap {
+		dmg := 1.8 * general.BaseInfo.AbilityAttr.IntelligenceBase
+		mm[general.BaseInfo.Id][consts.Battle_Round_Fourth][consts.DamageType_Strategy] = dmg
+	}
+	return mm
+}
+
+func (t ThreeDaysOfSeparationTactic) Resume() map[int64]map[consts.BattleRound]float64 {
+	return nil
+}
+
+func (t ThreeDaysOfSeparationTactic) GetCurrentRound() consts.BattleRound {
+	return consts.Battle_Round_Unknow
+}
+
+func (t ThreeDaysOfSeparationTactic) LastTriggerRound() consts.BattleRound {
+	return consts.Battle_Round_Unknow
+}
+
 func (t ThreeDaysOfSeparationTactic) Init(tacticsParams model.TacticsParams) {
 	t.tacticsParams = tacticsParams
 }
@@ -28,10 +88,6 @@ func (t ThreeDaysOfSeparationTactic) TacticsType() consts.TacticsType {
 	return consts.TacticsType_Passive
 }
 
-func (t ThreeDaysOfSeparationTactic) TacticsLevel() consts.TacticsLevel {
-	return consts.TacticsLevel_S
-}
-
 func (t ThreeDaysOfSeparationTactic) SupportArmTypes() []consts.ArmType {
 	return []consts.ArmType{
 		consts.ArmType_Cavalry,
@@ -43,129 +99,5 @@ func (t ThreeDaysOfSeparationTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (t ThreeDaysOfSeparationTactic) TriggerRate() float64 {
-	return 100.00
-}
-
-func (t ThreeDaysOfSeparationTactic) DamageType() consts.DamageType {
-	return consts.DamageType_Strategy
-}
-
-func (t ThreeDaysOfSeparationTactic) DamageRate() float64 {
-	//第四回合，对敌军全体造成谋略伤害，伤害率180%
-	if t.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
-		return 1.80
-	}
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) DamageRange() consts.GeneralNum {
-	return consts.GeneralNum_Unknow
-}
-
-func (t ThreeDaysOfSeparationTactic) DamageNum() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) IsDamageLockedMaster() bool {
-	return false
-}
-
-func (t ThreeDaysOfSeparationTactic) IsDamageLockedVice() bool {
-	return false
-}
-
-func (t ThreeDaysOfSeparationTactic) IncrDamageNum() int64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) IncrDamageRate() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) DecrDamageNum() int64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) DecrDamageRate() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) ResumeMilitaryStrengthRate() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) EnhancedStrategyDamageRate() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) EnhancedWeaponDamageRate() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) SuperposeNum() int64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) IncrForceNum() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) IncrIntelligenceNum() float64 {
-	//第四回合开始提高68点智力
-	if t.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
-		return 68
-	}
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) IncrCommandNum() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) IncrSpeedNum() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) EffectNextRounds() int64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) FrozenNextRounds() int64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) DebuffEffect() consts.DebuffEffectType {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) BuffEffect() consts.BuffEffectType {
-	//前3回合，获得30%规避
-	if t.tacticsParams.CurrentRound <= consts.Battle_Round_Third {
-		return consts.BuffEffectType_Evade
-	}
-	return consts.BuffEffectType_Unknow
-}
-
-func (t ThreeDaysOfSeparationTactic) IsGeneralAttack() bool {
-	//前3回合，无法进行普通攻击
-	if t.tacticsParams.CurrentRound <= consts.Battle_Round_Third {
-		return false
-	}
-	return true
-}
-
-func (c ThreeDaysOfSeparationTactic) EffectNextRoundDamageRate() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) DebuffEffectRate() float64 {
-	return 0
-}
-
-func (t ThreeDaysOfSeparationTactic) BuffEffectRate() float64 {
-	//前3回合，获得30%规避
-	if t.tacticsParams.CurrentRound <= consts.Battle_Round_Third {
-		return 0.3
-	}
-	return 0
+	return 1.0
 }

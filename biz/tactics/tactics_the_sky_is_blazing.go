@@ -65,11 +65,11 @@ func (t TheSkyIsBlazingTactic) DamageRange() consts.GeneralNum {
 	return consts.GeneralNum_Three
 }
 
-func (t TheSkyIsBlazingTactic) IsDamageLockedMaster() bool {
+func (t TheSkyIsBlazingTactic) IsLockingMaster() bool {
 	return false
 }
 
-func (t TheSkyIsBlazingTactic) IsDamageLockedVice() bool {
+func (t TheSkyIsBlazingTactic) IsLockingVice() bool {
 	return false
 }
 

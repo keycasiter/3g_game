@@ -59,3 +59,111 @@ func (s SuppressChokesAndPreventRefusalsTactic) Handle() {
 		}
 	}
 }
+
+func (s SuppressChokesAndPreventRefusalsTactic) TriggerRate() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) DamageType() consts.DamageType {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) DamageRate() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) DamageNum() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) DamageRange() consts.GeneralNum {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) IsLockingMaster() bool {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) IsLockingVice() bool {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) IncrDamageNum() int64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) IncrDamageRate() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) DecrDamageNum() int64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) DecrDamageRate() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) ResumeMilitaryStrengthRate() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) EnhancedStrategyDamageRate() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) EnhancedWeaponDamageRate() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) SuperposeNum() int64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) IncrForceNum() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) IncrIntelligenceNum() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) IncrCommandNum() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) IncrSpeedNum() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) EffectNextRounds() int64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) FrozenNextRounds() int64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) DebuffEffect() consts.DebuffEffectType {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) DebuffEffectRate() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) BuffEffect() consts.BuffEffectType {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) BuffEffectRate() float64 {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) IsGeneralAttack() bool {
+	panic("implement me")
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) EffectNextRoundDamageRate() float64 {
+	panic("implement me")
+}

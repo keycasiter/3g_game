@@ -1,5 +1,7 @@
 package tactics
 
+import "github.com/keycasiter/3g_game/biz/tactics/interface"
+
 const (
 	//鹰视狼顾
 	ClearEyedAndMalicious = iota + 1
@@ -51,7 +53,7 @@ var TroopsTacticsMap = make(map[int64]bool, 0)
 var ArmTacticsMap = make(map[int64]bool, 0)
 
 // ** 战法处理器 **
-var TacticsHandlerMap = make(map[int64]Tactics, 0)
+var TacticsHandlerMap = make(map[int64]_interface.Tactics, 0)
 
 func init() {
 	initTacticsHandler()
@@ -59,14 +61,23 @@ func init() {
 }
 
 func initTacticsHandler() {
+	//鹰视狼顾
 	TacticsHandlerMap[ClearEyedAndMalicious] = &ClearEyedAndMaliciousTactic{}
+	//士别三日
 	TacticsHandlerMap[ThreeDaysOfSeparation] = &ThreeDaysOfSeparationTactic{}
+	//熯天炽地
 	TacticsHandlerMap[TheSkyIsBlazing] = &TheSkyIsBlazingTactic{}
+	//乱世奸雄
 	TacticsHandlerMap[TraitorInTroubledTimes] = &TraitorInTroubledTimesTactic{}
+	//魅惑
 	TacticsHandlerMap[Charming] = &CharmingTactic{}
+	//镇扼防拒
 	TacticsHandlerMap[SuppressChokesAndPreventRefusals] = &SuppressChokesAndPreventRefusalsTactic{}
+	//抚揖军民
 	TacticsHandlerMap[AppeaseArmyAndPeople] = &AppeaseArmyAndPeopleTactic{}
+	//刮骨疗毒
 	TacticsHandlerMap[Curettage] = &CurettageTactic{}
+	//锋矢阵
 	TacticsHandlerMap[FrontalVectorArray] = &FrontalVectorArrayTactic{}
 }
 

@@ -243,20 +243,66 @@ func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, g
 
 // 对战准备阶段处理
 func (runCtx *BattleLogicContext) processBattlePreparePhase() {
-	//出战武将加成处理
+	/********************************************************/
+	/*** 以下不受武将速度影响来执行，根据我方先/敌方后的顺序执行即可 ***/
+	/********************************************************/
+
+	//我方武将加成处理
 	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
 		runCtx.handleGeneralAddition(runCtx.ReqParam.FightingTeam, general)
 		runCtx.handleTeamAddition(runCtx.ReqParam.FightingTeam)
 	}
 
-	//对战武将加成处理
+	//敌方武将加成处理
 	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
 		runCtx.handleGeneralAddition(runCtx.ReqParam.EnemyTeam, general)
 		runCtx.handleTeamAddition(runCtx.ReqParam.EnemyTeam)
 	}
 
-	//hlog.CtxInfof(runCtx.Ctx, "fighting team => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.FightingTeam))
-	//hlog.CtxInfof(runCtx.Ctx, "enemy team => %s", util.ToJsonString(runCtx.Ctx, runCtx.ReqParam.EnemyTeam))
+	//兵书处理：一兵书效果
+
+	/****************************/
+	/*** 以下受武将速度影响来执行 ***/
+	/****************************/
+	var allGenerals vo.BattleGeneralsOrderBySpeed
+	allGenerals = append(allGenerals, runCtx.ReqParam.FightingTeam.BattleGenerals...)
+	allGenerals = append(allGenerals, runCtx.ReqParam.EnemyTeam.BattleGenerals...)
+	//按速度排序，从快到慢
+	sort.Sort(allGenerals)
+	for _, currentGeneral := range allGenerals {
+		//每轮战法参数准备
+		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral)
+
+		//打印当前执行队伍、武将、速度
+		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", currentGeneral.BaseInfo.GeneralBattleType, currentGeneral.BaseInfo.Name,
+			currentGeneral.BaseInfo.AbilityAttr.SpeedBase)
+
+		//执行全部战法
+		for _, tactic := range currentGeneral.EquipTactics {
+			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.普攻 > 7.突击
+			//1.被动
+			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
+			}
+			//2.阵法
+			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
+			}
+			//3.兵种
+			if _, ok := tactics.ArmTacticsMap[tactic.Id]; ok {
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
+			}
+			//4.指挥
+			if _, ok := tactics.CommandTacticsMap[tactic.Id]; ok {
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
+			}
+		}
+	}
+
 }
 
 func (runCtx *BattleLogicContext) handleGeneralAddition(team *vo.BattleTeam, general *vo.BattleGeneral) {
@@ -299,59 +345,57 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 
 // 每回合对战处理
 func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts.BattleRound) {
+	//所有武将
 	var allGenerals vo.BattleGeneralsOrderBySpeed
 	allGenerals = append(allGenerals, runCtx.ReqParam.FightingTeam.BattleGenerals...)
 	allGenerals = append(allGenerals, runCtx.ReqParam.EnemyTeam.BattleGenerals...)
 
-	//1.判断执行优先级
-	//1.1 判断先攻战法生效
+	//判断先攻战法生效
 	//判断是否有武将本回合有先攻战法生效
 	//for _, general := range allGenerals {
 	//	for _, tactic := range general.EquipTactics {
 	//	}
 	//}
-	//1.2 判断武将速度
 	//按速度排序，从快到慢
 	sort.Sort(allGenerals)
 	hlog.CtxInfof(runCtx.Ctx, "回合：%d", currentRound)
+
 	for _, currentGeneral := range allGenerals {
 		//每轮战法参数准备
-		tacticsParams := runCtx.buildBattleRoundParams(currentRound, currentGeneral)
+		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral)
 
 		//打印当前执行队伍、武将、速度
 		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", currentGeneral.BaseInfo.GeneralBattleType, currentGeneral.BaseInfo.Name,
 			currentGeneral.BaseInfo.AbilityAttr.SpeedBase)
 
-		//执行当前武将战法
+		//执行战法
 		for _, tactic := range currentGeneral.EquipTactics {
-			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.突击
-			//1.被动
-			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
-				handler := tactics.TacticsHandlerMap[tactic.Id]
-				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
-			}
-			//2.阵法
-			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
-				handler := tactics.TacticsHandlerMap[tactic.Id]
-				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
-			}
-			//3.兵种
-			if _, ok := tactics.ArmTacticsMap[tactic.Id]; ok {
-				handler := tactics.TacticsHandlerMap[tactic.Id]
-				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
-			}
-			//4.指挥
-			if _, ok := tactics.CommandTacticsMap[tactic.Id]; ok {
-				handler := tactics.TacticsHandlerMap[tactic.Id]
-				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
-			}
-			//5.主动
+			//战法发动顺序：1.主动 > 2.普攻 > 3.突击
+			//1.主动
 			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
+				//主动战法拦截
+				if _, ok := currentGeneral.DeBuffEffectMap[consts.DebuffEffectType_NoStrategy]; ok {
+					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]计穷状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
+				}
+				if _, ok := currentGeneral.DeBuffEffectMap[consts.DebuffEffectType_PoorHealth]; ok {
+					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
+				}
+
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
-			//6.突击
-			if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
+			//2.普攻
+			//2.1 普通攻击拦截
+			if _, ok := currentGeneral.DeBuffEffectMap[consts.DebuffEffectType_PoorHealth]; ok {
+				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法普通攻击", currentGeneral.BaseInfo.Name)
+			}
+			if _, ok := currentGeneral.DeBuffEffectMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
+				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]无法普通攻击状态，无法普通攻击", currentGeneral.BaseInfo.Name)
+			}
+			//触发器
+
+			//3.突击
+			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
@@ -364,21 +408,27 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.Bat
 	tacticsParams.CurrentRound = currentRound
 	tacticsParams.CurrentGeneral = currentGeneral
 
-	//武将信息转map
+	//武将信息转map/arr，方便后续直接调用
 	tacticsParams.FightingGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	tacticsParams.EnemyGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
+	tacticsParams.AllGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
+	tacticsParams.AllGeneralArr = make([]*vo.BattleGeneral, 0)
 	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
 		tacticsParams.FightingGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
+		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
+		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
 	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
 		tacticsParams.EnemyGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
+		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
+		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
 	//初始化增益效果/负面效果
 	if tacticsParams.CurrentGeneral.BuffEffectMap == nil {
-		tacticsParams.CurrentGeneral.BuffEffectMap = make(map[consts.BuffEffectType]float64, 0)
+		tacticsParams.CurrentGeneral.BuffEffectMap = make(map[consts.BuffEffectType]map[consts.BattleRound]float64, 0)
 	}
 	if tacticsParams.CurrentGeneral.DeBuffEffectMap == nil {
-		tacticsParams.CurrentGeneral.DeBuffEffectMap = make(map[consts.DebuffEffectType]float64, 0)
+		tacticsParams.CurrentGeneral.DeBuffEffectMap = make(map[consts.DebuffEffectType]map[consts.BattleRound]float64, 0)
 	}
 
 	return tacticsParams

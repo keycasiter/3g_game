@@ -16,88 +16,77 @@ func (c CurettageTactic) Init(tacticsParams model.TacticsParams) {
 }
 
 func (c CurettageTactic) Id() int64 {
-	//TODO implement me
-	panic("implement me")
+	return Curettage
 }
 
 func (c CurettageTactic) TacticsSource() consts.TacticsSource {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsSource_Inherit
 }
 
 func (c CurettageTactic) TacticsType() consts.TacticsType {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsType_Active
 }
 
 func (c CurettageTactic) TacticsLevel() consts.TacticsLevel {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsLevel_S
 }
 
 func (c CurettageTactic) SupportArmTypes() []consts.ArmType {
-	//TODO implement me
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (c CurettageTactic) TriggerRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0.4
 }
 
 func (c CurettageTactic) DamageType() consts.DamageType {
-	//TODO implement me
-	panic("implement me")
+	return consts.DamageType_None
 }
 
 func (c CurettageTactic) DamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (c CurettageTactic) DamageNum() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (c CurettageTactic) DamageRange() consts.GeneralNum {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
-func (c CurettageTactic) IsDamageLockedMaster() bool {
-	//TODO implement me
-	panic("implement me")
+func (c CurettageTactic) IsLockingMaster() bool {
+	return false
 }
 
-func (c CurettageTactic) IsDamageLockedVice() bool {
-	//TODO implement me
-	panic("implement me")
+func (c CurettageTactic) IsLockingVice() bool {
+	return false
 }
 
 func (c CurettageTactic) IncrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (c CurettageTactic) IncrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (c CurettageTactic) DecrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (c CurettageTactic) DecrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (c CurettageTactic) ResumeMilitaryStrengthRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 0
 }
 
 func (c CurettageTactic) EnhancedStrategyDamageRate() float64 {
@@ -173,4 +162,8 @@ func (c CurettageTactic) IsGeneralAttack() bool {
 func (c CurettageTactic) EffectNextRoundDamageRate() float64 {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (c CurettageTactic) LockingGeneral() int64 {
+	return 0
 }

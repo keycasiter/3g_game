@@ -66,12 +66,12 @@ func (t TraitorInTroubledTimesTactic) DamageRange() consts.GeneralNum {
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimesTactic) IsDamageLockedMaster() bool {
+func (t TraitorInTroubledTimesTactic) IsLockingMaster() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (t TraitorInTroubledTimesTactic) IsDamageLockedVice() bool {
+func (t TraitorInTroubledTimesTactic) IsLockingVice() bool {
 	//TODO implement me
 	panic("implement me")
 }

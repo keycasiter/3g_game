@@ -65,12 +65,12 @@ func (f FrontalVectorArrayTactic) DamageRange() consts.GeneralNum {
 	panic("implement me")
 }
 
-func (f FrontalVectorArrayTactic) IsDamageLockedMaster() bool {
+func (f FrontalVectorArrayTactic) IsLockingMaster() bool {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (f FrontalVectorArrayTactic) IsDamageLockedVice() bool {
+func (f FrontalVectorArrayTactic) IsLockingVice() bool {
 	//TODO implement me
 	panic("implement me")
 }

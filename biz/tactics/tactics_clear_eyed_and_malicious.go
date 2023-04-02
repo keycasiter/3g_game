@@ -3,7 +3,6 @@ package tactics
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
-	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // 战法名称：鹰视狼顾
@@ -12,6 +11,34 @@ import (
 // 自身为主将时，获得16%奇谋几率
 type ClearEyedAndMaliciousTactic struct {
 	tacticsParams model.TacticsParams
+}
+
+func (c ClearEyedAndMaliciousTactic) Name() string {
+	return "鹰视狼顾"
+}
+
+func (c ClearEyedAndMaliciousTactic) BuffEffect() map[int64]map[consts.BuffEffectType]map[consts.BattleRound]float64 {
+	return nil
+}
+
+func (c ClearEyedAndMaliciousTactic) DebuffEffect() map[int64]map[consts.DebuffEffectType]map[consts.BattleRound]float64 {
+	panic("implement me")
+}
+
+func (c ClearEyedAndMaliciousTactic) Damage() map[int64]map[consts.BattleRound]map[consts.DamageType]float64 {
+	panic("implement me")
+}
+
+func (c ClearEyedAndMaliciousTactic) Resume() map[int64]map[consts.BattleRound]float64 {
+	panic("implement me")
+}
+
+func (c ClearEyedAndMaliciousTactic) GetCurrentRound() consts.BattleRound {
+	panic("implement me")
+}
+
+func (c ClearEyedAndMaliciousTactic) LastTriggerRound() consts.BattleRound {
+	panic("implement me")
 }
 
 func (c ClearEyedAndMaliciousTactic) Init(tacticsParams model.TacticsParams) {
@@ -30,10 +57,6 @@ func (c ClearEyedAndMaliciousTactic) TacticsType() consts.TacticsType {
 	return consts.TacticsType_Command
 }
 
-func (c ClearEyedAndMaliciousTactic) TacticsLevel() consts.TacticsLevel {
-	return consts.TacticsLevel_S
-}
-
 func (c ClearEyedAndMaliciousTactic) SupportArmTypes() []consts.ArmType {
 	return []consts.ArmType{
 		consts.ArmType_Cavalry,
@@ -45,144 +68,5 @@ func (c ClearEyedAndMaliciousTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (c ClearEyedAndMaliciousTactic) TriggerRate() float64 {
-	return 100.00
-}
-
-func (c ClearEyedAndMaliciousTactic) DamageType() consts.DamageType {
-	return consts.DamageType_Strategy
-}
-
-func (c ClearEyedAndMaliciousTactic) DamageRate() float64 {
-	return 1.54
-}
-
-func (c ClearEyedAndMaliciousTactic) DamageRange() consts.GeneralNum {
-	//第五回合起，80%概率
-	if c.tacticsParams.CurrentRound >= consts.Battle_Round_Fifth && util.GenerateRate(0.8) {
-		// TODO 描述黑盒的，暂时设置为50%概率，伤害1～2个目标
-		if util.GenerateRate(0.5) {
-			return consts.GeneralNum_One
-		}
-		return consts.GeneralNum_Two
-	}
-	return consts.GeneralNum_Unknow
-}
-
-func (c ClearEyedAndMaliciousTactic) IsDamageLockedMaster() bool {
-	return false
-}
-
-func (c ClearEyedAndMaliciousTactic) IsDamageLockedVice() bool {
-	return false
-}
-
-func (c ClearEyedAndMaliciousTactic) DamageNum() float64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) IncrDamageNum() int64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) IncrDamageRate() float64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) DecrDamageNum() int64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) DecrDamageRate() float64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) ResumeMilitaryStrengthRate() float64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) EnhancedStrategyDamageRate() float64 {
-	rate := float64(0)
-	//自身为主将，获得16%奇谋
-	if c.tacticsParams.CurrentGeneral.IsMaster {
-		rate += 0.16
-	}
-	//前4回合生效
-	if c.tacticsParams.CurrentRound >= consts.Battle_Round_First && c.tacticsParams.CurrentRound <= consts.Battle_Round_Fourth {
-		// 触发概率80%
-		if util.GenerateRate(0.8) {
-			//奇谋率7%
-			rate += 0.07
-		}
-		return rate
-	} else {
-		return rate
-	}
-}
-
-func (c ClearEyedAndMaliciousTactic) EnhancedWeaponDamageRate() float64 {
-	//前4回合生效
-	if c.tacticsParams.CurrentRound >= consts.Battle_Round_First && c.tacticsParams.CurrentRound <= consts.Battle_Round_Fourth {
-		// 触发概率80%
-		if util.GenerateRate(0.8) {
-			//会心率7%
-			return 0.07
-		}
-		return 0
-	} else {
-		return 0
-	}
-}
-
-func (c ClearEyedAndMaliciousTactic) SuperposeNum() int64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) IncrForceNum() float64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) IncrIntelligenceNum() float64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) IncrCommandNum() float64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) IncrSpeedNum() float64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) EffectNextRounds() int64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) FrozenNextRounds() int64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) DebuffEffect() consts.DebuffEffectType {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) BuffEffect() consts.BuffEffectType {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) IsGeneralAttack() bool {
-	return true
-}
-
-func (c ClearEyedAndMaliciousTactic) EffectNextRoundDamageRate() float64 {
-	return 0
-}
-
-func (c ClearEyedAndMaliciousTactic) DebuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c ClearEyedAndMaliciousTactic) BuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 1.0
 }

@@ -1,8 +1,11 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // 战法名称：魅惑
@@ -12,166 +15,45 @@ type CharmingTactic struct {
 	tacticsParams model.TacticsParams
 }
 
-func (c CharmingTactic) Init(tacticsParams model.TacticsParams) {
+func (c CharmingTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
 }
 
-func (c CharmingTactic) Id() int64 {
-	//TODO implement me
-	panic("implement me")
+func (c CharmingTactic) Execute() {
+	ctx := c.tacticsParams.Ctx
+	sufferGeneralName := c.tacticsParams.SufferGeneral.BaseInfo.Name
+	if !util.GenerateRate(0.45) {
+		hlog.CtxInfof(ctx, "[%s]执行来自[%s][%s]的「魅惑」效果因几率没有生效",
+			sufferGeneralName,
+			sufferGeneralName,
+			c.Name(),
+		)
+		return
+	}
 }
 
-func (c CharmingTactic) TacticsSource() consts.TacticsSource {
-	//TODO implement me
-	panic("implement me")
+func (c CharmingTactic) Name() string {
+	return "魅惑"
+}
+
+func (c CharmingTactic) Id() int64 {
+	return Charming
 }
 
 func (c CharmingTactic) TacticsType() consts.TacticsType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) TacticsLevel() consts.TacticsLevel {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsType_Passive
 }
 
 func (c CharmingTactic) SupportArmTypes() []consts.ArmType {
-	//TODO implement me
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (c CharmingTactic) TriggerRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) DamageType() consts.DamageType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) DamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) DamageNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) DamageRange() consts.GeneralNum {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) IsDamageLockedMaster() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) IsDamageLockedVice() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) IncrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) IncrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) DecrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) DecrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) ResumeMilitaryStrengthRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) EnhancedStrategyDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) EnhancedWeaponDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) SuperposeNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) IncrForceNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) IncrIntelligenceNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) IncrCommandNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) IncrSpeedNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) EffectNextRounds() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) FrozenNextRounds() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) DebuffEffect() consts.DebuffEffectType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) DebuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) BuffEffect() consts.BuffEffectType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) BuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) IsGeneralAttack() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c CharmingTactic) EffectNextRoundDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return 1.0
 }

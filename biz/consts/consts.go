@@ -289,6 +289,11 @@ const (
 	DebuffEffectType_LaunchWeaponDamageDeduce    DebuffEffectType = 11 //造成兵刃伤害减少
 	DebuffEffectType_LaunchStrategyDamageDeduce  DebuffEffectType = 12 //造成谋略伤害减少
 	DebuffEffectType_CanNotGeneralAttack         DebuffEffectType = 13 //无法普通攻击
+	DebuffEffectType_CancelWeapon                DebuffEffectType = 14 //缴械（无法普通攻击）
+	DebuffEffectType_DecrForce                   DebuffEffectType = 15 //降低武力
+	DebuffEffectType_DecrIntelligence            DebuffEffectType = 16 //降低智力
+	DebuffEffectType_DecrCommand                 DebuffEffectType = 17 //降低统率
+	DebuffEffectType_DecrSpeed                   DebuffEffectType = 18 //降低速度
 )
 
 // 增益效果
@@ -310,8 +315,21 @@ const (
 	BuffEffectType_LaunchStrategyDamageImprove BuffEffectType = 12 //造成谋略伤害增加
 	BuffEffectType_SufferWeaponDamageDeduce    BuffEffectType = 13 //受到兵刃伤害减少
 	BuffEffectType_SufferStrategyDamageDeduce  BuffEffectType = 14 //受到谋略伤害减少
-
+	BuffEffectType_IncrForce                   BuffEffectType = 15 //增加武力
+	BuffEffectType_IncrIntelligence            BuffEffectType = 16 //增加智力
+	BuffEffectType_IncrCommand                 BuffEffectType = 17 //增加统率
+	BuffEffectType_IncrSpeed                   BuffEffectType = 18 //增加速度
 )
+
+func (b BuffEffectType) String() string {
+	switch b {
+	case BuffEffectType_Evade:
+		return "规避"
+	case BuffEffectType_EnhanceWeapon:
+		return "会心"
+	}
+	return ""
+}
 
 // 武将等级
 type GeneralLevel int
@@ -374,4 +392,24 @@ const (
 	//WarBookDetailType_BigPlanWithoutPlan WarBookDetailType = 12 //占卜
 	//军形
 	//九变
+)
+
+// 武将索引
+type GeneralIndex int
+
+const (
+	GeneralIndex_1 GeneralIndex = 1 //我方武将-主将位
+	GeneralIndex_2 GeneralIndex = 2 //我方武将-副将位1
+	GeneralIndex_3 GeneralIndex = 3 //我方武将-副将位2
+	GeneralIndex_4 GeneralIndex = 4 //敌方武将-主将位
+	GeneralIndex_5 GeneralIndex = 5 //敌方武将-副将位1
+	GeneralIndex_6 GeneralIndex = 6 //敌方武将-副将位2
+)
+
+// 对战行为
+type BattleAction int
+
+const (
+	BattleAction_Attack       BattleAction = 1 //普通攻击
+	BattleAction_SufferAttack BattleAction = 2 //被普通攻击
 )

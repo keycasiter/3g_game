@@ -45,6 +45,24 @@ func GenerateHitIdxArr(hitNum, totalNum int) []int64 {
 	return idxArr
 }
 
+func GenerateHitIdxMap(hitNum, totalNum int) map[int64]bool {
+	idxMap := make(map[int64]bool, 0)
+	for {
+		if len(idxMap) == hitNum {
+			break
+		}
+
+		randNum := Random(0, float64(totalNum))
+
+		if _, ok := idxMap[int64(randNum)]; ok {
+			continue
+		} else {
+			idxMap[int64(randNum)] = true
+		}
+	}
+	return idxMap
+}
+
 //生成total数中的索引返回
 func GenerateHitOneIdx(total int) int64 {
 	rand := Random(0, float64(total))

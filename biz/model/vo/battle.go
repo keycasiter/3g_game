@@ -3,6 +3,7 @@ package vo
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/po"
+	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 )
 
 // 对战队伍信息
@@ -32,10 +33,12 @@ type BattleGeneral struct {
 	IsMaster bool
 	//携带兵力
 	SoldiersNum int64
-	//增益效果
-	BuffEffectMap map[consts.BuffEffectType]float64
-	//负面效果
-	DeBuffEffectMap map[consts.DebuffEffectType]float64
+	//增益效果 map<效果,map<回合,概率>>
+	BuffEffectMap map[consts.BuffEffectType]map[consts.BattleRound]float64
+	//负面效果 map<效果,map<回合,概率>>
+	DeBuffEffectMap map[consts.DebuffEffectType]map[consts.BattleRound]float64
+	//触发器 map<触发动作,[]触发战法>
+	TriggerMap map[consts.BattleAction][]_interface.Tactics
 }
 
 // 武将对战加成

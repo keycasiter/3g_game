@@ -1,20 +1,24 @@
 package _interface
 
+import (
+	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/tactics/model"
+)
+
+//战法通用
 type Tactics interface {
-	//通用
-	TacticsCommon
-	//增益
-	TacticsBuff
-	//减益
-	TacticsDebuff
-	//伤害
-	TacticsDamage
-	//恢复
-	TacticsResume
-	//武将锁定
-	TacticsLocking
-	//战法回合
-	TacticsRound
-	//附加
-	TacticsAttach
+	// Init 初始化
+	Init(tacticsParams model.TacticsParams) Tactics
+	//战法ID
+	Id() int64
+	//战法名称
+	Name() string
+	//战法类型
+	TacticsType() consts.TacticsType
+	//支持兵种
+	SupportArmTypes() []consts.ArmType
+	//发动概率
+	TriggerRate() float64
+	//战法执行
+	Execute()
 }

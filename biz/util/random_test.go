@@ -38,3 +38,9 @@ func TestGenerateHitOneIdx(t *testing.T) {
 		fmt.Printf("%v\n", GenerateHitOneIdx(3))
 	}
 }
+
+func TestGenerateHitIdxMap(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		fmt.Printf("%v\n", GenerateHitIdxMap(2, 3))
+	}
+}

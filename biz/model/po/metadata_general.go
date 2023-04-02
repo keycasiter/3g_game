@@ -5,7 +5,7 @@ import "github.com/keycasiter/3g_game/biz/consts"
 // 武将资料
 type MetadataGeneral struct {
 	//mongodb 持久化字段
-	Id          string        `bson:"_id"`
+	Id          int64         `bson:"_id"`
 	Name        string        `bson:"name"`
 	Gender      consts.Gender `bson:"gender"`
 	Group       consts.Group  `bson:"group"`

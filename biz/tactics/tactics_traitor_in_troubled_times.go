@@ -28,26 +28,27 @@ func (t TraitorInTroubledTimesTactic) Name() string {
 }
 
 func (t TraitorInTroubledTimesTactic) Execute() {
-	//TODO implement me
-	panic("implement me")
+	return
 }
 
 func (t TraitorInTroubledTimesTactic) Trigger() {
-	//TODO implement me
-	panic("implement me")
+	return
 }
 
 func (t TraitorInTroubledTimesTactic) Id() int64 {
-	//TODO implement me
-	panic("implement me")
+	return TraitorInTroubledTimes
 }
 
 func (t TraitorInTroubledTimesTactic) TacticsType() consts.TacticsType {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsType_Command
 }
 
 func (t TraitorInTroubledTimesTactic) SupportArmTypes() []consts.ArmType {
-	//TODO implement me
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }

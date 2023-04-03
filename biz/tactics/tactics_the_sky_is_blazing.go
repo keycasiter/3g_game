@@ -2,7 +2,9 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // 战法名称：熯天炽地
@@ -13,24 +15,48 @@ type TheSkyIsBlazingTactic struct {
 	tacticsParams model.TacticsParams
 }
 
-func (t TheSkyIsBlazingTactic) Init(tacticsParams model.TacticsParams) {
+func (t TheSkyIsBlazingTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
+	return t
+}
+
+func (t TheSkyIsBlazingTactic) Prepare() {
+
+}
+
+func (t TheSkyIsBlazingTactic) Name() string {
+	return "熯天炽地"
+}
+
+func (t TheSkyIsBlazingTactic) Execute() {
+	if !util.GenerateRate(0.35) {
+		return
+	}
+	//准备1回合，对敌军全体施放火攻（伤害率102%，受智力影响），并施加灼烧状态，
+	// 每回合持续造成伤害（伤害率72%，受智力影响），持续2回合。
+
+	//找到敌军全体
+	enemyGenerals := util.GetEnemyGeneralArr(t.tacticsParams)
+	currentRound := t.tacticsParams.CurrentRound
+	for _, general := range enemyGenerals {
+		//准备1回合,持续2回合
+		//TODO 受智力影响
+		general.DeBuffEffectTriggerMap[consts.DebuffEffectType_Firing][currentRound+1] = 1.02
+		general.DeBuffEffectTriggerMap[consts.DebuffEffectType_Firing][currentRound+2] = 0.72
+		general.DeBuffEffectTriggerMap[consts.DebuffEffectType_Firing][currentRound+3] = 0.72
+	}
+}
+
+func (t TheSkyIsBlazingTactic) Trigger() {
+	return
 }
 
 func (t TheSkyIsBlazingTactic) Id() int64 {
 	return TheSkyIsBlazing
 }
 
-func (t TheSkyIsBlazingTactic) TacticsSource() consts.TacticsSource {
-	return consts.TacticsSource_Inherit
-}
-
 func (t TheSkyIsBlazingTactic) TacticsType() consts.TacticsType {
 	return consts.TacticsType_Active
-}
-
-func (t TheSkyIsBlazingTactic) TacticsLevel() consts.TacticsLevel {
-	return consts.TacticsLevel_S
 }
 
 func (t TheSkyIsBlazingTactic) SupportArmTypes() []consts.ArmType {
@@ -41,117 +67,4 @@ func (t TheSkyIsBlazingTactic) SupportArmTypes() []consts.ArmType {
 		consts.ArmType_Spearman,
 		consts.ArmType_Apparatus,
 	}
-}
-
-func (t TheSkyIsBlazingTactic) TriggerRate() float64 {
-	// 35%
-	return 0.35
-}
-
-func (t TheSkyIsBlazingTactic) DamageType() consts.DamageType {
-	return consts.DamageType_Strategy
-}
-
-func (t TheSkyIsBlazingTactic) DamageRate() float64 {
-	//伤害率102%
-	return 1.02
-}
-
-func (t TheSkyIsBlazingTactic) DamageNum() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) DamageRange() consts.GeneralNum {
-	return consts.GeneralNum_Three
-}
-
-func (t TheSkyIsBlazingTactic) IsLockingMaster() bool {
-	return false
-}
-
-func (t TheSkyIsBlazingTactic) IsLockingVice() bool {
-	return false
-}
-
-func (t TheSkyIsBlazingTactic) IncrDamageNum() int64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) IncrDamageRate() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) DecrDamageNum() int64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) DecrDamageRate() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) ResumeMilitaryStrengthRate() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) EnhancedStrategyDamageRate() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) EnhancedWeaponDamageRate() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) SuperposeNum() int64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) IncrForceNum() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) IncrIntelligenceNum() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) IncrCommandNum() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) IncrSpeedNum() float64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) EffectNextRounds() int64 {
-	return 2
-}
-
-func (t TheSkyIsBlazingTactic) FrozenNextRounds() int64 {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) DebuffEffect() consts.DebuffEffectType {
-	return consts.DebuffEffectType_Firing
-}
-
-func (t TheSkyIsBlazingTactic) BuffEffect() consts.BuffEffectType {
-	return 0
-}
-
-func (t TheSkyIsBlazingTactic) IsGeneralAttack() bool {
-	return true
-}
-
-func (t TheSkyIsBlazingTactic) EffectNextRoundDamageRate() float64 {
-	//持续伤害率72%
-	return 0.72
-}
-
-func (t TheSkyIsBlazingTactic) DebuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (t TheSkyIsBlazingTactic) BuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
 }

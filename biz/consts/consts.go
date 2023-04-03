@@ -275,6 +275,7 @@ const (
 type DebuffEffectType int
 
 const (
+	//效果施加
 	DebuffEffectType_Unknow                      DebuffEffectType = 0  //未知
 	DebuffEffectType_Methysis                    DebuffEffectType = 1  //中毒
 	DebuffEffectType_Firing                      DebuffEffectType = 2  //灼烧
@@ -294,6 +295,26 @@ const (
 	DebuffEffectType_DecrIntelligence            DebuffEffectType = 16 //降低智力
 	DebuffEffectType_DecrCommand                 DebuffEffectType = 17 //降低统率
 	DebuffEffectType_DecrSpeed                   DebuffEffectType = 18 //降低速度
+
+	//效果消失
+	DebuffEffectType_Methysis_Disappear                    DebuffEffectType = 101 //中毒
+	DebuffEffectType_Firing_Disappear                      DebuffEffectType = 102 //灼烧
+	DebuffEffectType_Defect_Disappear                      DebuffEffectType = 103 //叛逃（受武力或智力最高一项影响，无视防御）
+	DebuffEffectType_Sandstorm_Disappear                   DebuffEffectType = 104 //沙暴（每回合持续造成伤害）
+	DebuffEffectType_Chaos_Disappear                       DebuffEffectType = 105 //混乱（攻击和战法无差别选择目标）
+	DebuffEffectType_NoStrategy_Disappear                  DebuffEffectType = 106 //计穷（无法发动主动战法）
+	DebuffEffectType_PoorHealth_Disappear                  DebuffEffectType = 107 //虚弱（无法造成伤害）
+	DebuffEffectType_WaterAttack_Disappear                 DebuffEffectType = 108 //水攻（每回合持续造成伤害）
+	DebuffEffectType_SufferWeaponDamageImprove_Disappear   DebuffEffectType = 109 //受到兵刃伤害增加
+	DebuffEffectType_SufferStrategyDamageImprove_Disappear DebuffEffectType = 110 //受到谋略伤害增加
+	DebuffEffectType_LaunchWeaponDamageDeduce_Disappear    DebuffEffectType = 111 //造成兵刃伤害减少
+	DebuffEffectType_LaunchStrategyDamageDeduce_Disappear  DebuffEffectType = 112 //造成谋略伤害减少
+	DebuffEffectType_CanNotGeneralAttack_Disappear         DebuffEffectType = 113 //无法普通攻击
+	DebuffEffectType_CancelWeapon_Disappear                DebuffEffectType = 114 //缴械（无法普通攻击）
+	DebuffEffectType_DecrForce_Disappear                   DebuffEffectType = 115 //降低武力
+	DebuffEffectType_DecrIntelligence_Disappear            DebuffEffectType = 116 //降低智力
+	DebuffEffectType_DecrCommand_Disappear                 DebuffEffectType = 117 //降低统率
+	DebuffEffectType_DecrSpeed_Disappear                   DebuffEffectType = 118 //降低速度
 )
 
 func (b DebuffEffectType) String() string {

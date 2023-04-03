@@ -2,7 +2,9 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // 战法名称：锋矢阵
@@ -11,166 +13,54 @@ type FrontalVectorArrayTactic struct {
 	tacticsParams model.TacticsParams
 }
 
-func (f FrontalVectorArrayTactic) Init(tacticsParams model.TacticsParams) {
+func (f FrontalVectorArrayTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
 	f.tacticsParams = tacticsParams
+	return f
+}
+
+func (f FrontalVectorArrayTactic) Prepare() {
+	//使我军主将造成的伤害提升30%，受到的伤害提升20%
+	masterGeneral := util.GetPairMasterGeneral(f.tacticsParams)
+	masterGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += 0.3
+	masterGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] += 0.3
+	masterGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_SufferWeaponDamageImprove] += 0.2
+	masterGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_SufferStrategyDamageImprove] += 0.2
+	//我军副将造成的伤害降低15%，受到的伤害降低25%
+	viceGenerals := util.GetPairViceGenerals(f.tacticsParams)
+	for _, general := range viceGenerals {
+		general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] += 0.15
+		general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] += 0.15
+		general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += 0.25
+		general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += 0.25
+	}
 }
 
 func (f FrontalVectorArrayTactic) Id() int64 {
-	//TODO implement me
-	panic("implement me")
+	return FrontalVectorArray
 }
 
-func (f FrontalVectorArrayTactic) TacticsSource() consts.TacticsSource {
-	//TODO implement me
-	panic("implement me")
+func (f FrontalVectorArrayTactic) Name() string {
+	return "锋矢阵"
 }
 
 func (f FrontalVectorArrayTactic) TacticsType() consts.TacticsType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) TacticsLevel() consts.TacticsLevel {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsType_Passive
 }
 
 func (f FrontalVectorArrayTactic) SupportArmTypes() []consts.ArmType {
-	//TODO implement me
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
-func (f FrontalVectorArrayTactic) TriggerRate() float64 {
-	//TODO implement me
-	panic("implement me")
+func (f FrontalVectorArrayTactic) Execute() {
+	return
 }
 
-func (f FrontalVectorArrayTactic) DamageType() consts.DamageType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) DamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) DamageNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) DamageRange() consts.GeneralNum {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) IsLockingMaster() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) IsLockingVice() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) IncrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) IncrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) DecrDamageNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) DecrDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) ResumeMilitaryStrengthRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) EnhancedStrategyDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) EnhancedWeaponDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) SuperposeNum() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) IncrForceNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) IncrIntelligenceNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) IncrCommandNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) IncrSpeedNum() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) EffectNextRounds() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) FrozenNextRounds() int64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) DebuffEffect() consts.DebuffEffectType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) DebuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) BuffEffect() consts.BuffEffectType {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) BuffEffectRate() float64 {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) IsGeneralAttack() bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (f FrontalVectorArrayTactic) EffectNextRoundDamageRate() float64 {
-	//TODO implement me
-	panic("implement me")
+func (f FrontalVectorArrayTactic) Trigger() {
+	return
 }

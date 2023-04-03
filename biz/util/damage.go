@@ -81,14 +81,14 @@ func FluctuateDamage(dmg int64) int64 {
 	return cast.ToInt64(cast.ToFloat64(dmg) * Random(-0.1, 0.1))
 }
 
-// 总伤害计算
+// 普通攻击伤害计算
 // ref: https://baijiahao.baidu.com/s?id=1748672336647348844
 // @num 我方携带兵力
 // @atk 兵刃伤害：我方武将武力；谋略伤害：我方武将智力
 // @def 兵刃防御：我方武将智力；谋略防御：我方武将智力
 // @inc 伤害增益比例
 // @dec 伤害减益比例
-func TotalDamage(num int64,
+func GeneralAttackDamage(num int64,
 	atk float64,
 	def float64,
 	inc float64,
@@ -114,4 +114,20 @@ func TotalDamage(num int64,
 	}
 	// 总伤害 = (兵力伤害 + 攻击 - 防御) * (1 + 增益比例 - 减益比例)
 	return cast.ToInt64((numDmg + (atk - def)) * (1 + inc - dec))
+}
+
+// 战法伤害计算
+// @soldierNum 被攻击者当前兵力
+// @damage 伤害值
+// @return 剩余兵力
+func TacticsDamage(soldierNum int64, damage int64) int64 {
+	if soldierNum == 0 {
+		return soldierNum
+	}
+
+	if damage >= soldierNum {
+		return soldierNum
+	}
+
+	return soldierNum - damage
 }

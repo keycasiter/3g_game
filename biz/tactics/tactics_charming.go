@@ -17,15 +17,16 @@ type CharmingTactic struct {
 
 func (c CharmingTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
-
-	//效果施加
-	tacticsParams.CurrentGeneral.TacticsTriggerMap[consts.BattleAction_SufferAttack] = &CharmingTactic{}
-
 	return c
 }
 
-func (c CharmingTactic) Execute() {
+func (c CharmingTactic) Prepare() {
+	//效果施加
+	c.tacticsParams.CurrentGeneral.TacticsTriggerMap[consts.BattleAction_SufferAttack] = &CharmingTactic{}
+}
 
+func (c CharmingTactic) Execute() {
+	return
 }
 
 func (c CharmingTactic) Name() string {
@@ -48,10 +49,6 @@ func (c CharmingTactic) SupportArmTypes() []consts.ArmType {
 		consts.ArmType_Spearman,
 		consts.ArmType_Apparatus,
 	}
-}
-
-func (c CharmingTactic) TriggerRate() float64 {
-	return 1.0
 }
 
 func (c CharmingTactic) Trigger() {

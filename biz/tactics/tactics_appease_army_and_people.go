@@ -20,8 +20,11 @@ type AppeaseArmyAndPeopleTactic struct {
 	generalIdxMap map[int64]bool
 }
 
-func (a AppeaseArmyAndPeopleTactic) Execute() {
+func (a AppeaseArmyAndPeopleTactic) Prepare() {
 	ctx := a.tacticsParams.Ctx
+
+	//生成我军群体2人索引
+	a.generalIdxMap = util.GenerateHitIdxMap(2, 3)
 
 	hlog.CtxInfof(ctx, "[%s]发动战法[%s]",
 		a.tacticsParams.CurrentGeneral.BaseInfo.Name,
@@ -71,11 +74,12 @@ func (a AppeaseArmyAndPeopleTactic) Execute() {
 	)
 }
 
+func (a AppeaseArmyAndPeopleTactic) Execute() {
+	return
+}
+
 func (a AppeaseArmyAndPeopleTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
 	a.tacticsParams = tacticsParams
-	//生成我军群体2人索引
-	a.generalIdxMap = util.GenerateHitIdxMap(2, 3)
-
 	return a
 }
 
@@ -99,10 +103,6 @@ func (a AppeaseArmyAndPeopleTactic) SupportArmTypes() []consts.ArmType {
 		consts.ArmType_Spearman,
 		consts.ArmType_Apparatus,
 	}
-}
-
-func (a AppeaseArmyAndPeopleTactic) TriggerRate() float64 {
-	return 1.0
 }
 
 func (a AppeaseArmyAndPeopleTactic) Trigger() {

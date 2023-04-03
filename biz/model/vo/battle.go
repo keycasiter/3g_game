@@ -3,7 +3,6 @@ package vo
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/po"
-	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 )
 
 // 对战队伍信息
@@ -50,7 +49,7 @@ type BattleGeneral struct {
 	BuffEffectAccumulateHolderMap map[consts.BuffEffectType]int
 
 	//战法触发器 map<动作,触发战法>
-	TacticsTriggerMap map[consts.BattleAction]_interface.Tactics
+	TacticsTriggerMap map[consts.BattleAction]bool
 }
 
 // 武将对战加成

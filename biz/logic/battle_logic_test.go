@@ -95,6 +95,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	taiWeiDun := []*po.MetadataGeneral{
 		//司马懿
 		{
+			Id:    int64(consts.SiMaYi),
 			Name:  "司马懿",
 			Group: consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
@@ -121,6 +122,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		},
 		//曹操
 		{
+			Id:    int64(consts.CaoCao),
 			Name:  "曹操",
 			Group: consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
@@ -147,6 +149,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		},
 		//满宠
 		{
+			Id:    int64(consts.ManChong),
 			Name:  "满宠",
 			Group: consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
@@ -172,84 +175,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			},
 		},
 	}
-	//麒麟弓
-	qiLinGong := []*po.MetadataGeneral{
-		{
-			Name:  "姜维",
-			Group: consts.Group_ShuGuo,
-			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        0,
-				ForceRate:        0,
-				IntelligenceBase: 0,
-				IntelligenceRate: 0,
-				CharmBase:        0,
-				CharmRate:        0,
-				CommandBase:      0,
-				CommandRate:      0,
-				PoliticsBase:     0,
-				PoliticsRate:     0,
-				SpeedBase:        80,
-				SpeedRate:        0,
-			},
-			ArmsAttr: &po.ArmsAttr{
-				Cavalry:   consts.ArmsAbility_S,
-				Mauler:    consts.ArmsAbility_S,
-				Archers:   consts.ArmsAbility_S,
-				Spearman:  consts.ArmsAbility_S,
-				Apparatus: consts.ArmsAbility_S,
-			},
-		},
-		{
-			Name:  "庞统",
-			Group: consts.Group_ShuGuo,
-			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        0,
-				ForceRate:        0,
-				IntelligenceBase: 0,
-				IntelligenceRate: 0,
-				CharmBase:        0,
-				CharmRate:        0,
-				CommandBase:      0,
-				CommandRate:      0,
-				PoliticsBase:     0,
-				PoliticsRate:     0,
-				SpeedBase:        44,
-				SpeedRate:        0,
-			},
-			ArmsAttr: &po.ArmsAttr{
-				Cavalry:   consts.ArmsAbility_S,
-				Mauler:    consts.ArmsAbility_S,
-				Archers:   consts.ArmsAbility_S,
-				Spearman:  consts.ArmsAbility_S,
-				Apparatus: consts.ArmsAbility_S,
-			},
-		},
-		{
-			Name:  "诸葛亮",
-			Group: consts.Group_ShuGuo,
-			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        0,
-				ForceRate:        0,
-				IntelligenceBase: 0,
-				IntelligenceRate: 0,
-				CharmBase:        0,
-				CharmRate:        0,
-				CommandBase:      0,
-				CommandRate:      0,
-				PoliticsBase:     0,
-				PoliticsRate:     0,
-				SpeedBase:        20,
-				SpeedRate:        0,
-			},
-			ArmsAttr: &po.ArmsAttr{
-				Cavalry:   consts.ArmsAbility_S,
-				Mauler:    consts.ArmsAbility_S,
-				Archers:   consts.ArmsAbility_S,
-				Spearman:  consts.ArmsAbility_S,
-				Apparatus: consts.ArmsAbility_S,
-			},
-		},
-	}
+
 	//司马懿战法
 	siMaYiTactics := []*po.Tactics{
 		{
@@ -293,21 +219,6 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		{
 			Id:   tactics.Curettage,
 			Name: "刮骨疗毒",
-		},
-	}
-	//麒麟弓战法
-	qiLinGongTactics := []*po.Tactics{
-		{
-			Id:   0,
-			Name: "",
-		},
-		{
-			Id:   0,
-			Name: "",
-		},
-		{
-			Id:   0,
-			Name: "",
 		},
 	}
 	//加点
@@ -363,14 +274,32 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	}
 	//敌人
 	enemyGenerals := make([]*vo.BattleGeneral, 0)
-	for _, general := range qiLinGong {
-		general.GeneralBattleType = consts.GeneralBattleType_Enemy
-		vo := &vo.BattleGeneral{
-			BaseInfo:     general,
-			EquipTactics: qiLinGongTactics,
-			Addition:     addition,
+	for _, general := range taiWeiDun {
+		general.GeneralBattleType = consts.GeneralBattleType_Fighting
+		switch general.Name {
+		case "司马懿":
+			vo := &vo.BattleGeneral{
+				BaseInfo:     general,
+				EquipTactics: siMaYiTactics,
+				Addition:     addition,
+			}
+			enemyGenerals = append(enemyGenerals, vo)
+		case "曹操":
+			vo := &vo.BattleGeneral{
+				BaseInfo:     general,
+				EquipTactics: caoCaoTactics,
+				Addition:     addition,
+			}
+			enemyGenerals = append(enemyGenerals, vo)
+		case "满宠":
+			vo := &vo.BattleGeneral{
+				BaseInfo:     general,
+				EquipTactics: manChongTactics,
+				Addition:     addition,
+			}
+			enemyGenerals = append(enemyGenerals, vo)
 		}
-		enemyGenerals = append(enemyGenerals, vo)
+
 	}
 
 	//############ 模拟对战 ###########

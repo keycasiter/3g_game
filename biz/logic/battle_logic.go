@@ -279,6 +279,11 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 
 		//执行全部战法
 		for _, tactic := range currentGeneral.EquipTactics {
+			hlog.CtxInfof(runCtx.Ctx, "武将[%s],战法[%s]",
+				currentGeneral.BaseInfo.Name,
+				tactic.Name,
+			)
+
 			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.普攻 > 7.突击
 			//1.被动
 			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
@@ -374,10 +379,10 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			//1.主动
 			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
 				//主动战法拦截
-				if _, ok := currentGeneral.DeBuffEffectMap[consts.DebuffEffectType_NoStrategy]; ok {
+				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; ok {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]计穷状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
 				}
-				if _, ok := currentGeneral.DeBuffEffectMap[consts.DebuffEffectType_PoorHealth]; ok {
+				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
 				}
 
@@ -386,10 +391,10 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			}
 			//2.普攻
 			//2.1 普通攻击拦截
-			if _, ok := currentGeneral.DeBuffEffectMap[consts.DebuffEffectType_PoorHealth]; ok {
+			if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
 				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法普通攻击", currentGeneral.BaseInfo.Name)
 			}
-			if _, ok := currentGeneral.DeBuffEffectMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
+			if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
 				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]无法普通攻击状态，无法普通攻击", currentGeneral.BaseInfo.Name)
 			}
 			//触发器
@@ -424,11 +429,23 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.Bat
 		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
 	//初始化增益效果/负面效果
-	if tacticsParams.CurrentGeneral.BuffEffectMap == nil {
-		tacticsParams.CurrentGeneral.BuffEffectMap = make(map[consts.BuffEffectType]map[consts.BattleRound]float64, 0)
+	if tacticsParams.CurrentGeneral.BuffEffectTriggerMap == nil {
+		tacticsParams.CurrentGeneral.BuffEffectTriggerMap = make(map[consts.BuffEffectType]map[consts.BattleRound]float64, 0)
 	}
-	if tacticsParams.CurrentGeneral.DeBuffEffectMap == nil {
-		tacticsParams.CurrentGeneral.DeBuffEffectMap = make(map[consts.DebuffEffectType]map[consts.BattleRound]float64, 0)
+	if tacticsParams.CurrentGeneral.DeBuffEffectTriggerMap == nil {
+		tacticsParams.CurrentGeneral.DeBuffEffectTriggerMap = make(map[consts.DebuffEffectType]map[consts.BattleRound]float64, 0)
+	}
+	if tacticsParams.CurrentGeneral.BuffEffectHolderMap == nil {
+		tacticsParams.CurrentGeneral.BuffEffectHolderMap = make(map[consts.BuffEffectType]float64, 0)
+	}
+	if tacticsParams.CurrentGeneral.DeBuffEffectHolderMap == nil {
+		tacticsParams.CurrentGeneral.DeBuffEffectHolderMap = make(map[consts.DebuffEffectType]float64, 0)
+	}
+	if tacticsParams.CurrentGeneral.BuffEffectAccumulateHolderMap == nil {
+		tacticsParams.CurrentGeneral.BuffEffectAccumulateHolderMap = make(map[consts.BuffEffectType]int, 0)
+	}
+	if tacticsParams.CurrentGeneral.TacticsTriggerMap == nil {
+		tacticsParams.CurrentGeneral.TacticsTriggerMap = make(map[consts.BattleAction]bool, 0)
 	}
 
 	return tacticsParams

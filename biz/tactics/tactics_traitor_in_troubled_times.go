@@ -4,6 +4,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // 战法名称：乱世奸雄
@@ -19,8 +20,21 @@ func (t TraitorInTroubledTimesTactic) Init(tacticsParams model.TacticsParams) _i
 }
 
 func (t TraitorInTroubledTimesTactic) Prepare() {
-	//TODO implement me
-	panic("implement me")
+	currentGeneral := t.tacticsParams.CurrentGeneral
+	//战斗中，使友军群体(2人)造成伤害提高16%（受智力影响）
+	//找到队友
+	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
+	hitIdxes := util.GenerateHitIdxArr(2, 3)
+	for _, hitIdx := range hitIdxes {
+		//造成伤害提高16% TODO （受智力影响）
+		pairGenerals[hitIdx].BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += 0.16
+		pairGenerals[hitIdx].BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] += 0.16
+		//自己受到伤害降低18%  TODO（受智力影响）
+		currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += 0.18
+		currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += 0.18
+	}
+
+	//TODO 如果自己为主将，副将造成伤害时，会为主将恢复其伤害量10%的兵力
 }
 
 func (t TraitorInTroubledTimesTactic) Name() string {

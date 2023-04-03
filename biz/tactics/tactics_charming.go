@@ -22,7 +22,7 @@ func (c CharmingTactic) Init(tacticsParams model.TacticsParams) _interface.Tacti
 
 func (c CharmingTactic) Prepare() {
 	//效果施加
-	c.tacticsParams.CurrentGeneral.TacticsTriggerMap[consts.BattleAction_SufferAttack] = &CharmingTactic{}
+	c.tacticsParams.CurrentGeneral.TacticsTriggerMap[consts.BattleAction_SufferAttack] = true
 }
 
 func (c CharmingTactic) Execute() {

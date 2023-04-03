@@ -8,6 +8,8 @@ import (
 
 type TacticsParams struct {
 	Ctx context.Context
+
+	/******** 回合属性变量 *******/
 	// 当前对战ID
 	CurrentBattleId string
 	// 当前回合
@@ -15,7 +17,11 @@ type TacticsParams struct {
 	// 当前武将
 	CurrentGeneral *vo.BattleGeneral
 	// 当前被攻击武将
-	SufferGeneral *vo.BattleGeneral
+	CurrentSufferGeneral *vo.BattleGeneral
+	// 当前对战执行动作
+	CurrentBattleAction consts.BattleAction
+
+	/******** 对战武将信息变量 *******/
 	// 出战武将信息Map
 	FightingGeneralMap map[int64]*vo.BattleGeneral
 	// 对战武将信息Map

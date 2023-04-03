@@ -33,12 +33,16 @@ type BattleGeneral struct {
 	IsMaster bool
 	//携带兵力
 	SoldiersNum int64
-	//增益效果 map<效果,map<回合,概率>>
-	BuffEffectMap map[consts.BuffEffectType]map[consts.BattleRound]float64
-	//负面效果 map<效果,map<回合,概率>>
-	DeBuffEffectMap map[consts.DebuffEffectType]map[consts.BattleRound]float64
-	//触发器 map<触发动作,[]触发战法>
-	TriggerMap map[consts.BattleAction][]_interface.Tactics
+	//增益效果触发器 map<效果,map<回合,概率>>
+	BuffEffectTriggerMap map[consts.BuffEffectType]map[consts.BattleRound]float64
+	//减益效果触发器 map<效果,map<回合,概率>>
+	DeBuffEffectTriggerMap map[consts.DebuffEffectType]map[consts.BattleRound]float64
+	//战法触发器
+	TacticsTriggerMap map[consts.BattleAction]_interface.Tactics
+	//增益减益变量
+	BuffEffectHolderMap map[consts.BuffEffectType]float64
+	//减益效果变量
+	DeBuffEffectHolderMap map[consts.DebuffEffectType]float64
 }
 
 // 武将对战加成

@@ -34,15 +34,10 @@ func (a AppeaseArmyAndPeopleTactic) Execute() {
 		//按随机索引匹配武将进行生效
 		if _, ok := a.generalIdxMap[cast.ToInt64(idx)]; ok {
 			//造成谋略伤害降低
-			general.DeBuffEffectMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce][consts.Battle_Round_First] = -0.24
-			general.DeBuffEffectMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce][consts.Battle_Round_Second] = -0.24
-			general.DeBuffEffectMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce][consts.Battle_Round_Third] = -0.24
+			general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] += 0.24
 			hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了24.00%", general.BaseInfo.Name)
-
 			//造成兵刃伤害降低
-			general.DeBuffEffectMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce][consts.Battle_Round_First] = -0.24
-			general.DeBuffEffectMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce][consts.Battle_Round_Second] = -0.24
-			general.DeBuffEffectMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce][consts.Battle_Round_Third] = -0.24
+			general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] += 0.24
 			hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害降低了24.00%", general.BaseInfo.Name)
 		}
 	}
@@ -53,15 +48,10 @@ func (a AppeaseArmyAndPeopleTactic) Execute() {
 		//按随机索引匹配武将进行生效
 		if _, ok := a.generalIdxMap[cast.ToInt64(idx)]; ok {
 			//受到谋略伤害降低
-			general.BuffEffectMap[consts.BuffEffectType_SufferStrategyDamageDeduce][consts.Battle_Round_First] = -0.24
-			general.BuffEffectMap[consts.BuffEffectType_SufferStrategyDamageDeduce][consts.Battle_Round_Second] = -0.24
-			general.BuffEffectMap[consts.BuffEffectType_SufferStrategyDamageDeduce][consts.Battle_Round_Third] = -0.24
+			general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += 0.24
 			hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了24.00%", general.BaseInfo.Name)
-
 			//受到兵刃伤害降低
-			general.BuffEffectMap[consts.BuffEffectType_SufferWeaponDamageDeduce][consts.Battle_Round_First] = -0.24
-			general.BuffEffectMap[consts.BuffEffectType_SufferStrategyDamageDeduce][consts.Battle_Round_Second] = -0.24
-			general.BuffEffectMap[consts.BuffEffectType_SufferStrategyDamageDeduce][consts.Battle_Round_Third] = -0.24
+			general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += 0.24
 			hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了24.00%", general.BaseInfo.Name)
 		}
 	}
@@ -72,11 +62,13 @@ func (a AppeaseArmyAndPeopleTactic) Execute() {
 		//按随机索引匹配武将进行生效
 		if _, ok := a.generalIdxMap[cast.ToInt64(idx)]; ok {
 			//恢复兵力
-			general.BuffEffectMap[consts.BuffEffectType_Rest][consts.Battle_Round_Fourth] =
+			general.BuffEffectTriggerMap[consts.BuffEffectType_Rest][consts.Battle_Round_Fourth] =
 				general.BaseInfo.AbilityAttr.IntelligenceBase * 1.26
 		}
 	}
-	hlog.CtxInfof(ctx, "[%s]的「%s[预备]」效果已施加", a.tacticsParams.CurrentGeneral.BaseInfo.Name)
+	hlog.CtxInfof(ctx, "[%s]的「%s[预备]」效果已施加", a.tacticsParams.CurrentGeneral.BaseInfo.Name,
+		a.Name(),
+	)
 }
 
 func (a AppeaseArmyAndPeopleTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
@@ -111,4 +103,8 @@ func (a AppeaseArmyAndPeopleTactic) SupportArmTypes() []consts.ArmType {
 
 func (a AppeaseArmyAndPeopleTactic) TriggerRate() float64 {
 	return 1.0
+}
+
+func (a AppeaseArmyAndPeopleTactic) Trigger() {
+	return
 }

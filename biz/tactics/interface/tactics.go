@@ -5,7 +5,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//战法通用
+// 战法通用
 type Tactics interface {
 	// Init 初始化
 	Init(tacticsParams model.TacticsParams) Tactics
@@ -19,6 +19,8 @@ type Tactics interface {
 	SupportArmTypes() []consts.ArmType
 	//发动概率
 	TriggerRate() float64
-	//战法执行
+	//战法立即执行
 	Execute()
+	//战法触发器
+	Trigger()
 }

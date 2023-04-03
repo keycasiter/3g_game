@@ -17,19 +17,15 @@ type CharmingTactic struct {
 
 func (c CharmingTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
+
+	//效果施加
+	tacticsParams.CurrentGeneral.TacticsTriggerMap[consts.BattleAction_SufferAttack] = &CharmingTactic{}
+
+	return c
 }
 
 func (c CharmingTactic) Execute() {
-	ctx := c.tacticsParams.Ctx
-	sufferGeneralName := c.tacticsParams.SufferGeneral.BaseInfo.Name
-	if !util.GenerateRate(0.45) {
-		hlog.CtxInfof(ctx, "[%s]执行来自[%s][%s]的「魅惑」效果因几率没有生效",
-			sufferGeneralName,
-			sufferGeneralName,
-			c.Name(),
-		)
-		return
-	}
+
 }
 
 func (c CharmingTactic) Name() string {
@@ -56,4 +52,29 @@ func (c CharmingTactic) SupportArmTypes() []consts.ArmType {
 
 func (c CharmingTactic) TriggerRate() float64 {
 	return 1.0
+}
+
+func (c CharmingTactic) Trigger() {
+	if !util.GenerateRate(0.45) {
+		hlog.CtxInfof(c.tacticsParams.Ctx, "[%s]战法[%s]因几率没有生效",
+			c.tacticsParams.CurrentSufferGeneral.BaseInfo.Name,
+			c.Name(),
+		)
+		return
+	}
+	hitIdx := util.GenerateHitOneIdx(3)
+	debuffs := []consts.DebuffEffectType{
+		consts.DebuffEffectType_Chaos,
+		consts.DebuffEffectType_NoStrategy,
+		consts.DebuffEffectType_PoorHealth,
+	}
+	//施加负面效果
+	c.tacticsParams.CurrentGeneral.DeBuffEffectHolderMap[debuffs[hitIdx]] = 1.0
+	hlog.CtxInfof(c.tacticsParams.Ctx, "[%s]执行来自【魅惑】的「魅惑」效果",
+		c.tacticsParams.CurrentSufferGeneral.BaseInfo.Name)
+	hlog.CtxInfof(c.tacticsParams.Ctx, "[%s]的「%s」效果已施加",
+		c.tacticsParams.CurrentGeneral.BaseInfo.Name,
+		debuffs[hitIdx],
+	)
+	return
 }

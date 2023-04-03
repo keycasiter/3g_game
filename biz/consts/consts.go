@@ -7,7 +7,7 @@ const (
 	RUN_ENV_PROD = "prod"
 )
 
-//兵力范围
+// 兵力范围
 const (
 	//每个武将最低带兵数量
 	Min_Soldiers_Num_Per_General = 0
@@ -296,10 +296,27 @@ const (
 	DebuffEffectType_DecrSpeed                   DebuffEffectType = 18 //降低速度
 )
 
+func (b DebuffEffectType) String() string {
+	switch b {
+	case DebuffEffectType_Methysis:
+		return "中毒"
+	case DebuffEffectType_Firing:
+		return "灼烧"
+	case DebuffEffectType_PoorHealth:
+		return "虚弱"
+	case DebuffEffectType_NoStrategy:
+		return "计穷"
+	case DebuffEffectType_Chaos:
+		return "混乱"
+	}
+	return ""
+}
+
 // 增益效果
 type BuffEffectType int
 
 const (
+	//效果施加
 	BuffEffectType_Unknow                      BuffEffectType = 0
 	BuffEffectType_Evade                       BuffEffectType = 1  //规避
 	BuffEffectType_EnhanceWeapon               BuffEffectType = 2  //会心
@@ -319,6 +336,26 @@ const (
 	BuffEffectType_IncrIntelligence            BuffEffectType = 16 //增加智力
 	BuffEffectType_IncrCommand                 BuffEffectType = 17 //增加统率
 	BuffEffectType_IncrSpeed                   BuffEffectType = 18 //增加速度
+
+	//效果消失
+	BuffEffectType_Evade_Disappear                       BuffEffectType = 101 //规避
+	BuffEffectType_EnhanceWeapon_Disappear               BuffEffectType = 102 //会心
+	BuffEffectType_EnhanceStrategy_Disappear             BuffEffectType = 103 //奇谋
+	BuffEffectType_GroupAttack_Disappear                 BuffEffectType = 104 //群攻
+	BuffEffectType_FirstAttack_Disappear                 BuffEffectType = 105 //先攻
+	BuffEffectType_Rest_Disappear                        BuffEffectType = 106 //休整
+	BuffEffectType_Defend_Disappear                      BuffEffectType = 107 //抵御
+	BuffEffectType_ContinuousAttack_Disappear            BuffEffectType = 108 //连击
+	BuffEffectType_StrikeBack_Disappear                  BuffEffectType = 109 //反击
+	BuffEffectType_TacticsTriggerImprove_Disappear       BuffEffectType = 110 //战法发动率提升
+	BuffEffectType_LaunchWeaponDamageImprove_Disappear   BuffEffectType = 111 //造成兵刃伤害增加
+	BuffEffectType_LaunchStrategyDamageImprove_Disappear BuffEffectType = 112 //造成谋略伤害增加
+	BuffEffectType_SufferWeaponDamageDeduce_Disappear    BuffEffectType = 113 //受到兵刃伤害减少
+	BuffEffectType_SufferStrategyDamageDeduce_Disappear  BuffEffectType = 114 //受到谋略伤害减少
+	BuffEffectType_IncrForce_Disappear                   BuffEffectType = 115 //增加武力
+	BuffEffectType_IncrIntelligence_Disappear            BuffEffectType = 116 //增加智力
+	BuffEffectType_IncrCommand_Disappear                 BuffEffectType = 117 //增加统率
+	BuffEffectType_IncrSpeed_Disappear                   BuffEffectType = 118 //增加速度
 )
 
 func (b BuffEffectType) String() string {

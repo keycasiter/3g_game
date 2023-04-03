@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
@@ -13,44 +14,22 @@ type ClearEyedAndMaliciousTactic struct {
 	tacticsParams model.TacticsParams
 }
 
+func (c ClearEyedAndMaliciousTactic) Execute() {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (c ClearEyedAndMaliciousTactic) Name() string {
 	return "鹰视狼顾"
 }
 
-func (c ClearEyedAndMaliciousTactic) BuffEffect() map[int64]map[consts.BuffEffectType]map[consts.BattleRound]float64 {
-	return nil
-}
-
-func (c ClearEyedAndMaliciousTactic) DebuffEffect() map[int64]map[consts.DebuffEffectType]map[consts.BattleRound]float64 {
-	panic("implement me")
-}
-
-func (c ClearEyedAndMaliciousTactic) Damage() map[int64]map[consts.BattleRound]map[consts.DamageType]float64 {
-	panic("implement me")
-}
-
-func (c ClearEyedAndMaliciousTactic) Resume() map[int64]map[consts.BattleRound]float64 {
-	panic("implement me")
-}
-
-func (c ClearEyedAndMaliciousTactic) GetCurrentRound() consts.BattleRound {
-	panic("implement me")
-}
-
-func (c ClearEyedAndMaliciousTactic) LastTriggerRound() consts.BattleRound {
-	panic("implement me")
-}
-
-func (c ClearEyedAndMaliciousTactic) Init(tacticsParams model.TacticsParams) {
+func (c ClearEyedAndMaliciousTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
+	return c
 }
 
 func (c ClearEyedAndMaliciousTactic) Id() int64 {
 	return ClearEyedAndMalicious
-}
-
-func (c ClearEyedAndMaliciousTactic) TacticsSource() consts.TacticsSource {
-	return consts.TacticsSource_SelfContained
 }
 
 func (c ClearEyedAndMaliciousTactic) TacticsType() consts.TacticsType {

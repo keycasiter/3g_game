@@ -1,6 +1,10 @@
 package util
 
 import (
+	"context"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/spf13/cast"
 )
 
@@ -116,18 +120,64 @@ func GeneralAttackDamage(num int64,
 	return cast.ToInt64((numDmg + (atk - def)) * (1 + inc - dec))
 }
 
-// 战法伤害计算
+// 普通攻击伤害结算
+//@attack 攻击武将
+//@suffer 被攻击武将
+func AttackDamage(ctx context.Context, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral) {
+	soldierNum := attackGeneral.SoldierNum
+	defSoldierNum := sufferGeneral.SoldierNum
+
+	//兵力伤害计算
+	numDmg := float64(0)
+	//0～3000兵力，伤害为兵力的10%
+	if soldierNum > 0 && soldierNum <= 3000 {
+		numDmg = cast.ToFloat64(soldierNum) * 0.1
+	}
+	//3000～6000兵力，1000兵力=50伤害
+	if soldierNum > 3000 && soldierNum <= 6000 {
+		numDmg = 3000 * 0.1
+		numDmg += cast.ToFloat64((soldierNum - 3000) / 1000 * 50)
+	}
+	//6000～Max兵力，1000兵力=30伤害
+	if soldierNum > 6000 {
+		numDmg = 3000 * 0.1
+		numDmg += cast.ToFloat64((soldierNum / 1000) * 50)
+		numDmg += cast.ToFloat64((soldierNum - 3000) / 1000 * 50)
+		numDmg += cast.ToFloat64((soldierNum - 6000) / 1000 * 30)
+	}
+	atk := attackGeneral.BaseInfo.AbilityAttr.ForceBase
+	def := sufferGeneral.BaseInfo.AbilityAttr.CommandBase
+	inc := attackGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove]
+	dec := attackGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce]
+
+	// 总伤害 = (兵力伤害 + 攻击 - 防御) * (1 + 增益比例 - 减益比例)
+	attackDmg := cast.ToInt64((numDmg + (atk - def)) * (1 + inc - dec))
+	hlog.CtxInfof(ctx, "numDmg:%f , atk:%f , def:%f , inc:%f , dec:%f", numDmg, atk, def, inc, dec)
+
+	hlog.CtxInfof(ctx, "[%s]对[%s]发动普通攻击",
+		attackGeneral.BaseInfo.Name,
+		sufferGeneral.BaseInfo.Name,
+	)
+
+	//伤害计算
+	finalDmg, remainSoldierNum := CalculateDamage(defSoldierNum, attackDmg)
+	sufferGeneral.SoldierNum = remainSoldierNum
+	hlog.CtxInfof(ctx, "[%s]损失了兵力%d(%d↘%d)", sufferGeneral.BaseInfo.Name, finalDmg, defSoldierNum, remainSoldierNum)
+}
+
+// 伤害计算
 // @soldierNum 被攻击者当前兵力
 // @damage 伤害值
-// @return 剩余兵力
-func TacticsDamage(soldierNum int64, damage int64) int64 {
+// @return 实际伤害/剩余兵力
+func CalculateDamage(soldierNum int64, damage int64) (int64, int64) {
+	hlog.CtxInfof(context.Background(), "soldierNum:%d damage:%d", soldierNum, damage)
 	if soldierNum == 0 {
-		return soldierNum
+		return 0, 0
 	}
 
 	if damage >= soldierNum {
-		return soldierNum
+		return soldierNum, soldierNum
 	}
 
-	return soldierNum - damage
+	return damage, soldierNum - damage
 }

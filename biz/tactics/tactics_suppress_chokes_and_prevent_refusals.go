@@ -38,8 +38,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) Name() string {
-	//TODO implement me
-	panic("implement me")
+	return "镇扼防拒"
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) Execute() {
@@ -47,15 +46,11 @@ func (s SuppressChokesAndPreventRefusalsTactic) Execute() {
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) Trigger() {
-
+	return
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) Id() int64 {
 	return SuppressChokesAndPreventRefusals
-}
-
-func (s SuppressChokesAndPreventRefusalsTactic) TacticsSource() consts.TacticsSource {
-	return consts.TacticsSource_SelfContained
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) TacticsType() consts.TacticsType {

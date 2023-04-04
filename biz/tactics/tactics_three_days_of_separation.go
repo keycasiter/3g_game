@@ -51,7 +51,7 @@ func (t ThreeDaysOfSeparationTactic) Execute() {
 		for _, general := range enemyGenerals {
 			// TODO 受智力影响
 			damage := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8
-			general.SoldierNum = util.TacticsDamage(general.SoldierNum, cast.ToInt64(damage))
+			_, general.SoldierNum = util.CalculateDamage(general.SoldierNum, cast.ToInt64(damage))
 		}
 	}
 }

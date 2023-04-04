@@ -346,6 +346,7 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 		currentRound++
 		runCtx.processBattleFightingRound(currentRound)
 	}
+	hlog.CtxInfof(runCtx.Ctx, "战斗结束")
 }
 
 // 每回合对战处理
@@ -374,6 +375,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			currentGeneral.BaseInfo.AbilityAttr.SpeedBase)
 
 		//执行战法
+		attackFlag := false
 		for _, tactic := range currentGeneral.EquipTactics {
 			//战法发动顺序：1.主动 > 2.普攻 > 3.突击
 			//1.主动
@@ -397,15 +399,49 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
 				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]无法普通攻击状态，无法普通攻击", currentGeneral.BaseInfo.Name)
 			}
-			//触发器
+			//2.2 普通攻击
+			if !attackFlag {
+				//找到普攻目标
+				hitIdx := util.GenerateHitOneIdx(3)
+				enemyGeneralArr := util.GetEnemyGeneralArr(tacticsParams)
+				sufferGeneral := enemyGeneralArr[hitIdx]
+				//发起攻击
+				util.AttackDamage(runCtx.Ctx, currentGeneral, sufferGeneral)
+
+				attackFlag = true
+			}
 
 			//3.突击
 			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
+
+			//是否满足回合结束条件
+			isFinish := runCtx.judgeFinishBattleRoundCondition(tacticsParams)
+			if isFinish {
+				break
+			}
 		}
 	}
+}
+
+func (runCtx BattleLogicContext) judgeFinishBattleRoundCondition(tacticsParams model.TacticsParams) bool {
+	//判断是否有队伍的主将兵力为0
+	for _, general := range tacticsParams.FightingGeneralMap {
+		if general.SoldierNum == 0 {
+			hlog.CtxInfof(runCtx.Ctx, "[%s]武将兵力为0，战斗结束", general.BaseInfo.Name)
+			return true
+		}
+	}
+	for _, general := range tacticsParams.EnemyGeneralMap {
+		if general.SoldierNum == 0 {
+			hlog.CtxInfof(runCtx.Ctx, "[%s]武将兵力为0，战斗结束", general.BaseInfo.Name)
+			return true
+		}
+	}
+
+	return false
 }
 
 func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.BattleRound, currentGeneral *vo.BattleGeneral, allGenerals []*vo.BattleGeneral) model.TacticsParams {

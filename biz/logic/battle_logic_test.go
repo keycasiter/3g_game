@@ -100,17 +100,17 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name:     "司马懿",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        0,
+				ForceBase:        83.16,
 				ForceRate:        0,
-				IntelligenceBase: 0,
+				IntelligenceBase: 359.52,
 				IntelligenceRate: 0,
 				CharmBase:        0,
 				CharmRate:        0,
-				CommandBase:      0,
+				CommandBase:      204.77,
 				CommandRate:      0,
 				PoliticsBase:     0,
 				PoliticsRate:     0,
-				SpeedBase:        50,
+				SpeedBase:        78.36,
 				SpeedRate:        0,
 			},
 			ArmsAttr: &po.ArmsAttr{
@@ -128,17 +128,17 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name:     "曹操",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        0,
+				ForceBase:        135.84,
 				ForceRate:        0,
-				IntelligenceBase: 0,
+				IntelligenceBase: 299.48,
 				IntelligenceRate: 0,
 				CharmBase:        0,
 				CharmRate:        0,
-				CommandBase:      0,
+				CommandBase:      235.70,
 				CommandRate:      0,
 				PoliticsBase:     0,
 				PoliticsRate:     0,
-				SpeedBase:        40,
+				SpeedBase:        130.83,
 				SpeedRate:        0,
 			},
 			ArmsAttr: &po.ArmsAttr{
@@ -156,17 +156,17 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name:     "满宠",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        0,
+				ForceBase:        112.66,
 				ForceRate:        0,
-				IntelligenceBase: 0,
+				IntelligenceBase: 291.52,
 				IntelligenceRate: 0,
 				CharmBase:        0,
 				CharmRate:        0,
-				CommandBase:      0,
+				CommandBase:      191.40,
 				CommandRate:      0,
 				PoliticsBase:     0,
 				PoliticsRate:     0,
-				SpeedBase:        60,
+				SpeedBase:        115.36,
 				SpeedRate:        0,
 			},
 			ArmsAttr: &po.ArmsAttr{
@@ -188,17 +188,17 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name:     "司马懿",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        0,
+				ForceBase:        83.16,
 				ForceRate:        0,
-				IntelligenceBase: 0,
+				IntelligenceBase: 359.52,
 				IntelligenceRate: 0,
 				CharmBase:        0,
 				CharmRate:        0,
-				CommandBase:      0,
+				CommandBase:      204.77,
 				CommandRate:      0,
 				PoliticsBase:     0,
 				PoliticsRate:     0,
-				SpeedBase:        50,
+				SpeedBase:        78.36,
 				SpeedRate:        0,
 			},
 			ArmsAttr: &po.ArmsAttr{
@@ -216,17 +216,17 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name:     "曹操",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        0,
+				ForceBase:        135.84,
 				ForceRate:        0,
-				IntelligenceBase: 0,
+				IntelligenceBase: 299.48,
 				IntelligenceRate: 0,
 				CharmBase:        0,
 				CharmRate:        0,
-				CommandBase:      0,
+				CommandBase:      235.70,
 				CommandRate:      0,
 				PoliticsBase:     0,
 				PoliticsRate:     0,
-				SpeedBase:        40,
+				SpeedBase:        130.83,
 				SpeedRate:        0,
 			},
 			ArmsAttr: &po.ArmsAttr{
@@ -244,17 +244,17 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name:     "满宠",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        0,
+				ForceBase:        112.66,
 				ForceRate:        0,
-				IntelligenceBase: 0,
+				IntelligenceBase: 291.52,
 				IntelligenceRate: 0,
 				CharmBase:        0,
 				CharmRate:        0,
-				CommandBase:      0,
+				CommandBase:      191.40,
 				CommandRate:      0,
 				PoliticsBase:     0,
 				PoliticsRate:     0,
-				SpeedBase:        60,
+				SpeedBase:        115.36,
 				SpeedRate:        0,
 			},
 			ArmsAttr: &po.ArmsAttr{
@@ -345,6 +345,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: siMaYiTactics,
 				Addition:     addition,
+				SoldierNum:   30000,
 			}
 			fightGenerals = append(fightGenerals, vo)
 		case "曹操":
@@ -352,6 +353,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: caoCaoTactics,
 				Addition:     addition,
+				SoldierNum:   30000,
 			}
 			fightGenerals = append(fightGenerals, vo)
 		case "满宠":
@@ -359,6 +361,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: manChongTactics,
 				Addition:     addition,
+				SoldierNum:   30000,
 			}
 			fightGenerals = append(fightGenerals, vo)
 		}
@@ -375,6 +378,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: siMaYiTactics,
 				Addition:     addition,
+				SoldierNum:   30000,
 			}
 			enemyGenerals = append(enemyGenerals, vo)
 		case "曹操":
@@ -382,6 +386,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: caoCaoTactics,
 				Addition:     addition,
+				SoldierNum:   30000,
 			}
 			enemyGenerals = append(enemyGenerals, vo)
 		case "满宠":
@@ -389,6 +394,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: manChongTactics,
 				Addition:     addition,
+				SoldierNum:   30000,
 			}
 			enemyGenerals = append(enemyGenerals, vo)
 		}

@@ -18,6 +18,8 @@ type MetadataGeneral struct {
 
 	//业务字段
 	GeneralBattleType consts.GeneralBattleType
+	//唯一对战ID
+	UniqueId int64
 }
 
 // 能力属性

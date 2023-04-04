@@ -367,7 +367,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	//敌人
 	enemyGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range taiWeiDun2 {
-		general.GeneralBattleType = consts.GeneralBattleType_Fighting
+		general.GeneralBattleType = consts.GeneralBattleType_Enemy
 		switch general.Name {
 		case "司马懿":
 			vo := &vo.BattleGeneral{

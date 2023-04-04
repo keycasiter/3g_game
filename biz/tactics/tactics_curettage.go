@@ -41,9 +41,9 @@ func (c CurettageTactic) Execute() {
 	}
 
 	//清除负面状态
-	maxLossSoldierNumGeneral.DeBuffEffectHolderMap = make(map[consts.DebuffEffectType]float64)
+	maxLossSoldierNumGeneral.DeBuffEffectHolderMap = map[consts.DebuffEffectType]float64{}
 	//清除负面触发器
-	maxLossSoldierNumGeneral.DeBuffEffectTriggerMap = make(map[consts.DebuffEffectType]map[consts.BattleRound]float64)
+	maxLossSoldierNumGeneral.DeBuffEffectTriggerMap = map[consts.DebuffEffectType]map[consts.BattleRound]float64{}
 
 	//为其恢复兵力（治疗率256%，受智力影响）
 	maxLossSoldierNumGeneral.SoldierNum += cast.ToInt64(2.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)

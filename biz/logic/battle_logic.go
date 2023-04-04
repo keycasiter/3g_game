@@ -271,7 +271,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 	sort.Sort(allGenerals)
 	for _, currentGeneral := range allGenerals {
 		//每轮战法参数准备
-		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral)
+		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral, allGenerals)
 
 		//打印当前执行队伍、武将、速度
 		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", currentGeneral.BaseInfo.GeneralBattleType, currentGeneral.BaseInfo.Name,
@@ -367,7 +367,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 	for _, currentGeneral := range allGenerals {
 		//每轮战法参数准备
-		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral)
+		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral, allGenerals)
 
 		//打印当前执行队伍、武将、速度
 		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", currentGeneral.BaseInfo.GeneralBattleType, currentGeneral.BaseInfo.Name,
@@ -408,7 +408,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	}
 }
 
-func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.BattleRound, currentGeneral *vo.BattleGeneral) model.TacticsParams {
+func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.BattleRound, currentGeneral *vo.BattleGeneral, allGenerals []*vo.BattleGeneral) model.TacticsParams {
 	tacticsParams := model.TacticsParams{}
 	tacticsParams.CurrentRound = currentRound
 	tacticsParams.CurrentGeneral = currentGeneral
@@ -419,33 +419,36 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.Bat
 	tacticsParams.AllGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	tacticsParams.AllGeneralArr = make([]*vo.BattleGeneral, 0)
 	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
-		tacticsParams.FightingGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
-		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
+		tacticsParams.FightingGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
+		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
 		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
 	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
-		tacticsParams.EnemyGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
-		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.Id)] = general
+		tacticsParams.EnemyGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
+		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
 		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
+
 	//初始化增益效果/负面效果
-	if tacticsParams.CurrentGeneral.BuffEffectTriggerMap == nil {
-		tacticsParams.CurrentGeneral.BuffEffectTriggerMap = make(map[consts.BuffEffectType]map[consts.BattleRound]float64, 0)
-	}
-	if tacticsParams.CurrentGeneral.DeBuffEffectTriggerMap == nil {
-		tacticsParams.CurrentGeneral.DeBuffEffectTriggerMap = make(map[consts.DebuffEffectType]map[consts.BattleRound]float64, 0)
-	}
-	if tacticsParams.CurrentGeneral.BuffEffectHolderMap == nil {
-		tacticsParams.CurrentGeneral.BuffEffectHolderMap = make(map[consts.BuffEffectType]float64, 0)
-	}
-	if tacticsParams.CurrentGeneral.DeBuffEffectHolderMap == nil {
-		tacticsParams.CurrentGeneral.DeBuffEffectHolderMap = make(map[consts.DebuffEffectType]float64, 0)
-	}
-	if tacticsParams.CurrentGeneral.BuffEffectAccumulateHolderMap == nil {
-		tacticsParams.CurrentGeneral.BuffEffectAccumulateHolderMap = make(map[consts.BuffEffectType]int, 0)
-	}
-	if tacticsParams.CurrentGeneral.TacticsTriggerMap == nil {
-		tacticsParams.CurrentGeneral.TacticsTriggerMap = make(map[consts.BattleAction]bool, 0)
+	for _, general := range allGenerals {
+		if general.BuffEffectTriggerMap == nil {
+			general.BuffEffectTriggerMap = map[consts.BuffEffectType]map[consts.BattleRound]float64{}
+		}
+		if general.DeBuffEffectTriggerMap == nil {
+			general.DeBuffEffectTriggerMap = map[consts.DebuffEffectType]map[consts.BattleRound]float64{}
+		}
+		if general.BuffEffectHolderMap == nil {
+			general.BuffEffectHolderMap = map[consts.BuffEffectType]float64{}
+		}
+		if general.DeBuffEffectHolderMap == nil {
+			general.DeBuffEffectHolderMap = map[consts.DebuffEffectType]float64{}
+		}
+		if general.BuffEffectAccumulateHolderMap == nil {
+			general.BuffEffectAccumulateHolderMap = map[consts.BuffEffectType]int{}
+		}
+		if general.TacticsTriggerMap == nil {
+			general.TacticsTriggerMap = map[consts.BattleAction]bool{}
+		}
 	}
 
 	return tacticsParams

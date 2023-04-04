@@ -95,9 +95,10 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	taiWeiDun := []*po.MetadataGeneral{
 		//司马懿
 		{
-			Id:    int64(consts.SiMaYi),
-			Name:  "司马懿",
-			Group: consts.Group_WeiGuo,
+			Id:       int64(consts.SiMaYi),
+			UniqueId: 10 + int64(consts.SiMaYi),
+			Name:     "司马懿",
+			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
 				ForceBase:        0,
 				ForceRate:        0,
@@ -122,9 +123,10 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		},
 		//曹操
 		{
-			Id:    int64(consts.CaoCao),
-			Name:  "曹操",
-			Group: consts.Group_WeiGuo,
+			Id:       int64(consts.CaoCao),
+			UniqueId: 10 + int64(consts.CaoCao),
+			Name:     "曹操",
+			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
 				ForceBase:        0,
 				ForceRate:        0,
@@ -149,9 +151,98 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		},
 		//满宠
 		{
-			Id:    int64(consts.ManChong),
-			Name:  "满宠",
-			Group: consts.Group_WeiGuo,
+			Id:       int64(consts.ManChong),
+			UniqueId: 10 + int64(consts.ManChong),
+			Name:     "满宠",
+			Group:    consts.Group_WeiGuo,
+			AbilityAttr: &po.AbilityAttr{
+				ForceBase:        0,
+				ForceRate:        0,
+				IntelligenceBase: 0,
+				IntelligenceRate: 0,
+				CharmBase:        0,
+				CharmRate:        0,
+				CommandBase:      0,
+				CommandRate:      0,
+				PoliticsBase:     0,
+				PoliticsRate:     0,
+				SpeedBase:        60,
+				SpeedRate:        0,
+			},
+			ArmsAttr: &po.ArmsAttr{
+				Cavalry:   consts.ArmsAbility_S,
+				Mauler:    consts.ArmsAbility_S,
+				Archers:   consts.ArmsAbility_S,
+				Spearman:  consts.ArmsAbility_S,
+				Apparatus: consts.ArmsAbility_S,
+			},
+		},
+	}
+
+	//太尉盾
+	taiWeiDun2 := []*po.MetadataGeneral{
+		//司马懿
+		{
+			Id:       int64(consts.SiMaYi),
+			UniqueId: 20 + int64(consts.SiMaYi),
+			Name:     "司马懿",
+			Group:    consts.Group_WeiGuo,
+			AbilityAttr: &po.AbilityAttr{
+				ForceBase:        0,
+				ForceRate:        0,
+				IntelligenceBase: 0,
+				IntelligenceRate: 0,
+				CharmBase:        0,
+				CharmRate:        0,
+				CommandBase:      0,
+				CommandRate:      0,
+				PoliticsBase:     0,
+				PoliticsRate:     0,
+				SpeedBase:        50,
+				SpeedRate:        0,
+			},
+			ArmsAttr: &po.ArmsAttr{
+				Cavalry:   consts.ArmsAbility_S,
+				Mauler:    consts.ArmsAbility_S,
+				Archers:   consts.ArmsAbility_S,
+				Spearman:  consts.ArmsAbility_S,
+				Apparatus: consts.ArmsAbility_S,
+			},
+		},
+		//曹操
+		{
+			Id:       int64(consts.CaoCao),
+			UniqueId: 20 + int64(consts.CaoCao),
+			Name:     "曹操",
+			Group:    consts.Group_WeiGuo,
+			AbilityAttr: &po.AbilityAttr{
+				ForceBase:        0,
+				ForceRate:        0,
+				IntelligenceBase: 0,
+				IntelligenceRate: 0,
+				CharmBase:        0,
+				CharmRate:        0,
+				CommandBase:      0,
+				CommandRate:      0,
+				PoliticsBase:     0,
+				PoliticsRate:     0,
+				SpeedBase:        40,
+				SpeedRate:        0,
+			},
+			ArmsAttr: &po.ArmsAttr{
+				Cavalry:   consts.ArmsAbility_S,
+				Mauler:    consts.ArmsAbility_S,
+				Archers:   consts.ArmsAbility_S,
+				Spearman:  consts.ArmsAbility_S,
+				Apparatus: consts.ArmsAbility_S,
+			},
+		},
+		//满宠
+		{
+			Id:       int64(consts.ManChong),
+			UniqueId: 20 + int64(consts.ManChong),
+			Name:     "满宠",
+			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
 				ForceBase:        0,
 				ForceRate:        0,
@@ -250,6 +341,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		switch general.Name {
 		case "司马懿":
 			vo := &vo.BattleGeneral{
+				IsMaster:     true,
 				BaseInfo:     general,
 				EquipTactics: siMaYiTactics,
 				Addition:     addition,
@@ -274,11 +366,12 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	}
 	//敌人
 	enemyGenerals := make([]*vo.BattleGeneral, 0)
-	for _, general := range taiWeiDun {
+	for _, general := range taiWeiDun2 {
 		general.GeneralBattleType = consts.GeneralBattleType_Fighting
 		switch general.Name {
 		case "司马懿":
 			vo := &vo.BattleGeneral{
+				IsMaster:     true,
 				BaseInfo:     general,
 				EquipTactics: siMaYiTactics,
 				Addition:     addition,

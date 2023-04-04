@@ -65,8 +65,8 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 		//按随机索引匹配武将进行生效
 		if _, ok := a.generalIdxMap[cast.ToInt64(idx)]; ok {
 			//恢复兵力
-			general.BuffEffectTriggerMap[consts.BuffEffectType_Rest][consts.Battle_Round_Fourth] =
-				general.BaseInfo.AbilityAttr.IntelligenceBase * 1.26
+			v := general.BaseInfo.AbilityAttr.IntelligenceBase * 1.26
+			util.BuffEffectWrapSet(general.BuffEffectTriggerMap, consts.BuffEffectType_Rest, consts.Battle_Round_Fourth, v)
 		}
 	}
 	hlog.CtxInfof(ctx, "[%s]的「%s[预备]」效果已施加", a.tacticsParams.CurrentGeneral.BaseInfo.Name,

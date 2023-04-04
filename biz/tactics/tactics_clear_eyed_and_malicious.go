@@ -40,10 +40,10 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 		cnt := currentGeneral.BuffEffectAccumulateHolderMap[buffEffect]
 		//一种效果最多叠加2次
 		if cnt < 2 {
+			//获得7%攻心或奇谋几率
+			util.BuffEffectWrapSet(currentGeneral.BuffEffectTriggerMap, buffEffect, consts.BattleRound(i), 0.07)
 			currentGeneral.BuffEffectAccumulateHolderMap[buffEffect]++
 		}
-		//获得7%攻心或奇谋几率
-		currentGeneral.BuffEffectTriggerMap[buffEffect][consts.BattleRound(i)] = 0.07
 	}
 }
 

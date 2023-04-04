@@ -23,12 +23,19 @@ func (t ThreeDaysOfSeparationTactic) Init(tacticsParams model.TacticsParams) _in
 func (t ThreeDaysOfSeparationTactic) Prepare() {
 	//战斗前3回合，无法进行普通攻击
 	currentGeneral := t.tacticsParams.CurrentGeneral
-	currentGeneral.DeBuffEffectTriggerMap[consts.DebuffEffectType_CanNotGeneralAttack][consts.Battle_Round_First] = 1.0
-	currentGeneral.DeBuffEffectTriggerMap[consts.DebuffEffectType_CanNotGeneralAttack][consts.Battle_Round_Second] = 1.0
-	currentGeneral.DeBuffEffectTriggerMap[consts.DebuffEffectType_CanNotGeneralAttack][consts.Battle_Round_Third] = 1.0
+	currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack] = 1.0
+	util.DebuffEffectWrapSet(currentGeneral.DeBuffEffectTriggerMap,
+		consts.DebuffEffectType_CanNotGeneralAttack_Disappear,
+		consts.Battle_Round_Fourth,
+		1.0,
+	)
 	//战斗前3回合，获得30%概率规避效果
 	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] += 0.3
-	currentGeneral.BuffEffectTriggerMap[consts.BuffEffectType_Evade_Disappear][consts.Battle_Round_Fourth] -= 0.3
+	util.BuffEffectWrapSet(currentGeneral.BuffEffectTriggerMap,
+		consts.BuffEffectType_Evade_Disappear,
+		consts.Battle_Round_Fourth,
+		1.0,
+	)
 }
 
 func (t ThreeDaysOfSeparationTactic) Execute() {

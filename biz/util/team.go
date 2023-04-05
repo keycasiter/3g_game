@@ -122,3 +122,91 @@ func GetPairGeneralsNotSelf(tacticsParams model.TacticsParams, targetGeneral *vo
 	}
 	return pairGenerals
 }
+
+// 找到当前友军两到三个队友
+func GetPairGeneralsTwoOrThreeMap(tacticsParams model.TacticsParams) []*vo.BattleGeneral {
+	//找到队友
+	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+	pairGenerals := make([]*vo.BattleGeneral, 0)
+	//两到三个
+	hitIdxMap := GenerateHitTwoOrThreeIdxMap()
+	for idx, general := range pairGeneralArr {
+		if _, ok := hitIdxMap[int64(idx)]; ok {
+			pairGenerals = append(pairGenerals, general)
+		}
+	}
+	return pairGenerals
+}
+
+// 找到当前敌军一个人
+func GetEnemyOneGeneral(tacticsParams model.TacticsParams) *vo.BattleGeneral {
+	//找到敌军
+	enemyGeneralMap := GetEnemyGeneralMap(tacticsParams)
+	//随机1个人
+	hitIdx := GenerateHitOneIdx(3)
+	if general, ok := enemyGeneralMap[hitIdx]; ok {
+		return general
+	}
+	panic("can't find any one general")
+	return nil
+}
+
+// 找到当前敌军两个人
+func GetEnemyGeneralsTwoArr(tacticsParams model.TacticsParams) []*vo.BattleGeneral {
+	//找到敌军
+	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
+	enemyGenerals := make([]*vo.BattleGeneral, 0)
+	//随机两个人
+	hitIdxMap := GenerateHitIdxMap(2, 3)
+	for idx, general := range enemyGeneralArr {
+		if _, ok := hitIdxMap[int64(idx)]; ok {
+			enemyGenerals = append(enemyGenerals, general)
+		}
+	}
+	return enemyGenerals
+}
+
+// 找到当前友军两个队友
+func GetPairGeneralsTwoArr(tacticsParams model.TacticsParams) []*vo.BattleGeneral {
+	//找到队友
+	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+	pairGenerals := make([]*vo.BattleGeneral, 0)
+	//随机两个队友
+	hitIdxMap := GenerateHitIdxMap(2, 3)
+	for idx, general := range pairGeneralArr {
+		if _, ok := hitIdxMap[int64(idx)]; ok {
+			pairGenerals = append(pairGenerals, general)
+		}
+	}
+	return pairGenerals
+}
+
+// 找到当前敌军两到三个队友
+func GetEnemyGeneralsTwoOrThreeMap(tacticsParams model.TacticsParams) []*vo.BattleGeneral {
+	//找到队友
+	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
+	enemyGenerals := make([]*vo.BattleGeneral, 0)
+	//两到三个
+	hitIdxMap := GenerateHitTwoOrThreeIdxMap()
+	for idx, general := range enemyGeneralArr {
+		if _, ok := hitIdxMap[int64(idx)]; ok {
+			enemyGenerals = append(enemyGenerals, general)
+		}
+	}
+	return enemyGenerals
+}
+
+//找到我军损失兵力最多的武将
+func GetPairMaxLossSoldierNumGeneral(tacticsParams model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(tacticsParams)
+	//找到我方损失兵力最多的我军单体
+	maxLossSoldierNum := pairGenerals[0].LossSoldierNum
+	maxLossSoldierNumGeneral := pairGenerals[0]
+	for _, general := range pairGenerals {
+		if maxLossSoldierNum > general.LossSoldierNum && general.LossSoldierNum > 0 {
+			maxLossSoldierNum = general.LossSoldierNum
+			maxLossSoldierNumGeneral = general
+		}
+	}
+	return maxLossSoldierNumGeneral
+}

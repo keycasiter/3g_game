@@ -23,12 +23,11 @@ func (t TraitorInTroubledTimesTactic) Prepare() {
 	currentGeneral := t.tacticsParams.CurrentGeneral
 	//战斗中，使友军群体(2人)造成伤害提高16%（受智力影响）
 	//找到队友
-	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
-	hitIdxes := util.GenerateHitIdxArr(2, 3)
-	for _, hitIdx := range hitIdxes {
+	pairGenerals := util.GetPairGeneralsTwoArr(t.tacticsParams)
+	for _, general := range pairGenerals {
 		//造成伤害提高16% TODO （受智力影响）
-		pairGenerals[hitIdx].BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += 0.16
-		pairGenerals[hitIdx].BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] += 0.16
+		general.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += 0.16
+		general.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] += 0.16
 		//自己受到伤害降低18%  TODO（受智力影响）
 		currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += 0.18
 		currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += 0.18
@@ -49,8 +48,8 @@ func (t TraitorInTroubledTimesTactic) Trigger() {
 	return
 }
 
-func (t TraitorInTroubledTimesTactic) Id() int64 {
-	return TraitorInTroubledTimes
+func (t TraitorInTroubledTimesTactic) Id() consts.TacticId {
+	return consts.TraitorInTroubledTimes
 }
 
 func (t TraitorInTroubledTimesTactic) TacticsType() consts.TacticsType {

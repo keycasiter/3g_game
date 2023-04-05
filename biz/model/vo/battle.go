@@ -34,11 +34,19 @@ type BattleGeneral struct {
 	SoldierNum int64
 	//已损失兵力
 	LossSoldierNum int64
+	//被谁援护
+	HelpByGeneral *BattleGeneral
 
+	//*****效果触发器都是按回合一定会触发的******
 	//增益效果触发器 map<效果,map<回合,概率>>
 	BuffEffectTriggerMap map[consts.BuffEffectType]map[consts.BattleRound]float64
 	//减益效果触发器 map<效果,map<回合,概率>>
 	DeBuffEffectTriggerMap map[consts.DebuffEffectType]map[consts.BattleRound]float64
+
+	//增益效果计数器 map<效果,计数>
+	BuffEffectCountMap map[consts.BuffEffectType]map[int64]float64
+	//减益效果计数器 map<效果,计数>
+	DeBuffEffectCountMap map[consts.DebuffEffectType]map[int64]float64
 
 	//增益效果变量 map<效果,效果值>
 	BuffEffectHolderMap map[consts.BuffEffectType]float64
@@ -48,8 +56,22 @@ type BattleGeneral struct {
 	//增益累计变量 map<效果,累计数>
 	BuffEffectAccumulateHolderMap map[consts.BuffEffectType]int
 
-	//战法触发器 map<动作,触发战法>
-	TacticsTriggerMap map[consts.BattleAction]bool
+	//战法冷却器 map<战法,冷却回合>
+	TacticsFrozenMap map[consts.TacticId]int64
+
+	//*****战法触发器都是按条件（非回合）会触发的******
+	//战法触发器 map<触发动作,func(触发函数参数)>
+	TacticsTriggerMap map[consts.BattleAction][]func(params TacticsTriggerParams)
+}
+
+//被动战法触发参数
+type TacticsTriggerParams struct {
+	//当前回合
+	CurrentRound consts.BattleRound
+	//当前攻击者
+	CurrentAttackGeneral *BattleGeneral
+	//当前造成伤害
+	CurrentDamage int64
 }
 
 // 武将对战加成
@@ -83,12 +105,4 @@ type BuildingTechGroupAddition struct {
 	GroupShuGuoRate   float64
 	GroupWuGuoRate    float64
 	GroupQunXiongRate float64
-}
-
-// 对战队伍效果
-type BattlingTeamEffect struct {
-}
-
-// 对战武将效果
-type BattlingGeneralEffect struct {
 }

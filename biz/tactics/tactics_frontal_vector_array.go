@@ -35,8 +35,8 @@ func (f FrontalVectorArrayTactic) Prepare() {
 	}
 }
 
-func (f FrontalVectorArrayTactic) Id() int64 {
-	return FrontalVectorArray
+func (f FrontalVectorArrayTactic) Id() consts.TacticId {
+	return consts.FrontalVectorArray
 }
 
 func (f FrontalVectorArrayTactic) Name() string {

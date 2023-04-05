@@ -7,7 +7,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/dal/mongodb"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
-	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/kr/pretty"
 	"go.mongodb.org/mongo-driver/bson"
 	"testing"
@@ -270,45 +269,45 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	//司马懿战法
 	siMaYiTactics := []*po.Tactics{
 		{
-			Id:   tactics.ClearEyedAndMalicious,
+			Id:   consts.ClearEyedAndMalicious,
 			Name: "鹰视狼顾",
 		},
 		{
-			Id:   tactics.ThreeDaysOfSeparation,
+			Id:   consts.ThreeDaysOfSeparation,
 			Name: "士别三日",
 		},
 		{
-			Id:   tactics.TheSkyIsBlazing,
+			Id:   consts.TheSkyIsBlazing,
 			Name: "熯天炽地",
 		},
 	}
 	//曹操战法
 	caoCaoTactics := []*po.Tactics{
 		{
-			Id:   tactics.TraitorInTroubledTimes,
+			Id:   consts.TraitorInTroubledTimes,
 			Name: "乱世奸雄",
 		},
 		{
-			Id:   tactics.Charming,
+			Id:   consts.Charming,
 			Name: "魅惑",
 		},
 		{
-			Id:   tactics.AppeaseArmyAndPeople,
+			Id:   consts.AppeaseArmyAndPeople,
 			Name: "抚揖军民",
 		},
 	}
 	//满宠战法
 	manChongTactics := []*po.Tactics{
 		{
-			Id:   tactics.SuppressChokesAndPreventRefusals,
+			Id:   consts.SuppressChokesAndPreventRefusals,
 			Name: "镇扼防拒",
 		},
 		{
-			Id:   tactics.FrontalVectorArray,
+			Id:   consts.FrontalVectorArray,
 			Name: "锋矢阵",
 		},
 		{
-			Id:   tactics.Curettage,
+			Id:   consts.Curettage,
 			Name: "刮骨疗毒",
 		},
 	}

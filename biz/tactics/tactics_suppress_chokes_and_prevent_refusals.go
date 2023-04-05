@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -32,7 +33,9 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 		//让这个副将援护友军
 		generals := util.GetPairGeneralsNotSelf(s.tacticsParams, viceGeneral)
 		for _, general := range generals {
-			general.TacticsTriggerMap[consts.BattleAction_SufferAttack] = true
+			util.TacticsTriggerWrapSet(general, consts.BattleAction_SufferAttack, func(params vo.TacticsTriggerParams) {
+				general.HelpByGeneral = viceGeneral
+			})
 		}
 	}
 }
@@ -49,8 +52,8 @@ func (s SuppressChokesAndPreventRefusalsTactic) Trigger() {
 	return
 }
 
-func (s SuppressChokesAndPreventRefusalsTactic) Id() int64 {
-	return SuppressChokesAndPreventRefusals
+func (s SuppressChokesAndPreventRefusalsTactic) Id() consts.TacticId {
+	return consts.SuppressChokesAndPreventRefusals
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) TacticsType() consts.TacticsType {

@@ -29,16 +29,8 @@ func (c CurettageTactic) Name() string {
 
 func (c CurettageTactic) Execute() {
 	currentGeneral := c.tacticsParams.CurrentGeneral
-	pairGenerals := util.GetPairGeneralArr(c.tacticsParams)
-	//找到我方损失兵力最多的我军单体
-	maxLossSoldierNum := pairGenerals[0].LossSoldierNum
-	maxLossSoldierNumGeneral := pairGenerals[0]
-	for _, general := range pairGenerals {
-		if maxLossSoldierNum > general.LossSoldierNum && general.LossSoldierNum > 0 {
-			maxLossSoldierNum = general.LossSoldierNum
-			maxLossSoldierNumGeneral = general
-		}
-	}
+	//找我我军损失兵力最多的武将
+	maxLossSoldierNumGeneral := util.GetPairMaxLossSoldierNumGeneral(c.tacticsParams)
 
 	//清除负面状态
 	maxLossSoldierNumGeneral.DeBuffEffectHolderMap = map[consts.DebuffEffectType]float64{}
@@ -53,8 +45,8 @@ func (c CurettageTactic) Trigger() {
 	return
 }
 
-func (c CurettageTactic) Id() int64 {
-	return Curettage
+func (c CurettageTactic) Id() consts.TacticId {
+	return consts.Curettage
 }
 
 func (c CurettageTactic) TacticsType() consts.TacticsType {

@@ -52,8 +52,8 @@ func (c ClearEyedAndMaliciousTactic) Init(tacticsParams model.TacticsParams) _in
 	return c
 }
 
-func (c ClearEyedAndMaliciousTactic) Id() int64 {
-	return ClearEyedAndMalicious
+func (c ClearEyedAndMaliciousTactic) Id() consts.TacticId {
+	return consts.ClearEyedAndMalicious
 }
 
 func (c ClearEyedAndMaliciousTactic) TacticsType() consts.TacticsType {

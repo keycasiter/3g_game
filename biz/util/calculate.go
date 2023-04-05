@@ -30,16 +30,3 @@ func CalGeneralArmAbility(armAbility consts.ArmsAbility, attr *po.AbilityAttr) {
 		attr.SpeedBase = attr.SpeedBase * 0.7
 	}
 }
-
-//恢复兵力计算
-//@resultNum 最终结果量
-//@realResumeNum 真实恢复量
-func ResumeSoldiersNum(currentNum, resumeNum int64) (resultNum, realResumeNum int64) {
-	resultNum = currentNum + resumeNum
-	realResumeNum = resultNum
-	if resultNum > consts.Max_Soldiers_Num_Per_General {
-		resultNum = consts.Max_Soldiers_Num_Per_General
-		realResumeNum = resultNum - currentNum
-	}
-	return resultNum, realResumeNum
-}

@@ -6,6 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
 
+//战法参数
 type TacticsParams struct {
 	Ctx context.Context
 

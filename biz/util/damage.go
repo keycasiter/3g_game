@@ -170,7 +170,6 @@ func AttackDamage(ctx context.Context, attackGeneral *vo.BattleGeneral, sufferGe
 // @damage 伤害值
 // @return 实际伤害/剩余兵力
 func CalculateDamage(soldierNum int64, damage int64) (int64, int64) {
-	hlog.CtxInfof(context.Background(), "soldierNum:%d damage:%d", soldierNum, damage)
 	if soldierNum == 0 {
 		return 0, 0
 	}
@@ -180,4 +179,36 @@ func CalculateDamage(soldierNum int64, damage int64) (int64, int64) {
 	}
 
 	return damage, soldierNum - damage
+}
+
+// 战法伤害计算
+// @attack 攻击武将
+// @suffer 被攻击武将
+// @damage 伤害量
+// @return 实际伤害/原兵力/剩余兵力
+func TacticDamage(ctx context.Context, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64) (damageNum, soldierNum, remainSoldierNum int64) {
+	//是否可以规避
+	if rate, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
+		if GenerateRate(rate) {
+			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效")
+			return 0, sufferGeneral.SoldierNum, sufferGeneral.SoldierNum
+		} else {
+			hlog.CtxInfof(ctx, "[%s]规避失败")
+		}
+	}
+
+	//伤害结算
+	if sufferGeneral.SoldierNum == 0 {
+		return 0, 0, 0
+	}
+	damageNum = damage
+	soldierNum = sufferGeneral.SoldierNum
+
+	if damage >= soldierNum {
+		damageNum = soldierNum
+	}
+	//伤害结算
+	sufferGeneral.SoldierNum -= damageNum
+	remainSoldierNum = sufferGeneral.SoldierNum
+	return
 }

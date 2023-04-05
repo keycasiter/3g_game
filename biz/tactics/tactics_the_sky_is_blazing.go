@@ -64,8 +64,8 @@ func (t TheSkyIsBlazingTactic) Trigger() {
 	return
 }
 
-func (t TheSkyIsBlazingTactic) Id() int64 {
-	return TheSkyIsBlazing
+func (t TheSkyIsBlazingTactic) Id() consts.TacticId {
+	return consts.TheSkyIsBlazing
 }
 
 func (t TheSkyIsBlazingTactic) TacticsType() consts.TacticsType {

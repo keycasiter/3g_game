@@ -12,7 +12,7 @@ type Tactics interface {
 	//战法准备
 	Prepare()
 	//战法ID
-	Id() int64
+	Id() consts.TacticId
 	//战法名称
 	Name() string
 	//战法类型
@@ -21,6 +21,4 @@ type Tactics interface {
 	SupportArmTypes() []consts.ArmType
 	//战法执行
 	Execute()
-	//战法触发器
-	Trigger()
 }

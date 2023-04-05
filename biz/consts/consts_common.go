@@ -314,6 +314,8 @@ const (
 type BattleAction int
 
 const (
-	BattleAction_Attack       BattleAction = 1 //普通攻击
-	BattleAction_SufferAttack BattleAction = 2 //被普通攻击
+	BattleAction_BeginAction         BattleAction = 0 //开始行动
+	BattleAction_Attack              BattleAction = 1 //普通攻击
+	BattleAction_SufferAttack        BattleAction = 2 //被普通攻击
+	BattleAction_ExecuteActiveTactic BattleAction = 3 //发动主动战法
 )

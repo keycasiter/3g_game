@@ -371,8 +371,10 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral, allGenerals)
 
 		//打印当前执行队伍、武将、速度
-		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", currentGeneral.BaseInfo.GeneralBattleType, currentGeneral.BaseInfo.Name,
-			currentGeneral.BaseInfo.AbilityAttr.SpeedBase)
+		hlog.CtxInfof(runCtx.Ctx, "[%v][%s]开始行动",
+			currentGeneral.BaseInfo.GeneralBattleType,
+			currentGeneral.BaseInfo.Name,
+		)
 
 		//执行战法
 		attackFlag := false
@@ -417,16 +419,31 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 
-			//是否满足回合结束条件
-			isFinish := runCtx.judgeFinishBattleRoundCondition(tacticsParams)
+			//战法结束处理器
+			isFinish := runCtx.TacticEndProcessor(tacticsParams)
 			if isFinish {
 				break
 			}
 		}
+
+		//回合结束处理器
+		runCtx.RoundEndProcessor(tacticsParams)
 	}
 }
 
-func (runCtx BattleLogicContext) judgeFinishBattleRoundCondition(tacticsParams model.TacticsParams) bool {
+func (runCtx BattleLogicContext) RoundEndProcessor(tacticsParams model.TacticsParams) {
+	//所有冷却战法-1
+	for _, general := range tacticsParams.AllGeneralArr {
+		for tacticId, cnt := range general.TacticsFrozenMap {
+			if cnt > 0 {
+				general.TacticsFrozenMap[tacticId]--
+			}
+		}
+	}
+	return
+}
+
+func (runCtx BattleLogicContext) TacticEndProcessor(tacticsParams model.TacticsParams) bool {
 	//判断是否有队伍的主将兵力为0
 	for _, general := range tacticsParams.FightingGeneralMap {
 		if general.SoldierNum == 0 {
@@ -482,8 +499,17 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.Bat
 		if general.BuffEffectAccumulateHolderMap == nil {
 			general.BuffEffectAccumulateHolderMap = map[consts.BuffEffectType]int{}
 		}
+		if general.BuffEffectCountMap == nil {
+			general.BuffEffectCountMap = map[consts.BuffEffectType]map[int64]float64{}
+		}
+		if general.DeBuffEffectCountMap == nil {
+			general.DeBuffEffectCountMap = map[consts.DebuffEffectType]map[int64]float64{}
+		}
 		if general.TacticsTriggerMap == nil {
-			general.TacticsTriggerMap = map[consts.BattleAction]bool{}
+			general.TacticsTriggerMap = map[consts.BattleAction][]func(params vo.TacticsTriggerParams){}
+		}
+		if general.TacticsFrozenMap == nil {
+			general.TacticsFrozenMap = map[consts.TacticId]int64{}
 		}
 	}
 

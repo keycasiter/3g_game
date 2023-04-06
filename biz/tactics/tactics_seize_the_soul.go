@@ -9,15 +9,15 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//夺魂挟魄
-//发动概率55%
-//偷取敌军单体38点武力、智力、速度、统率（受智力影响），
-//持续2回合，可叠加2次
+// 夺魂挟魄
+// 发动概率55%
+// 偷取敌军单体38点武力、智力、速度、统率（受智力影响），
+// 持续2回合，可叠加2次
 type SeizeTheSoulTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (s SeizeTheSoulTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (s SeizeTheSoulTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	s.tacticsParams = tacticsParams
 	return s
 }

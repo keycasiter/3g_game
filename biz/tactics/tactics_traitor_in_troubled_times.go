@@ -11,10 +11,10 @@ import (
 // 战法描述：战斗中，使友军群体(2人)造成伤害提高16%（受智力影响），
 // 自己受到伤害降低18%（受智力影响），如果自己为主将，副将造成伤害时，会为主将恢复其伤害量10%的兵力
 type TraitorInTroubledTimesTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (t TraitorInTroubledTimesTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (t TraitorInTroubledTimesTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
 	return t
 }

@@ -14,10 +14,10 @@ import (
 // 敌军群体(2人)发动主动战法时，有35%几率令其失败并对其造成谋略伤害(伤害率100%，受智力影响)，
 // 自身为主将时，该次伤害会基于双方智力之差额外提高
 type CleverStrategyAndShrewdTacticsTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (c CleverStrategyAndShrewdTacticsTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (c CleverStrategyAndShrewdTacticsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
 	return c
 }

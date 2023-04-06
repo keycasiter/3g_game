@@ -11,10 +11,10 @@ import (
 // 战法名称：刮骨疗毒
 // 战法描述：为损失兵力最多的我军单体清除负面状态并为其恢复兵力（治疗率256%，受智力影响）
 type CurettageTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (c CurettageTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (c CurettageTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
 	return c
 }

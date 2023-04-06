@@ -14,10 +14,10 @@ import (
 // 对敌军群体(2-3人)施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合；
 // 若目标已有灼烧状态则造成兵刃攻击(伤害率118%)
 type BlazingWildfireTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (b BlazingWildfireTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (b BlazingWildfireTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	b.tacticsParams = tacticsParams
 	return b
 }

@@ -12,7 +12,7 @@ import (
 // 第5回合起，每回合有80%概率对1-2个敌军单体造成谋略伤害(伤害154%，受智力影响)；
 // 自身为主将时，获得16%奇谋几率
 type ClearEyedAndMaliciousTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
 func (c ClearEyedAndMaliciousTactic) Prepare() {
@@ -47,7 +47,7 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 	}
 }
 
-func (c ClearEyedAndMaliciousTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (c ClearEyedAndMaliciousTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
 	return c
 }

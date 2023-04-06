@@ -12,10 +12,10 @@ import (
 // 战法描述：每回合有50%概率（受智力影响）使我军单体(优先选除自己之外的副将)援护所有友军并获得休整状态（每回合恢复一次兵力，治疗率192%，受智力影响），
 // 持续1回合，同时使其在1回合内受到普通攻击时，有55%概率（受智力影响）移除攻击者的增益状态
 type SuppressChokesAndPreventRefusalsTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (s SuppressChokesAndPreventRefusalsTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (s SuppressChokesAndPreventRefusalsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	s.tacticsParams = tacticsParams
 	return s
 }

@@ -10,15 +10,15 @@ import (
 	"github.com/spf13/cast"
 )
 
-//草船借箭
-//主动战法 65%
-//移除我军群体(2-3人)负面效果，并使我军群体(2人)获得急救状态，每次受到伤害时有70%几率回复一定兵力（伤害量的28%，受统率影响）
-//持续2回合，该战法发动后会进入1回合冷却
+// 草船借箭
+// 主动战法 65%
+// 移除我军群体(2-3人)负面效果，并使我军群体(2人)获得急救状态，每次受到伤害时有70%几率回复一定兵力（伤害量的28%，受统率影响）
+// 持续2回合，该战法发动后会进入1回合冷却
 type BorrowArrowsWithThatchedBoatsTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (b BorrowArrowsWithThatchedBoatsTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (b BorrowArrowsWithThatchedBoatsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	b.tacticsParams = tacticsParams
 	return b
 }

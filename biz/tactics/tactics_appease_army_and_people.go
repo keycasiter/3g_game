@@ -15,7 +15,7 @@ import (
 // 受到的伤害降低24%（受统率影响），
 // 战斗第4回合时，恢复其兵力（治疗率126%，受智力影响）
 type AppeaseArmyAndPeopleTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
 func (a AppeaseArmyAndPeopleTactic) Prepare() {
@@ -85,7 +85,7 @@ func (a AppeaseArmyAndPeopleTactic) Execute() {
 	return
 }
 
-func (a AppeaseArmyAndPeopleTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (a AppeaseArmyAndPeopleTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	a.tacticsParams = tacticsParams
 	return a
 }

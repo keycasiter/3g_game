@@ -15,10 +15,10 @@ import (
 // 我军全体统率、速度提高22点，首回合对敌军群体（2人）施加中毒状态，每回合持续造成伤害（伤害率80%，受智力影响），持续3回合
 // 若王平统领，对敌军全体施加中毒状态，但伤害率降低（伤害率66%，受智力影响）
 type WuDangFlyArmyTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (w WuDangFlyArmyTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (w WuDangFlyArmyTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	w.tacticsParams = tacticsParams
 	return w
 }

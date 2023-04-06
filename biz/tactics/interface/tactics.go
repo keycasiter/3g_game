@@ -8,7 +8,7 @@ import (
 // 战法通用
 type Tactics interface {
 	// 初始化
-	Init(tacticsParams model.TacticsParams) Tactics
+	Init(tacticsParams *model.TacticsParams) Tactics
 	//战法准备
 	Prepare()
 	//战法ID

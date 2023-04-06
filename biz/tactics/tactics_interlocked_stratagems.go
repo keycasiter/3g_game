@@ -8,15 +8,15 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//连环计
-//发动概率35%
-//准备一回合，对敌军全体释放铁索连环，使其任一目标受到伤害时会反馈15%（受智力影响）伤害给其他单位，持续2回合，
-//并发动谋略攻击（伤害率156%，受智力影响）
+// 连环计
+// 发动概率35%
+// 准备一回合，对敌军全体释放铁索连环，使其任一目标受到伤害时会反馈15%（受智力影响）伤害给其他单位，持续2回合，
+// 并发动谋略攻击（伤害率156%，受智力影响）
 type InterlockedStratagemsTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (i InterlockedStratagemsTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (i InterlockedStratagemsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	i.tacticsParams = tacticsParams
 	return i
 }

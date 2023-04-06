@@ -14,10 +14,10 @@ import (
 // 战法描述：战斗前3回合，无法进行普通攻击但获得30%概率规避效果
 // 第4回合提高自己68点智力，并对敌军全体造成谋略伤害(伤害率180%，受智力影响)
 type ThreeDaysOfSeparationTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (t ThreeDaysOfSeparationTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (t ThreeDaysOfSeparationTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
 	return t
 }

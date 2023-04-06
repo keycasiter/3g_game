@@ -13,10 +13,10 @@ import (
 // 战法描述：自己受到普通攻击时，有45%几率使攻击者进入混乱（攻击和战法无差别选择目标）、计穷（无法发动主动战法）、虚弱（无法造成伤害）状态的一种，
 // 持续1回合，自身为女性时，触发几率额外受智力影响
 type CharmingTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (c CharmingTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (c CharmingTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
 	return c
 }

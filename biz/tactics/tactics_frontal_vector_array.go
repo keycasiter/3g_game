@@ -10,10 +10,10 @@ import (
 // 战法名称：锋矢阵
 // 战法描述：战斗中，使我军主将造成的伤害提升30%，受到的伤害提升20%，我军副将造成的伤害降低15%，受到的伤害降低25%
 type FrontalVectorArrayTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (f FrontalVectorArrayTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (f FrontalVectorArrayTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	f.tacticsParams = tacticsParams
 	return f
 }

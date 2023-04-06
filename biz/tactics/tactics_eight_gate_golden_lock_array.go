@@ -13,10 +13,10 @@ import (
 // 战斗前3回合，使敌军群体（2人）造成的伤害降低30%（受智力影响），
 // 并使我军主将获得先攻状态（优先行动）
 type EightGateGoldenLockArrayTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (e EightGateGoldenLockArrayTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (e EightGateGoldenLockArrayTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	e.tacticsParams = tacticsParams
 	return e
 }

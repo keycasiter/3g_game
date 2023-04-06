@@ -12,10 +12,10 @@ import (
 // 每回合持续造成伤害（伤害率72%，受智力影响），持续2回合。
 // 主动战法 发动率35%
 type TheSkyIsBlazingTactic struct {
-	tacticsParams model.TacticsParams
+	tacticsParams *model.TacticsParams
 }
 
-func (t TheSkyIsBlazingTactic) Init(tacticsParams model.TacticsParams) _interface.Tactics {
+func (t TheSkyIsBlazingTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
 	return t
 }

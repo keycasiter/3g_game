@@ -29,4 +29,6 @@ type TacticsParams struct {
 	EnemyGeneralMap map[int64]*vo.BattleGeneral
 	// 全部武将信息Map
 	AllGeneralMap map[int64]*vo.BattleGeneral
+	// 全部武将信息Arr
+	AllGeneralArr []*vo.BattleGeneral
 }

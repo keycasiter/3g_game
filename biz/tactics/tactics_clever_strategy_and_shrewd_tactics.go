@@ -58,7 +58,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 						dmgNum += cast.ToInt64(diff)
 					}
 				}
-				finalDmg, originNum, remaindNum := util.TacticDamage(ctx, currentGeneral, sufferGeneral, dmgNum)
+				finalDmg, originNum, remaindNum := util.TacticDamage(c.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
 				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「神机妙算」效果，损失了兵力%d(%d↘%d️️️)",
 					sufferGeneral.BaseInfo.Name,
 					currentGeneral.BaseInfo.Name,

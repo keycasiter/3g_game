@@ -70,7 +70,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 				consts.DebuffEffectType_Methysis,
 			)
 			dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
-			dmg, origin, remain := util.TacticDamage(ctx, currentGeneral, general, dmgNum)
+			dmg, origin, remain := util.TacticDamage(w.tacticsParams, currentGeneral, general, dmgNum)
 			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「%v」效果，损失了兵力%d(%d↘%d)",
 				general.BaseInfo.Name,
 				currentGeneral.BaseInfo.Name,

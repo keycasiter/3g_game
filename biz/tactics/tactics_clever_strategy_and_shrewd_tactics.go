@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cast"
 )
 
-//神机妙算
-//敌军群体(2人)发动主动战法时，有35%几率令其失败并对其造成谋略伤害(伤害率100%，受智力影响)，
-//自身为主将时，该次伤害会基于双方智力之差额外提高
+// 神机妙算
+// 敌军群体(2人)发动主动战法时，有35%几率令其失败并对其造成谋略伤害(伤害率100%，受智力影响)，
+// 自身为主将时，该次伤害会基于双方智力之差额外提高
 type CleverStrategyAndShrewdTacticsTactic struct {
 	tacticsParams model.TacticsParams
 }
@@ -35,7 +35,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(c.tacticsParams)
 	//注册触发效果
 	for _, sufferGeneral := range enemyGenerals {
-		sufferGeneral.TacticsTriggerMap[consts.BattleAction_ExecuteActiveTactic] = func(params vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_ExecuteActiveTactic, func(params vo.TacticsTriggerParams) {
 			//35%几率
 			if !util.GenerateRate(0.35) {
 				hlog.CtxInfof(ctx, "[%s]执行来自[%s]【%s】的「神机妙算」效果因几率没有生效",
@@ -68,7 +68,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 					remaindNum,
 				)
 			}
-		}
+		})
 	}
 	//自身为主将时，该次伤害会基于双方智力之差额外提高
 }

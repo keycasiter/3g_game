@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/cast"
 )
 
-//无当飞军
-//将弓兵进阶为矢不虚发的无当飞军：
-//我军全体统率、速度提高22点，首回合对敌军群体（2人）施加中毒状态，每回合持续造成伤害（伤害率80%，受智力影响），持续3回合
-//若王平统领，对敌军全体施加中毒状态，但伤害率降低（伤害率66%，受智力影响）
+// 无当飞军
+// 将弓兵进阶为矢不虚发的无当飞军：
+// 我军全体统率、速度提高22点，首回合对敌军群体（2人）施加中毒状态，每回合持续造成伤害（伤害率80%，受智力影响），持续3回合
+// 若王平统领，对敌军全体施加中毒状态，但伤害率降低（伤害率66%，受智力影响）
 type WuDangFlyArmyTactic struct {
 	tacticsParams model.TacticsParams
 }
@@ -50,8 +50,19 @@ func (w WuDangFlyArmyTactic) Prepare() {
 			general.BaseInfo.Name,
 			consts.DebuffEffectType_Methysis,
 		)
+		//持续3回合
+		general.DeBuffEffectCountMap[consts.DebuffEffectType_Methysis][3] = 1.0
 		//注册效果
 		util.TacticsTriggerWrapSet(general, consts.BattleAction_BeginAction, func(params vo.TacticsTriggerParams) {
+			if mm, ok := general.DeBuffEffectCountMap[consts.DebuffEffectType_Methysis]; ok {
+				if _, okk := mm[0]; okk {
+					return
+				} else {
+					for k, v := range mm {
+						mm[k-1] = v
+					}
+				}
+			}
 
 			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
 				general.BaseInfo.Name,

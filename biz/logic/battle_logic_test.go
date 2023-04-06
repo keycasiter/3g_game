@@ -178,26 +178,26 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		},
 	}
 
-	//太尉盾
-	taiWeiDun2 := []*po.MetadataGeneral{
-		//司马懿
+	//麒麟弓
+	qiLinGong := []*po.MetadataGeneral{
+		//姜维
 		{
 			Id:       int64(consts.SiMaYi),
 			UniqueId: 20 + int64(consts.SiMaYi),
-			Name:     "司马懿",
+			Name:     "姜维",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        83.16,
+				ForceBase:        198.54,
 				ForceRate:        0,
-				IntelligenceBase: 359.52,
+				IntelligenceBase: 291.89,
 				IntelligenceRate: 0,
 				CharmBase:        0,
 				CharmRate:        0,
-				CommandBase:      204.77,
+				CommandBase:      192.35,
 				CommandRate:      0,
 				PoliticsBase:     0,
 				PoliticsRate:     0,
-				SpeedBase:        78.36,
+				SpeedBase:        124.87,
 				SpeedRate:        0,
 			},
 			ArmsAttr: &po.ArmsAttr{
@@ -208,24 +208,24 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				Apparatus: consts.ArmsAbility_S,
 			},
 		},
-		//曹操
+		//庞统
 		{
 			Id:       int64(consts.CaoCao),
 			UniqueId: 20 + int64(consts.CaoCao),
-			Name:     "曹操",
+			Name:     "庞统",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        135.84,
+				ForceBase:        58.96,
 				ForceRate:        0,
-				IntelligenceBase: 299.48,
+				IntelligenceBase: 334.98,
 				IntelligenceRate: 0,
 				CharmBase:        0,
 				CharmRate:        0,
-				CommandBase:      235.70,
+				CommandBase:      167.73,
 				CommandRate:      0,
 				PoliticsBase:     0,
 				PoliticsRate:     0,
-				SpeedBase:        130.83,
+				SpeedBase:        74.33,
 				SpeedRate:        0,
 			},
 			ArmsAttr: &po.ArmsAttr{
@@ -236,24 +236,24 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				Apparatus: consts.ArmsAbility_S,
 			},
 		},
-		//满宠
+		//诸葛亮
 		{
 			Id:       int64(consts.ManChong),
 			UniqueId: 20 + int64(consts.ManChong),
-			Name:     "满宠",
+			Name:     "诸葛亮",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
-				ForceBase:        112.66,
+				ForceBase:        62.13,
 				ForceRate:        0,
-				IntelligenceBase: 291.52,
+				IntelligenceBase: 334.00,
 				IntelligenceRate: 0,
 				CharmBase:        0,
 				CharmRate:        0,
-				CommandBase:      191.40,
+				CommandBase:      236.46,
 				CommandRate:      0,
 				PoliticsBase:     0,
 				PoliticsRate:     0,
-				SpeedBase:        115.36,
+				SpeedBase:        76.01,
 				SpeedRate:        0,
 			},
 			ArmsAttr: &po.ArmsAttr{
@@ -311,6 +311,53 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "刮骨疗毒",
 		},
 	}
+
+	//姜维战法
+	jiangweiTactics := []*po.Tactics{
+		{
+			Id:   consts.BraveAmbition,
+			Name: "义胆雄心",
+		},
+		{
+			Id:   consts.SeizeTheSoul,
+			Name: "夺魂挟魄",
+		},
+		{
+			Id:   consts.BlazingWildfire,
+			Name: "火炽原燎",
+		},
+	}
+	//庞统战法
+	pangTongTactics := []*po.Tactics{
+		{
+			Id:   consts.InterlockedStratagems,
+			Name: "连环计",
+		},
+		{
+			Id:   consts.TaipingLaw,
+			Name: "太平道法",
+		},
+		{
+			Id:   consts.WuDangFlyArmy,
+			Name: "无当飞军",
+		},
+	}
+	//诸葛亮战法
+	zhuGeLiangTactics := []*po.Tactics{
+		{
+			Id:   consts.CleverStrategyAndShrewdTactics,
+			Name: "神机妙算",
+		},
+		{
+			Id:   consts.EightGateGoldenLockArray,
+			Name: "八门金锁阵",
+		},
+		{
+			Id:   consts.BorrowArrowsWithThatchedBoats,
+			Name: "草船借箭",
+		},
+	}
+
 	//加点
 	addition := &vo.BattleGeneralAddition{
 		AbilityAttr: po.AbilityAttr{
@@ -368,30 +415,30 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	}
 	//敌人
 	enemyGenerals := make([]*vo.BattleGeneral, 0)
-	for _, general := range taiWeiDun2 {
+	for _, general := range qiLinGong {
 		general.GeneralBattleType = consts.GeneralBattleType_Enemy
 		switch general.Name {
-		case "司马懿":
+		case "姜维":
 			vo := &vo.BattleGeneral{
 				IsMaster:     true,
 				BaseInfo:     general,
-				EquipTactics: siMaYiTactics,
+				EquipTactics: jiangweiTactics,
 				Addition:     addition,
 				SoldierNum:   30000,
 			}
 			enemyGenerals = append(enemyGenerals, vo)
-		case "曹操":
+		case "庞统":
 			vo := &vo.BattleGeneral{
 				BaseInfo:     general,
-				EquipTactics: caoCaoTactics,
+				EquipTactics: pangTongTactics,
 				Addition:     addition,
 				SoldierNum:   30000,
 			}
 			enemyGenerals = append(enemyGenerals, vo)
-		case "满宠":
+		case "诸葛亮":
 			vo := &vo.BattleGeneral{
 				BaseInfo:     general,
-				EquipTactics: manChongTactics,
+				EquipTactics: zhuGeLiangTactics,
 				Addition:     addition,
 				SoldierNum:   30000,
 			}

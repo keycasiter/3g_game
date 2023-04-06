@@ -73,7 +73,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		currentGeneral.BaseInfo.Name,
 		consts.BuffEffectType_Evade,
 	)
-	hlog.CtxInfof(ctx, "[%s]的规避率提高了30.00%",
+	hlog.CtxInfof(ctx, "[%s]的规避率提高了30.00%%",
 		currentGeneral.BaseInfo.Name,
 	)
 	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] += 0.3

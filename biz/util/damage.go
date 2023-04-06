@@ -5,6 +5,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/spf13/cast"
 )
 
@@ -121,9 +122,10 @@ func GeneralAttackDamage(num int64,
 }
 
 // 普通攻击伤害结算
-//@attack 攻击武将
-//@suffer 被攻击武将
-func AttackDamage(ctx context.Context, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral) {
+// @attack 攻击武将
+// @suffer 被攻击武将
+func AttackDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral) {
+	ctx := tacticsParams.Ctx
 	soldierNum := attackGeneral.SoldierNum
 	defSoldierNum := sufferGeneral.SoldierNum
 
@@ -147,12 +149,36 @@ func AttackDamage(ctx context.Context, attackGeneral *vo.BattleGeneral, sufferGe
 	}
 	atk := attackGeneral.BaseInfo.AbilityAttr.ForceBase
 	def := sufferGeneral.BaseInfo.AbilityAttr.CommandBase
-	inc := attackGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove]
-	dec := attackGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce]
+	inc := attackGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] +
+		sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_SufferWeaponDamageImprove]
+	dec := attackGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] +
+		sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce]
 
 	// 总伤害 = (兵力伤害 + 攻击 - 防御) * (1 + 增益比例 - 减益比例)
-	attackDmg := cast.ToInt64((numDmg + (atk - def)) * (1 + inc - dec))
-	hlog.CtxInfof(ctx, "numDmg:%f , atk:%f , def:%f , inc:%f , dec:%f", numDmg, atk, def, inc, dec)
+	//（攻击 - 防御）伤害结算
+	atkDefDmg := atk - def
+	if atkDefDmg < 0 {
+		atkDefDmg = 0
+	}
+	//（1 + 增伤 - 减伤）比率结算
+	incDecRate := inc - dec
+	if incDecRate < 0 {
+		//**** 总体减伤逻辑 ****
+		if incDecRate < -0.9 {
+			//最大减伤为90%
+			incDecRate = 1 - 0.9
+		} else {
+			//正常减伤
+			incDecRate = 1 + incDecRate
+		}
+	} else {
+		//**** 总体增伤逻辑 ****
+		incDecRate = 1 + (inc - dec)
+	}
+	attackDmg := cast.ToInt64((numDmg + atkDefDmg) * incDecRate)
+
+	hlog.CtxInfof(ctx, "兵力基础伤害:%d ,武力/防御差:%.2f , 最终伤害:%d , 攻击者武力:%.2f , 防守者统率:%.2f , 造成+受到兵刃伤害增加:%.2f%% , 造成+受到兵刃伤害减少:%.2f%% , 最终增减伤率:%.2f",
+		int64(numDmg), atkDefDmg, attackDmg, atk, def, inc*100, dec*100, incDecRate)
 
 	hlog.CtxInfof(ctx, "[%s]对[%s]发动普通攻击",
 		attackGeneral.BaseInfo.Name,
@@ -160,25 +186,28 @@ func AttackDamage(ctx context.Context, attackGeneral *vo.BattleGeneral, sufferGe
 	)
 
 	//伤害计算
-	finalDmg, remainSoldierNum := CalculateDamage(defSoldierNum, attackDmg)
-	sufferGeneral.SoldierNum = remainSoldierNum
+	finalDmg := int64(0)
+	remainSoldierNum := int64(0)
+	if attackDmg > sufferGeneral.SoldierNum {
+		finalDmg = sufferGeneral.SoldierNum
+		sufferGeneral.SoldierNum = 0
+		remainSoldierNum = 0
+	} else {
+		finalDmg = attackDmg
+		sufferGeneral.SoldierNum -= attackDmg
+		remainSoldierNum = sufferGeneral.SoldierNum
+	}
 	hlog.CtxInfof(ctx, "[%s]损失了兵力%d(%d↘%d)", sufferGeneral.BaseInfo.Name, finalDmg, defSoldierNum, remainSoldierNum)
-}
-
-// 伤害计算
-// @soldierNum 被攻击者当前兵力
-// @damage 伤害值
-// @return 实际伤害/剩余兵力
-func CalculateDamage(soldierNum int64, damage int64) (int64, int64) {
-	if soldierNum == 0 {
-		return 0, 0
+	if sufferGeneral.SoldierNum == 0 {
+		//判断是否有队伍的主将兵力为0
+		if _, ok := tacticsParams.FightingGeneralMap[sufferGeneral.BaseInfo.UniqueId]; ok {
+			delete(tacticsParams.FightingGeneralMap, sufferGeneral.BaseInfo.UniqueId)
+		}
+		if _, ok := tacticsParams.EnemyGeneralMap[sufferGeneral.BaseInfo.UniqueId]; ok {
+			delete(tacticsParams.EnemyGeneralMap, sufferGeneral.BaseInfo.UniqueId)
+		}
+		hlog.CtxInfof(ctx, "[%s]武将兵力为0，无法再战", sufferGeneral.BaseInfo.Name)
 	}
-
-	if damage >= soldierNum {
-		return soldierNum, soldierNum
-	}
-
-	return damage, soldierNum - damage
 }
 
 // 战法伤害计算

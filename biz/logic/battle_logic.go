@@ -347,6 +347,7 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 		runCtx.processBattleFightingRound(currentRound)
 	}
 	hlog.CtxInfof(runCtx.Ctx, "战斗结束")
+	hlog.CtxInfof(runCtx.Ctx, "平局！")
 }
 
 // 每回合对战处理
@@ -364,7 +365,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	//}
 	//按速度排序，从快到慢
 	sort.Sort(allGenerals)
-	hlog.CtxInfof(runCtx.Ctx, "回合：%d", currentRound)
+	hlog.CtxInfof(runCtx.Ctx, "战斗回合：%d", currentRound)
 
 	for _, currentGeneral := range allGenerals {
 		//每轮战法参数准备
@@ -408,7 +409,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				enemyGeneralArr := util.GetEnemyGeneralArr(tacticsParams)
 				sufferGeneral := enemyGeneralArr[hitIdx]
 				//发起攻击
-				util.AttackDamage(runCtx.Ctx, currentGeneral, sufferGeneral)
+				util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral)
 
 				attackFlag = true
 			}
@@ -444,19 +445,6 @@ func (runCtx BattleLogicContext) RoundEndProcessor(tacticsParams model.TacticsPa
 }
 
 func (runCtx BattleLogicContext) TacticEndProcessor(tacticsParams model.TacticsParams) bool {
-	//判断是否有队伍的主将兵力为0
-	for _, general := range tacticsParams.FightingGeneralMap {
-		if general.SoldierNum == 0 {
-			hlog.CtxInfof(runCtx.Ctx, "[%s]武将兵力为0，战斗结束", general.BaseInfo.Name)
-			return true
-		}
-	}
-	for _, general := range tacticsParams.EnemyGeneralMap {
-		if general.SoldierNum == 0 {
-			hlog.CtxInfof(runCtx.Ctx, "[%s]武将兵力为0，战斗结束", general.BaseInfo.Name)
-			return true
-		}
-	}
 
 	return false
 }

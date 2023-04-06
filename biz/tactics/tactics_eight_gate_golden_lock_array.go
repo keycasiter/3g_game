@@ -9,9 +9,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//八门金锁阵
-//战斗前3回合，使敌军群体（2人）造成的伤害降低30%（受智力影响），
-//并使我军主将获得先攻状态（优先行动）
+// 八门金锁阵
+// 战斗前3回合，使敌军群体（2人）造成的伤害降低30%（受智力影响），
+// 并使我军主将获得先攻状态（优先行动）
 type EightGateGoldenLockArrayTactic struct {
 	tacticsParams model.TacticsParams
 }
@@ -50,7 +50,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 			effectRate*100,
 		)
 		//注册消失效果
-		sufferGeneral.TacticsTriggerMap[consts.BattleAction_Attack] = func(params vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_Attack, func(params vo.TacticsTriggerParams) {
 			//第四回合消失
 			if e.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
 				sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] -= effectRate
@@ -72,7 +72,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 					effectRate*100,
 				)
 			}
-		}
+		})
 	}
 	//并使我军主将获得先攻状态（优先行动）
 	//找到我军主将

@@ -50,7 +50,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 			effectRate*100,
 		)
 		//注册消失效果
-		util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_Attack, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
 			//第四回合消失
 			if e.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
 				sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] -= effectRate
@@ -58,7 +58,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 					sufferGeneral.BaseInfo.Name,
 					consts.DebuffEffectType_LaunchStrategyDamageDeduce,
 				)
-				hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提高了%d%%",
+				hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提高了%.2f%%",
 					sufferGeneral.BaseInfo.Name,
 					effectRate*100,
 				)
@@ -67,7 +67,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 					sufferGeneral.BaseInfo.Name,
 					consts.DebuffEffectType_LaunchStrategyDamageDeduce,
 				)
-				hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提高了%d%%",
+				hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提高了%.2f%%",
 					sufferGeneral.BaseInfo.Name,
 					effectRate*100,
 				)
@@ -82,6 +82,14 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 		pairMasterGeneral.BaseInfo.Name,
 		consts.BuffEffectType_FirstAttack,
 	)
+	//注册消失效果
+	util.TacticsTriggerWrapSet(pairMasterGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+		if params.CurrentRound == consts.Battle_Round_Third {
+			delete(pairMasterGeneral.BuffEffectHolderMap, consts.BuffEffectType_FirstAttack)
+			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+				pairMasterGeneral.BaseInfo.Name, consts.BuffEffectType_FirstAttack)
+		}
+	})
 }
 
 func (e EightGateGoldenLockArrayTactic) Id() consts.TacticId {

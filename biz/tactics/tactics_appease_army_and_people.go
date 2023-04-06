@@ -29,33 +29,84 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 	//找到我军队伍
 	pairGeneralArr := util.GetPairGeneralsTwoArr(a.tacticsParams)
 	//使我军群体(2人)造成的伤害降低24%
+	launchDamageDeduceRate := 0.24
 	for _, general := range pairGeneralArr {
 		//造成谋略伤害降低
-		general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] += 0.24
-		hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了24.00%%", general.BaseInfo.Name)
+		general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] += launchDamageDeduceRate
+		hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了%.2f%%", general.BaseInfo.Name,
+			launchDamageDeduceRate*100)
 		//造成兵刃伤害降低
-		general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] += 0.24
-		hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害降低了24.00%%", general.BaseInfo.Name)
+		general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] += launchDamageDeduceRate
+		hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害降低了%.2f%%", general.BaseInfo.Name,
+			launchDamageDeduceRate*100)
+		//注册效果
+		util.TacticsTriggerWrapSet(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+			if params.CurrentRound == consts.Battle_Round_Fourth {
+				//造成谋略伤害降低消失
+				general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] -= launchDamageDeduceRate
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					general.BaseInfo.Name,
+					consts.DebuffEffectType_LaunchStrategyDamageDeduce,
+				)
+				hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提升了%.2f%%", general.BaseInfo.Name,
+					launchDamageDeduceRate*100)
+				//造成兵刃伤害降低消失
+				general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] -= launchDamageDeduceRate
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					general.BaseInfo.Name,
+					consts.DebuffEffectType_LaunchWeaponDamageDeduce,
+				)
+				hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提升了%.2f%%", general.BaseInfo.Name,
+					launchDamageDeduceRate*100)
+			}
+		})
 	}
 
 	//受到的伤害降低24%
 	// TODO（受统率影响）
+	sufferDamageDeduceRate := 0.24 + (currentGeneral.BaseInfo.AbilityAttr.CommandBase / 100 / 100)
 	for _, general := range pairGeneralArr {
 		//受到谋略伤害降低
-		general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += 0.24
-		hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了24.00%%", general.BaseInfo.Name)
+		general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += sufferDamageDeduceRate
+		hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了%.2f%%", general.BaseInfo.Name,
+			sufferDamageDeduceRate*100)
 		//受到兵刃伤害降低
-		general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += 0.24
-		hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了24.00%%", general.BaseInfo.Name)
+		general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += sufferDamageDeduceRate
+		hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了%.2f%%", general.BaseInfo.Name,
+			sufferDamageDeduceRate*100)
+		//注册效果
+		util.TacticsTriggerWrapSet(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+			if params.CurrentRound == consts.Battle_Round_Fourth {
+				//受到谋略伤害降低消失
+				general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] -= sufferDamageDeduceRate
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					general.BaseInfo.Name,
+					consts.BuffEffectType_SufferStrategyDamageDeduce,
+				)
+				hlog.CtxInfof(ctx, "[%s]受到的谋略伤害提升了%.2f%%", general.BaseInfo.Name,
+					sufferDamageDeduceRate*100)
+				//受到兵刃伤害降低消失
+				general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] -= sufferDamageDeduceRate
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					general.BaseInfo.Name,
+					consts.BuffEffectType_SufferWeaponDamageDeduce,
+				)
+				hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害提升了%.2f%%", general.BaseInfo.Name,
+					sufferDamageDeduceRate*100)
+			}
+		})
 	}
 
 	//战斗第4回合时，恢复其兵力
 	//注册效果
 	util.TacticsTriggerWrapSet(currentGeneral,
-		consts.BattleAction_Attack,
+		consts.BattleAction_BeginAction,
 		func(params *vo.TacticsTriggerParams) {
 			//第四回合
-			if a.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
+			if params.CurrentRound == consts.Battle_Round_Fourth {
+				//效果消失
+
+				//恢复兵力
 				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
 					currentGeneral.BaseInfo.Name,
 					a.Name(),

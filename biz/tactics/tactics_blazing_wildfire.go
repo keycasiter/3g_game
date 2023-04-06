@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -65,8 +66,8 @@ func (b BlazingWildfireTactic) Execute() {
 	//对敌军群体(2-3人)施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合；
 	//找到敌军2或3人
 	hitIdMap := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
-	enemyGenerals := util.GetEnemyGeneralArr(b.tacticsParams)
-	for idx, sufferGeneral := range enemyGenerals {
+	enemyGeneralMap := util.GetEnemyGeneralMap(b.tacticsParams)
+	for idx, sufferGeneral := range enemyGeneralMap {
 		if _, ok := hitIdMap[int64(idx)]; ok {
 			//若目标已有灼烧状态则造成兵刃攻击(伤害率118%)
 			//判断当前被攻击武将是否有灼烧状态
@@ -85,8 +86,38 @@ func (b BlazingWildfireTactic) Execute() {
 			} else {
 				//施加灼烧状态
 				sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Firing] = 1.0
-				sufferGeneral.DeBuffEffectCountMap[consts.DebuffEffectType_Firing][2] = 0.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase
-				hlog.CtxInfof(ctx, "[%s]的「灼烧」效果已施加")
+				util.TacticsDebuffCountWrapSet(sufferGeneral, consts.DebuffEffectType_Firing, 2, 0.56*currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+					sufferGeneral.BaseInfo.Name, consts.DebuffEffectType_Firing)
+				//每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合
+				//注册效果
+				util.TacticsDebuffCountWrapSet(sufferGeneral, consts.DebuffEffectType_Firing, 2, 1.0)
+				util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+					//剩余次数判断
+					if !util.TacticsDebuffCountGet(sufferGeneral, consts.DebuffEffectType_Firing) {
+						//次数不足
+						return
+					} else {
+						util.TacticsDebuffCountCost(sufferGeneral, consts.DebuffEffectType_Firing, 1)
+					}
+
+					dmgNum := cast.ToInt64(0.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+					finalDmg, oldNum, remainNum := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
+					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+						sufferGeneral.BaseInfo.Name,
+						b.Name(),
+						consts.DebuffEffectType_Firing,
+					)
+					hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「%v」效果，损失了兵力%d(%d↘%d️)",
+						sufferGeneral.BaseInfo.Name,
+						currentGeneral.BaseInfo.Name,
+						b.Name(),
+						consts.DebuffEffectType_Firing,
+						finalDmg,
+						oldNum,
+						remainNum,
+					)
+				})
 			}
 		}
 	}

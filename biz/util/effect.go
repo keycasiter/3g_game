@@ -75,8 +75,18 @@ func TacticsTriggerWrapSet(general *vo.BattleGeneral, action consts.BattleAction
 // 战法增益次数设置
 func TacticsBuffCountWrapSet(general *vo.BattleGeneral, buffEffect consts.BuffEffectType, cnt int64, rate float64) {
 	if mm, ok := general.BuffEffectCountMap[buffEffect]; ok {
-		mm[cnt] = rate
-		general.BuffEffectCountMap[buffEffect] = mm
+		//取出原数量
+		for k, _ := range mm {
+			//叠加
+			cnt += k
+		}
+		//删除原存储mm
+		delete(general.BuffEffectCountMap, buffEffect)
+		//生成新mm
+		newMm := make(map[int64]float64, 0)
+		//刷新
+		newMm[cnt] = rate
+		general.BuffEffectCountMap[buffEffect] = newMm
 	} else {
 		newMm := make(map[int64]float64, 0)
 		newMm[cnt] = rate
@@ -87,11 +97,78 @@ func TacticsBuffCountWrapSet(general *vo.BattleGeneral, buffEffect consts.BuffEf
 // 战法减益次数设置
 func TacticsDebuffCountWrapSet(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, cnt int64, rate float64) {
 	if mm, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
-		mm[cnt] = rate
-		general.DeBuffEffectCountMap[debuffEffect] = mm
+		//取出原数量
+		for k, _ := range mm {
+			//叠加
+			cnt += k
+		}
+		//删除原存储mm
+		delete(general.DeBuffEffectCountMap, debuffEffect)
+		//生成新mm
+		newMm := make(map[int64]float64, 0)
+		//刷新
+		newMm[cnt] = rate
+		general.DeBuffEffectCountMap[debuffEffect] = newMm
 	} else {
 		newMm := make(map[int64]float64, 0)
 		newMm[cnt] = rate
 		general.DeBuffEffectCountMap[debuffEffect] = newMm
 	}
+}
+
+// 战法减益次数消耗
+func TacticsDebuffCountCost(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, costNum int64) {
+	oldNum := int64(0)
+	rate := float64(0)
+	//兼容消耗数量
+	if costNum > oldNum {
+		costNum = oldNum
+	}
+
+	if mm, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
+		//取出原数量
+		for k, v := range mm {
+			oldNum = k
+			rate = v
+		}
+		//删除原存储mm
+		delete(general.DeBuffEffectCountMap, debuffEffect)
+		//生成新mm
+		newMm := make(map[int64]float64, 0)
+		//刷新
+		newMm[oldNum-costNum] = rate
+		general.DeBuffEffectCountMap[debuffEffect] = newMm
+	} else {
+		newMm := make(map[int64]float64, 0)
+		newMm[oldNum-costNum] = rate
+		general.DeBuffEffectCountMap[debuffEffect] = newMm
+	}
+}
+
+// 战法增益次数查询
+func TacticsBuffCountGet(general *vo.BattleGeneral, buffEffect consts.BuffEffectType) bool {
+	if mm, ok := general.BuffEffectCountMap[buffEffect]; ok {
+		//0次
+		if _, okk := mm[0]; okk {
+			return false
+		}
+		//>0次
+		return true
+	}
+	//不存在效果
+	return false
+}
+
+// 战法减益次数查询
+func TacticsDebuffCountGet(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType) bool {
+	if mm, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
+		//0次
+		if _, okk := mm[0]; okk {
+			return false
+		}
+		//>0次
+		return true
+	}
+	//不存在效果
+	return false
 }

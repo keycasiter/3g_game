@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
@@ -129,7 +130,8 @@ func GetPairGeneralsTwoOrThreeMap(tacticsParams model.TacticsParams) []*vo.Battl
 	pairGeneralArr := GetPairGeneralArr(tacticsParams)
 	pairGenerals := make([]*vo.BattleGeneral, 0)
 	//两到三个
-	hitIdxMap := GenerateHitTwoOrThreeIdxMap()
+	totalNum := len(pairGeneralArr)
+	hitIdxMap := GenerateHitTwoOrThreeIdxMap(totalNum)
 	for idx, general := range pairGeneralArr {
 		if _, ok := hitIdxMap[int64(idx)]; ok {
 			pairGenerals = append(pairGenerals, general)
@@ -143,7 +145,8 @@ func GetEnemyOneGeneral(tacticsParams model.TacticsParams) *vo.BattleGeneral {
 	//找到敌军
 	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
 	//随机1个人
-	hitIdx := GenerateHitOneIdx(3)
+	totalNum := len(enemyGeneralArr)
+	hitIdx := GenerateHitOneIdx(totalNum)
 	if enemyGeneralArr[hitIdx] != nil {
 		return enemyGeneralArr[hitIdx]
 	}
@@ -157,7 +160,12 @@ func GetEnemyGeneralsTwoArr(tacticsParams model.TacticsParams) []*vo.BattleGener
 	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
 	enemyGenerals := make([]*vo.BattleGeneral, 0)
 	//随机两个人
-	hitIdxMap := GenerateHitIdxMap(2, 3)
+	hitNum := 2
+	totalNum := len(enemyGeneralArr)
+	if totalNum < 2 {
+		hitNum = 1
+	}
+	hitIdxMap := GenerateHitIdxMap(hitNum, totalNum)
 	for idx, general := range enemyGeneralArr {
 		if _, ok := hitIdxMap[int64(idx)]; ok {
 			enemyGenerals = append(enemyGenerals, general)
@@ -172,7 +180,12 @@ func GetPairGeneralsTwoArr(tacticsParams model.TacticsParams) []*vo.BattleGenera
 	pairGeneralArr := GetPairGeneralArr(tacticsParams)
 	pairGenerals := make([]*vo.BattleGeneral, 0)
 	//随机两个队友
-	hitIdxMap := GenerateHitIdxMap(2, 3)
+	hitNum := 2
+	totalNum := len(pairGeneralArr)
+	if totalNum < 2 {
+		hitNum = 1
+	}
+	hitIdxMap := GenerateHitIdxMap(hitNum, totalNum)
 	for idx, general := range pairGeneralArr {
 		if _, ok := hitIdxMap[int64(idx)]; ok {
 			pairGenerals = append(pairGenerals, general)
@@ -182,18 +195,19 @@ func GetPairGeneralsTwoArr(tacticsParams model.TacticsParams) []*vo.BattleGenera
 }
 
 // 找到当前敌军两到三个队友
-func GetEnemyGeneralsTwoOrThreeMap(tacticsParams model.TacticsParams) []*vo.BattleGeneral {
+func GetEnemyGeneralsTwoOrThreeMap(tacticsParams model.TacticsParams) map[int64]*vo.BattleGeneral {
 	//找到队友
 	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
-	enemyGenerals := make([]*vo.BattleGeneral, 0)
+	enemyGeneralMap := make(map[int64]*vo.BattleGeneral, 0)
 	//两到三个
-	hitIdxMap := GenerateHitTwoOrThreeIdxMap()
+	totalNum := len(enemyGeneralArr)
+	hitIdxMap := GenerateHitTwoOrThreeIdxMap(totalNum)
 	for idx, general := range enemyGeneralArr {
 		if _, ok := hitIdxMap[int64(idx)]; ok {
-			enemyGenerals = append(enemyGenerals, general)
+			enemyGeneralMap[general.BaseInfo.UniqueId] = general
 		}
 	}
-	return enemyGenerals
+	return enemyGeneralMap
 }
 
 // 找到我军损失兵力最多的武将
@@ -209,4 +223,22 @@ func GetPairMaxLossSoldierNumGeneral(tacticsParams model.TacticsParams) *vo.Batt
 		}
 	}
 	return maxLossSoldierNumGeneral
+}
+
+// 移除兵力为0武将退场
+func RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams model.TacticsParams) {
+	allGenerals := make([]*vo.BattleGeneral, 0)
+
+	for _, general := range tacticsParams.AllGeneralArr {
+		if general.SoldierNum == 0 {
+			hlog.CtxInfof(tacticsParams.Ctx, "退出武将：%s", general.BaseInfo.Name)
+			delete(tacticsParams.AllGeneralMap, general.BaseInfo.UniqueId)
+			delete(tacticsParams.FightingGeneralMap, general.BaseInfo.UniqueId)
+			delete(tacticsParams.EnemyGeneralMap, general.BaseInfo.UniqueId)
+		} else {
+			allGenerals = append(allGenerals, general)
+		}
+	}
+	hlog.CtxInfof(tacticsParams.Ctx, "武将池：%d", len(allGenerals))
+	tacticsParams.AllGeneralArr = allGenerals
 }

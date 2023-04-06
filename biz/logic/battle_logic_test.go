@@ -391,7 +391,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: siMaYiTactics,
 				Addition:     addition,
-				SoldierNum:   30000,
+				SoldierNum:   10000,
 			}
 			fightGenerals = append(fightGenerals, vo)
 		case "曹操":
@@ -399,7 +399,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: caoCaoTactics,
 				Addition:     addition,
-				SoldierNum:   30000,
+				SoldierNum:   10000,
 			}
 			fightGenerals = append(fightGenerals, vo)
 		case "满宠":
@@ -407,7 +407,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: manChongTactics,
 				Addition:     addition,
-				SoldierNum:   30000,
+				SoldierNum:   10000,
 			}
 			fightGenerals = append(fightGenerals, vo)
 		}
@@ -424,7 +424,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: jiangweiTactics,
 				Addition:     addition,
-				SoldierNum:   30000,
+				SoldierNum:   10000,
 			}
 			enemyGenerals = append(enemyGenerals, vo)
 		case "庞统":
@@ -432,7 +432,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: pangTongTactics,
 				Addition:     addition,
-				SoldierNum:   30000,
+				SoldierNum:   10000,
 			}
 			enemyGenerals = append(enemyGenerals, vo)
 		case "诸葛亮":
@@ -440,7 +440,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 				BaseInfo:     general,
 				EquipTactics: zhuGeLiangTactics,
 				Addition:     addition,
-				SoldierNum:   30000,
+				SoldierNum:   10000,
 			}
 			enemyGenerals = append(enemyGenerals, vo)
 		}

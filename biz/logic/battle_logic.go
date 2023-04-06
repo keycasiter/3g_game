@@ -38,6 +38,8 @@ type BattleLogicContext struct {
 	Funcs []func()
 	// 执行错误
 	RunErr error
+
+	/** 回合对战全局变量 **/
 	//对战战法全局holder
 	TacticsParams *model.TacticsParams
 	//回合结束标记
@@ -285,11 +287,6 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 
 		//执行战法
 		for _, tactic := range currentGeneral.EquipTactics {
-			hlog.CtxInfof(runCtx.Ctx, "武将[%s],战法[%s]",
-				currentGeneral.BaseInfo.Name,
-				tactic.Name,
-			)
-
 			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.普攻 > 7.突击
 			//1.被动
 			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
@@ -386,9 +383,19 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	//	for _, tactic := range general.EquipTactics {
 	//	}
 	//}
-	hlog.CtxInfof(runCtx.Ctx, "战斗回合：%d", currentRound)
+	hlog.CtxInfof(runCtx.Ctx, "战斗回合：【%d】", currentRound)
 
-	for _, currentGeneral := range tacticsParams.AllGeneralArr {
+	for _, currentGeneral := range tacticsParams.AllGeneralMap {
+		//for _, general := range tacticsParams.FightingGeneralMap {
+		//	hlog.CtxInfof(runCtx.Ctx,"我军:%s",general.BaseInfo.Name)
+		//}
+		//for _, general := range tacticsParams.EnemyGeneralMap {
+		//	hlog.CtxInfof(runCtx.Ctx,"敌军:%s",general.BaseInfo.Name)
+		//}
+		//for _, general := range tacticsParams.AllGeneralArr {
+		//	hlog.CtxInfof(runCtx.Ctx,"武将:%s",general.BaseInfo.Name)
+		//}
+
 		//设置战法轮次属性
 		runCtx.TacticsParams.CurrentRound = currentRound
 		runCtx.TacticsParams.CurrentGeneral = currentGeneral
@@ -403,6 +410,17 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			currentGeneral.BaseInfo.GeneralBattleType,
 			currentGeneral.BaseInfo.Name,
 		)
+		//触发「开始行动」战法效果
+		if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_BeginAction]; ok {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:         currentRound,
+					CurrentAttackGeneral: currentGeneral,
+					CurrentDamage:        0,
+				}
+				f(params)
+			}
+		}
 
 		//执行战法
 		//普攻次数
@@ -434,10 +452,18 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			if attackCanCnt > 0 {
 				//2.1 普通攻击拦截
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
-					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法普通攻击", currentGeneral.BaseInfo.Name)
+					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
+						currentGeneral.BaseInfo.Name,
+						consts.DebuffEffectType_PoorHealth,
+					)
+					return
 				}
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
-					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]无法普通攻击状态，无法普通攻击", currentGeneral.BaseInfo.Name)
+					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
+						currentGeneral.BaseInfo.Name,
+						consts.DebuffEffectType_CanNotGeneralAttack,
+					)
+					return
 				}
 				//2.2 触发兵书效果
 				//TODO

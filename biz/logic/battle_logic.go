@@ -40,6 +40,8 @@ type BattleLogicContext struct {
 	RunErr error
 	//对战战法全局holder
 	TacticsParams *model.TacticsParams
+	//回合结束标记
+	BattleRoundEndFlag bool
 }
 
 func NewBattleLogicContext(ctx context.Context, req *BattleLogicContextRequest) *BattleLogicContext {
@@ -356,10 +358,13 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 	//最多8回合
 	currentRound := consts.Battle_Round_Unknow
 	for i := 0; i < int(consts.Battle_Round_Eighth); i++ {
+		if runCtx.BattleRoundEndFlag {
+			break
+		}
 		currentRound++
 		runCtx.processBattleFightingRound(currentRound)
 	}
-	hlog.CtxInfof(runCtx.Ctx, "战斗结束")
+	hlog.CtxInfof(runCtx.Ctx, "战斗结束 , 结束时回合数：%d", currentRound)
 
 	//打印每队战况
 	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
@@ -389,7 +394,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 		//武将回合前置处理器
 		if !runCtx.GeneralRoundPreProcessor(tacticsParams) {
-			return
+			continue
 		}
 
 		//打印当前执行队伍、武将、速度
@@ -418,17 +423,22 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 				//武将清理
 				util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
+				//战法后置处理器
+				if !runCtx.TacticPostProcessor(tacticsParams) {
+					runCtx.BattleRoundEndFlag = true
+					goto exitFlag
+				}
 			}
 			//2.普攻
-			//2.1 普通攻击拦截
-			if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
-				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法普通攻击", currentGeneral.BaseInfo.Name)
-			}
-			if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
-				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]无法普通攻击状态，无法普通攻击", currentGeneral.BaseInfo.Name)
-			}
-			//2.2 普通攻击
 			if attackCanCnt > 0 {
+				//2.1 普通攻击拦截
+				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
+					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法普通攻击", currentGeneral.BaseInfo.Name)
+				}
+				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
+					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]无法普通攻击状态，无法普通攻击", currentGeneral.BaseInfo.Name)
+				}
+
 				//找到普攻目标
 				sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
 				//发起攻击
@@ -439,6 +449,12 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				//武将清理
 				util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
 
+				//战法后置处理器
+				if !runCtx.TacticPostProcessor(tacticsParams) {
+					runCtx.BattleRoundEndFlag = true
+					goto exitFlag
+				}
+
 				//3.突击
 				if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
 					handler := tactics.TacticsHandlerMap[tactic.Id]
@@ -446,22 +462,50 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 					//武将清理
 					util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
+
+					//战法后置处理器
+					if !runCtx.TacticPostProcessor(tacticsParams) {
+						runCtx.BattleRoundEndFlag = true
+						goto exitFlag
+					}
 				}
 			}
 		}
-
 		//武将回合结束处理器
 		runCtx.GeneralRoundPostProcessor(tacticsParams)
 	}
+
+exitFlag:
 }
 
 // 战法执行前置处理器
-func (runCtx BattleLogicContext) GeneralRoundPreProcessor(tacticsParams *model.TacticsParams) bool {
+func (runCtx BattleLogicContext) TacticPreProcessor(tacticsParams *model.TacticsParams) bool {
 	//兵力校验
 	if tacticsParams.CurrentGeneral.SoldierNum == 0 {
 		return false
 	}
 
+	return true
+}
+
+// 武将回合执行前置处理器
+func (runCtx BattleLogicContext) TacticPostProcessor(tacticsParams *model.TacticsParams) bool {
+	//主将校验
+	masterGeneralCnt := 0
+	for _, general := range tacticsParams.AllGeneralMap {
+		if general.IsMaster {
+			masterGeneralCnt++
+		}
+	}
+	if masterGeneralCnt != 2 {
+		return false
+	}
+
+	return true
+}
+
+// 武将回合执行前置处理器
+func (runCtx BattleLogicContext) GeneralRoundPreProcessor(tacticsParams *model.TacticsParams) bool {
 	return true
 }
 

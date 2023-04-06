@@ -88,7 +88,7 @@ func FluctuateDamage(dmg int64) int64 {
 // 普通攻击伤害结算
 // @attack 攻击武将
 // @suffer 被攻击武将
-func AttackDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral) {
+func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral) {
 	ctx := tacticsParams.Ctx
 	soldierNum := attackGeneral.SoldierNum
 	defSoldierNum := sufferGeneral.SoldierNum
@@ -176,8 +176,6 @@ func AttackDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGen
 	if sufferGeneral.SoldierNum == 0 {
 		hlog.CtxInfof(ctx, "[%s]武将兵力为0，无法再战", sufferGeneral.BaseInfo.Name)
 	}
-	//武将兵力为0，直接退场
-	RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
 }
 
 // 战法伤害计算
@@ -185,7 +183,7 @@ func AttackDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGen
 // @suffer 被攻击武将
 // @damage 伤害量
 // @return 实际伤害/原兵力/剩余兵力
-func TacticDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64) (damageNum, soldierNum, remainSoldierNum int64) {
+func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64) (damageNum, soldierNum, remainSoldierNum int64) {
 	ctx := tacticsParams.Ctx
 
 	//是否可以规避
@@ -212,7 +210,5 @@ func TacticDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGen
 	sufferGeneral.SoldierNum -= damageNum
 	remainSoldierNum = sufferGeneral.SoldierNum
 
-	//武将兵力为0，直接退场
-	RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
 	return
 }

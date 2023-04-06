@@ -9,7 +9,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 	"sort"
 )
 
@@ -39,6 +38,8 @@ type BattleLogicContext struct {
 	Funcs []func()
 	// 执行错误
 	RunErr error
+	//对战战法全局holder
+	TacticsParams *model.TacticsParams
 }
 
 func NewBattleLogicContext(ctx context.Context, req *BattleLogicContextRequest) *BattleLogicContext {
@@ -49,6 +50,8 @@ func NewBattleLogicContext(ctx context.Context, req *BattleLogicContextRequest) 
 	runCtx.Funcs = []func(){
 		//初始化元数据
 		runCtx.initMetadata,
+		//构建对战战法数据
+		runCtx.buildBattleRoundParams,
 		//对战准备阶段处理
 		runCtx.processBattlePreparePhase,
 		//对战对阵阶段处理
@@ -243,6 +246,8 @@ func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, g
 
 // 对战准备阶段处理
 func (runCtx *BattleLogicContext) processBattlePreparePhase() {
+	tacticsParams := runCtx.TacticsParams
+
 	/********************************************************/
 	/*** 以下不受武将速度影响来执行，根据我方先/敌方后的顺序执行即可 ***/
 	/********************************************************/
@@ -264,20 +269,19 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 	/****************************/
 	/*** 以下受武将速度影响来执行 ***/
 	/****************************/
-	var allGenerals vo.BattleGeneralsOrderBySpeed
-	allGenerals = append(allGenerals, runCtx.ReqParam.FightingTeam.BattleGenerals...)
-	allGenerals = append(allGenerals, runCtx.ReqParam.EnemyTeam.BattleGenerals...)
-	//按速度排序，从快到慢
-	sort.Sort(allGenerals)
-	for _, currentGeneral := range allGenerals {
-		//每轮战法参数准备
-		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral, allGenerals)
+	runCtx.makeAllGeneralsOrderBySpeed(tacticsParams)
+
+	//战法参数准备
+	for _, currentGeneral := range tacticsParams.AllGeneralArr {
+		//设置战法轮次属性
+		runCtx.TacticsParams.CurrentRound = consts.Battle_Round_Prepare
+		runCtx.TacticsParams.CurrentGeneral = currentGeneral
 
 		//打印当前执行队伍、武将、速度
 		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", currentGeneral.BaseInfo.GeneralBattleType, currentGeneral.BaseInfo.Name,
 			currentGeneral.BaseInfo.AbilityAttr.SpeedBase)
 
-		//执行全部战法
+		//执行战法
 		for _, tactic := range currentGeneral.EquipTactics {
 			hlog.CtxInfof(runCtx.Ctx, "武将[%s],战法[%s]",
 				currentGeneral.BaseInfo.Name,
@@ -308,6 +312,15 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 		}
 	}
 
+}
+
+// 按速度排序，从快到慢
+func (runCtx *BattleLogicContext) makeAllGeneralsOrderBySpeed(tacticsParams *model.TacticsParams) {
+	var allGenerals vo.BattleGeneralsOrderBySpeed
+	allGenerals = append(allGenerals, runCtx.ReqParam.FightingTeam.BattleGenerals...)
+	allGenerals = append(allGenerals, runCtx.ReqParam.EnemyTeam.BattleGenerals...)
+	sort.Sort(allGenerals)
+	tacticsParams.AllGeneralArr = allGenerals
 }
 
 func (runCtx *BattleLogicContext) handleGeneralAddition(team *vo.BattleTeam, general *vo.BattleGeneral) {
@@ -347,15 +360,19 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 		runCtx.processBattleFightingRound(currentRound)
 	}
 	hlog.CtxInfof(runCtx.Ctx, "战斗结束")
-	hlog.CtxInfof(runCtx.Ctx, "平局！")
+
+	//打印每队战况
+	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
+		hlog.CtxInfof(runCtx.Ctx, "[%s]兵力[%d]", general.BaseInfo.Name, general.SoldierNum)
+	}
+	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
+		hlog.CtxInfof(runCtx.Ctx, "[%s]兵力[%d]", general.BaseInfo.Name, general.SoldierNum)
+	}
 }
 
 // 每回合对战处理
 func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts.BattleRound) {
-	//所有武将
-	var allGenerals vo.BattleGeneralsOrderBySpeed
-	allGenerals = append(allGenerals, runCtx.ReqParam.FightingTeam.BattleGenerals...)
-	allGenerals = append(allGenerals, runCtx.ReqParam.EnemyTeam.BattleGenerals...)
+	tacticsParams := runCtx.TacticsParams
 
 	//判断先攻战法生效
 	//判断是否有武将本回合有先攻战法生效
@@ -363,18 +380,17 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	//	for _, tactic := range general.EquipTactics {
 	//	}
 	//}
-	//按速度排序，从快到慢
-	sort.Sort(allGenerals)
 	hlog.CtxInfof(runCtx.Ctx, "战斗回合：%d", currentRound)
 
-	for _, currentGeneral := range allGenerals {
-		//兵力判断
-		if currentGeneral.SoldierNum == 0 {
+	for _, currentGeneral := range tacticsParams.AllGeneralArr {
+		//设置战法轮次属性
+		runCtx.TacticsParams.CurrentRound = currentRound
+		runCtx.TacticsParams.CurrentGeneral = currentGeneral
+
+		//武将回合前置处理器
+		if !runCtx.GeneralRoundPreProcessor(tacticsParams) {
 			return
 		}
-
-		//每轮战法参数准备
-		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral, allGenerals)
 
 		//打印当前执行队伍、武将、速度
 		hlog.CtxInfof(runCtx.Ctx, "[%v][%s]开始行动",
@@ -383,7 +399,8 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		)
 
 		//执行战法
-		attackFlag := false
+		//普攻次数
+		attackCanCnt := 1
 		for _, tactic := range currentGeneral.EquipTactics {
 			//战法发动顺序：1.主动 > 2.普攻 > 3.突击
 			//1.主动
@@ -398,6 +415,9 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
+
+				//武将清理
+				util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
 			}
 			//2.普攻
 			//2.1 普通攻击拦截
@@ -408,34 +428,45 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]无法普通攻击状态，无法普通攻击", currentGeneral.BaseInfo.Name)
 			}
 			//2.2 普通攻击
-			if !attackFlag {
+			if attackCanCnt > 0 {
 				//找到普攻目标
 				sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
 				//发起攻击
 				util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral)
+				//普攻次数减一
+				attackCanCnt--
 
-				attackFlag = true
-			}
+				//武将清理
+				util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
 
-			//3.突击
-			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
-				handler := tactics.TacticsHandlerMap[tactic.Id]
-				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
-			}
+				//3.突击
+				if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
+					handler := tactics.TacticsHandlerMap[tactic.Id]
+					execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 
-			//战法结束处理器
-			isFinish := runCtx.TacticEndProcessor(tacticsParams)
-			if isFinish {
-				break
+					//武将清理
+					util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
+				}
 			}
 		}
 
-		//回合结束处理器
-		runCtx.RoundEndProcessor(tacticsParams)
+		//武将回合结束处理器
+		runCtx.GeneralRoundPostProcessor(tacticsParams)
 	}
 }
 
-func (runCtx BattleLogicContext) RoundEndProcessor(tacticsParams model.TacticsParams) {
+// 战法执行前置处理器
+func (runCtx BattleLogicContext) GeneralRoundPreProcessor(tacticsParams *model.TacticsParams) bool {
+	//兵力校验
+	if tacticsParams.CurrentGeneral.SoldierNum == 0 {
+		return false
+	}
+
+	return true
+}
+
+// 战法执行后置处理器
+func (runCtx BattleLogicContext) GeneralRoundPostProcessor(tacticsParams *model.TacticsParams) {
 	//所有冷却战法-1
 	for _, general := range tacticsParams.AllGeneralMap {
 		for tacticId, cnt := range general.TacticsFrozenMap {
@@ -447,31 +478,27 @@ func (runCtx BattleLogicContext) RoundEndProcessor(tacticsParams model.TacticsPa
 	return
 }
 
-func (runCtx BattleLogicContext) TacticEndProcessor(tacticsParams model.TacticsParams) bool {
-
-	return false
-}
-
-func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.BattleRound, currentGeneral *vo.BattleGeneral, allGenerals []*vo.BattleGeneral) model.TacticsParams {
-	tacticsParams := model.TacticsParams{}
-	tacticsParams.CurrentRound = currentRound
-	tacticsParams.CurrentGeneral = currentGeneral
+func (runCtx *BattleLogicContext) buildBattleRoundParams() {
+	tacticsParams := &model.TacticsParams{}
+	tacticsParams.CurrentRound = consts.Battle_Round_Unknow
 
 	//武将信息转map/arr，方便后续直接调用
 	tacticsParams.FightingGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	tacticsParams.EnemyGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	tacticsParams.AllGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
-		tacticsParams.FightingGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
-		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
+		tacticsParams.FightingGeneralMap[general.BaseInfo.UniqueId] = general
+		tacticsParams.AllGeneralMap[general.BaseInfo.UniqueId] = general
+		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
 	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
-		tacticsParams.EnemyGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
-		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
+		tacticsParams.EnemyGeneralMap[general.BaseInfo.UniqueId] = general
+		tacticsParams.AllGeneralMap[general.BaseInfo.UniqueId] = general
+		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
 
 	//初始化增益效果/负面效果
-	for _, general := range allGenerals {
+	for _, general := range tacticsParams.AllGeneralArr {
 		if general.BuffEffectTriggerMap == nil {
 			general.BuffEffectTriggerMap = map[consts.BuffEffectType]map[consts.BattleRound]float64{}
 		}
@@ -501,5 +528,5 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.Bat
 		}
 	}
 
-	return tacticsParams
+	runCtx.TacticsParams = tacticsParams
 }

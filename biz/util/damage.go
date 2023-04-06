@@ -1,7 +1,6 @@
 package util
 
 import (
-	"context"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
@@ -86,41 +85,6 @@ func FluctuateDamage(dmg int64) int64 {
 	return cast.ToInt64(cast.ToFloat64(dmg) * Random(-0.1, 0.1))
 }
 
-// 普通攻击伤害计算
-// ref: https://baijiahao.baidu.com/s?id=1748672336647348844
-// @num 我方携带兵力
-// @atk 兵刃伤害：我方武将武力；谋略伤害：我方武将智力
-// @def 兵刃防御：我方武将智力；谋略防御：我方武将智力
-// @inc 伤害增益比例
-// @dec 伤害减益比例
-func GeneralAttackDamage(num int64,
-	atk float64,
-	def float64,
-	inc float64,
-	dec float64) int64 {
-
-	//兵力伤害计算
-	numDmg := float64(0)
-	//0～3000兵力，伤害为兵力的10%
-	if num > 0 && num <= 3000 {
-		numDmg = cast.ToFloat64(num) * 0.1
-	}
-	//3000～6000兵力，1000兵力=50伤害
-	if num > 3000 && num <= 6000 {
-		numDmg = 3000 * 0.1
-		numDmg += cast.ToFloat64((num - 3000) / 1000 * 50)
-	}
-	//6000～Max兵力，1000兵力=30伤害
-	if num > 6000 {
-		numDmg = 3000 * 0.1
-		numDmg += cast.ToFloat64((num / 1000) * 50)
-		numDmg += cast.ToFloat64((num - 3000) / 1000 * 50)
-		numDmg += cast.ToFloat64((num - 6000) / 1000 * 30)
-	}
-	// 总伤害 = (兵力伤害 + 攻击 - 防御) * (1 + 增益比例 - 减益比例)
-	return cast.ToInt64((numDmg + (atk - def)) * (1 + inc - dec))
-}
-
 // 普通攻击伤害结算
 // @attack 攻击武将
 // @suffer 被攻击武将
@@ -128,6 +92,21 @@ func AttackDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGen
 	ctx := tacticsParams.Ctx
 	soldierNum := attackGeneral.SoldierNum
 	defSoldierNum := sufferGeneral.SoldierNum
+
+	hlog.CtxInfof(ctx, "[%s]对[%s]发动普通攻击",
+		attackGeneral.BaseInfo.Name,
+		sufferGeneral.BaseInfo.Name,
+	)
+
+	//是否可以规避
+	if rate, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
+		if GenerateRate(rate) {
+			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效", sufferGeneral.BaseInfo.Name)
+			return
+		} else {
+			hlog.CtxInfof(ctx, "[%s]规避失败", sufferGeneral.BaseInfo.Name)
+		}
+	}
 
 	//兵力伤害计算
 	numDmg := float64(0)
@@ -180,11 +159,6 @@ func AttackDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGen
 	hlog.CtxInfof(ctx, "兵力基础伤害:%d ,武力/防御差:%.2f , 最终伤害:%d , 攻击者武力:%.2f , 防守者统率:%.2f , 造成+受到兵刃伤害增加:%.2f%% , 造成+受到兵刃伤害减少:%.2f%% , 最终增减伤率:%.2f",
 		int64(numDmg), atkDefDmg, attackDmg, atk, def, inc*100, dec*100, incDecRate)
 
-	hlog.CtxInfof(ctx, "[%s]对[%s]发动普通攻击",
-		attackGeneral.BaseInfo.Name,
-		sufferGeneral.BaseInfo.Name,
-	)
-
 	//伤害计算
 	finalDmg := int64(0)
 	remainSoldierNum := int64(0)
@@ -199,10 +173,11 @@ func AttackDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGen
 	}
 	hlog.CtxInfof(ctx, "[%s]损失了兵力%d(%d↘%d)", sufferGeneral.BaseInfo.Name, finalDmg, defSoldierNum, remainSoldierNum)
 
-	//武将兵力为0，直接退场
 	if sufferGeneral.SoldierNum == 0 {
 		hlog.CtxInfof(ctx, "[%s]武将兵力为0，无法再战", sufferGeneral.BaseInfo.Name)
 	}
+	//武将兵力为0，直接退场
+	RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
 }
 
 // 战法伤害计算
@@ -210,14 +185,16 @@ func AttackDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGen
 // @suffer 被攻击武将
 // @damage 伤害量
 // @return 实际伤害/原兵力/剩余兵力
-func TacticDamage(ctx context.Context, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64) (damageNum, soldierNum, remainSoldierNum int64) {
+func TacticDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64) (damageNum, soldierNum, remainSoldierNum int64) {
+	ctx := tacticsParams.Ctx
+
 	//是否可以规避
 	if rate, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
 		if GenerateRate(rate) {
-			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效")
+			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效", sufferGeneral.BaseInfo.Name)
 			return 0, sufferGeneral.SoldierNum, sufferGeneral.SoldierNum
 		} else {
-			hlog.CtxInfof(ctx, "[%s]规避失败")
+			hlog.CtxInfof(ctx, "[%s]规避失败", sufferGeneral.BaseInfo.Name)
 		}
 	}
 
@@ -234,5 +211,8 @@ func TacticDamage(ctx context.Context, attackGeneral *vo.BattleGeneral, sufferGe
 	//伤害结算
 	sufferGeneral.SoldierNum -= damageNum
 	remainSoldierNum = sufferGeneral.SoldierNum
+
+	//武将兵力为0，直接退场
+	RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
 	return
 }

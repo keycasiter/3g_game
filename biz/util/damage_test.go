@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -37,8 +36,4 @@ func TestDamage(t *testing.T) {
 }
 
 func TestGeneralAttackDamage(t *testing.T) {
-	dmg := GeneralAttackDamage(2900, 44, 84, 0.075, 0.167)
-	fmt.Printf("dmg: %d\n", dmg)
-	dmg = dmg + FluctuateDamage(dmg)
-	fmt.Printf("wave dmg: %d\n", dmg)
 }

@@ -51,12 +51,32 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.Curettage] = &CurettageTactic{}
 	//锋矢阵
 	TacticsHandlerMap[consts.FrontalVectorArray] = &FrontalVectorArrayTactic{}
+	//义胆雄心
+	TacticsHandlerMap[consts.BraveAmbition] = &BraveAmbitionTactic{}
+	//夺魂挟魄
+	TacticsHandlerMap[consts.SeizeTheSoul] = &SeizeTheSoulTactic{}
+	//火炽原燎
+	TacticsHandlerMap[consts.BlazingWildfire] = &BlazingWildfireTactic{}
+	//连环计
+	TacticsHandlerMap[consts.InterlockedStratagems] = &InterlockedStratagemsTactic{}
+	//太平道法
+	TacticsHandlerMap[consts.TaipingLaw] = &TaipingLawTactic{}
+	//无当飞军
+	TacticsHandlerMap[consts.WuDangFlyArmy] = &WuDangFlyArmyTactic{}
+	//神机妙算
+	TacticsHandlerMap[consts.CleverStrategyAndShrewdTactics] = &CleverStrategyAndShrewdTacticsTactic{}
+	//八门金锁阵
+	TacticsHandlerMap[consts.EightGateGoldenLockArray] = &EightGateGoldenLockArrayTactic{}
+	//草船借箭
+	TacticsHandlerMap[consts.BorrowArrowsWithThatchedBoats] = &BorrowArrowsWithThatchedBoatsTactic{}
 }
 
 func initTacticsMap() {
 	//被动战法
 	PassiveTacticsMap[consts.ThreeDaysOfSeparation] = true
 	PassiveTacticsMap[consts.Charming] = true
+	PassiveTacticsMap[consts.TaipingLaw] = true
+	PassiveTacticsMap[consts.BraveAmbition] = true
 	//指挥战法
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[consts.Demoralize] = true
@@ -67,9 +87,17 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.AppeaseArmyAndPeople] = true
 	CommandTacticsMap[consts.TraitorInTroubledTimes] = true
 	PassiveTacticsMap[consts.ClearEyedAndMalicious] = true
+	PassiveTacticsMap[consts.CleverStrategyAndShrewdTactics] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
+	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
+	//兵种
+	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	//主动
 	ActiveTacticsMap[consts.Curettage] = true
 	ActiveTacticsMap[consts.TheSkyIsBlazing] = true
+	ActiveTacticsMap[consts.SeizeTheSoul] = true
+	ActiveTacticsMap[consts.BlazingWildfire] = true
+	ActiveTacticsMap[consts.InterlockedStratagems] = true
+	ActiveTacticsMap[consts.BorrowArrowsWithThatchedBoats] = true
 }

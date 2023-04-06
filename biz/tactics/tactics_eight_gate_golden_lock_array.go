@@ -35,17 +35,17 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(e.tacticsParams)
 	//造成的伤害降低30%
 	//TODO（受智力影响）
-	effectRate := 0.3 + (currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100)
+	effectRate := 0.3 + (currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100 / 100)
 
 	for _, sufferGeneral := range enemyGenerals {
 		//效果施加
 		sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] += effectRate
-		hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害降低了%d%%",
+		hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害降低了%.2f%%",
 			sufferGeneral.BaseInfo.Name,
 			effectRate*100,
 		)
 		sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] += effectRate
-		hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了%d%%",
+		hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了%.2f%%",
 			sufferGeneral.BaseInfo.Name,
 			effectRate*100,
 		)
@@ -78,7 +78,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 	//找到我军主将
 	pairMasterGeneral := util.GetPairMasterGeneral(e.tacticsParams)
 	pairMasterGeneral.BuffEffectHolderMap[consts.BuffEffectType_FirstAttack] = 1.0
-	hlog.CtxInfof(ctx, "[%s]的「%」效果已施加",
+	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 		pairMasterGeneral.BaseInfo.Name,
 		consts.BuffEffectType_FirstAttack,
 	)

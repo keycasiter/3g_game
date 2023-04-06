@@ -99,16 +99,16 @@ func (s SeizeTheSoulTactic) Execute() {
 		enemyGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
 		enemyGeneral.BaseInfo.AbilityAttr.CommandBase -= v
 		hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
-			currentGeneral.BaseInfo.Name,
+			enemyGeneral.BaseInfo.Name,
 			v)
 		hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
-			currentGeneral.BaseInfo.Name,
+			enemyGeneral.BaseInfo.Name,
 			v)
 		hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
-			currentGeneral.BaseInfo.Name,
+			enemyGeneral.BaseInfo.Name,
 			v)
 		hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
-			currentGeneral.BaseInfo.Name,
+			enemyGeneral.BaseInfo.Name,
 			v)
 		//持续2回合，可叠加2次
 		//注册效果

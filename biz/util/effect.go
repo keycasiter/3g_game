@@ -47,8 +47,8 @@ func DebuffEffectWrapSet(holder map[consts.DebuffEffectType]map[consts.BattleRou
 	holder[effectType] = mm
 }
 
-//负面效果清除
-//@general 要处理的武将
+// 负面效果清除
+// @general 要处理的武将
 func DebuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 	for effectType, _ := range general.DeBuffEffectHolderMap {
 		hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
@@ -61,7 +61,7 @@ func DebuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 	general.DeBuffEffectHolderMap = map[consts.DebuffEffectType]float64{}
 }
 
-//战法触发器设置
+// 战法触发器设置
 func TacticsTriggerWrapSet(general *vo.BattleGeneral, action consts.BattleAction, f func(params vo.TacticsTriggerParams)) {
 	if funcs, ok := general.TacticsTriggerMap[action]; ok {
 		funcs = append(funcs, f)
@@ -69,5 +69,29 @@ func TacticsTriggerWrapSet(general *vo.BattleGeneral, action consts.BattleAction
 		fs := make([]func(params vo.TacticsTriggerParams), 0)
 		fs = append(fs, f)
 		general.TacticsTriggerMap[action] = fs
+	}
+}
+
+// 战法增益次数设置
+func TacticsBuffCountWrapSet(general *vo.BattleGeneral, buffEffect consts.BuffEffectType, cnt int64, rate float64) {
+	if mm, ok := general.BuffEffectCountMap[buffEffect]; ok {
+		mm[cnt] = rate
+		general.BuffEffectCountMap[buffEffect] = mm
+	} else {
+		newMm := make(map[int64]float64, 0)
+		newMm[cnt] = rate
+		general.BuffEffectCountMap[buffEffect] = newMm
+	}
+}
+
+// 战法减益次数设置
+func TacticsDebuffCountWrapSet(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, cnt int64, rate float64) {
+	if mm, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
+		mm[cnt] = rate
+		general.DeBuffEffectCountMap[debuffEffect] = mm
+	} else {
+		newMm := make(map[int64]float64, 0)
+		newMm[cnt] = rate
+		general.DeBuffEffectCountMap[debuffEffect] = newMm
 	}
 }

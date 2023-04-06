@@ -51,7 +51,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 			consts.DebuffEffectType_Methysis,
 		)
 		//持续3回合
-		general.DeBuffEffectCountMap[consts.DebuffEffectType_Methysis][3] = 1.0
+		util.TacticsDebuffCountWrapSet(general, consts.DebuffEffectType_Methysis, 3, 1.0)
 		//注册效果
 		util.TacticsTriggerWrapSet(general, consts.BattleAction_BeginAction, func(params vo.TacticsTriggerParams) {
 			if mm, ok := general.DeBuffEffectCountMap[consts.DebuffEffectType_Methysis]; ok {

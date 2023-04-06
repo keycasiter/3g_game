@@ -82,7 +82,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		//施加急救效果
 		general.BuffEffectHolderMap[consts.BuffEffectType_EmergencyTreatment] = 1.0
 		//持续2回合
-		general.BuffEffectCountMap[consts.BuffEffectType_EmergencyTreatment][2] = 1.0
+		util.TacticsBuffCountWrapSet(general, consts.BuffEffectType_EmergencyTreatment, 2, 1.0)
 		hlog.CtxInfof(ctx, "[%s]的「急救」状态已施加", general.BaseInfo.Name)
 
 		//注册触发效果

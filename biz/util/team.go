@@ -1,8 +1,6 @@
 package util
 
 import (
-	"context"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
@@ -63,12 +61,6 @@ func GetEnemyGeneralArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral 
 		for _, general := range tacticsParams.EnemyGeneralMap {
 			enemyGeneralArr = append(enemyGeneralArr, general)
 		}
-	}
-	for _, general := range tacticsParams.FightingGeneralMap {
-		hlog.CtxInfof(context.Background(), "FightingGeneralMap 武将：%s", general.BaseInfo.Name)
-	}
-	for _, general := range tacticsParams.EnemyGeneralMap {
-		hlog.CtxInfof(context.Background(), "EnemyGeneralMap 武将：%s", general.BaseInfo.Name)
 	}
 	return enemyGeneralArr
 }

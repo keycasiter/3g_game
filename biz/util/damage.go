@@ -198,14 +198,9 @@ func AttackDamage(tacticsParams model.TacticsParams, attackGeneral *vo.BattleGen
 		remainSoldierNum = sufferGeneral.SoldierNum
 	}
 	hlog.CtxInfof(ctx, "[%s]损失了兵力%d(%d↘%d)", sufferGeneral.BaseInfo.Name, finalDmg, defSoldierNum, remainSoldierNum)
+
+	//武将兵力为0，直接退场
 	if sufferGeneral.SoldierNum == 0 {
-		//判断是否有队伍的主将兵力为0
-		if _, ok := tacticsParams.FightingGeneralMap[sufferGeneral.BaseInfo.UniqueId]; ok {
-			delete(tacticsParams.FightingGeneralMap, sufferGeneral.BaseInfo.UniqueId)
-		}
-		if _, ok := tacticsParams.EnemyGeneralMap[sufferGeneral.BaseInfo.UniqueId]; ok {
-			delete(tacticsParams.EnemyGeneralMap, sufferGeneral.BaseInfo.UniqueId)
-		}
 		hlog.CtxInfof(ctx, "[%s]武将兵力为0，无法再战", sufferGeneral.BaseInfo.Name)
 	}
 }

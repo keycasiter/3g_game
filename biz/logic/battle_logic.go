@@ -368,6 +368,11 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	hlog.CtxInfof(runCtx.Ctx, "战斗回合：%d", currentRound)
 
 	for _, currentGeneral := range allGenerals {
+		//兵力判断
+		if currentGeneral.SoldierNum == 0 {
+			return
+		}
+
 		//每轮战法参数准备
 		tacticsParams := runCtx.buildBattleRoundParams(consts.Battle_Round_Prepare, currentGeneral, allGenerals)
 
@@ -405,9 +410,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			//2.2 普通攻击
 			if !attackFlag {
 				//找到普攻目标
-				hitIdx := util.GenerateHitOneIdx(3)
-				enemyGeneralArr := util.GetEnemyGeneralArr(tacticsParams)
-				sufferGeneral := enemyGeneralArr[hitIdx]
+				sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
 				//发起攻击
 				util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral)
 
@@ -434,7 +437,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 func (runCtx BattleLogicContext) RoundEndProcessor(tacticsParams model.TacticsParams) {
 	//所有冷却战法-1
-	for _, general := range tacticsParams.AllGeneralArr {
+	for _, general := range tacticsParams.AllGeneralMap {
 		for tacticId, cnt := range general.TacticsFrozenMap {
 			if cnt > 0 {
 				general.TacticsFrozenMap[tacticId]--
@@ -458,16 +461,13 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams(currentRound consts.Bat
 	tacticsParams.FightingGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	tacticsParams.EnemyGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	tacticsParams.AllGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
-	tacticsParams.AllGeneralArr = make([]*vo.BattleGeneral, 0)
 	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
 		tacticsParams.FightingGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
 		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
-		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
 	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
 		tacticsParams.EnemyGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
 		tacticsParams.AllGeneralMap[cast.ToInt64(general.BaseInfo.UniqueId)] = general
-		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
 
 	//初始化增益效果/负面效果

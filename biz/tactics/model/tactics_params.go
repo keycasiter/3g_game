@@ -6,7 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
 
-//战法参数
+// 战法参数
 type TacticsParams struct {
 	Ctx context.Context
 
@@ -29,6 +29,4 @@ type TacticsParams struct {
 	EnemyGeneralMap map[int64]*vo.BattleGeneral
 	// 全部武将信息Map
 	AllGeneralMap map[int64]*vo.BattleGeneral
-	// 全部武将信息Arr，严格按照顺序[我方主将/我方副将1/我方副将2/敌方主将/敌方副将1/敌方副将2]
-	AllGeneralArr []*vo.BattleGeneral
 }

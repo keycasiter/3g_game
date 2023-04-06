@@ -141,11 +141,11 @@ func GetPairGeneralsTwoOrThreeMap(tacticsParams model.TacticsParams) []*vo.Battl
 // 找到当前敌军一个人
 func GetEnemyOneGeneral(tacticsParams model.TacticsParams) *vo.BattleGeneral {
 	//找到敌军
-	enemyGeneralMap := GetEnemyGeneralMap(tacticsParams)
+	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
 	//随机1个人
 	hitIdx := GenerateHitOneIdx(3)
-	if general, ok := enemyGeneralMap[hitIdx]; ok {
-		return general
+	if enemyGeneralArr[hitIdx] != nil {
+		return enemyGeneralArr[hitIdx]
 	}
 	panic("can't find any one general")
 	return nil
@@ -196,7 +196,7 @@ func GetEnemyGeneralsTwoOrThreeMap(tacticsParams model.TacticsParams) []*vo.Batt
 	return enemyGenerals
 }
 
-//找到我军损失兵力最多的武将
+// 找到我军损失兵力最多的武将
 func GetPairMaxLossSoldierNumGeneral(tacticsParams model.TacticsParams) *vo.BattleGeneral {
 	pairGenerals := GetPairGeneralArr(tacticsParams)
 	//找到我方损失兵力最多的我军单体

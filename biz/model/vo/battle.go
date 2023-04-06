@@ -61,10 +61,10 @@ type BattleGeneral struct {
 
 	//*****战法触发器都是按条件（非回合）会触发的******
 	//战法触发器 map<触发动作,func(触发函数参数)>
-	TacticsTriggerMap map[consts.BattleAction][]func(params TacticsTriggerParams)
+	TacticsTriggerMap map[consts.BattleAction][]func(params *TacticsTriggerParams)
 }
 
-//被动战法触发参数
+// 被动战法触发参数
 type TacticsTriggerParams struct {
 	//当前回合
 	CurrentRound consts.BattleRound

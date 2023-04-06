@@ -35,7 +35,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(c.tacticsParams)
 	//注册触发效果
 	for _, sufferGeneral := range enemyGenerals {
-		util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_ExecuteActiveTactic, func(params vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_ExecuteActiveTactic, func(params *vo.TacticsTriggerParams) {
 			//35%几率
 			if !util.GenerateRate(0.35) {
 				hlog.CtxInfof(ctx, "[%s]执行来自[%s]【%s】的「神机妙算」效果因几率没有生效",

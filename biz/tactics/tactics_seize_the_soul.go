@@ -112,7 +112,7 @@ func (s SeizeTheSoulTactic) Execute() {
 			v)
 		//持续2回合，可叠加2次
 		//注册效果
-		util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_Attack, func(params vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_Attack, func(params *vo.TacticsTriggerParams) {
 			if params.CurrentRound == currentRound+2 {
 				currentGeneral.BaseInfo.AbilityAttr.ForceBase -= v
 				currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v

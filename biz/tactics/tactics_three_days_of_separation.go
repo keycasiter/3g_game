@@ -39,7 +39,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 	)
 	util.TacticsTriggerWrapSet(currentGeneral,
 		consts.BattleAction_Attack,
-		func(params vo.TacticsTriggerParams) {
+		func(params *vo.TacticsTriggerParams) {
 			//第四回合
 			if currentRound == consts.Battle_Round_Fourth {
 				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
@@ -77,7 +77,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		currentGeneral.BaseInfo.Name,
 	)
 	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] += 0.3
-	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_Attack, func(params vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_Attack, func(params *vo.TacticsTriggerParams) {
 		//第四回合
 		if currentRound == consts.Battle_Round_Fourth {
 			currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] -= 0.3
@@ -95,7 +95,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		consts.DebuffEffectType_CanNotGeneralAttack,
 	)
 	currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack] = 1.0
-	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_Attack, func(params vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_Attack, func(params *vo.TacticsTriggerParams) {
 		//第四回合
 		if currentRound == consts.Battle_Round_Fourth {
 			delete(currentGeneral.DeBuffEffectHolderMap, consts.DebuffEffectType_CanNotGeneralAttack)

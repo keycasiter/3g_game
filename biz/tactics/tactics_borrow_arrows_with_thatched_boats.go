@@ -88,7 +88,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		//注册触发效果
 		util.TacticsTriggerWrapSet(general,
 			consts.BattleAction_SufferAttack,
-			func(params vo.TacticsTriggerParams) {
+			func(params *vo.TacticsTriggerParams) {
 				if !util.GenerateRate(0.7) {
 					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果因几率没有生效",
 						general.BaseInfo.Name,

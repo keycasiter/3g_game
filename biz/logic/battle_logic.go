@@ -364,9 +364,10 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 		currentRound++
 		runCtx.processBattleFightingRound(currentRound)
 	}
-	hlog.CtxInfof(runCtx.Ctx, "战斗结束 , 结束时回合数：%d", currentRound)
 
 	//打印每队战况
+	hlog.CtxInfof(runCtx.Ctx, "******************《 战报 》********************")
+	hlog.CtxInfof(runCtx.Ctx, "战斗结束 , 结束时回合数：%d", currentRound)
 	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
 		hlog.CtxInfof(runCtx.Ctx, "[%s]兵力[%d]", general.BaseInfo.Name, general.SoldierNum)
 	}
@@ -437,6 +438,18 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				}
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]无法普通攻击状态，无法普通攻击", currentGeneral.BaseInfo.Name)
+				}
+				//2.2 触发兵书效果
+				//TODO
+				//2.3 触发战法效果
+				//负面效果
+				//增益效果
+				//战法触发器
+				if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{}
+						f(params)
+					}
 				}
 
 				//找到普攻目标
@@ -565,7 +578,7 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 			general.DeBuffEffectCountMap = map[consts.DebuffEffectType]map[int64]float64{}
 		}
 		if general.TacticsTriggerMap == nil {
-			general.TacticsTriggerMap = map[consts.BattleAction][]func(params vo.TacticsTriggerParams){}
+			general.TacticsTriggerMap = map[consts.BattleAction][]func(params *vo.TacticsTriggerParams){}
 		}
 		if general.TacticsFrozenMap == nil {
 			general.TacticsFrozenMap = map[consts.TacticId]int64{}

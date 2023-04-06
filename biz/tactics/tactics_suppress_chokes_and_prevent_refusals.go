@@ -33,7 +33,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 		//让这个副将援护友军
 		generals := util.GetPairGeneralsNotSelf(s.tacticsParams, viceGeneral)
 		for _, general := range generals {
-			util.TacticsTriggerWrapSet(general, consts.BattleAction_SufferAttack, func(params vo.TacticsTriggerParams) {
+			util.TacticsTriggerWrapSet(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) {
 				general.HelpByGeneral = viceGeneral
 			})
 		}

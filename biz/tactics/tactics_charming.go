@@ -29,7 +29,7 @@ func (c CharmingTactic) Prepare() {
 	//效果施加
 	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Charming] = 1.0
 	//触发效果注册
-	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_SufferAttack, func(params vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) {
 		//有45%几率
 		triggerRate := 0.45
 		//自身为女性时，触发几率额外受智力影响

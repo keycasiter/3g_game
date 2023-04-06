@@ -53,7 +53,7 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 	//注册效果
 	util.TacticsTriggerWrapSet(currentGeneral,
 		consts.BattleAction_Attack,
-		func(params vo.TacticsTriggerParams) {
+		func(params *vo.TacticsTriggerParams) {
 			//第四回合
 			if a.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
 				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",

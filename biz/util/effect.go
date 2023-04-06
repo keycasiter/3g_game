@@ -62,11 +62,11 @@ func DebuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 }
 
 // 战法触发器设置
-func TacticsTriggerWrapSet(general *vo.BattleGeneral, action consts.BattleAction, f func(params vo.TacticsTriggerParams)) {
+func TacticsTriggerWrapSet(general *vo.BattleGeneral, action consts.BattleAction, f func(params *vo.TacticsTriggerParams)) {
 	if funcs, ok := general.TacticsTriggerMap[action]; ok {
 		funcs = append(funcs, f)
 	} else {
-		fs := make([]func(params vo.TacticsTriggerParams), 0)
+		fs := make([]func(params *vo.TacticsTriggerParams), 0)
 		fs = append(fs, f)
 		general.TacticsTriggerMap[action] = fs
 	}

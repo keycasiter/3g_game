@@ -9,7 +9,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"sort"
 )
 
 // req
@@ -273,7 +272,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 	/****************************/
 	/*** 以下受武将速度影响来执行 ***/
 	/****************************/
-	runCtx.makeAllGeneralsOrderBySpeed(tacticsParams)
+	tacticsParams.AllGeneralArr = util.MakeGeneralsOrderBySpeed(tacticsParams.AllGeneralArr)
 
 	//战法参数准备
 	for _, currentGeneral := range tacticsParams.AllGeneralArr {
@@ -311,15 +310,6 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 		}
 	}
 
-}
-
-// 按速度排序，从快到慢
-func (runCtx *BattleLogicContext) makeAllGeneralsOrderBySpeed(tacticsParams *model.TacticsParams) {
-	var allGenerals vo.BattleGeneralsOrderBySpeed
-	allGenerals = append(allGenerals, runCtx.ReqParam.FightingTeam.BattleGenerals...)
-	allGenerals = append(allGenerals, runCtx.ReqParam.EnemyTeam.BattleGenerals...)
-	sort.Sort(allGenerals)
-	tacticsParams.AllGeneralArr = allGenerals
 }
 
 func (runCtx *BattleLogicContext) handleGeneralAddition(team *vo.BattleTeam, general *vo.BattleGeneral) {
@@ -383,19 +373,11 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 	//	for _, tactic := range general.EquipTactics {
 	//	}
 	//}
-	hlog.CtxInfof(runCtx.Ctx, "战斗回合：【%d】", currentRound)
+	hlog.CtxInfof(runCtx.Ctx, "战斗回合：===========【%d】===========", currentRound)
+	//每一轮重新排序，按速度执行
+	tacticsParams.AllGeneralArr = util.MakeGeneralsOrderBySpeed(tacticsParams.AllGeneralArr)
 
-	for _, currentGeneral := range tacticsParams.AllGeneralMap {
-		//for _, general := range tacticsParams.FightingGeneralMap {
-		//	hlog.CtxInfof(runCtx.Ctx,"我军:%s",general.BaseInfo.Name)
-		//}
-		//for _, general := range tacticsParams.EnemyGeneralMap {
-		//	hlog.CtxInfof(runCtx.Ctx,"敌军:%s",general.BaseInfo.Name)
-		//}
-		//for _, general := range tacticsParams.AllGeneralArr {
-		//	hlog.CtxInfof(runCtx.Ctx,"武将:%s",general.BaseInfo.Name)
-		//}
-
+	for _, currentGeneral := range tacticsParams.AllGeneralArr {
 		//设置战法轮次属性
 		runCtx.TacticsParams.CurrentRound = currentRound
 		runCtx.TacticsParams.CurrentGeneral = currentGeneral
@@ -545,6 +527,10 @@ func (runCtx BattleLogicContext) TacticPostProcessor(tacticsParams *model.Tactic
 
 // 武将回合执行前置处理器
 func (runCtx BattleLogicContext) GeneralRoundPreProcessor(tacticsParams *model.TacticsParams) bool {
+	//兵力为0直接退出
+	if tacticsParams.CurrentGeneral.SoldierNum == 0 {
+		return false
+	}
 	return true
 }
 

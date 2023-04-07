@@ -171,6 +171,10 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		sufferGeneral.SoldierNum -= attackDmg
 		remainSoldierNum = sufferGeneral.SoldierNum
 	}
+
+	//记录伤兵
+	sufferGeneral.LossSoldierNum += attackDmg
+
 	hlog.CtxInfof(ctx, "[%s]损失了兵力%d(%d↘%d)", sufferGeneral.BaseInfo.Name, finalDmg, defSoldierNum, remainSoldierNum)
 
 	if sufferGeneral.SoldierNum == 0 {
@@ -183,14 +187,15 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 // @suffer 被攻击武将
 // @damage 伤害量
 // @return 实际伤害/原兵力/剩余兵力
-func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64) (damageNum, soldierNum, remainSoldierNum int64) {
+func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64) (damageNum, soldierNum, remainSoldierNum int64, isEffect bool) {
 	ctx := tacticsParams.Ctx
+	isEffect = true
 
 	//是否可以规避
 	if rate, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
 		if GenerateRate(rate) {
 			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效", sufferGeneral.BaseInfo.Name)
-			return 0, sufferGeneral.SoldierNum, sufferGeneral.SoldierNum
+			return 0, sufferGeneral.SoldierNum, sufferGeneral.SoldierNum, false
 		} else {
 			hlog.CtxInfof(ctx, "[%s]规避失败", sufferGeneral.BaseInfo.Name)
 		}
@@ -198,7 +203,7 @@ func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 
 	//伤害结算
 	if sufferGeneral.SoldierNum == 0 {
-		return 0, 0, 0
+		return 0, 0, 0, false
 	}
 	damageNum = damage
 	soldierNum = sufferGeneral.SoldierNum
@@ -206,6 +211,8 @@ func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	if damage >= soldierNum {
 		damageNum = soldierNum
 	}
+	//记录伤兵
+	sufferGeneral.LossSoldierNum += damageNum
 	//伤害结算
 	sufferGeneral.SoldierNum -= damageNum
 	remainSoldierNum = sufferGeneral.SoldierNum

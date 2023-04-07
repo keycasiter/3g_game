@@ -52,7 +52,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 		//注册消失效果
 		util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
 			//第四回合消失
-			if e.tacticsParams.CurrentRound == consts.Battle_Round_Fourth {
+			if params.CurrentRound == consts.Battle_Round_Fourth {
 				sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] -= effectRate
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
 					sufferGeneral.BaseInfo.Name,

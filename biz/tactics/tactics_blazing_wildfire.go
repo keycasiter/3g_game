@@ -68,7 +68,7 @@ func (b BlazingWildfireTactic) Execute() {
 	hitIdMap := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
 	enemyGeneralMap := util.GetEnemyGeneralMap(b.tacticsParams)
 	for idx, sufferGeneral := range enemyGeneralMap {
-		if _, ok := hitIdMap[int64(idx)]; ok {
+		if _, ok := hitIdMap[idx]; ok {
 			//若目标已有灼烧状态则造成兵刃攻击(伤害率118%)
 			//判断当前被攻击武将是否有灼烧状态
 			if _, ok := sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Firing]; ok {

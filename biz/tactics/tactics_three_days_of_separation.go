@@ -25,7 +25,6 @@ func (t ThreeDaysOfSeparationTactic) Init(tacticsParams *model.TacticsParams) _i
 func (t ThreeDaysOfSeparationTactic) Prepare() {
 	ctx := t.tacticsParams.Ctx
 	currentGeneral := t.tacticsParams.CurrentGeneral
-	currentRound := t.tacticsParams.CurrentRound
 
 	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 		currentGeneral.BaseInfo.Name,
@@ -41,7 +40,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		consts.BattleAction_Attack,
 		func(params *vo.TacticsTriggerParams) {
 			//第四回合
-			if currentRound == consts.Battle_Round_Fourth {
+			if params.CurrentRound == consts.Battle_Round_Fourth {
 				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
 					currentGeneral.BaseInfo.Name,
 					t.Name(),
@@ -77,15 +76,17 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		currentGeneral.BaseInfo.Name,
 	)
 	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] += 0.3
-	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_Attack, func(params *vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
 		//第四回合
-		if currentRound == consts.Battle_Round_Fourth {
+		if params.CurrentRound == consts.Battle_Round_Fourth {
 			currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] -= 0.3
 			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
 				currentGeneral.BaseInfo.Name,
 				consts.BuffEffectType_Evade,
 			)
-			hlog.CtxInfof(ctx, "[%s]的规避率降低了30.00%")
+			hlog.CtxInfof(ctx, "[%s]的规避率降低了30.00%%",
+				currentGeneral.BaseInfo.Name,
+			)
 		}
 	})
 
@@ -95,9 +96,9 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		consts.DebuffEffectType_CanNotGeneralAttack,
 	)
 	currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack] = 1.0
-	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_Attack, func(params *vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
 		//第四回合
-		if currentRound == consts.Battle_Round_Fourth {
+		if params.CurrentRound == consts.Battle_Round_Fourth {
 			delete(currentGeneral.DeBuffEffectHolderMap, consts.DebuffEffectType_CanNotGeneralAttack)
 
 			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",

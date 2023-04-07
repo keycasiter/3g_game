@@ -71,7 +71,10 @@ func (b BlazingWildfireTactic) Execute() {
 		//判断当前被攻击武将是否有灼烧状态
 		if _, ok := sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Firing]; ok {
 			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
-			dmg, origin, remain := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmg)
+			dmg, origin, remain, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmg)
+			if !isEffect {
+				return
+			}
 
 			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
 				sufferGeneral.BaseInfo.Name,
@@ -108,7 +111,10 @@ func (b BlazingWildfireTactic) Execute() {
 					consts.DebuffEffectType_Firing,
 				)
 				dmgNum := cast.ToInt64(0.56 * triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-				finalDmg, oldNum, remainNum := util.TacticDamage(b.tacticsParams, currentGeneral, triggerGeneral, dmgNum)
+				finalDmg, oldNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, triggerGeneral, dmgNum)
+				if !isEffect {
+					return
+				}
 				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「%v」效果，损失了兵力%d(%d↘%d)",
 					triggerGeneral.BaseInfo.Name,
 					triggerGeneral.BaseInfo.Name,

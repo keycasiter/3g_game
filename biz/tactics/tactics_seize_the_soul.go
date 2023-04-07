@@ -57,14 +57,15 @@ func (s SeizeTheSoulTactic) Execute() {
 	if !util.GenerateRate(0.55) {
 		return
 	} else {
-		hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-			currentGeneral.BaseInfo.Name,
-			s.Name(),
-		)
 		//最多叠加两次
 		if !util.TacticsBuffEffectCountWrapIncr(currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1, 2) {
 			return
 		}
+
+		hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+			currentGeneral.BaseInfo.Name,
+			s.Name(),
+		)
 
 		enemyGeneral := util.GetEnemyOneGeneral(s.tacticsParams)
 		//偷取敌军单体38点武力、智力、速度、统率（受智力影响）

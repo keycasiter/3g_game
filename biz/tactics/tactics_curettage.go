@@ -1,6 +1,7 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -31,6 +32,15 @@ func (c CurettageTactic) Execute() {
 	ctx := c.tacticsParams.Ctx
 	currentGeneral := c.tacticsParams.CurrentGeneral
 
+	//发动概率40%
+	if !util.GenerateRate(0.4) {
+		return
+	}
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		c.Name(),
+	)
+
 	//找我我军损失兵力最多的武将
 	maxLossSoldierNumGeneral := util.GetPairMaxLossSoldierNumGeneral(c.tacticsParams)
 
@@ -38,7 +48,14 @@ func (c CurettageTactic) Execute() {
 	util.DebuffEffectClean(ctx, maxLossSoldierNumGeneral)
 
 	//为其恢复兵力（治疗率256%，受智力影响）
-	maxLossSoldierNumGeneral.SoldierNum += cast.ToInt64(2.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+	resumeNum := cast.ToInt64(2.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+	hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
+		maxLossSoldierNumGeneral.BaseInfo.Name,
+		resumeNum,
+		maxLossSoldierNumGeneral.SoldierNum,
+		maxLossSoldierNumGeneral.SoldierNum+resumeNum,
+	)
+	maxLossSoldierNumGeneral.SoldierNum += resumeNum
 }
 
 func (c CurettageTactic) Trigger() {

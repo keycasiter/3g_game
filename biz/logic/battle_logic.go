@@ -280,10 +280,6 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 		runCtx.TacticsParams.CurrentRound = consts.Battle_Round_Prepare
 		runCtx.TacticsParams.CurrentGeneral = currentGeneral
 
-		//打印当前执行队伍、武将、速度
-		hlog.CtxInfof(runCtx.Ctx, "队伍：%v, %s 执行, 速度：%.2f", currentGeneral.BaseInfo.GeneralBattleType, currentGeneral.BaseInfo.Name,
-			currentGeneral.BaseInfo.AbilityAttr.SpeedBase)
-
 		//执行战法
 		for _, tactic := range currentGeneral.EquipTactics {
 			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.普攻 > 7.突击
@@ -396,19 +392,17 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_BeginAction]; ok {
 			for _, f := range funcs {
 				params := &vo.TacticsTriggerParams{
-					CurrentRound:         currentRound,
-					CurrentAttackGeneral: currentGeneral,
-					CurrentDamage:        0,
+					CurrentRound:   currentRound,
+					CurrentGeneral: currentGeneral,
+					CurrentDamage:  0,
 				}
 				f(params)
 			}
 		}
 
-		//执行战法
-		//普攻次数
-		attackCanCnt := 1
+		//战法发动顺序：1.主动 > 2.普攻 > 3.突击
+		//按装配顺序执行主动战法
 		for _, tactic := range currentGeneral.EquipTactics {
-			//战法发动顺序：1.主动 > 2.普攻 > 3.突击
 			//1.主动
 			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
 				//主动战法拦截
@@ -430,54 +424,58 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 					goto exitFlag
 				}
 			}
-			//2.普攻
-			if attackCanCnt > 0 {
-				//2.1 普通攻击拦截
-				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
-					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
-						currentGeneral.BaseInfo.Name,
-						consts.DebuffEffectType_PoorHealth,
-					)
-					return
+		}
+		//2.普攻
+		//普攻次数(默认一次)
+		attackCanCnt := 1
+		if attackCanCnt > 0 {
+			//2.1 普通攻击拦截
+			if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
+				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
+					currentGeneral.BaseInfo.Name,
+					consts.DebuffEffectType_PoorHealth,
+				)
+				return
+			}
+			if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
+				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
+					currentGeneral.BaseInfo.Name,
+					consts.DebuffEffectType_CanNotGeneralAttack,
+				)
+				return
+			}
+			//2.2 触发兵书效果
+			//TODO
+			//2.3 触发战法效果
+			//负面效果
+			//增益效果
+			//战法触发器
+			if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
+				for _, f := range funcs {
+					params := &vo.TacticsTriggerParams{}
+					f(params)
 				}
-				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
-					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
-						currentGeneral.BaseInfo.Name,
-						consts.DebuffEffectType_CanNotGeneralAttack,
-					)
-					return
-				}
-				//2.2 触发兵书效果
-				//TODO
-				//2.3 触发战法效果
-				//负面效果
-				//增益效果
-				//战法触发器
-				if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
-					for _, f := range funcs {
-						params := &vo.TacticsTriggerParams{}
-						f(params)
-					}
-				}
+			}
 
-				//找到普攻目标
-				sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
-				//发起攻击
-				util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral)
-				//普攻次数减一
-				attackCanCnt--
+			//找到普攻目标
+			sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
+			//发起攻击
+			util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral)
+			//普攻次数减一
+			attackCanCnt--
 
-				//武将清理
-				util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
+			//武将清理
+			util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
 
-				//战法后置处理器
-				if !runCtx.TacticPostProcessor(tacticsParams) {
-					runCtx.BattleRoundEndFlag = true
-					goto exitFlag
-				}
+			//战法后置处理器
+			if !runCtx.TacticPostProcessor(tacticsParams) {
+				runCtx.BattleRoundEndFlag = true
+				goto exitFlag
+			}
 
-				//3.突击
-				if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
+			//3.突击战法
+			for _, tactic := range currentGeneral.EquipTactics {
+				if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
 					handler := tactics.TacticsHandlerMap[tactic.Id]
 					execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 
@@ -492,6 +490,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				}
 			}
 		}
+
 		//武将回合结束处理器
 		runCtx.GeneralRoundPostProcessor(tacticsParams)
 	}
@@ -568,26 +567,17 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 
 	//初始化增益效果/负面效果
 	for _, general := range tacticsParams.AllGeneralArr {
-		if general.BuffEffectTriggerMap == nil {
-			general.BuffEffectTriggerMap = map[consts.BuffEffectType]map[consts.BattleRound]float64{}
-		}
-		if general.DeBuffEffectTriggerMap == nil {
-			general.DeBuffEffectTriggerMap = map[consts.DebuffEffectType]map[consts.BattleRound]float64{}
-		}
 		if general.BuffEffectHolderMap == nil {
 			general.BuffEffectHolderMap = map[consts.BuffEffectType]float64{}
 		}
 		if general.DeBuffEffectHolderMap == nil {
 			general.DeBuffEffectHolderMap = map[consts.DebuffEffectType]float64{}
 		}
-		if general.BuffEffectAccumulateHolderMap == nil {
-			general.BuffEffectAccumulateHolderMap = map[consts.BuffEffectType]int{}
-		}
 		if general.BuffEffectCountMap == nil {
-			general.BuffEffectCountMap = map[consts.BuffEffectType]map[int64]float64{}
+			general.BuffEffectCountMap = map[consts.BuffEffectType]int64{}
 		}
 		if general.DeBuffEffectCountMap == nil {
-			general.DeBuffEffectCountMap = map[consts.DebuffEffectType]map[int64]float64{}
+			general.DeBuffEffectCountMap = map[consts.DebuffEffectType]int64{}
 		}
 		if general.TacticsTriggerMap == nil {
 			general.TacticsTriggerMap = map[consts.BattleAction][]func(params *vo.TacticsTriggerParams){}

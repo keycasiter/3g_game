@@ -15,5 +15,6 @@ func main() {
 
 	//日志
 	logger := hertzlogrus.NewLogger()
+	logger.SetLevel(hlog.LevelDebug)
 	hlog.SetLogger(logger)
 }

@@ -65,6 +65,7 @@ func DebuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 func TacticsTriggerWrapSet(general *vo.BattleGeneral, action consts.BattleAction, f func(params *vo.TacticsTriggerParams)) {
 	if funcs, ok := general.TacticsTriggerMap[action]; ok {
 		funcs = append(funcs, f)
+		general.TacticsTriggerMap[action] = funcs
 	} else {
 		fs := make([]func(params *vo.TacticsTriggerParams), 0)
 		fs = append(fs, f)
@@ -96,12 +97,7 @@ func TacticsBuffCountWrapSet(general *vo.BattleGeneral, buffEffect consts.BuffEf
 
 // 战法减益次数设置
 func TacticsDebuffCountWrapSet(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, cnt int64, rate float64) {
-	if mm, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
-		//取出原数量
-		for k, _ := range mm {
-			//叠加
-			cnt += k
-		}
+	if _, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
 		//删除原存储mm
 		delete(general.DeBuffEffectCountMap, debuffEffect)
 		//生成新mm

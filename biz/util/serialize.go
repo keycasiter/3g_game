@@ -4,13 +4,12 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/common/json"
-	"google.golang.org/appengine/log"
 )
 
 func ToJsonString(ctx context.Context, obj interface{}) string {
 	byt, err := json.Marshal(obj)
 	if err != nil {
-		log.Errorf(ctx, "json Marshal err:%v", err)
+		hlog.CtxErrorf(ctx, "json Marshal err:%v", err)
 		return ""
 	}
 	return string(byt)

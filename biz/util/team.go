@@ -41,10 +41,10 @@ func GetEnemyGeneralMap(tacticsParams *model.TacticsParams) map[int64]*vo.Battle
 	enemyGeneralMap := make(map[int64]*vo.BattleGeneral, 0)
 	currentGeneralId := tacticsParams.CurrentGeneral.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
-		enemyGeneralMap = tacticsParams.FightingGeneralMap
+		enemyGeneralMap = tacticsParams.EnemyGeneralMap
 	}
 	if _, ok := tacticsParams.EnemyGeneralMap[currentGeneralId]; !ok {
-		enemyGeneralMap = tacticsParams.EnemyGeneralMap
+		enemyGeneralMap = tacticsParams.FightingGeneralMap
 	}
 	return enemyGeneralMap
 }
@@ -194,9 +194,9 @@ func GetPairGeneralsTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGener
 	return pairGenerals
 }
 
-// 找到当前敌军两到三个队友
+// 找到当前敌军两到三个敌人
 func GetEnemyGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) map[int64]*vo.BattleGeneral {
-	//找到队友
+	//找到敌人
 	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
 	enemyGeneralMap := make(map[int64]*vo.BattleGeneral, 0)
 	//两到三个

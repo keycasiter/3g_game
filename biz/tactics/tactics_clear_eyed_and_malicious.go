@@ -36,14 +36,12 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 			consts.BuffEffectType_EnhanceWeapon,
 		}
 		buffEffect := buffs[chosenIdx]
-		//最多累计拦截
-		cnt := currentGeneral.BuffEffectAccumulateHolderMap[buffEffect]
+
 		//一种效果最多叠加2次
-		if cnt < 2 {
-			//获得7%攻心或奇谋几率
-			util.BuffEffectWrapSet(currentGeneral.BuffEffectTriggerMap, buffEffect, consts.BattleRound(i), 0.07)
-			currentGeneral.BuffEffectAccumulateHolderMap[buffEffect]++
+		if !util.TacticsBuffEffectCountWrapIncr(currentGeneral, buffEffect, 1, 2) {
+			return
 		}
+		util.BuffEffectWrapSet(currentGeneral, buffEffect, 0.07)
 	}
 }
 

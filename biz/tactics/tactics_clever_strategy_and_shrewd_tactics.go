@@ -35,18 +35,19 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(c.tacticsParams)
 	//注册触发效果
 	for _, sufferGeneral := range enemyGenerals {
-		util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_ExecuteActiveTactic, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_ExecuteActiveTactic, func(params *vo.TacticsTriggerParams) {
+			triggerGeneral := params.CurrentGeneral
 			//35%几率
 			if !util.GenerateRate(0.35) {
 				hlog.CtxInfof(ctx, "[%s]执行来自[%s]【%s】的「神机妙算」效果因几率没有生效",
-					sufferGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					currentGeneral.BaseInfo.Name,
 					c.Name(),
 				)
 				return
 			} else {
 				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「神机妙算」效果",
-					sufferGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					c.Name(),
 				)
 				dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.00)
@@ -60,7 +61,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 				}
 				finalDmg, originNum, remaindNum := util.TacticDamage(c.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
 				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「神机妙算」效果，损失了兵力%d(%d↘%d️️️)",
-					sufferGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					currentGeneral.BaseInfo.Name,
 					c.Name(),
 					finalDmg,

@@ -37,26 +37,14 @@ func (t TheSkyIsBlazingTactic) Execute() {
 
 	//找到敌军全体
 	enemyGenerals := util.GetEnemyGeneralArr(t.tacticsParams)
-	currentRound := t.tacticsParams.CurrentRound
 	for _, general := range enemyGenerals {
 		//准备1回合,持续2回合
 		//TODO 受智力影响
-		util.DebuffEffectWrapSet(general.DeBuffEffectTriggerMap,
-			consts.DebuffEffectType_Firing,
-			currentRound+1,
-			1.02,
+		util.DebuffEffectWrapSet(general,
+			consts.DebuffEffectType_Firing, 1.02,
 		)
-		general.DeBuffEffectTriggerMap[consts.DebuffEffectType_Firing][currentRound+2] = 0.72
-		util.DebuffEffectWrapSet(general.DeBuffEffectTriggerMap,
-			consts.DebuffEffectType_Firing,
-			currentRound+2,
-			0.72,
-		)
-		util.DebuffEffectWrapSet(general.DeBuffEffectTriggerMap,
-			consts.DebuffEffectType_Firing,
-			currentRound+3,
-			0.72,
-		)
+		util.DebuffEffectWrapSet(general, consts.DebuffEffectType_Firing, 0.72)
+		util.DebuffEffectWrapSet(general, consts.DebuffEffectType_Firing, 0.72)
 	}
 }
 

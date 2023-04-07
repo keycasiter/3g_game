@@ -65,60 +65,60 @@ func (b BlazingWildfireTactic) Execute() {
 
 	//对敌军群体(2-3人)施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合；
 	//找到敌军2或3人
-	hitIdMap := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
-	enemyGeneralMap := util.GetEnemyGeneralMap(b.tacticsParams)
-	for idx, sufferGeneral := range enemyGeneralMap {
-		if _, ok := hitIdMap[idx]; ok {
-			//若目标已有灼烧状态则造成兵刃攻击(伤害率118%)
-			//判断当前被攻击武将是否有灼烧状态
-			if _, ok := sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Firing]; ok {
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
-				dmg, origin, remain := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmg)
+	enemyGeneralMap := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
+	for _, sufferGeneral := range enemyGeneralMap {
+		//若目标已有灼烧状态则造成兵刃攻击(伤害率118%)
+		//判断当前被攻击武将是否有灼烧状态
+		if _, ok := sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Firing]; ok {
+			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
+			dmg, origin, remain := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmg)
 
-				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d️)",
-					sufferGeneral.BaseInfo.Name,
-					currentGeneral.BaseInfo.Name,
-					b.Name(),
-					dmg,
-					origin,
-					remain,
-				)
-			} else {
-				//施加灼烧状态
-				sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Firing] = 1.0
-				util.TacticsDebuffCountWrapSet(sufferGeneral, consts.DebuffEffectType_Firing, 2, 0.56*currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-					sufferGeneral.BaseInfo.Name, consts.DebuffEffectType_Firing)
-				//每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合
-				//注册效果
-				util.TacticsDebuffCountWrapSet(sufferGeneral, consts.DebuffEffectType_Firing, 2, 1.0)
-				util.TacticsTriggerWrapSet(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
-					//剩余次数判断
-					if !util.TacticsDebuffCountGet(sufferGeneral, consts.DebuffEffectType_Firing) {
-						//次数不足
-						return
-					} else {
-						util.TacticsDebuffCountCost(sufferGeneral, consts.DebuffEffectType_Firing, 1)
-					}
-
-					dmgNum := cast.ToInt64(0.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-					finalDmg, oldNum, remainNum := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
-					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-						sufferGeneral.BaseInfo.Name,
-						b.Name(),
-						consts.DebuffEffectType_Firing,
-					)
-					hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「%v」效果，损失了兵力%d(%d↘%d️)",
-						sufferGeneral.BaseInfo.Name,
-						currentGeneral.BaseInfo.Name,
-						b.Name(),
-						consts.DebuffEffectType_Firing,
-						finalDmg,
-						oldNum,
-						remainNum,
-					)
-				})
+			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
+				sufferGeneral.BaseInfo.Name,
+				currentGeneral.BaseInfo.Name,
+				b.Name(),
+				dmg,
+				origin,
+				remain,
+			)
+		} else {
+			//施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合
+			//次数
+			if !util.TacticsDebuffEffectCountWrapIncr(sufferGeneral, consts.DebuffEffectType_Firing, 2, 2) {
+				return
 			}
+
+			//效果
+			util.DebuffEffectWrapSet(sufferGeneral, consts.DebuffEffectType_Firing, 1.0)
+			hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+				sufferGeneral.BaseInfo.Name, consts.DebuffEffectType_Firing)
+
+			//注册效果
+			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+				triggerGeneral := params.CurrentGeneral
+				//剩余次数判断
+				if !util.TacticsDebuffectCountDecr(triggerGeneral, consts.DebuffEffectType_Firing, 1) {
+					//次数不足
+					return
+				}
+
+				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+					triggerGeneral.BaseInfo.Name,
+					b.Name(),
+					consts.DebuffEffectType_Firing,
+				)
+				dmgNum := cast.ToInt64(0.56 * triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+				finalDmg, oldNum, remainNum := util.TacticDamage(b.tacticsParams, currentGeneral, triggerGeneral, dmgNum)
+				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「%v」效果，损失了兵力%d(%d↘%d)",
+					triggerGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
+					b.Name(),
+					consts.DebuffEffectType_Firing,
+					finalDmg,
+					oldNum,
+					remainNum,
+				)
+			})
 		}
 	}
 }

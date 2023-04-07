@@ -43,36 +43,34 @@ func (w WuDangFlyArmyTactic) Prepare() {
 	//首回合对敌军群体（2人）施加中毒状态，每回合持续造成伤害（伤害率80%，受智力影响），持续3回合
 	//找到敌军2人
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(w.tacticsParams)
-	for _, general := range enemyGenerals {
+	for _, sufferGeneral := range enemyGenerals {
+		//持续3回合
+		if !util.TacticsDebuffEffectCountWrapIncr(sufferGeneral, consts.DebuffEffectType_Methysis, 3, 3) {
+			return
+		}
 		//施加中毒效果
-		general.DeBuffEffectHolderMap[consts.DebuffEffectType_Methysis] = 1.0
+		sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Methysis] = 1.0
 		hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-			general.BaseInfo.Name,
+			sufferGeneral.BaseInfo.Name,
 			consts.DebuffEffectType_Methysis,
 		)
-		//持续3回合
-		util.TacticsDebuffCountWrapSet(general, consts.DebuffEffectType_Methysis, 3, 1.0)
 		//注册效果
-		util.TacticsTriggerWrapSet(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
-			if mm, ok := general.DeBuffEffectCountMap[consts.DebuffEffectType_Methysis]; ok {
-				if _, okk := mm[0]; okk {
-					return
-				} else {
-					for k, v := range mm {
-						mm[k-1] = v
-					}
-				}
-			}
+		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+			triggerGeneral := params.CurrentGeneral
 
+			if !util.TacticsDebuffectCountDecr(triggerGeneral, consts.DebuffEffectType_Methysis, 1) {
+				//次数不足
+				return
+			}
 			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-				general.BaseInfo.Name,
+				triggerGeneral.BaseInfo.Name,
 				w.Name(),
 				consts.DebuffEffectType_Methysis,
 			)
 			dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
-			dmg, origin, remain := util.TacticDamage(w.tacticsParams, currentGeneral, general, dmgNum)
+			dmg, origin, remain := util.TacticDamage(w.tacticsParams, currentGeneral, triggerGeneral, dmgNum)
 			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「%v」效果，损失了兵力%d(%d↘%d)",
-				general.BaseInfo.Name,
+				triggerGeneral.BaseInfo.Name,
 				currentGeneral.BaseInfo.Name,
 				w.Name(),
 				consts.DebuffEffectType_Methysis,

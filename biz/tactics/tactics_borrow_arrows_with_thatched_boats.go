@@ -82,35 +82,36 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		//施加急救效果
 		general.BuffEffectHolderMap[consts.BuffEffectType_EmergencyTreatment] = 1.0
 		//持续2回合
-		util.TacticsBuffCountWrapSet(general, consts.BuffEffectType_EmergencyTreatment, 2, 1.0)
+		if !util.TacticsBuffEffectCountWrapIncr(general, consts.BuffEffectType_EmergencyTreatment, 2, 2) {
+			return
+		}
 		hlog.CtxInfof(ctx, "[%s]的「急救」状态已施加", general.BaseInfo.Name)
 
 		//注册触发效果
-		util.TacticsTriggerWrapSet(general,
-			consts.BattleAction_SufferAttack,
-			func(params *vo.TacticsTriggerParams) {
-				if !util.GenerateRate(0.7) {
-					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果因几率没有生效",
-						general.BaseInfo.Name,
-						b.Name(),
-					)
-					return
-				} else {
-					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果",
-						general.BaseInfo.Name,
-						b.Name(),
-					)
-					// TODO 受统率影响
-					resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentDamage) * 0.28)
-					hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d️️)",
-						general.BaseInfo.Name,
-						resumeNum,
-						general.SoldierNum,
-						general.SoldierNum+resumeNum,
-					)
-					general.SoldierNum += resumeNum
-				}
-			},
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) {
+			triggerGeneral := params.CurrentGeneral
+			if !util.GenerateRate(0.7) {
+				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果因几率没有生效",
+					triggerGeneral.BaseInfo.Name,
+					b.Name(),
+				)
+				return
+			} else {
+				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果",
+					triggerGeneral.BaseInfo.Name,
+					b.Name(),
+				)
+				// TODO 受统率影响
+				resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentDamage) * 0.28)
+				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d️️)",
+					triggerGeneral.BaseInfo.Name,
+					resumeNum,
+					triggerGeneral.SoldierNum,
+					triggerGeneral.SoldierNum+resumeNum,
+				)
+				triggerGeneral.SoldierNum += resumeNum
+			}
+		},
 		)
 	}
 

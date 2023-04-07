@@ -28,14 +28,14 @@ func (c CurettageTactic) Name() string {
 }
 
 func (c CurettageTactic) Execute() {
+	ctx := c.tacticsParams.Ctx
 	currentGeneral := c.tacticsParams.CurrentGeneral
+
 	//找我我军损失兵力最多的武将
 	maxLossSoldierNumGeneral := util.GetPairMaxLossSoldierNumGeneral(c.tacticsParams)
 
 	//清除负面状态
-	maxLossSoldierNumGeneral.DeBuffEffectHolderMap = map[consts.DebuffEffectType]float64{}
-	//清除负面触发器
-	maxLossSoldierNumGeneral.DeBuffEffectTriggerMap = map[consts.DebuffEffectType]map[consts.BattleRound]float64{}
+	util.DebuffEffectClean(ctx, maxLossSoldierNumGeneral)
 
 	//为其恢复兵力（治疗率256%，受智力影响）
 	maxLossSoldierNumGeneral.SoldierNum += cast.ToInt64(2.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)

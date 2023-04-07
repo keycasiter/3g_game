@@ -36,8 +36,8 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		currentGeneral.BaseInfo.Name,
 		consts.BuffEffectType_ThreeDaysOfSeparation_Prepare,
 	)
-	util.TacticsTriggerWrapSet(currentGeneral,
-		consts.BattleAction_Attack,
+	util.TacticsTriggerWrapRegister(currentGeneral,
+		consts.BattleAction_BeginAction,
 		func(params *vo.TacticsTriggerParams) {
 			//第四回合
 			if params.CurrentRound == consts.Battle_Round_Fourth {
@@ -47,7 +47,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 					consts.BuffEffectType_ThreeDaysOfSeparation_Prepare,
 				)
 				currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase += 68
-				hlog.CtxInfof(ctx, "[%s]的智力提高了68")
+				hlog.CtxInfof(ctx, "[%s]的智力提高了68", currentGeneral.BaseInfo.Name)
 
 				//并对敌军全体造成谋略伤害(伤害率180%，受智力影响)
 				//找到敌军全体
@@ -56,7 +56,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 					//TODO 受智力影响
 					dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
 					finalDmg, originNum, remaindNum := util.TacticDamage(t.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
-					hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d️️️)",
+					hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
 						sufferGeneral.BaseInfo.Name,
 						currentGeneral.BaseInfo.Name,
 						t.Name(),
@@ -76,7 +76,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		currentGeneral.BaseInfo.Name,
 	)
 	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] += 0.3
-	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
 		//第四回合
 		if params.CurrentRound == consts.Battle_Round_Fourth {
 			currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] -= 0.3
@@ -96,7 +96,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		consts.DebuffEffectType_CanNotGeneralAttack,
 	)
 	currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack] = 1.0
-	util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
 		//第四回合
 		if params.CurrentRound == consts.Battle_Round_Fourth {
 			delete(currentGeneral.DeBuffEffectHolderMap, consts.DebuffEffectType_CanNotGeneralAttack)

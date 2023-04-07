@@ -40,23 +40,24 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 		hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害降低了%.2f%%", general.BaseInfo.Name,
 			launchDamageDeduceRate*100)
 		//注册效果
-		util.TacticsTriggerWrapSet(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
 			if params.CurrentRound == consts.Battle_Round_Fourth {
+				triggerGeneral := params.CurrentGeneral
 				//造成谋略伤害降低消失
-				general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] -= launchDamageDeduceRate
+				triggerGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] -= launchDamageDeduceRate
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					general.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					consts.DebuffEffectType_LaunchStrategyDamageDeduce,
 				)
-				hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提升了%.2f%%", general.BaseInfo.Name,
+				hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提升了%.2f%%", triggerGeneral.BaseInfo.Name,
 					launchDamageDeduceRate*100)
 				//造成兵刃伤害降低消失
-				general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] -= launchDamageDeduceRate
+				triggerGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] -= launchDamageDeduceRate
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					general.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					consts.DebuffEffectType_LaunchWeaponDamageDeduce,
 				)
-				hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提升了%.2f%%", general.BaseInfo.Name,
+				hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提升了%.2f%%", triggerGeneral.BaseInfo.Name,
 					launchDamageDeduceRate*100)
 			}
 		})
@@ -75,23 +76,25 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 		hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了%.2f%%", general.BaseInfo.Name,
 			sufferDamageDeduceRate*100)
 		//注册效果
-		util.TacticsTriggerWrapSet(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
 			if params.CurrentRound == consts.Battle_Round_Fourth {
+				triggerGeneral := params.CurrentGeneral
+
 				//受到谋略伤害降低消失
-				general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] -= sufferDamageDeduceRate
+				triggerGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] -= sufferDamageDeduceRate
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					general.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					consts.BuffEffectType_SufferStrategyDamageDeduce,
 				)
-				hlog.CtxInfof(ctx, "[%s]受到的谋略伤害提升了%.2f%%", general.BaseInfo.Name,
+				hlog.CtxInfof(ctx, "[%s]受到的谋略伤害提升了%.2f%%", triggerGeneral.BaseInfo.Name,
 					sufferDamageDeduceRate*100)
 				//受到兵刃伤害降低消失
-				general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] -= sufferDamageDeduceRate
+				triggerGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] -= sufferDamageDeduceRate
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					general.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					consts.BuffEffectType_SufferWeaponDamageDeduce,
 				)
-				hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害提升了%.2f%%", general.BaseInfo.Name,
+				hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害提升了%.2f%%", triggerGeneral.BaseInfo.Name,
 					sufferDamageDeduceRate*100)
 			}
 		})
@@ -99,33 +102,32 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 
 	//战斗第4回合时，恢复其兵力
 	//注册效果
-	util.TacticsTriggerWrapSet(currentGeneral,
-		consts.BattleAction_BeginAction,
-		func(params *vo.TacticsTriggerParams) {
-			//第四回合
-			if params.CurrentRound == consts.Battle_Round_Fourth {
-				//效果消失
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+		//第四回合
+		if params.CurrentRound == consts.Battle_Round_Fourth {
+			triggerGeneral := params.CurrentGeneral
+			//恢复兵力
+			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+				triggerGeneral.BaseInfo.Name,
+				a.Name(),
+				consts.BuffEffectType_AppeaseArmyAndPeople_Prepare,
+			)
 
+			pairArr := util.GetPairGeneralsTwoArr(a.tacticsParams)
+			for _, general := range pairArr {
 				//恢复兵力
-				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-					currentGeneral.BaseInfo.Name,
-					a.Name(),
-					consts.BuffEffectType_AppeaseArmyAndPeople_Prepare,
+				//TODO（治疗率126%，受智力影响）
+				resumeNum := cast.ToInt64(general.BaseInfo.AbilityAttr.IntelligenceBase * 1.26)
+				resume, origin, final := util.ResumeSoldierNum(general, resumeNum)
+				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
+					general.BaseInfo.Name,
+					resume,
+					origin,
+					final,
 				)
-				for _, general := range pairGeneralArr {
-					//恢复兵力
-					//TODO（治疗率126%，受智力影响）
-					resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.26)
-					resume, origin, final := util.ResumeSoldierNum(general, resumeNum)
-					hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
-						general.BaseInfo.Name,
-						resume,
-						origin,
-						final,
-					)
-				}
 			}
-		},
+		}
+	},
 	)
 	hlog.CtxInfof(ctx, "[%s]的「%s[预备]」效果已施加", a.tacticsParams.CurrentGeneral.BaseInfo.Name,
 		a.Name(),

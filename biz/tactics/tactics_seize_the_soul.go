@@ -62,15 +62,8 @@ func (s SeizeTheSoulTactic) Execute() {
 			s.Name(),
 		)
 		//最多叠加两次
-		//判断叠加次数
-		if mm, ok := currentGeneral.BuffEffectCountMap[consts.BuffEffectType_SeizeTheSoul]; ok {
-			if _, okk := mm[2]; okk {
-				hlog.CtxInfof(ctx, "[%s][%s]叠加次数已达上限",
-					currentGeneral.BaseInfo.Name,
-					s.Name(),
-				)
-				return
-			}
+		if !util.TacticsBuffEffectCountWrapIncr(currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1, 2) {
+			return
 		}
 
 		enemyGeneral := util.GetEnemyOneGeneral(s.tacticsParams)
@@ -112,44 +105,39 @@ func (s SeizeTheSoulTactic) Execute() {
 			v)
 		//持续2回合，可叠加2次
 		//注册效果
-		util.TacticsTriggerWrapSet(currentGeneral, consts.BattleAction_Attack, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
 			if params.CurrentRound == currentRound+2 {
-				currentGeneral.BaseInfo.AbilityAttr.ForceBase -= v
-				currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
-				currentGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
-				currentGeneral.BaseInfo.AbilityAttr.CommandBase -= v
+				triggerGeneral := params.CurrentGeneral
+
+				triggerGeneral.BaseInfo.AbilityAttr.ForceBase -= v
+				triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
+				triggerGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
+				triggerGeneral.BaseInfo.AbilityAttr.CommandBase -= v
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					currentGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					consts.BuffEffectType_IncrForce)
 				hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
-					currentGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					v)
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					currentGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					consts.BuffEffectType_IncrIntelligence)
 				hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
-					currentGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					v)
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					currentGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					consts.BuffEffectType_IncrSpeed)
 				hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
-					currentGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					v)
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					currentGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					consts.BuffEffectType_IncrCommand)
 				hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
-					currentGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
 					v)
 			}
 		})
-
-		//叠加次数
-		util.BuffEffectCountWrapAdd(currentGeneral.BuffEffectCountMap,
-			consts.BuffEffectType_SeizeTheSoul,
-			1,
-			1.0,
-		)
 	}
 }

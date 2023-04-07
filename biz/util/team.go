@@ -3,6 +3,7 @@ package util
 import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"sort"
 )
 
 // 找到当前执行战法武将的队友Map
@@ -212,6 +213,10 @@ func GetEnemyGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) map[int64
 // 找到我军损失兵力最多的武将
 func GetPairMaxLossSoldierNumGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	pairGenerals := GetPairGeneralArr(tacticsParams)
+	if pairGenerals == nil || len(pairGenerals) == 0 {
+		return tacticsParams.CurrentGeneral
+	}
+
 	//找到我方损失兵力最多的我军单体
 	maxLossSoldierNum := pairGenerals[0].LossSoldierNum
 	maxLossSoldierNumGeneral := pairGenerals[0]
@@ -237,5 +242,12 @@ func RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams *model.TacticsParams) {
 			newAllGenerals = append(newAllGenerals, general)
 		}
 	}
-	tacticsParams.AllGeneralArr = newAllGenerals
+}
+
+// 按速度排序，从快到慢
+func MakeGeneralsOrderBySpeed(allGenerals []*vo.BattleGeneral) []*vo.BattleGeneral {
+	var allGeneralsOrderBySpeed vo.BattleGeneralsOrderBySpeed
+	allGeneralsOrderBySpeed = append(allGeneralsOrderBySpeed, allGenerals...)
+	sort.Sort(allGeneralsOrderBySpeed)
+	return allGeneralsOrderBySpeed
 }

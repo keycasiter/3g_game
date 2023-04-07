@@ -103,6 +103,10 @@ func (b BuffEffectType) String() string {
 		return "速度增加"
 	case BuffEffectType_IncrCommand:
 		return "统率增加"
+	case BuffEffectType_SufferWeaponDamageDeduce:
+		return "受到兵刃伤害降低"
+	case BuffEffectType_SufferStrategyDamageDeduce:
+		return "受到谋略伤害降低"
 	}
 	return ""
 }

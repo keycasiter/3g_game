@@ -221,7 +221,7 @@ func GetPairMaxLossSoldierNumGeneral(tacticsParams *model.TacticsParams) *vo.Bat
 	maxLossSoldierNum := pairGenerals[0].LossSoldierNum
 	maxLossSoldierNumGeneral := pairGenerals[0]
 	for _, general := range pairGenerals {
-		if maxLossSoldierNum > general.LossSoldierNum && general.LossSoldierNum > 0 {
+		if maxLossSoldierNum < general.LossSoldierNum && general.LossSoldierNum > 0 {
 			maxLossSoldierNum = general.LossSoldierNum
 			maxLossSoldierNumGeneral = general
 		}

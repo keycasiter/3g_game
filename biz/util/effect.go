@@ -51,24 +51,24 @@ func DebuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 }
 
 // 战法触发器注册
-func TacticsTriggerWrapRegister(general *vo.BattleGeneral, action consts.BattleAction, newFunc func(params *vo.TacticsTriggerParams)) {
+func TacticsTriggerWrapRegister(general *vo.BattleGeneral, action consts.BattleAction, newFunc func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult) {
 	if funcs, ok := general.TacticsTriggerMap[action]; ok {
 		funcs = append(funcs, newFunc)
 		general.TacticsTriggerMap[action] = funcs
 	} else {
-		fs := make([]func(params *vo.TacticsTriggerParams), 0)
+		fs := make([]func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult, 0)
 		fs = append(fs, newFunc)
 		general.TacticsTriggerMap[action] = fs
 	}
 }
 
 // 战法触发器注销
-func TacticsTriggerWrapUnregister(general *vo.BattleGeneral, action consts.BattleAction, removeFunc func(params *vo.TacticsTriggerParams)) {
+func TacticsTriggerWrapUnregister(general *vo.BattleGeneral, action consts.BattleAction, removeFunc func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult) {
 	if funcs, okk := general.TacticsTriggerMap[action]; okk {
-		newFuncs := make([]func(params *vo.TacticsTriggerParams), 0)
+		newFuncs := make([]func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult, 0)
 		for _, f := range funcs {
 			if reflect.DeepEqual(removeFunc, f) {
-				hlog.CtxInfof(context.Background(), "判断是重复 %v , %v", removeFunc, f)
+				hlog.CtxDebugf(context.Background(), "判断是重复 %v , %v", removeFunc, f)
 				continue
 			} else {
 				newFuncs = append(newFuncs, f)
@@ -140,7 +140,7 @@ func TacticsDebuffEffectCountWrapIncr(general *vo.BattleGeneral, debuffEffect co
 // @general 执行武将
 // @debuffEffect 减益效果
 // @costNum 消耗次数
-func TacticsDebuffectCountDecr(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, decrNum int64) bool {
+func TacticsDebuffEffectCountWrapDecr(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, decrNum int64) bool {
 	holdNum := general.DeBuffEffectCountMap[debuffEffect]
 	//消费次数不足
 	if decrNum > holdNum {

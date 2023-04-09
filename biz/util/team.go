@@ -175,6 +175,29 @@ func GetEnemyGeneralsTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGene
 }
 
 // 找到当前友军两个队友
+func GetPairGeneralsTwoArrByGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+	pairGeneralArr := make([]*vo.BattleGeneral, 0)
+	currentGeneralId := currentGeneral.BaseInfo.UniqueId
+	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; ok {
+		for _, general := range tacticsParams.FightingGeneralMap {
+			if currentGeneralId != general.BaseInfo.UniqueId {
+				continue
+			}
+			pairGeneralArr = append(pairGeneralArr, general)
+		}
+	}
+	if _, ok := tacticsParams.EnemyGeneralMap[currentGeneralId]; ok {
+		for _, general := range tacticsParams.EnemyGeneralMap {
+			if currentGeneralId != general.BaseInfo.UniqueId {
+				continue
+			}
+			pairGeneralArr = append(pairGeneralArr, general)
+		}
+	}
+	return pairGeneralArr
+}
+
+// 找到当前友军两个队友
 func GetPairGeneralsTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	//找到队友
 	pairGeneralArr := GetPairGeneralArr(tacticsParams)

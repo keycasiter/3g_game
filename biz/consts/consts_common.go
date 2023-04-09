@@ -314,8 +314,55 @@ const (
 type BattleAction int
 
 const (
-	BattleAction_BeginAction         BattleAction = 0 //开始行动
-	BattleAction_Attack              BattleAction = 1 //普通攻击
-	BattleAction_SufferAttack        BattleAction = 2 //被普通攻击
-	BattleAction_ExecuteActiveTactic BattleAction = 3 //发动主动战法
+	BattleAction_BeginAction         BattleAction = 0  //开始行动
+	BattleAction_Attack              BattleAction = 1  //普通攻击
+	BattleAction_SufferAttack        BattleAction = 2  //被普通攻击
+	BattleAction_ActiveTactic        BattleAction = 3  //发动主动战法
+	BattleAction_SufferActiveTactic  BattleAction = 4  //被主动战法攻击
+	BattleAction_AssaultTactic       BattleAction = 5  //发动突击战法攻击
+	BattleAction_SufferAssaultTactic BattleAction = 6  //被突击战法攻击
+	BattleAction_CommandTactic       BattleAction = 7  //指挥战法攻击
+	BattleAction_SufferCommandTactic BattleAction = 8  //被指挥战法攻击
+	BattleAction_PassiveTactic       BattleAction = 9  //被动战法攻击
+	BattleAction_SufferPassiveTactic BattleAction = 10 //被被动战法攻击
+	BattleAction_TroopsTactic        BattleAction = 11 //阵法战法攻击
+	BattleAction_SufferTroopsTactic  BattleAction = 12 //被阵法战法攻击
+	BattleAction_ArmTactic           BattleAction = 13 //兵种战法攻击
+	BattleAction_SufferArmTactic     BattleAction = 14 //被兵种战法攻击
 )
+
+func (action BattleAction) String() string {
+	switch action {
+	case BattleAction_BeginAction: //开始行动
+		return "开始行动"
+	case BattleAction_Attack: //普通攻击
+		return "普通攻击"
+	case BattleAction_SufferAttack: //被普通攻击
+		return "被普通攻击"
+	case BattleAction_ActiveTactic: //发动主动战法
+		return "发动主动战法"
+	case BattleAction_SufferActiveTactic: //被主动战法攻击
+		return "被主动战法攻击"
+	case BattleAction_AssaultTactic: //发动突击战法攻击
+		return "发动突击战法攻击"
+	case BattleAction_SufferAssaultTactic: //被突击战法攻击
+		return "被突击战法攻击"
+	case BattleAction_CommandTactic: //指挥战法攻击
+		return "指挥战法攻击"
+	case BattleAction_SufferCommandTactic: //被指挥战法攻击
+		return "被指挥战法攻击"
+	case BattleAction_PassiveTactic: //被动战法攻击
+		return "被动战法攻击"
+	case BattleAction_SufferPassiveTactic: //被被动战法攻击
+		return "被被动战法攻击"
+	case BattleAction_TroopsTactic: //阵法战法攻击
+		return "阵法战法攻击"
+	case BattleAction_SufferTroopsTactic: //被阵法战法攻击
+		return "被阵法战法攻击"
+	case BattleAction_ArmTactic: //兵种战法攻击
+		return "兵种战法攻击"
+	case BattleAction_SufferArmTactic: //被兵种战法攻击
+		return "被兵种战法攻击"
+	}
+	return ""
+}

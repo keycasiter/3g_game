@@ -187,7 +187,7 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 // @suffer 被攻击武将
 // @damage 伤害量
 // @return 实际伤害/原兵力/剩余兵力
-func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64) (damageNum, soldierNum, remainSoldierNum int64, isEffect bool) {
+func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64, action consts.BattleAction) (damageNum, soldierNum, remainSoldierNum int64, isEffect bool) {
 	ctx := tacticsParams.Ctx
 	isEffect = true
 

@@ -48,6 +48,9 @@ func (b DebuffEffectType) String() string {
 		return "铁索连环"
 	case DebuffEffectType_CanNotGeneralAttack:
 		return "无法攻击"
+	case DebuffEffectType_CleverStrategyAndShrewdTactic:
+		return "神机妙算"
+
 	}
 	return ""
 }

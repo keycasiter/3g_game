@@ -286,21 +286,58 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 			//1.被动
 			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
+				//发动率判断
+				if !util.GenerateRate(handler.TriggerRate()) {
+					return
+				}
+				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
+					currentGeneral.BaseInfo.Name,
+					tactic.Name,
+				)
+				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
+
 			}
 			//2.阵法
 			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
+				//发动率判断
+				if !util.GenerateRate(handler.TriggerRate()) {
+					return
+				}
+				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
+					currentGeneral.BaseInfo.Name,
+					tactic.Name,
+				)
+				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 			//3.兵种
 			if _, ok := tactics.ArmTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
+				//发动率判断
+				if !util.GenerateRate(handler.TriggerRate()) {
+					return
+				}
+				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
+					currentGeneral.BaseInfo.Name,
+					tactic.Name,
+				)
+				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 			//4.指挥
 			if _, ok := tactics.CommandTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
+				//发动率判断
+				if !util.GenerateRate(handler.TriggerRate()) {
+					return
+				}
+				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
+					currentGeneral.BaseInfo.Name,
+					tactic.Name,
+				)
+				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
 			}
 		}
@@ -388,7 +425,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			currentGeneral.BaseInfo.GeneralBattleType,
 			currentGeneral.BaseInfo.Name,
 		)
-		//触发「开始行动」战法效果
+		//触发「开始行动」触发器
 		if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_BeginAction]; ok {
 			for _, f := range funcs {
 				params := &vo.TacticsTriggerParams{
@@ -408,13 +445,42 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				//主动战法拦截
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; ok {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]计穷状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
+					return
 				}
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
+					return
 				}
+				tacticHandler := tactics.TacticsHandlerMap[tactic.Id]
+				//发动率判断
+				if !util.GenerateRate(tacticHandler.TriggerRate()) {
+					return
+				}
+				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
+					currentGeneral.BaseInfo.Name,
+					tactic.Name,
+				)
 
-				handler := tactics.TacticsHandlerMap[tactic.Id]
-				execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
+				//触发「主动战法」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_ActiveTactic]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   currentRound,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+						}
+						triggerResp := f(params)
+						if triggerResp.IsTerminate {
+							hlog.CtxInfof(runCtx.Ctx, "[%s]的【%s】被阻止了",
+								currentGeneral.BaseInfo.Name,
+								tactic.Name,
+							)
+							continue
+						}
+					}
+				}
+				//战法执行
+				execute.TacticsExecute(runCtx.Ctx, tacticHandler, tacticsParams)
 
 				//武将清理
 				util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
@@ -476,8 +542,17 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			//3.突击战法
 			for _, tactic := range currentGeneral.EquipTactics {
 				if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
-					handler := tactics.TacticsHandlerMap[tactic.Id]
-					execute.TacticsExecute(runCtx.Ctx, handler, tacticsParams)
+					tacticHandler := tactics.TacticsHandlerMap[tactic.Id]
+					//发动率判断
+					if !util.GenerateRate(tacticHandler.TriggerRate()) {
+						return
+					}
+					hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
+						currentGeneral.BaseInfo.Name,
+						tactic.Name,
+					)
+					//战法执行
+					execute.TacticsExecute(runCtx.Ctx, tacticHandler, tacticsParams)
 
 					//武将清理
 					util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
@@ -580,7 +655,7 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 			general.DeBuffEffectCountMap = map[consts.DebuffEffectType]int64{}
 		}
 		if general.TacticsTriggerMap == nil {
-			general.TacticsTriggerMap = map[consts.BattleAction][]func(params *vo.TacticsTriggerParams){}
+			general.TacticsTriggerMap = map[consts.BattleAction][]func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult{}
 		}
 		if general.TacticsFrozenMap == nil {
 			general.TacticsFrozenMap = map[consts.TacticId]int64{}

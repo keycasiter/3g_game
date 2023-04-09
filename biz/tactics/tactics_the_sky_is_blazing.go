@@ -15,6 +15,10 @@ type TheSkyIsBlazingTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (t TheSkyIsBlazingTactic) TriggerRate() float64 {
+	return 0.35
+}
+
 func (t TheSkyIsBlazingTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
 	return t
@@ -29,9 +33,6 @@ func (t TheSkyIsBlazingTactic) Name() string {
 }
 
 func (t TheSkyIsBlazingTactic) Execute() {
-	if !util.GenerateRate(0.35) {
-		return
-	}
 	//准备1回合，对敌军全体施放火攻（伤害率102%，受智力影响），并施加灼烧状态，
 	// 每回合持续造成伤害（伤害率72%，受智力影响），持续2回合。
 

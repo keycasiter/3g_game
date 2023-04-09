@@ -15,6 +15,10 @@ type CurettageTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (c CurettageTactic) TriggerRate() float64 {
+	return 0.4
+}
+
 func (c CurettageTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
 	return c
@@ -31,15 +35,6 @@ func (c CurettageTactic) Name() string {
 func (c CurettageTactic) Execute() {
 	ctx := c.tacticsParams.Ctx
 	currentGeneral := c.tacticsParams.CurrentGeneral
-
-	//发动概率40%
-	if !util.GenerateRate(0.4) {
-		return
-	}
-	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-		currentGeneral.BaseInfo.Name,
-		c.Name(),
-	)
 
 	//找我我军损失兵力最多的武将
 	maxLossSoldierNumGeneral := util.GetPairMaxLossSoldierNumGeneral(c.tacticsParams)

@@ -16,6 +16,10 @@ type EightGateGoldenLockArrayTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (e EightGateGoldenLockArrayTactic) TriggerRate() float64 {
+	return 1.0
+}
+
 func (e EightGateGoldenLockArrayTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	e.tacticsParams = tacticsParams
 	return e
@@ -24,11 +28,6 @@ func (e EightGateGoldenLockArrayTactic) Init(tacticsParams *model.TacticsParams)
 func (e EightGateGoldenLockArrayTactic) Prepare() {
 	ctx := e.tacticsParams.Ctx
 	currentGeneral := e.tacticsParams.CurrentGeneral
-
-	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-		currentGeneral.BaseInfo.Name,
-		e.Name(),
-	)
 
 	//战斗前3回合，使敌军群体（2人）造成的伤害降低30%（受智力影响）
 	//找到敌军2人
@@ -50,7 +49,9 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 			effectRate*100,
 		)
 		//注册消失效果
-		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			triggerResp := &vo.TacticsTriggerResult{}
+
 			//第四回合消失
 			if params.CurrentRound == consts.Battle_Round_Fourth {
 				triggerGeneral := params.CurrentGeneral
@@ -74,6 +75,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 					effectRate*100,
 				)
 			}
+			return triggerResp
 		})
 	}
 	//并使我军主将获得先攻状态（优先行动）
@@ -85,7 +87,8 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 		consts.BuffEffectType_FirstAttack,
 	)
 	//注册消失效果
-	util.TacticsTriggerWrapRegister(pairMasterGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapRegister(pairMasterGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
 		if params.CurrentRound == consts.Battle_Round_Third {
 			triggerGeneral := params.CurrentGeneral
 
@@ -93,6 +96,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
 				triggerGeneral.BaseInfo.Name, consts.BuffEffectType_FirstAttack)
 		}
+		return triggerResp
 	})
 }
 

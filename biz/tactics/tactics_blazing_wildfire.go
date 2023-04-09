@@ -18,6 +18,10 @@ type BlazingWildfireTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (b BlazingWildfireTactic) TriggerRate() float64 {
+	return 0.5
+}
+
 func (b BlazingWildfireTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	b.tacticsParams = tacticsParams
 	return b
@@ -53,16 +57,6 @@ func (b BlazingWildfireTactic) Execute() {
 	ctx := b.tacticsParams.Ctx
 	currentGeneral := b.tacticsParams.CurrentGeneral
 
-	//发动概率50%
-	if !util.GenerateRate(0.5) {
-		return
-	}
-
-	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-		b.tacticsParams.CurrentGeneral.BaseInfo.Name,
-		b.Name(),
-	)
-
 	//对敌军群体(2-3人)施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合；
 	//找到敌军2或3人
 	enemyGeneralMap := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
@@ -71,7 +65,7 @@ func (b BlazingWildfireTactic) Execute() {
 		//判断当前被攻击武将是否有灼烧状态
 		if _, ok := sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Firing]; ok {
 			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
-			dmg, origin, remain, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmg)
+			dmg, origin, remain, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmg, consts.BattleAction_SufferActiveTactic)
 			if !isEffect {
 				return
 			}
@@ -97,12 +91,15 @@ func (b BlazingWildfireTactic) Execute() {
 				sufferGeneral.BaseInfo.Name, consts.DebuffEffectType_Firing)
 
 			//注册效果
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				triggerGeneral := params.CurrentGeneral
+				triggerResp := &vo.TacticsTriggerResult{
+					IsTerminate: false,
+				}
 				//剩余次数判断
-				if !util.TacticsDebuffectCountDecr(triggerGeneral, consts.DebuffEffectType_Firing, 1) {
+				if !util.TacticsDebuffEffectCountWrapDecr(triggerGeneral, consts.DebuffEffectType_Firing, 1) {
 					//次数不足
-					return
+					return triggerResp
 				}
 
 				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
@@ -111,19 +108,21 @@ func (b BlazingWildfireTactic) Execute() {
 					consts.DebuffEffectType_Firing,
 				)
 				dmgNum := cast.ToInt64(0.56 * triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-				finalDmg, oldNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, triggerGeneral, dmgNum)
+				finalDmg, oldNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, triggerGeneral, dmgNum, consts.BattleAction_SufferActiveTactic)
 				if !isEffect {
-					return
+					return triggerResp
 				}
 				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「%v」效果，损失了兵力%d(%d↘%d)",
 					triggerGeneral.BaseInfo.Name,
-					triggerGeneral.BaseInfo.Name,
+					currentGeneral.BaseInfo.Name,
 					b.Name(),
 					consts.DebuffEffectType_Firing,
 					finalDmg,
 					oldNum,
 					remainNum,
 				)
+
+				return triggerResp
 			})
 		}
 	}

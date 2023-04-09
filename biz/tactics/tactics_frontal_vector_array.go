@@ -13,6 +13,10 @@ type FrontalVectorArrayTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (f FrontalVectorArrayTactic) TriggerRate() float64 {
+	return 1.0
+}
+
 func (f FrontalVectorArrayTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	f.tacticsParams = tacticsParams
 	return f

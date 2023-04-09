@@ -14,6 +14,10 @@ type TraitorInTroubledTimesTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (t TraitorInTroubledTimesTactic) TriggerRate() float64 {
+	return 1.00
+}
+
 func (t TraitorInTroubledTimesTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
 	return t

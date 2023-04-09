@@ -18,6 +18,10 @@ type WuDangFlyArmyTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (w WuDangFlyArmyTactic) TriggerRate() float64 {
+	return 1.00
+}
+
 func (w WuDangFlyArmyTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	w.tacticsParams = tacticsParams
 	return w
@@ -55,12 +59,13 @@ func (w WuDangFlyArmyTactic) Prepare() {
 			consts.DebuffEffectType_Methysis,
 		)
 		//注册效果
-		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerGeneral := params.CurrentGeneral
+			triggerResp := &vo.TacticsTriggerResult{}
 
-			if !util.TacticsDebuffectCountDecr(triggerGeneral, consts.DebuffEffectType_Methysis, 1) {
+			if !util.TacticsDebuffEffectCountWrapDecr(triggerGeneral, consts.DebuffEffectType_Methysis, 1) {
 				//次数不足
-				return
+				return triggerResp
 			}
 			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
 				triggerGeneral.BaseInfo.Name,
@@ -68,9 +73,9 @@ func (w WuDangFlyArmyTactic) Prepare() {
 				consts.DebuffEffectType_Methysis,
 			)
 			dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
-			dmg, origin, remain, isEffect := util.TacticDamage(w.tacticsParams, currentGeneral, triggerGeneral, dmgNum)
+			dmg, origin, remain, isEffect := util.TacticDamage(w.tacticsParams, currentGeneral, triggerGeneral, dmgNum, consts.BattleAction_SufferArmTactic)
 			if !isEffect {
-				return
+				return triggerResp
 			}
 			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「%v」效果，损失了兵力%d(%d↘%d)",
 				triggerGeneral.BaseInfo.Name,
@@ -81,6 +86,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 				origin,
 				remain,
 			)
+			return triggerResp
 		})
 	}
 

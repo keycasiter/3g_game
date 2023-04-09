@@ -18,6 +18,10 @@ type BorrowArrowsWithThatchedBoatsTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (b BorrowArrowsWithThatchedBoatsTactic) TriggerRate() float64 {
+	return 0.65
+}
+
 func (b BorrowArrowsWithThatchedBoatsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	b.tacticsParams = tacticsParams
 	return b
@@ -63,14 +67,6 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		}
 	}
 
-	//65%概率
-	if !util.GenerateRate(0.65) {
-		return
-	}
-	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-		b.tacticsParams.CurrentGeneral.BaseInfo.Name,
-		b.Name(),
-	)
 	//移除我军群体(2-3人)负面效果
 	twoOrThreeGenerals := util.GetPairGeneralsTwoOrThreeMap(b.tacticsParams)
 	for _, general := range twoOrThreeGenerals {
@@ -88,14 +84,15 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		hlog.CtxInfof(ctx, "[%s]的「急救」状态已施加", general.BaseInfo.Name)
 
 		//注册触发效果
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerGeneral := params.CurrentGeneral
+			triggerResp := &vo.TacticsTriggerResult{}
 			if !util.GenerateRate(0.7) {
 				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果因几率没有生效",
 					triggerGeneral.BaseInfo.Name,
 					b.Name(),
 				)
-				return
+				return triggerResp
 			} else {
 				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果",
 					triggerGeneral.BaseInfo.Name,
@@ -111,6 +108,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 				)
 				triggerGeneral.SoldierNum += resumeNum
 			}
+			return triggerResp
 		},
 		)
 	}

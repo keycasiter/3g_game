@@ -17,6 +17,10 @@ type CleverStrategyAndShrewdTacticsTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (c CleverStrategyAndShrewdTacticsTactic) TriggerRate() float64 {
+	return 1.0
+}
+
 func (c CleverStrategyAndShrewdTacticsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
 	return c
@@ -26,17 +30,19 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 	ctx := c.tacticsParams.Ctx
 	currentGeneral := c.tacticsParams.CurrentGeneral
 
-	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-		currentGeneral.BaseInfo.Name,
-		c.Name(),
-	)
 	//敌军群体(2人)发动主动战法时，有35%几率令其失败并对其造成谋略伤害(伤害率100%，受智力影响)，
 	//找到两个敌军
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(c.tacticsParams)
 	//注册触发效果
 	for _, sufferGeneral := range enemyGenerals {
-		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_ExecuteActiveTactic, func(params *vo.TacticsTriggerParams) {
+		hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+			sufferGeneral.BaseInfo.Name,
+			consts.DebuffEffectType_CleverStrategyAndShrewdTactic,
+		)
+
+		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerGeneral := params.CurrentGeneral
+			triggerResp := &vo.TacticsTriggerResult{}
 			//35%几率
 			if !util.GenerateRate(0.35) {
 				hlog.CtxInfof(ctx, "[%s]执行来自[%s]【%s】的「神机妙算」效果因几率没有生效",
@@ -44,7 +50,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 					currentGeneral.BaseInfo.Name,
 					c.Name(),
 				)
-				return
+				return triggerResp
 			} else {
 				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「神机妙算」效果",
 					triggerGeneral.BaseInfo.Name,
@@ -59,9 +65,9 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 						dmgNum += cast.ToInt64(diff)
 					}
 				}
-				finalDmg, originNum, remaindNum, isEffect := util.TacticDamage(c.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
+				finalDmg, originNum, remaindNum, isEffect := util.TacticDamage(c.tacticsParams, currentGeneral, sufferGeneral, dmgNum, consts.BattleAction_SufferCommandTactic)
 				if !isEffect {
-					return
+					return triggerResp
 				}
 				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「神机妙算」效果，损失了兵力%d(%d↘%d️️️)",
 					triggerGeneral.BaseInfo.Name,
@@ -72,6 +78,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 					remaindNum,
 				)
 			}
+			return triggerResp
 		})
 	}
 	//TODO 自身为主将时，该次伤害会基于双方智力之差额外提高

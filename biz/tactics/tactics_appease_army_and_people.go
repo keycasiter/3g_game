@@ -18,14 +18,13 @@ type AppeaseArmyAndPeopleTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (a AppeaseArmyAndPeopleTactic) TriggerRate() float64 {
+	return 1.00
+}
+
 func (a AppeaseArmyAndPeopleTactic) Prepare() {
 	ctx := a.tacticsParams.Ctx
 	currentGeneral := a.tacticsParams.CurrentGeneral
-
-	hlog.CtxInfof(ctx, "[%s]发动战法[%s]",
-		a.tacticsParams.CurrentGeneral.BaseInfo.Name,
-		a.Name(),
-	)
 	//找到我军队伍
 	pairGeneralArr := util.GetPairGeneralsTwoArr(a.tacticsParams)
 	//使我军群体(2人)造成的伤害降低24%
@@ -40,7 +39,7 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 		hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害降低了%.2f%%", general.BaseInfo.Name,
 			launchDamageDeduceRate*100)
 		//注册效果
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			if params.CurrentRound == consts.Battle_Round_Fourth {
 				triggerGeneral := params.CurrentGeneral
 				//造成谋略伤害降低消失
@@ -60,6 +59,7 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 				hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提升了%.2f%%", triggerGeneral.BaseInfo.Name,
 					launchDamageDeduceRate*100)
 			}
+			return &vo.TacticsTriggerResult{}
 		})
 	}
 
@@ -76,7 +76,7 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 		hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了%.2f%%", general.BaseInfo.Name,
 			sufferDamageDeduceRate*100)
 		//注册效果
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			if params.CurrentRound == consts.Battle_Round_Fourth {
 				triggerGeneral := params.CurrentGeneral
 
@@ -97,12 +97,13 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 				hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害提升了%.2f%%", triggerGeneral.BaseInfo.Name,
 					sufferDamageDeduceRate*100)
 			}
+			return &vo.TacticsTriggerResult{}
 		})
 	}
 
 	//战斗第4回合时，恢复其兵力
 	//注册效果
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		//第四回合
 		if params.CurrentRound == consts.Battle_Round_Fourth {
 			triggerGeneral := params.CurrentGeneral
@@ -127,6 +128,7 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 				)
 			}
 		}
+		return &vo.TacticsTriggerResult{}
 	},
 	)
 	hlog.CtxInfof(ctx, "[%s]的「%s[预备]」效果已施加", a.tacticsParams.CurrentGeneral.BaseInfo.Name,

@@ -17,6 +17,10 @@ type SeizeTheSoulTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (s SeizeTheSoulTactic) TriggerRate() float64 {
+	return 0.55
+}
+
 func (s SeizeTheSoulTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	s.tacticsParams = tacticsParams
 	return s
@@ -53,92 +57,89 @@ func (s SeizeTheSoulTactic) Execute() {
 	currentGeneral := s.tacticsParams.CurrentGeneral
 	currentRound := s.tacticsParams.CurrentRound
 
-	//发动概率55%
-	if !util.GenerateRate(0.55) {
+	//最多叠加两次
+	if !util.TacticsBuffEffectCountWrapIncr(currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1, 2) {
 		return
-	} else {
-		//最多叠加两次
-		if !util.TacticsBuffEffectCountWrapIncr(currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1, 2) {
-			return
-		}
-
-		hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-			currentGeneral.BaseInfo.Name,
-			s.Name(),
-		)
-
-		enemyGeneral := util.GetEnemyOneGeneral(s.tacticsParams)
-		//偷取敌军单体38点武力、智力、速度、统率（受智力影响）
-		v := 38 + (currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100)
-		//提高我军武将
-		currentGeneral.BaseInfo.AbilityAttr.ForceBase += v
-		currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase += v
-		currentGeneral.BaseInfo.AbilityAttr.SpeedBase += v
-		currentGeneral.BaseInfo.AbilityAttr.CommandBase += v
-		hlog.CtxInfof(ctx, "[%s]的武力提高了%.2f",
-			currentGeneral.BaseInfo.Name,
-			v)
-		hlog.CtxInfof(ctx, "[%s]的智力提高了%.2f",
-			currentGeneral.BaseInfo.Name,
-			v)
-		hlog.CtxInfof(ctx, "[%s]的速度提高了%.2f",
-			currentGeneral.BaseInfo.Name,
-			v)
-		hlog.CtxInfof(ctx, "[%s]的统率提高了%.2f",
-			currentGeneral.BaseInfo.Name,
-			v)
-		//降低敌军武将
-		enemyGeneral.BaseInfo.AbilityAttr.ForceBase -= v
-		enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
-		enemyGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
-		enemyGeneral.BaseInfo.AbilityAttr.CommandBase -= v
-		hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
-			enemyGeneral.BaseInfo.Name,
-			v)
-		hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
-			enemyGeneral.BaseInfo.Name,
-			v)
-		hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
-			enemyGeneral.BaseInfo.Name,
-			v)
-		hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
-			enemyGeneral.BaseInfo.Name,
-			v)
-		//持续2回合，可叠加2次
-		//注册效果
-		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) {
-			if params.CurrentRound == currentRound+2 {
-				triggerGeneral := params.CurrentGeneral
-
-				triggerGeneral.BaseInfo.AbilityAttr.ForceBase -= v
-				triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
-				triggerGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
-				triggerGeneral.BaseInfo.AbilityAttr.CommandBase -= v
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					triggerGeneral.BaseInfo.Name,
-					consts.BuffEffectType_IncrForce)
-				hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
-					triggerGeneral.BaseInfo.Name,
-					v)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					triggerGeneral.BaseInfo.Name,
-					consts.BuffEffectType_IncrIntelligence)
-				hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
-					triggerGeneral.BaseInfo.Name,
-					v)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					triggerGeneral.BaseInfo.Name,
-					consts.BuffEffectType_IncrSpeed)
-				hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
-					triggerGeneral.BaseInfo.Name,
-					v)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					triggerGeneral.BaseInfo.Name,
-					consts.BuffEffectType_IncrCommand)
-				hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
-					triggerGeneral.BaseInfo.Name,
-					v)
-			}
-		})
 	}
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		s.Name(),
+	)
+
+	enemyGeneral := util.GetEnemyOneGeneral(s.tacticsParams)
+	//偷取敌军单体38点武力、智力、速度、统率（受智力影响）
+	v := 38 + (currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100)
+	//提高我军武将
+	currentGeneral.BaseInfo.AbilityAttr.ForceBase += v
+	currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase += v
+	currentGeneral.BaseInfo.AbilityAttr.SpeedBase += v
+	currentGeneral.BaseInfo.AbilityAttr.CommandBase += v
+	hlog.CtxInfof(ctx, "[%s]的武力提高了%.2f",
+		currentGeneral.BaseInfo.Name,
+		v)
+	hlog.CtxInfof(ctx, "[%s]的智力提高了%.2f",
+		currentGeneral.BaseInfo.Name,
+		v)
+	hlog.CtxInfof(ctx, "[%s]的速度提高了%.2f",
+		currentGeneral.BaseInfo.Name,
+		v)
+	hlog.CtxInfof(ctx, "[%s]的统率提高了%.2f",
+		currentGeneral.BaseInfo.Name,
+		v)
+	//降低敌军武将
+	enemyGeneral.BaseInfo.AbilityAttr.ForceBase -= v
+	enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
+	enemyGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
+	enemyGeneral.BaseInfo.AbilityAttr.CommandBase -= v
+	hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
+		enemyGeneral.BaseInfo.Name,
+		v)
+	hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
+		enemyGeneral.BaseInfo.Name,
+		v)
+	hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
+		enemyGeneral.BaseInfo.Name,
+		v)
+	hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
+		enemyGeneral.BaseInfo.Name,
+		v)
+	//持续2回合，可叠加2次
+	//注册效果
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		if params.CurrentRound == currentRound+2 {
+			triggerGeneral := params.CurrentGeneral
+
+			triggerGeneral.BaseInfo.AbilityAttr.ForceBase -= v
+			triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
+			triggerGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
+			triggerGeneral.BaseInfo.AbilityAttr.CommandBase -= v
+			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+				triggerGeneral.BaseInfo.Name,
+				consts.BuffEffectType_IncrForce)
+			hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
+				triggerGeneral.BaseInfo.Name,
+				v)
+			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+				triggerGeneral.BaseInfo.Name,
+				consts.BuffEffectType_IncrIntelligence)
+			hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
+				triggerGeneral.BaseInfo.Name,
+				v)
+			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+				triggerGeneral.BaseInfo.Name,
+				consts.BuffEffectType_IncrSpeed)
+			hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
+				triggerGeneral.BaseInfo.Name,
+				v)
+			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+				triggerGeneral.BaseInfo.Name,
+				consts.BuffEffectType_IncrCommand)
+			hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
+				triggerGeneral.BaseInfo.Name,
+				v)
+		}
+		return triggerResp
+	})
 }

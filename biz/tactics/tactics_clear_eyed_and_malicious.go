@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -15,6 +16,10 @@ type ClearEyedAndMaliciousTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (c ClearEyedAndMaliciousTactic) TriggerRate() float64 {
+	return 1.0
+}
+
 func (c ClearEyedAndMaliciousTactic) Prepare() {
 	currentGeneral := c.tacticsParams.CurrentGeneral
 
@@ -24,25 +29,34 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 	}
 
 	//战斗前4回合，每回合有80%概率使自身获得7%攻心或奇谋几率(每种效果最多叠加2次)
-	for i := int(consts.Battle_Round_First); i <= int(consts.Battle_Round_Fourth); i++ {
-		//80%概率
-		if !util.GenerateRate(0.8) {
-			continue
-		}
-		//攻心或奇谋
-		chosenIdx := util.GenerateHitOneIdx(2)
-		buffs := []consts.BuffEffectType{
-			consts.BuffEffectType_EnhanceStrategy,
-			consts.BuffEffectType_EnhanceWeapon,
-		}
-		buffEffect := buffs[chosenIdx]
+	//注册效果
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		currentRound := params.CurrentRound
+		triggerGeneral := params.CurrentGeneral
+		triggerResp := &vo.TacticsTriggerResult{}
 
-		//一种效果最多叠加2次
-		if !util.TacticsBuffEffectCountWrapIncr(currentGeneral, buffEffect, 1, 2) {
-			return
+		if currentRound >= consts.Battle_Round_First && currentRound <= consts.Battle_Round_Fourth {
+			//80%概率
+			if !util.GenerateRate(0.8) {
+				return triggerResp
+			}
+			//攻心或奇谋
+			chosenIdx := util.GenerateHitOneIdx(2)
+			buffs := []consts.BuffEffectType{
+				consts.BuffEffectType_EnhanceStrategy,
+				consts.BuffEffectType_EnhanceWeapon,
+			}
+			buffEffect := buffs[chosenIdx]
+
+			//一种效果最多叠加2次
+			if !util.TacticsBuffEffectCountWrapIncr(triggerGeneral, buffEffect, 1, 2) {
+				return triggerResp
+			}
+			util.BuffEffectWrapSet(triggerGeneral, buffEffect, 0.07)
 		}
-		util.BuffEffectWrapSet(currentGeneral, buffEffect, 0.07)
-	}
+		return triggerResp
+	})
+	//第5回合起，每回合有80%概率对1-2个敌军单体造成谋略伤害(伤害154%，受智力影响)
 }
 
 func (c ClearEyedAndMaliciousTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {

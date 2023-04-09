@@ -16,6 +16,10 @@ type CharmingTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (c CharmingTactic) TriggerRate() float64 {
+	return 1.0
+}
+
 func (c CharmingTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
 	return c
@@ -29,8 +33,9 @@ func (c CharmingTactic) Prepare() {
 	//效果施加
 	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Charming] = 1.0
 	//触发效果注册
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) {
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerGeneral := params.CurrentGeneral
+		triggerResp := &vo.TacticsTriggerResult{}
 		//有45%几率
 		triggerRate := 0.45
 		//自身为女性时，触发几率额外受智力影响
@@ -43,7 +48,7 @@ func (c CharmingTactic) Prepare() {
 				triggerGeneral.BaseInfo.Name,
 				c.Name(),
 			)
-			return
+			return triggerResp
 		} else {
 			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「魅惑」效果",
 				triggerGeneral.BaseInfo.Name,
@@ -62,6 +67,8 @@ func (c CharmingTactic) Prepare() {
 			//持续1回合
 			util.TacticsDebuffEffectCountWrapIncr(currentGeneral, debuff, 1, 1)
 		}
+
+		return triggerResp
 	})
 }
 

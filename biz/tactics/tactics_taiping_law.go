@@ -13,6 +13,10 @@ type TaipingLawTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (t TaipingLawTactic) TriggerRate() float64 {
+	return 1.00
+}
+
 func (t TaipingLawTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
 	return t

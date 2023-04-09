@@ -15,6 +15,10 @@ type SuppressChokesAndPreventRefusalsTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (s SuppressChokesAndPreventRefusalsTactic) TriggerRate() float64 {
+	return 1.00
+}
+
 func (s SuppressChokesAndPreventRefusalsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	s.tacticsParams = tacticsParams
 	return s
@@ -33,8 +37,11 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 		//让这个副将援护友军
 		generals := util.GetPairGeneralsNotSelf(s.tacticsParams, viceGeneral)
 		for _, general := range generals {
-			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) {
+			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerResp := &vo.TacticsTriggerResult{}
+				//TODO
 				general.HelpByGeneral = viceGeneral
+				return triggerResp
 			})
 		}
 	}

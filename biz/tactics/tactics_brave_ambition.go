@@ -14,6 +14,10 @@ type BraveAmbitionTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (b BraveAmbitionTactic) TriggerRate() float64 {
+	return 1.0
+}
+
 func (b BraveAmbitionTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	b.tacticsParams = tacticsParams
 	return b

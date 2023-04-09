@@ -15,6 +15,8 @@ type Tactics interface {
 	Id() consts.TacticId
 	//战法名称
 	Name() string
+	//发动概率
+	TriggerRate() float64
 	//战法类型
 	TacticsType() consts.TacticsType
 	//支持兵种

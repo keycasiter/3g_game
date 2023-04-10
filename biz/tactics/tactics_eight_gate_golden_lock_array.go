@@ -16,6 +16,10 @@ type EightGateGoldenLockArrayTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (e EightGateGoldenLockArrayTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Inherit
+}
+
 func (e EightGateGoldenLockArrayTactic) TriggerRate() float64 {
 	return 1.0
 }

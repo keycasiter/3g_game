@@ -13,6 +13,10 @@ type FrontalVectorArrayTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (f FrontalVectorArrayTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Inherit
+}
+
 func (f FrontalVectorArrayTactic) TriggerRate() float64 {
 	return 1.0
 }

@@ -17,6 +17,10 @@ type CleverStrategyAndShrewdTacticsTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (c CleverStrategyAndShrewdTacticsTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_SelfContained
+}
+
 func (c CleverStrategyAndShrewdTacticsTactic) TriggerRate() float64 {
 	return 1.0
 }

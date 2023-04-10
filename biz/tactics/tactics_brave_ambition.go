@@ -18,6 +18,10 @@ type BraveAmbitionTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (b BraveAmbitionTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_SelfContained
+}
+
 func (b BraveAmbitionTactic) TriggerRate() float64 {
 	return 1.0
 }

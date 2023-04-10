@@ -15,6 +15,10 @@ type SuppressChokesAndPreventRefusalsTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (s SuppressChokesAndPreventRefusalsTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_SelfContained
+}
+
 func (s SuppressChokesAndPreventRefusalsTactic) TriggerRate() float64 {
 	return 1.00
 }

@@ -16,6 +16,10 @@ type ClearEyedAndMaliciousTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (c ClearEyedAndMaliciousTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_SelfContained
+}
+
 func (c ClearEyedAndMaliciousTactic) TriggerRate() float64 {
 	return 1.0
 }

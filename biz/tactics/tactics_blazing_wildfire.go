@@ -18,6 +18,10 @@ type BlazingWildfireTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (b BlazingWildfireTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Event
+}
+
 func (b BlazingWildfireTactic) TriggerRate() float64 {
 	return 0.5
 }

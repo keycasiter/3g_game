@@ -18,6 +18,10 @@ type WuDangFlyArmyTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (w WuDangFlyArmyTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Inherit
+}
+
 func (w WuDangFlyArmyTactic) TriggerRate() float64 {
 	return 1.00
 }

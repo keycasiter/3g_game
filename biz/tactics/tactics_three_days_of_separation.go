@@ -17,6 +17,10 @@ type ThreeDaysOfSeparationTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (t ThreeDaysOfSeparationTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Inherit
+}
+
 func (t ThreeDaysOfSeparationTactic) TriggerRate() float64 {
 	return 1.00
 }

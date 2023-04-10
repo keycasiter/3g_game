@@ -15,6 +15,8 @@ type Tactics interface {
 	Id() consts.TacticId
 	//战法名称
 	Name() string
+	//战法来源
+	TacticsSource() consts.TacticsSource
 	//发动概率
 	TriggerRate() float64
 	//战法类型

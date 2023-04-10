@@ -16,6 +16,10 @@ type CharmingTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (c CharmingTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Inherit
+}
+
 func (c CharmingTactic) TriggerRate() float64 {
 	return 1.0
 }

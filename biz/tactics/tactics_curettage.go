@@ -15,6 +15,10 @@ type CurettageTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (c CurettageTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Inherit
+}
+
 func (c CurettageTactic) TriggerRate() float64 {
 	return 0.4
 }

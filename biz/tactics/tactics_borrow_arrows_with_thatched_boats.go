@@ -18,6 +18,10 @@ type BorrowArrowsWithThatchedBoatsTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (b BorrowArrowsWithThatchedBoatsTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Event
+}
+
 func (b BorrowArrowsWithThatchedBoatsTactic) TriggerRate() float64 {
 	return 0.65
 }

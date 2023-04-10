@@ -17,6 +17,10 @@ type SeizeTheSoulTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (s SeizeTheSoulTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Inherit
+}
+
 func (s SeizeTheSoulTactic) TriggerRate() float64 {
 	return 0.55
 }

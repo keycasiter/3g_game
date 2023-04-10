@@ -18,6 +18,10 @@ type InterlockedStratagemsTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (i InterlockedStratagemsTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_SelfContained
+}
+
 func (i InterlockedStratagemsTactic) TriggerRate() float64 {
 	return 0.35
 }

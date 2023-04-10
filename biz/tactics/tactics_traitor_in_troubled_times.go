@@ -14,6 +14,10 @@ type TraitorInTroubledTimesTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (t TraitorInTroubledTimesTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_SelfContained
+}
+
 func (t TraitorInTroubledTimesTactic) TriggerRate() float64 {
 	return 1.00
 }

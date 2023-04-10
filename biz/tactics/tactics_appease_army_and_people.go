@@ -18,6 +18,10 @@ type AppeaseArmyAndPeopleTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (a AppeaseArmyAndPeopleTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Event
+}
+
 func (a AppeaseArmyAndPeopleTactic) TriggerRate() float64 {
 	return 1.00
 }

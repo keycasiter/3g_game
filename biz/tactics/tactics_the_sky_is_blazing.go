@@ -15,6 +15,10 @@ type TheSkyIsBlazingTactic struct {
 	tacticsParams *model.TacticsParams
 }
 
+func (t TheSkyIsBlazingTactic) TacticsSource() consts.TacticsSource {
+	return consts.TacticsSource_Inherit
+}
+
 func (t TheSkyIsBlazingTactic) TriggerRate() float64 {
 	return 0.35
 }

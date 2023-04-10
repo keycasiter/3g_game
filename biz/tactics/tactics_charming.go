@@ -14,18 +14,24 @@ import (
 // 持续1回合，自身为女性时，触发几率额外受智力影响
 type CharmingTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (c CharmingTactic) SetTriggerRate(rate float64) {
+	c.triggerRate = rate
 }
 
 func (c CharmingTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (c CharmingTactic) TriggerRate() float64 {
-	return 1.0
+func (c CharmingTactic) GetTriggerRate() float64 {
+	return c.triggerRate
 }
 
 func (c CharmingTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
+	c.triggerRate = 1.0
 	return c
 }
 

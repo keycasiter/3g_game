@@ -287,7 +287,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				//发动率判断
-				if !util.GenerateRate(handler.TriggerRate()) {
+				if !util.GenerateRate(handler.GetTriggerRate()) {
 					return
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
@@ -302,7 +302,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				//发动率判断
-				if !util.GenerateRate(handler.TriggerRate()) {
+				if !util.GenerateRate(handler.GetTriggerRate()) {
 					return
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
@@ -316,7 +316,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 			if _, ok := tactics.ArmTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				//发动率判断
-				if !util.GenerateRate(handler.TriggerRate()) {
+				if !util.GenerateRate(handler.GetTriggerRate()) {
 					return
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
@@ -330,7 +330,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 			if _, ok := tactics.CommandTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				//发动率判断
-				if !util.GenerateRate(handler.TriggerRate()) {
+				if !util.GenerateRate(handler.GetTriggerRate()) {
 					return
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
@@ -453,7 +453,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				}
 				tacticHandler := tactics.TacticsHandlerMap[tactic.Id]
 				//发动率判断
-				if !util.GenerateRate(tacticHandler.TriggerRate()) {
+				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
@@ -544,7 +544,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
 					tacticHandler := tactics.TacticsHandlerMap[tactic.Id]
 					//发动率判断
-					if !util.GenerateRate(tacticHandler.TriggerRate()) {
+					if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 						return
 					}
 					hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",

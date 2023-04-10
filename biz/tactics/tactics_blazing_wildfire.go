@@ -16,18 +16,24 @@ import (
 // 若目标已有灼烧状态则造成兵刃攻击(伤害率118%)
 type BlazingWildfireTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (b BlazingWildfireTactic) SetTriggerRate(rate float64) {
+	b.triggerRate = rate
 }
 
 func (b BlazingWildfireTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Event
 }
 
-func (b BlazingWildfireTactic) TriggerRate() float64 {
-	return 0.5
+func (b BlazingWildfireTactic) GetTriggerRate() float64 {
+	return b.triggerRate
 }
 
 func (b BlazingWildfireTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	b.tacticsParams = tacticsParams
+	b.triggerRate = 0.5
 	return b
 }
 

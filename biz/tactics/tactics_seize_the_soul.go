@@ -15,18 +15,24 @@ import (
 // 持续2回合，可叠加2次
 type SeizeTheSoulTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (s SeizeTheSoulTactic) SetTriggerRate(rate float64) {
+	s.triggerRate = rate
 }
 
 func (s SeizeTheSoulTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (s SeizeTheSoulTactic) TriggerRate() float64 {
-	return 0.55
+func (s SeizeTheSoulTactic) GetTriggerRate() float64 {
+	return s.triggerRate
 }
 
 func (s SeizeTheSoulTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	s.tacticsParams = tacticsParams
+	s.triggerRate = 0.55
 	return s
 }
 

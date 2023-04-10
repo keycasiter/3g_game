@@ -16,18 +16,24 @@ import (
 // 若王平统领，对敌军全体施加中毒状态，但伤害率降低（伤害率66%，受智力影响）
 type WuDangFlyArmyTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (w WuDangFlyArmyTactic) SetTriggerRate(rate float64) {
+	w.triggerRate = rate
 }
 
 func (w WuDangFlyArmyTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (w WuDangFlyArmyTactic) TriggerRate() float64 {
-	return 1.00
+func (w WuDangFlyArmyTactic) GetTriggerRate() float64 {
+	return w.triggerRate
 }
 
 func (w WuDangFlyArmyTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	w.tacticsParams = tacticsParams
+	w.triggerRate = 1.0
 	return w
 }
 

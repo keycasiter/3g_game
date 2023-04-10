@@ -14,18 +14,24 @@ import (
 // 自身为黄巾军主将时，使黄巾军副将同样获得自带战法发动率提升
 type TaipingLawTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (t TaipingLawTactic) SetTriggerRate(rate float64) {
+	t.triggerRate = rate
 }
 
 func (t TaipingLawTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Event
 }
 
-func (t TaipingLawTactic) TriggerRate() float64 {
-	return 1.00
+func (t TaipingLawTactic) GetTriggerRate() float64 {
+	return t.triggerRate
 }
 
 func (t TaipingLawTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
+	t.triggerRate = 1.0
 	return t
 }
 

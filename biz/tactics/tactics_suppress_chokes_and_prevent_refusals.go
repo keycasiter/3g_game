@@ -13,18 +13,24 @@ import (
 // 持续1回合，同时使其在1回合内受到普通攻击时，有55%概率（受智力影响）移除攻击者的增益状态
 type SuppressChokesAndPreventRefusalsTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (s SuppressChokesAndPreventRefusalsTactic) SetTriggerRate(rate float64) {
+	s.triggerRate = rate
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_SelfContained
 }
 
-func (s SuppressChokesAndPreventRefusalsTactic) TriggerRate() float64 {
-	return 1.00
+func (s SuppressChokesAndPreventRefusalsTactic) GetTriggerRate() float64 {
+	return s.triggerRate
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	s.tacticsParams = tacticsParams
+	s.triggerRate = 1.00
 	return s
 }
 

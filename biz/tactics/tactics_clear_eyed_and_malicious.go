@@ -14,14 +14,19 @@ import (
 // 自身为主将时，获得16%奇谋几率
 type ClearEyedAndMaliciousTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (c ClearEyedAndMaliciousTactic) SetTriggerRate(rate float64) {
+	c.triggerRate = rate
 }
 
 func (c ClearEyedAndMaliciousTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_SelfContained
 }
 
-func (c ClearEyedAndMaliciousTactic) TriggerRate() float64 {
-	return 1.0
+func (c ClearEyedAndMaliciousTactic) GetTriggerRate() float64 {
+	return c.triggerRate
 }
 
 func (c ClearEyedAndMaliciousTactic) Prepare() {
@@ -65,6 +70,7 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 
 func (c ClearEyedAndMaliciousTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
+	c.triggerRate = 1.0
 	return c
 }
 

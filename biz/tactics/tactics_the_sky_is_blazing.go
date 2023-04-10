@@ -13,18 +13,24 @@ import (
 // 主动战法 发动率35%
 type TheSkyIsBlazingTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (t TheSkyIsBlazingTactic) SetTriggerRate(rate float64) {
+	t.triggerRate = rate
 }
 
 func (t TheSkyIsBlazingTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (t TheSkyIsBlazingTactic) TriggerRate() float64 {
-	return 0.35
+func (t TheSkyIsBlazingTactic) GetTriggerRate() float64 {
+	return t.triggerRate
 }
 
 func (t TheSkyIsBlazingTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
+	t.triggerRate = 0.35
 	return t
 }
 

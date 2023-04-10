@@ -11,18 +11,24 @@ import (
 // 战法描述：战斗中，使我军主将造成的伤害提升30%，受到的伤害提升20%，我军副将造成的伤害降低15%，受到的伤害降低25%
 type FrontalVectorArrayTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (f FrontalVectorArrayTactic) SetTriggerRate(rate float64) {
+	f.triggerRate = rate
 }
 
 func (f FrontalVectorArrayTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (f FrontalVectorArrayTactic) TriggerRate() float64 {
-	return 1.0
+func (f FrontalVectorArrayTactic) GetTriggerRate() float64 {
+	return f.triggerRate
 }
 
 func (f FrontalVectorArrayTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	f.tacticsParams = tacticsParams
+	f.triggerRate = 1.0
 	return f
 }
 
@@ -66,9 +72,5 @@ func (f FrontalVectorArrayTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (f FrontalVectorArrayTactic) Execute() {
-	return
-}
-
-func (f FrontalVectorArrayTactic) Trigger() {
 	return
 }

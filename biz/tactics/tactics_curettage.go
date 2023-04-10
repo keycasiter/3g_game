@@ -13,18 +13,24 @@ import (
 // 战法描述：为损失兵力最多的我军单体清除负面状态并为其恢复兵力（治疗率256%，受智力影响）
 type CurettageTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (c CurettageTactic) SetTriggerRate(rate float64) {
+	c.triggerRate = rate
 }
 
 func (c CurettageTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (c CurettageTactic) TriggerRate() float64 {
-	return 0.4
+func (c CurettageTactic) GetTriggerRate() float64 {
+	return c.triggerRate
 }
 
 func (c CurettageTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
+	c.triggerRate = 0.4
 	return c
 }
 

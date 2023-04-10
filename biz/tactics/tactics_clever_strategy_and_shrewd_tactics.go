@@ -15,18 +15,24 @@ import (
 // 自身为主将时，该次伤害会基于双方智力之差额外提高
 type CleverStrategyAndShrewdTacticsTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (c CleverStrategyAndShrewdTacticsTactic) SetTriggerRate(rate float64) {
+	c.triggerRate = rate
 }
 
 func (c CleverStrategyAndShrewdTacticsTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_SelfContained
 }
 
-func (c CleverStrategyAndShrewdTacticsTactic) TriggerRate() float64 {
-	return 1.0
+func (c CleverStrategyAndShrewdTacticsTactic) GetTriggerRate() float64 {
+	return c.triggerRate
 }
 
 func (c CleverStrategyAndShrewdTacticsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
+	c.triggerRate = 1.0
 	return c
 }
 

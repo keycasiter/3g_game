@@ -17,8 +17,10 @@ type Tactics interface {
 	Name() string
 	//战法来源
 	TacticsSource() consts.TacticsSource
-	//发动概率
-	TriggerRate() float64
+	//获取发动概率
+	GetTriggerRate() float64
+	//设置发动概率
+	SetTriggerRate(rate float64)
 	//战法类型
 	TacticsType() consts.TacticsType
 	//支持兵种

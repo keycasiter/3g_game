@@ -79,31 +79,36 @@ type BuffEffectType int
 
 const (
 	//效果施加
-	BuffEffectType_Unknow                        BuffEffectType = 0
-	BuffEffectType_Evade                         BuffEffectType = 1  //规避
-	BuffEffectType_EnhanceWeapon                 BuffEffectType = 2  //会心
-	BuffEffectType_EnhanceStrategy               BuffEffectType = 3  //奇谋
-	BuffEffectType_GroupAttack                   BuffEffectType = 4  //群攻
-	BuffEffectType_FirstAttack                   BuffEffectType = 5  //先攻
-	BuffEffectType_Rest                          BuffEffectType = 6  //休整
-	BuffEffectType_Defend                        BuffEffectType = 7  //抵御
-	BuffEffectType_ContinuousAttack              BuffEffectType = 8  //连击
-	BuffEffectType_StrikeBack                    BuffEffectType = 9  //反击
-	BuffEffectType_TacticsTriggerImprove         BuffEffectType = 10 //战法发动率提升
-	BuffEffectType_LaunchWeaponDamageImprove     BuffEffectType = 11 //造成兵刃伤害增加
-	BuffEffectType_LaunchStrategyDamageImprove   BuffEffectType = 12 //造成谋略伤害增加
-	BuffEffectType_SufferWeaponDamageDeduce      BuffEffectType = 13 //受到兵刃伤害减少
-	BuffEffectType_SufferStrategyDamageDeduce    BuffEffectType = 14 //受到谋略伤害减少
-	BuffEffectType_IncrForce                     BuffEffectType = 15 //增加武力
-	BuffEffectType_IncrIntelligence              BuffEffectType = 16 //增加智力
-	BuffEffectType_IncrCommand                   BuffEffectType = 17 //增加统率
-	BuffEffectType_IncrSpeed                     BuffEffectType = 18 //增加速度
-	BuffEffectType_EmergencyTreatment            BuffEffectType = 19 //急救
-	BuffEffectType_Charming                      BuffEffectType = 20 //魅惑
-	BuffEffectType_AppeaseArmyAndPeople_Prepare  BuffEffectType = 21 //抚辑军民「预备」
-	BuffEffectType_ThreeDaysOfSeparation_Prepare BuffEffectType = 22 //士别三日「预备」
-	BuffEffectType_SeizeTheSoul                  BuffEffectType = 23 //夺魂挟魄
-	BuffEffectType_BraveAmbition_Prepare         BuffEffectType = 24 //义胆雄心「预备」
+	BuffEffectType_Unknow                       BuffEffectType = iota
+	BuffEffectType_Evade                                       //规避
+	BuffEffectType_EnhanceWeapon                               //会心
+	BuffEffectType_EnhanceStrategy                             //奇谋
+	BuffEffectType_GroupAttack                                 //群攻
+	BuffEffectType_FirstAttack                                 //先攻
+	BuffEffectType_Rest                                        //休整
+	BuffEffectType_Defend                                      //抵御
+	BuffEffectType_ContinuousAttack                            //连击
+	BuffEffectType_StrikeBack                                  //反击
+	BuffEffectType_TacticsActiveTriggerImprove                 //主动战法发动率提升
+	BuffEffectType_TacticsPassiveTriggerImprove                //被动战法发动率提升
+	BuffEffectType_LaunchWeaponDamageImprove                   //造成兵刃伤害增加
+	BuffEffectType_LaunchStrategyDamageImprove                 //造成谋略伤害增加
+
+	BuffEffectType_TacticsActiveTriggerDecr      //主动战法发动率降低
+	BuffEffectType_TacticsPassiveTriggerDecr     //被动战法发动率降低
+	BuffEffectType_SufferWeaponDamageDeduce      //受到兵刃伤害减少
+	BuffEffectType_SufferStrategyDamageDeduce    //受到谋略伤害减少
+	BuffEffectType_IncrForce                     //增加武力
+	BuffEffectType_IncrIntelligence              //增加智力
+	BuffEffectType_IncrCommand                   //增加统率
+	BuffEffectType_IncrSpeed                     //增加速度
+	BuffEffectType_EmergencyTreatment            //急救
+	BuffEffectType_Charming                      //魅惑
+	BuffEffectType_AppeaseArmyAndPeople_Prepare  //抚辑军民「预备」
+	BuffEffectType_ThreeDaysOfSeparation_Prepare //士别三日「预备」
+	BuffEffectType_SeizeTheSoul                  //夺魂挟魄
+	BuffEffectType_BraveAmbition_Prepare         //义胆雄心「预备」
+	BuffEffectType_HuangTianDangLi               //黄天当立
 )
 
 func (b BuffEffectType) String() string {
@@ -132,6 +137,8 @@ func (b BuffEffectType) String() string {
 		return "受到谋略伤害降低"
 	case BuffEffectType_BraveAmbition_Prepare:
 		return "义胆雄心[预备]"
+	case BuffEffectType_HuangTianDangLi:
+		return "黄天当立"
 	}
 	return ""
 }

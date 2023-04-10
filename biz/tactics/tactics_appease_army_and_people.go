@@ -16,14 +16,19 @@ import (
 // 战斗第4回合时，恢复其兵力（治疗率126%，受智力影响）
 type AppeaseArmyAndPeopleTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (a AppeaseArmyAndPeopleTactic) SetTriggerRate(rate float64) {
+	a.triggerRate = rate
 }
 
 func (a AppeaseArmyAndPeopleTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Event
 }
 
-func (a AppeaseArmyAndPeopleTactic) TriggerRate() float64 {
-	return 1.00
+func (a AppeaseArmyAndPeopleTactic) GetTriggerRate() float64 {
+	return a.triggerRate
 }
 
 func (a AppeaseArmyAndPeopleTactic) Prepare() {
@@ -146,6 +151,7 @@ func (a AppeaseArmyAndPeopleTactic) Execute() {
 
 func (a AppeaseArmyAndPeopleTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	a.tacticsParams = tacticsParams
+	a.triggerRate = 1.0
 	return a
 }
 

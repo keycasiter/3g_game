@@ -12,18 +12,24 @@ import (
 // 自己受到伤害降低18%（受智力影响），如果自己为主将，副将造成伤害时，会为主将恢复其伤害量10%的兵力
 type TraitorInTroubledTimesTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (t TraitorInTroubledTimesTactic) SetTriggerRate(rate float64) {
+	t.triggerRate = rate
 }
 
 func (t TraitorInTroubledTimesTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_SelfContained
 }
 
-func (t TraitorInTroubledTimesTactic) TriggerRate() float64 {
-	return 1.00
+func (t TraitorInTroubledTimesTactic) GetTriggerRate() float64 {
+	return t.triggerRate
 }
 
 func (t TraitorInTroubledTimesTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
+	t.triggerRate = 1.0
 	return t
 }
 

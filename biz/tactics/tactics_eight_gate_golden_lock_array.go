@@ -14,18 +14,24 @@ import (
 // 并使我军主将获得先攻状态（优先行动）
 type EightGateGoldenLockArrayTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (e EightGateGoldenLockArrayTactic) SetTriggerRate(rate float64) {
+	e.triggerRate = rate
 }
 
 func (e EightGateGoldenLockArrayTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (e EightGateGoldenLockArrayTactic) TriggerRate() float64 {
-	return 1.0
+func (e EightGateGoldenLockArrayTactic) GetTriggerRate() float64 {
+	return e.triggerRate
 }
 
 func (e EightGateGoldenLockArrayTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	e.tacticsParams = tacticsParams
+	e.triggerRate = 1.0
 	return e
 }
 

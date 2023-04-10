@@ -16,18 +16,24 @@ import (
 // 并发动谋略攻击（伤害率156%，受智力影响）
 type InterlockedStratagemsTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (i InterlockedStratagemsTactic) SetTriggerRate(rate float64) {
+	i.triggerRate = rate
 }
 
 func (i InterlockedStratagemsTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_SelfContained
 }
 
-func (i InterlockedStratagemsTactic) TriggerRate() float64 {
-	return 0.35
+func (i InterlockedStratagemsTactic) GetTriggerRate() float64 {
+	return i.triggerRate
 }
 
 func (i InterlockedStratagemsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	i.tacticsParams = tacticsParams
+	i.triggerRate = 0.35
 	return i
 }
 

@@ -16,18 +16,24 @@ import (
 // 自身为主将时，降低属性效果受自身对应属性影响
 type BraveAmbitionTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (b BraveAmbitionTactic) SetTriggerRate(rate float64) {
+	b.triggerRate = rate
 }
 
 func (b BraveAmbitionTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_SelfContained
 }
 
-func (b BraveAmbitionTactic) TriggerRate() float64 {
-	return 1.0
+func (b BraveAmbitionTactic) GetTriggerRate() float64 {
+	return b.triggerRate
 }
 
 func (b BraveAmbitionTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	b.tacticsParams = tacticsParams
+	b.triggerRate = 1.0
 	return b
 }
 

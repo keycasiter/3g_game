@@ -16,18 +16,24 @@ import (
 // 持续2回合，该战法发动后会进入1回合冷却
 type BorrowArrowsWithThatchedBoatsTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (b BorrowArrowsWithThatchedBoatsTactic) SetTriggerRate(rate float64) {
+	b.triggerRate = rate
 }
 
 func (b BorrowArrowsWithThatchedBoatsTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Event
 }
 
-func (b BorrowArrowsWithThatchedBoatsTactic) TriggerRate() float64 {
-	return 0.65
+func (b BorrowArrowsWithThatchedBoatsTactic) GetTriggerRate() float64 {
+	return b.triggerRate
 }
 
 func (b BorrowArrowsWithThatchedBoatsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	b.tacticsParams = tacticsParams
+	b.triggerRate = 0.65
 	return b
 }
 

@@ -15,18 +15,24 @@ import (
 // 第4回合提高自己68点智力，并对敌军全体造成谋略伤害(伤害率180%，受智力影响)
 type ThreeDaysOfSeparationTactic struct {
 	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (t ThreeDaysOfSeparationTactic) SetTriggerRate(rate float64) {
+	t.triggerRate = rate
 }
 
 func (t ThreeDaysOfSeparationTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (t ThreeDaysOfSeparationTactic) TriggerRate() float64 {
-	return 1.00
+func (t ThreeDaysOfSeparationTactic) GetTriggerRate() float64 {
+	return t.triggerRate
 }
 
 func (t ThreeDaysOfSeparationTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
+	t.triggerRate = 1.0
 	return t
 }
 

@@ -41,10 +41,10 @@ func GetEnemyGeneralMap(tacticsParams *model.TacticsParams) map[int64]*vo.Battle
 	enemyGeneralMap := make(map[int64]*vo.BattleGeneral, 0)
 	currentGeneralId := tacticsParams.CurrentGeneral.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
-		enemyGeneralMap = tacticsParams.EnemyGeneralMap
+		enemyGeneralMap = tacticsParams.FightingGeneralMap
 	}
 	if _, ok := tacticsParams.EnemyGeneralMap[currentGeneralId]; !ok {
-		enemyGeneralMap = tacticsParams.FightingGeneralMap
+		enemyGeneralMap = tacticsParams.EnemyGeneralMap
 	}
 	return enemyGeneralMap
 }
@@ -181,17 +181,15 @@ func GetPairGeneralsTwoArrByGeneral(currentGeneral *vo.BattleGeneral, tacticsPar
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; ok {
 		for _, general := range tacticsParams.FightingGeneralMap {
 			if currentGeneralId != general.BaseInfo.UniqueId {
-				continue
+				pairGeneralArr = append(pairGeneralArr, general)
 			}
-			pairGeneralArr = append(pairGeneralArr, general)
 		}
 	}
 	if _, ok := tacticsParams.EnemyGeneralMap[currentGeneralId]; ok {
 		for _, general := range tacticsParams.EnemyGeneralMap {
 			if currentGeneralId != general.BaseInfo.UniqueId {
-				continue
+				pairGeneralArr = append(pairGeneralArr, general)
 			}
-			pairGeneralArr = append(pairGeneralArr, general)
 		}
 	}
 	return pairGeneralArr

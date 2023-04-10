@@ -65,7 +65,7 @@ func (c CharmingTactic) Prepare() {
 			//找到攻击者
 			params.CurrentGeneral.DeBuffEffectHolderMap[debuff] = 1.0
 			//持续1回合
-			util.TacticsDebuffEffectCountWrapIncr(currentGeneral, debuff, 1, 1)
+			util.TacticsDebuffEffectCountWrapIncr(ctx, currentGeneral, debuff, 1, 1, false)
 		}
 
 		return triggerResp

@@ -49,7 +49,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(w.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
 		//持续3回合
-		if !util.TacticsDebuffEffectCountWrapIncr(sufferGeneral, consts.DebuffEffectType_Methysis, 3, 3) {
+		if !util.TacticsDebuffEffectCountWrapIncr(ctx, sufferGeneral, consts.DebuffEffectType_Methysis, 3, 3, false) {
 			return
 		}
 		//施加中毒效果

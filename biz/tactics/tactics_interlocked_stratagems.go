@@ -63,11 +63,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 	allGenerals := util.GetEnemyGeneralMap(i.tacticsParams)
 	for _, general := range allGenerals {
 		//次数判断
-		if !util.TacticsDebuffEffectCountWrapIncr(general,
-			consts.DebuffEffectType_InterlockedStratagems,
-			2,
-			2,
-		) {
+		if !util.TacticsDebuffEffectCountWrapIncr(ctx, general, consts.DebuffEffectType_InterlockedStratagems, 2, 2, false) {
 			return
 		}
 		hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",

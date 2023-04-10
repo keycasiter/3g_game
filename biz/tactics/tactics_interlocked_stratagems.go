@@ -77,6 +77,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 		//注册效果
 		registerFunc := func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
+			triggerGeneral := params.CurrentGeneral
 			//准备一回合
 			if !(currentRound+1 == params.CurrentRound) {
 				return triggerResp
@@ -90,16 +91,15 @@ func (i InterlockedStratagemsTactic) Execute() {
 			}
 			//释放效果
 			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-				currentGeneral.BaseInfo.Name,
+				triggerGeneral.BaseInfo.Name,
 				i.Name(),
 				consts.DebuffEffectType_InterlockedStratagems,
 			)
-			sufferGeneral := params.CurrentGeneral
 			//找到2个队友进行伤害反弹
-			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(sufferGeneral, i.tacticsParams)
+			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, i.tacticsParams)
 			for _, reboundGeneral := range pairGenerals {
 				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.15)
-				finalNum, holdNum, remainNum, isEffect := util.TacticDamage(i.tacticsParams, sufferGeneral, reboundGeneral, dmg, consts.BattleAction_SufferCommandTactic)
+				finalNum, holdNum, remainNum, isEffect := util.TacticDamage(i.tacticsParams, currentGeneral, reboundGeneral, dmg, consts.BattleAction_Unknow)
 				if !isEffect {
 					return triggerResp
 				}
@@ -115,9 +115,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 			}
 			return triggerResp
 		}
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, registerFunc)
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferActiveTactic, registerFunc)
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAssaultTactic, registerFunc)
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferDamage, registerFunc)
 
 	}
 	//并发动谋略攻击（伤害率156%，受智力影响）

@@ -314,21 +314,25 @@ const (
 type BattleAction int
 
 const (
-	BattleAction_BeginAction         BattleAction = 0  //开始行动
-	BattleAction_Attack              BattleAction = 1  //普通攻击
-	BattleAction_SufferAttack        BattleAction = 2  //被普通攻击
-	BattleAction_ActiveTactic        BattleAction = 3  //发动主动战法
-	BattleAction_SufferActiveTactic  BattleAction = 4  //被主动战法攻击
-	BattleAction_AssaultTactic       BattleAction = 5  //发动突击战法攻击
-	BattleAction_SufferAssaultTactic BattleAction = 6  //被突击战法攻击
-	BattleAction_CommandTactic       BattleAction = 7  //指挥战法攻击
-	BattleAction_SufferCommandTactic BattleAction = 8  //被指挥战法攻击
-	BattleAction_PassiveTactic       BattleAction = 9  //被动战法攻击
-	BattleAction_SufferPassiveTactic BattleAction = 10 //被被动战法攻击
-	BattleAction_TroopsTactic        BattleAction = 11 //阵法战法攻击
-	BattleAction_SufferTroopsTactic  BattleAction = 12 //被阵法战法攻击
-	BattleAction_ArmTactic           BattleAction = 13 //兵种战法攻击
-	BattleAction_SufferArmTactic     BattleAction = 14 //被兵种战法攻击
+	BattleAction_Unknow              BattleAction = 0  //未知动作
+	BattleAction_BeginAction         BattleAction = 1  //开始行动
+	BattleAction_Attack              BattleAction = 2  //普通攻击
+	BattleAction_SufferAttack        BattleAction = 3  //被普通攻击
+	BattleAction_ActiveTactic        BattleAction = 4  //发动主动战法
+	BattleAction_SufferActiveTactic  BattleAction = 5  //被主动战法攻击
+	BattleAction_AssaultTactic       BattleAction = 6  //发动突击战法攻击
+	BattleAction_SufferAssaultTactic BattleAction = 7  //被突击战法攻击
+	BattleAction_CommandTactic       BattleAction = 8  //指挥战法攻击
+	BattleAction_SufferCommandTactic BattleAction = 9  //被指挥战法攻击
+	BattleAction_PassiveTactic       BattleAction = 10 //被动战法攻击
+	BattleAction_SufferPassiveTactic BattleAction = 11 //被被动战法攻击
+	BattleAction_TroopsTactic        BattleAction = 12 //阵法战法攻击
+	BattleAction_SufferTroopsTactic  BattleAction = 13 //被阵法战法攻击
+	BattleAction_ArmTactic           BattleAction = 14 //兵种战法攻击
+	BattleAction_SufferArmTactic     BattleAction = 15 //被兵种战法攻击
+
+	BattleAction_Damage       BattleAction = 101 //造成伤害的动作
+	BattleAction_SufferDamage BattleAction = 102 //被伤害的动作
 )
 
 func (action BattleAction) String() string {

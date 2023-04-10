@@ -180,6 +180,17 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	if sufferGeneral.SoldierNum == 0 {
 		hlog.CtxInfof(ctx, "[%s]武将兵力为0，无法再战", sufferGeneral.BaseInfo.Name)
 	}
+
+	//效果触发器
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; ok {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: sufferGeneral,
+			}
+			f(params)
+		}
+	}
 }
 
 // 战法伤害计算
@@ -216,6 +227,17 @@ func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	//伤害结算
 	sufferGeneral.SoldierNum -= damageNum
 	remainSoldierNum = sufferGeneral.SoldierNum
+
+	//效果触发器
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; ok {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: sufferGeneral,
+			}
+			f(params)
+		}
+	}
 
 	return
 }

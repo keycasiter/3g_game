@@ -120,9 +120,19 @@ func TacticsBuffEffectCountWrapDecr(general *vo.BattleGeneral, buffEffect consts
 // @effectType 效果类型
 // @cnt 当前次数
 // @v 效果值
-func TacticsDebuffEffectCountWrapIncr(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, incrNum int64, maxNum int64) bool {
+func TacticsDebuffEffectCountWrapIncr(ctx context.Context, general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, incrNum int64, maxNum int64, supportRefresh bool) bool {
 	holdNum := int64(0)
 	if v, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
+		//v最少为1才算刷新效果
+		if supportRefresh && incrNum <= maxNum {
+			general.DeBuffEffectCountMap[debuffEffect] = incrNum
+			hlog.CtxInfof(ctx, "[%s]的「%v」的效果已刷新",
+				general.BaseInfo.Name,
+				debuffEffect,
+			)
+			return false
+		}
+
 		holdNum = v
 	}
 	//超限

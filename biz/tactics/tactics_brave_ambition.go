@@ -124,7 +124,7 @@ func (b BraveAmbitionTactic) Prepare() {
 				)
 				//持续2回合
 				if !util.TacticsDebuffEffectCountWrapIncr(ctx, enemyGeneral, consts.DebuffEffectType_BraveAmbition_DecrIntelligence, 2, 2, true) {
-					return triggerResp
+					continue
 				}
 				//降低智力34点，持续2回合；
 				decrNum := float64(34)

@@ -445,16 +445,16 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				//主动战法拦截
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; ok {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]计穷状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
-					return
+					continue
 				}
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
-					return
+					continue
 				}
 				tacticHandler := tactics.TacticsHandlerMap[tactic.Id]
 				//发动率判断
 				if !util.GenerateRate(tacticHandler.TriggerRate()) {
-					return
+					continue
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
 					currentGeneral.BaseInfo.Name,

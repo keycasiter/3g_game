@@ -67,6 +67,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 				}
 				finalDmg, originNum, remaindNum, isEffect := util.TacticDamage(c.tacticsParams, currentGeneral, sufferGeneral, dmgNum, consts.BattleAction_SufferCommandTactic)
 				if !isEffect {
+					triggerResp.IsTerminate = true
 					return triggerResp
 				}
 				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「神机妙算」效果，损失了兵力%d(%d↘%d️️️)",
@@ -78,6 +79,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 					remaindNum,
 				)
 			}
+			triggerResp.IsTerminate = true
 			return triggerResp
 		})
 	}

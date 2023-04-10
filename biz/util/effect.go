@@ -163,10 +163,22 @@ func TacticsDebuffEffectCountWrapDecr(general *vo.BattleGeneral, debuffEffect co
 
 // 战法增益次数查询
 func TacticsBuffCountGet(general *vo.BattleGeneral, buffEffect consts.BuffEffectType) int64 {
-	return general.BuffEffectCountMap[buffEffect]
+	if cnt, ok := general.BuffEffectCountMap[buffEffect]; ok {
+		if cnt == 0 {
+			delete(general.BuffEffectCountMap, buffEffect)
+		}
+		return cnt
+	}
+	return -1
 }
 
 // 战法减益次数查询
 func TacticsDebuffCountGet(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType) int64 {
-	return general.DeBuffEffectCountMap[debuffEffect]
+	if cnt, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
+		if cnt == 0 {
+			delete(general.DeBuffEffectCountMap, debuffEffect)
+		}
+		return cnt
+	}
+	return -1
 }

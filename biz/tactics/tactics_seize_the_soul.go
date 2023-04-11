@@ -86,22 +86,34 @@ func (s SeizeTheSoulTactic) Execute() {
 	//偷取敌军单体38点武力、智力、速度、统率（受智力影响）
 	v := 38 + (currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100)
 	//提高我军武将
+	hlog.CtxInfof(ctx, "[%s]的武力提高了%.2f(%.2f↗%.2f)",
+		currentGeneral.BaseInfo.Name,
+		v,
+		currentGeneral.BaseInfo.AbilityAttr.ForceBase,
+		currentGeneral.BaseInfo.AbilityAttr.ForceBase+v,
+	)
+	hlog.CtxInfof(ctx, "[%s]的智力提高了%.2f(%.2f↗%.2f)",
+		currentGeneral.BaseInfo.Name,
+		v,
+		currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase,
+		currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase+v,
+	)
+	hlog.CtxInfof(ctx, "[%s]的速度提高了%.2f(%.2f↗%.2f)",
+		currentGeneral.BaseInfo.Name,
+		v,
+		currentGeneral.BaseInfo.AbilityAttr.SpeedBase,
+		currentGeneral.BaseInfo.AbilityAttr.SpeedBase+v,
+	)
+	hlog.CtxInfof(ctx, "[%s]的统率提高了%.2f(%.2f↗%.2f)",
+		currentGeneral.BaseInfo.Name,
+		v,
+		currentGeneral.BaseInfo.AbilityAttr.CommandBase,
+		currentGeneral.BaseInfo.AbilityAttr.CommandBase+v,
+	)
 	currentGeneral.BaseInfo.AbilityAttr.ForceBase += v
 	currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase += v
 	currentGeneral.BaseInfo.AbilityAttr.SpeedBase += v
 	currentGeneral.BaseInfo.AbilityAttr.CommandBase += v
-	hlog.CtxInfof(ctx, "[%s]的武力提高了%.2f",
-		currentGeneral.BaseInfo.Name,
-		v)
-	hlog.CtxInfof(ctx, "[%s]的智力提高了%.2f",
-		currentGeneral.BaseInfo.Name,
-		v)
-	hlog.CtxInfof(ctx, "[%s]的速度提高了%.2f",
-		currentGeneral.BaseInfo.Name,
-		v)
-	hlog.CtxInfof(ctx, "[%s]的统率提高了%.2f",
-		currentGeneral.BaseInfo.Name,
-		v)
 
 	//注册撤销效果
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {

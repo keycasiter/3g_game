@@ -288,8 +288,8 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
-				if !util.GenerateRate(handler.GetTriggerRate()) {
-					return
+				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+					continue
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
 					currentGeneral.BaseInfo.Name,
@@ -303,8 +303,8 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
-				if !util.GenerateRate(handler.GetTriggerRate()) {
-					return
+				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+					continue
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
 					currentGeneral.BaseInfo.Name,
@@ -318,8 +318,8 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
-				if !util.GenerateRate(handler.GetTriggerRate()) {
-					return
+				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+					continue
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
 					currentGeneral.BaseInfo.Name,
@@ -333,8 +333,8 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
-				if !util.GenerateRate(handler.GetTriggerRate()) {
-					return
+				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+					continue
 				}
 				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
 					currentGeneral.BaseInfo.Name,
@@ -445,6 +445,9 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		for _, tactic := range currentGeneral.EquipTactics {
 			//1.主动
 			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
+				//战法参数设置
+				runCtx.TacticsParams.TacticsType = consts.TacticsType_Active
+
 				//主动战法拦截
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; ok {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]计穷状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
@@ -546,6 +549,9 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			//3.突击战法
 			for _, tactic := range currentGeneral.EquipTactics {
 				if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
+					//战法参数设置
+					runCtx.TacticsParams.TacticsType = consts.TacticsType_Assault
+
 					handler := tactics.TacticsHandlerMap[tactic.Id]
 					tacticHandler := handler.Init(tacticsParams)
 					//发动率判断

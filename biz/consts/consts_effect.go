@@ -139,6 +139,8 @@ func (b BuffEffectType) String() string {
 		return "义胆雄心[预备]"
 	case BuffEffectType_HuangTianDangLi:
 		return "黄天当立"
+	case BuffEffectType_Charming:
+		return "魅惑"
 	}
 	return ""
 }

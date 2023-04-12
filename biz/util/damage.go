@@ -181,12 +181,13 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		hlog.CtxInfof(ctx, "[%s]武将兵力为0，无法再战", sufferGeneral.BaseInfo.Name)
 	}
 
-	//效果触发器
-	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; ok {
+	//被伤害效果触发器
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferAttack]; ok {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
 				CurrentRound:   tacticsParams.CurrentRound,
 				CurrentGeneral: sufferGeneral,
+				AttackGeneral:  attackGeneral,
 			}
 			f(params)
 		}
@@ -228,12 +229,24 @@ func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	sufferGeneral.SoldierNum -= damageNum
 	remainSoldierNum = sufferGeneral.SoldierNum
 
-	//效果触发器
-	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; ok {
+	//被伤害效果触发器
+	//映射转换
+	sufferEffectTriggerMapping := map[consts.TacticsType]consts.BattleAction{
+		consts.TacticsType_Active:        consts.BattleAction_SufferActiveTactic,
+		consts.TacticsType_Passive:       consts.BattleAction_SufferPassiveTactic,
+		consts.TacticsType_Assault:       consts.BattleAction_SufferAssaultTactic,
+		consts.TacticsType_Arm:           consts.BattleAction_SufferArmTactic,
+		consts.TacticsType_Command:       consts.BattleAction_SufferCommandTactic,
+		consts.TacticsType_TroopsTactics: consts.BattleAction_SufferTroopsTactic,
+	}
+
+	action = sufferEffectTriggerMapping[tacticsParams.TacticsType]
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[action]; ok {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
 				CurrentRound:   tacticsParams.CurrentRound,
 				CurrentGeneral: sufferGeneral,
+				AttackGeneral:  attackGeneral,
 			}
 			f(params)
 		}

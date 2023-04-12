@@ -330,9 +330,6 @@ const (
 	BattleAction_SufferTroopsTactic  BattleAction = 13 //被阵法战法攻击
 	BattleAction_ArmTactic           BattleAction = 14 //兵种战法攻击
 	BattleAction_SufferArmTactic     BattleAction = 15 //被兵种战法攻击
-
-	BattleAction_Damage       BattleAction = 101 //造成伤害的动作
-	BattleAction_SufferDamage BattleAction = 102 //被伤害的动作
 )
 
 func (action BattleAction) String() string {

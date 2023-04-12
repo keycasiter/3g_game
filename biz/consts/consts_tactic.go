@@ -87,8 +87,6 @@ const (
 	RepelForeignAggression
 	//合军聚众
 	GatheringOfTroops
-	//守而必固
-	DefendAndBeFirm
 	//克敌制胜
 	VanquishTheEnemy
 	//兵锋

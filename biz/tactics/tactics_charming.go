@@ -42,10 +42,15 @@ func (c CharmingTactic) Prepare() {
 	// 持续1回合，自身为女性时，触发几率额外受智力影响
 	//效果施加
 	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Charming] = 1.0
+	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+		currentGeneral.BaseInfo.Name,
+		consts.BuffEffectType_Charming,
+	)
 	//触发效果注册
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerGeneral := params.CurrentGeneral
 		triggerResp := &vo.TacticsTriggerResult{}
+		attackGeneral := params.AttackGeneral
 		//有45%几率
 		triggerRate := 0.45
 		//自身为女性时，触发几率额外受智力影响
@@ -73,9 +78,14 @@ func (c CharmingTactic) Prepare() {
 			hitIdx := util.GenerateHitOneIdx(len(debuffs))
 			debuff := debuffs[hitIdx]
 			//找到攻击者
-			params.CurrentGeneral.DeBuffEffectHolderMap[debuff] = 1.0
+			attackGeneral.DeBuffEffectHolderMap[debuff] = 1.0
+
+			hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+				attackGeneral.BaseInfo.Name,
+				debuff,
+			)
 			//持续1回合
-			util.TacticsDebuffEffectCountWrapIncr(ctx, currentGeneral, debuff, 1, 1, false)
+			util.TacticsDebuffEffectCountWrapIncr(ctx, attackGeneral, debuff, 1, 1, false)
 		}
 
 		return triggerResp

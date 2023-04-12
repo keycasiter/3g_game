@@ -121,7 +121,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 			}
 			return triggerResp
 		}
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferDamage, registerFunc)
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferTroopsTactic, registerFunc)
 
 	}
 	//并发动谋略攻击（伤害率156%，受智力影响）

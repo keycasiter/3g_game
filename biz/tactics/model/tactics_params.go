@@ -10,6 +10,10 @@ import (
 type TacticsParams struct {
 	Ctx context.Context
 
+	/******** 战法信息相关 *******/
+	// 战法类型
+	TacticsType consts.TacticsType
+
 	/******** 回合属性变量 *******/
 	// 当前对战ID
 	CurrentBattleId string

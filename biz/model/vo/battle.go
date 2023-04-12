@@ -63,6 +63,8 @@ type TacticsTriggerParams struct {
 	CurrentRound consts.BattleRound
 	//当前执行武将
 	CurrentGeneral *BattleGeneral
+	//当前发起攻击的武将
+	AttackGeneral *BattleGeneral
 	//当前造成伤害
 	CurrentDamage int64
 }

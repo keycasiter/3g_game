@@ -450,13 +450,20 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 				//主动战法拦截
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; ok {
-					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]计穷状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
+					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
+						currentGeneral.BaseInfo.Name,
+						consts.DebuffEffectType_NoStrategy,
+					)
 					continue
 				}
 				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
-					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于[负面]虚弱状态，无法发动主动战法", currentGeneral.BaseInfo.Name)
+					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
+						currentGeneral.BaseInfo.Name,
+						consts.DebuffEffectType_PoorHealth,
+					)
 					continue
 				}
+
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
@@ -621,15 +628,6 @@ func (runCtx BattleLogicContext) GeneralRoundPreProcessor(tacticsParams *model.T
 
 // 战法执行后置处理器
 func (runCtx BattleLogicContext) GeneralRoundPostProcessor(tacticsParams *model.TacticsParams) {
-	//所有冷却战法-1
-	for _, general := range tacticsParams.AllGeneralMap {
-		for tacticId, cnt := range general.TacticsFrozenMap {
-			if cnt > 0 {
-				general.TacticsFrozenMap[tacticId]--
-			}
-		}
-	}
-	return
 }
 
 func (runCtx *BattleLogicContext) buildBattleRoundParams() {

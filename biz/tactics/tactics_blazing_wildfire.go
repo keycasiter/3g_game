@@ -66,6 +66,7 @@ func (b BlazingWildfireTactic) SupportArmTypes() []consts.ArmType {
 func (b BlazingWildfireTactic) Execute() {
 	ctx := b.tacticsParams.Ctx
 	currentGeneral := b.tacticsParams.CurrentGeneral
+	currentRound := b.tacticsParams.CurrentRound
 
 	//对敌军群体(2-3人)施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合；
 	//找到敌军2或3人
@@ -92,6 +93,10 @@ func (b BlazingWildfireTactic) Execute() {
 			//施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合
 			//次数
 			if !util.TacticsDebuffEffectCountWrapIncr(ctx, sufferGeneral, consts.DebuffEffectType_Firing, 2, 2, false) {
+				hlog.CtxInfof(ctx, "[%s]身上已存在更强的[%s]效果",
+					sufferGeneral.BaseInfo.Name,
+					consts.DebuffEffectType_Firing,
+				)
 				return
 			}
 
@@ -99,8 +104,25 @@ func (b BlazingWildfireTactic) Execute() {
 			util.DebuffEffectWrapSet(sufferGeneral, consts.DebuffEffectType_Firing, 1.0)
 			hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 				sufferGeneral.BaseInfo.Name, consts.DebuffEffectType_Firing)
+			//注册消失效果
+			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+				revokeRound := params.CurrentRound
+				//持续2回合
+				if currentRound+2 == revokeRound {
+					if util.DebuffEffectWrapRemove(revokeGeneral, consts.DebuffEffectType_Firing) {
+						hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+							revokeGeneral.BaseInfo.Name,
+							consts.DebuffEffectType_Firing,
+						)
+					}
+				}
 
-			//注册效果
+				return revokeResp
+			})
+
+			//注册伤害效果
 			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				triggerGeneral := params.CurrentGeneral
 				triggerResp := &vo.TacticsTriggerResult{

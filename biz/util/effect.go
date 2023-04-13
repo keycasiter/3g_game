@@ -16,12 +16,41 @@ func BuffEffectWrapSet(general *vo.BattleGeneral, effectType consts.BuffEffectTy
 	general.BuffEffectHolderMap[effectType] = v
 }
 
+func BuffEffectWrapRemove(general *vo.BattleGeneral, effectType consts.BuffEffectType) bool {
+	if _, ok := general.BuffEffectHolderMap[effectType]; ok {
+		delete(general.BuffEffectHolderMap, effectType)
+		return true
+	}
+	return false
+}
+
 // 减益效果容器处理
 // @holder 效果容器
 // @effectType 效果类型
 // @v 效果值
 func DebuffEffectWrapSet(general *vo.BattleGeneral, effectType consts.DebuffEffectType, v float64) {
 	general.DeBuffEffectHolderMap[effectType] = v
+}
+
+func DebuffEffectWrapRemove(general *vo.BattleGeneral, effectType consts.DebuffEffectType) bool {
+	if _, ok := general.DeBuffEffectHolderMap[effectType]; ok {
+		delete(general.DeBuffEffectHolderMap, effectType)
+		return true
+	}
+	return false
+}
+
+func TacticFrozenWrapSet(general *vo.BattleGeneral, tacticId consts.TacticId, cnt int64) bool {
+	general.TacticsFrozenMap[tacticId] = cnt
+	return true
+}
+
+func TacticFrozenWrapRemove(general *vo.BattleGeneral, tacticId consts.TacticId) bool {
+	if _, ok := general.TacticsFrozenMap[tacticId]; ok {
+		delete(general.TacticsFrozenMap, tacticId)
+		return true
+	}
+	return false
 }
 
 // 增益效果清除
@@ -158,6 +187,7 @@ func TacticsDebuffEffectCountWrapDecr(general *vo.BattleGeneral, debuffEffect co
 	}
 
 	general.DeBuffEffectCountMap[debuffEffect]--
+
 	return true
 }
 

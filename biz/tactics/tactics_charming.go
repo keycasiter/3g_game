@@ -49,6 +49,7 @@ func (c CharmingTactic) Prepare() {
 	//触发效果注册
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerGeneral := params.CurrentGeneral
+		triggerRound := params.CurrentRound
 		triggerResp := &vo.TacticsTriggerResult{}
 		attackGeneral := params.AttackGeneral
 		//有45%几率
@@ -84,8 +85,31 @@ func (c CharmingTactic) Prepare() {
 				attackGeneral.BaseInfo.Name,
 				debuff,
 			)
-			//持续1回合
-			util.TacticsDebuffEffectCountWrapIncr(ctx, attackGeneral, debuff, 1, 1, false)
+			//次数设置
+			if !util.TacticsDebuffEffectCountWrapIncr(ctx, attackGeneral, debuff, 1, 1, false) {
+				hlog.CtxInfof(ctx, "[%s]身上已有更强的「%v」效果",
+					attackGeneral.BaseInfo.Name,
+					debuff,
+				)
+				return triggerResp
+			}
+			//消失效果注册
+			util.TacticsTriggerWrapRegister(attackGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeGeneral := params.CurrentGeneral
+				revokeRound := params.CurrentRound
+				resp := &vo.TacticsTriggerResult{}
+				//持续一回合
+				if triggerRound+1 == revokeRound {
+					if util.DebuffEffectWrapRemove(revokeGeneral, debuff) {
+						hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+							revokeGeneral.BaseInfo.Name,
+							debuff,
+						)
+					}
+				}
+
+				return resp
+			})
 		}
 
 		return triggerResp

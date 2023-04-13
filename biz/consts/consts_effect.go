@@ -46,6 +46,8 @@ func (b DebuffEffectType) String() string {
 		return "计穷"
 	case DebuffEffectType_Chaos:
 		return "混乱"
+	case DebuffEffectType_Defect:
+		return "叛逃"
 	case DebuffEffectType_LaunchWeaponDamageDeduce:
 		return "造成兵刃伤害降低"
 	case DebuffEffectType_LaunchStrategyDamageDeduce:

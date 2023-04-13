@@ -80,7 +80,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 					triggerResp.IsTerminate = true
 					return triggerResp
 				}
-				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「神机妙算」效果，损失了兵力%d(%d↘%d️️️)",
+				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「神机妙算」效果，损失了兵力%d(%d↘%d)",
 					triggerGeneral.BaseInfo.Name,
 					currentGeneral.BaseInfo.Name,
 					c.Name(),

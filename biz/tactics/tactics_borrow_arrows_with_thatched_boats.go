@@ -66,6 +66,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) SupportArmTypes() []consts.ArmType 
 func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 	ctx := b.tacticsParams.Ctx
 	currentGeneral := b.tacticsParams.CurrentGeneral
+	currentRound := b.tacticsParams.CurrentRound
 	//判断是否冷却
 	if cnt, ok := currentGeneral.TacticsFrozenMap[b.Id()]; ok {
 		if cnt > 0 {
@@ -76,6 +77,33 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 			return
 		}
 	}
+	//该战法发动后会进入1回合冷却
+	if !util.TacticFrozenWrapSet(currentGeneral, b.Id(), 1) {
+		hlog.CtxInfof(ctx, "[%s]的已有更强的「%s[冷却]」效果",
+			currentGeneral.BaseInfo.Name,
+			b.Name(),
+		)
+		return
+	}
+	//注册冷却效果消失
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		revokeResp := &vo.TacticsTriggerResult{}
+		revokeRound := params.CurrentRound
+		revokeGeneral := params.CurrentGeneral
+		//1回合冷却，下下回合冷却结束
+		if currentRound+2 == revokeRound {
+			if !util.TacticFrozenWrapRemove(revokeGeneral, b.Id()) {
+				hlog.CtxErrorf(ctx, "TacticFrozenWrapRemove err")
+				panic("TacticFrozenWrapRemove err")
+			}
+
+			hlog.CtxInfof(ctx, "[%s]的「%s[冷却]」效果已消失",
+				currentGeneral.BaseInfo.Name,
+				b.Name(),
+			)
+		}
+		return revokeResp
+	})
 
 	//移除我军群体(2-3人)负面效果
 	twoOrThreeGenerals := util.GetPairGeneralsTwoOrThreeMap(b.tacticsParams)
@@ -89,7 +117,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		general.BuffEffectHolderMap[consts.BuffEffectType_EmergencyTreatment] = 1.0
 		//持续2回合
 		if !util.TacticsBuffEffectCountWrapIncr(general, consts.BuffEffectType_EmergencyTreatment, 2, 2) {
-			return
+			continue
 		}
 		hlog.CtxInfof(ctx, "[%s]的「急救」状态已施加", general.BaseInfo.Name)
 
@@ -122,8 +150,5 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		},
 		)
 	}
-
-	//该战法发动后会进入1回合冷却
-	currentGeneral.TacticsFrozenMap[b.Id()] = 1
 	return
 }

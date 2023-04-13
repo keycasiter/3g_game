@@ -68,7 +68,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 			for _, sufferGeneral := range enemyGenerals {
 				//TODO 受智力影响
 				dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
-				finalDmg, originNum, remaindNum, isEffect := util.TacticDamage(t.tacticsParams, currentGeneral, sufferGeneral, dmgNum, consts.BattleAction_SufferPassiveTactic)
+				finalDmg, originNum, remaindNum, isEffect := util.TacticDamage(t.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
 				if !isEffect {
 					return triggerResp
 				}

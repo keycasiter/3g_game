@@ -39,6 +39,11 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 	ctx := e.tacticsParams.Ctx
 	currentGeneral := e.tacticsParams.CurrentGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		e.Name(),
+	)
+
 	//战斗前3回合，使敌军群体（2人）造成的伤害降低30%（受智力影响）
 	//找到敌军2人
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(e.tacticsParams)

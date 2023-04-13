@@ -68,6 +68,11 @@ func (i InterlockedStratagemsTactic) Execute() {
 	currentGeneral := i.tacticsParams.CurrentGeneral
 	currentRound := i.tacticsParams.CurrentRound
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		i.Name(),
+	)
+
 	//准备一回合，对敌军全体释放铁索连环，使其任一目标受到伤害时会反馈15%（受智力影响）伤害给其他单位，持续2回合，
 	//获取敌军全体
 	allGenerals := util.GetEnemyGeneralMap(i.tacticsParams)
@@ -105,7 +110,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, i.tacticsParams)
 			for _, reboundGeneral := range pairGenerals {
 				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.15)
-				finalNum, holdNum, remainNum, isEffect := util.TacticDamage(i.tacticsParams, currentGeneral, reboundGeneral, dmg, consts.BattleAction_Unknow)
+				finalNum, holdNum, remainNum, isEffect := util.TacticDamage(i.tacticsParams, currentGeneral, reboundGeneral, dmg)
 				if !isEffect {
 					return triggerResp
 				}

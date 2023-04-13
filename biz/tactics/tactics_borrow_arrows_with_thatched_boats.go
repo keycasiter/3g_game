@@ -67,6 +67,12 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 	ctx := b.tacticsParams.Ctx
 	currentGeneral := b.tacticsParams.CurrentGeneral
 	currentRound := b.tacticsParams.CurrentRound
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		b.Name(),
+	)
+
 	//判断是否冷却
 	if cnt, ok := currentGeneral.TacticsFrozenMap[b.Id()]; ok {
 		if cnt > 0 {
@@ -138,7 +144,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 				)
 				// TODO 受统率影响
 				resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentDamage) * 0.28)
-				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d️️)",
+				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
 					triggerGeneral.BaseInfo.Name,
 					resumeNum,
 					triggerGeneral.SoldierNum,

@@ -291,10 +291,6 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
-				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
-					currentGeneral.BaseInfo.Name,
-					tactic.Name,
-				)
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
@@ -306,10 +302,6 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
-				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
-					currentGeneral.BaseInfo.Name,
-					tactic.Name,
-				)
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
@@ -321,10 +313,6 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
-				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
-					currentGeneral.BaseInfo.Name,
-					tactic.Name,
-				)
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
@@ -336,10 +324,6 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
-				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
-					currentGeneral.BaseInfo.Name,
-					tactic.Name,
-				)
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
@@ -470,10 +454,6 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
-				hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
-					currentGeneral.BaseInfo.Name,
-					tactic.Name,
-				)
 
 				//触发「主动战法」触发器
 				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_ActiveTactic]; okk {
@@ -563,12 +543,8 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 					tacticHandler := handler.Init(tacticsParams)
 					//发动率判断
 					if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
-						return
+						continue
 					}
-					hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【%s】",
-						currentGeneral.BaseInfo.Name,
-						tactic.Name,
-					)
 					//战法执行
 					execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 

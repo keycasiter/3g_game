@@ -1,10 +1,13 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 战法名称：熯天炽地
@@ -45,17 +48,41 @@ func (t TheSkyIsBlazingTactic) Name() string {
 func (t TheSkyIsBlazingTactic) Execute() {
 	//准备1回合，对敌军全体施放火攻（伤害率102%，受智力影响），并施加灼烧状态，
 	// 每回合持续造成伤害（伤害率72%，受智力影响），持续2回合。
+	ctx := t.tacticsParams.Ctx
+	currentRound := t.tacticsParams.CurrentRound
+	currentGeneral := t.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]准备发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		t.Name(),
+	)
 
 	//找到敌军全体
 	enemyGenerals := util.GetEnemyGeneralArr(t.tacticsParams)
 	for _, general := range enemyGenerals {
-		//准备1回合,持续2回合
-		//TODO 受智力影响
-		util.DebuffEffectWrapSet(general,
-			consts.DebuffEffectType_Firing, 1.02,
-		)
-		util.DebuffEffectWrapSet(general, consts.DebuffEffectType_Firing, 0.72)
-		util.DebuffEffectWrapSet(general, consts.DebuffEffectType_Firing, 0.72)
+		//注册效果
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			triggerRound := params.CurrentRound
+			triggerResp := &vo.TacticsTriggerResult{}
+			//准备1回合
+			if currentRound+1 == triggerRound {
+				hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+					currentGeneral.BaseInfo.Name,
+					t.Name(),
+				)
+				dmg := cast.ToInt64(1.02 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+				util.TacticDamage(t.tacticsParams, currentGeneral, general, dmg)
+				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d",
+					general.BaseInfo.Name,
+					currentGeneral.BaseInfo.Name,
+					t.Name(),
+				)
+
+				util.DebuffEffectWrapSet(general, consts.DebuffEffectType_Firing, 1.0)
+				hlog.CtxInfof(ctx, "[%s]的「%v」已施加")
+			}
+			return triggerResp
+		})
 	}
 }
 

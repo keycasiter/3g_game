@@ -1,6 +1,7 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
@@ -31,6 +32,12 @@ func (c ClearEyedAndMaliciousTactic) GetTriggerRate() float64 {
 
 func (c ClearEyedAndMaliciousTactic) Prepare() {
 	currentGeneral := c.tacticsParams.CurrentGeneral
+	ctx := c.tacticsParams.Ctx
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		c.Name(),
+	)
 
 	//自身为主将时，获得16%奇谋几率
 	if currentGeneral.IsMaster {

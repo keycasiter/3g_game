@@ -1,6 +1,7 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
@@ -35,6 +36,14 @@ func (s SuppressChokesAndPreventRefusalsTactic) Init(tacticsParams *model.Tactic
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
+	ctx := s.tacticsParams.Ctx
+	currentGeneral := s.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		s.Name(),
+	)
+
 	for i := int(consts.Battle_Round_First); i <= int(consts.Battle_Round_Eighth); i++ {
 		//每回合有50%概率
 		//TODO（受智力影响）

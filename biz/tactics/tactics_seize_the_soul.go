@@ -67,6 +67,11 @@ func (s SeizeTheSoulTactic) Execute() {
 	currentGeneral := s.tacticsParams.CurrentGeneral
 	enemyGeneral := util.GetEnemyOneGeneral(s.tacticsParams)
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		s.Name(),
+	)
+
 	//最多叠加两次
 	if !util.TacticsBuffEffectCountWrapIncr(currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1, 2) {
 		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",

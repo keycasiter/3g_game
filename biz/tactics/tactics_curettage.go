@@ -46,6 +46,11 @@ func (c CurettageTactic) Execute() {
 	ctx := c.tacticsParams.Ctx
 	currentGeneral := c.tacticsParams.CurrentGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		c.Name(),
+	)
+
 	//找我我军损失兵力最多的武将
 	maxLossSoldierNumGeneral := util.GetPairMaxLossSoldierNumGeneral(c.tacticsParams)
 

@@ -1,6 +1,7 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -33,6 +34,14 @@ func (f FrontalVectorArrayTactic) Init(tacticsParams *model.TacticsParams) _inte
 }
 
 func (f FrontalVectorArrayTactic) Prepare() {
+	currentGeneral := f.tacticsParams.CurrentGeneral
+	ctx := f.tacticsParams.Ctx
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		f.Name(),
+	)
+
 	//使我军主将造成的伤害提升30%，受到的伤害提升20%
 	masterGeneral := util.GetPairMasterGeneral(f.tacticsParams)
 	masterGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += 0.3

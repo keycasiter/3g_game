@@ -83,7 +83,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 				consts.DebuffEffectType_Methysis,
 			)
 			dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
-			dmg, origin, remain, isEffect := util.TacticDamage(w.tacticsParams, currentGeneral, triggerGeneral, dmgNum, consts.BattleAction_SufferArmTactic)
+			dmg, origin, remain, isEffect := util.TacticDamage(w.tacticsParams, currentGeneral, triggerGeneral, dmgNum)
 			if !isEffect {
 				return triggerResp
 			}

@@ -68,6 +68,11 @@ func (b BlazingWildfireTactic) Execute() {
 	currentGeneral := b.tacticsParams.CurrentGeneral
 	currentRound := b.tacticsParams.CurrentRound
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		b.Name(),
+	)
+
 	//对敌军群体(2-3人)施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合；
 	//找到敌军2或3人
 	enemyGeneralMap := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
@@ -76,7 +81,7 @@ func (b BlazingWildfireTactic) Execute() {
 		//判断当前被攻击武将是否有灼烧状态
 		if _, ok := sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Firing]; ok {
 			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
-			dmg, origin, remain, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmg, consts.BattleAction_SufferActiveTactic)
+			dmg, origin, remain, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, sufferGeneral, dmg)
 			if !isEffect {
 				return
 			}
@@ -140,7 +145,7 @@ func (b BlazingWildfireTactic) Execute() {
 					consts.DebuffEffectType_Firing,
 				)
 				dmgNum := cast.ToInt64(0.56 * triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-				finalDmg, oldNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, triggerGeneral, dmgNum, consts.BattleAction_SufferActiveTactic)
+				finalDmg, oldNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, currentGeneral, triggerGeneral, dmgNum)
 				if !isEffect {
 					return triggerResp
 				}

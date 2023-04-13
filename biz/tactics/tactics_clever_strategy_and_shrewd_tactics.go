@@ -40,6 +40,11 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 	ctx := c.tacticsParams.Ctx
 	currentGeneral := c.tacticsParams.CurrentGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		c.Name(),
+	)
+
 	//敌军群体(2人)发动主动战法时，有35%几率令其失败并对其造成谋略伤害(伤害率100%，受智力影响)，
 	//找到两个敌军
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(c.tacticsParams)
@@ -75,7 +80,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 						dmgNum += cast.ToInt64(diff)
 					}
 				}
-				finalDmg, originNum, remaindNum, isEffect := util.TacticDamage(c.tacticsParams, currentGeneral, sufferGeneral, dmgNum, consts.BattleAction_SufferCommandTactic)
+				finalDmg, originNum, remaindNum, isEffect := util.TacticDamage(c.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
 				if !isEffect {
 					triggerResp.IsTerminate = true
 					return triggerResp

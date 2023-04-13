@@ -37,6 +37,11 @@ func (t TraitorInTroubledTimesTactic) Init(tacticsParams *model.TacticsParams) _
 func (t TraitorInTroubledTimesTactic) Prepare() {
 	currentGeneral := t.tacticsParams.CurrentGeneral
 	ctx := t.tacticsParams.Ctx
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		t.Name(),
+	)
 	//战斗中，使友军群体(2人)造成伤害提高16%（受智力影响）
 	//找到队友
 	pairGenerals := util.GetPairGeneralsTwoArr(t.tacticsParams)

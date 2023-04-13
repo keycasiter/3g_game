@@ -39,6 +39,11 @@ func (t TaipingLawTactic) Prepare() {
 	ctx := t.tacticsParams.Ctx
 	currentGeneral := t.tacticsParams.CurrentGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		t.Name(),
+	)
+
 	//获得28%奇谋并提高自带主动战法发动率(6%，若为准备战法则提高12%，受智力影响)，
 	util.BuffEffectWrapSet(currentGeneral, consts.BuffEffectType_EnhanceStrategy, 0.28)
 

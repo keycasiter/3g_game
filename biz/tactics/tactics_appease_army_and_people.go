@@ -34,6 +34,12 @@ func (a AppeaseArmyAndPeopleTactic) GetTriggerRate() float64 {
 func (a AppeaseArmyAndPeopleTactic) Prepare() {
 	ctx := a.tacticsParams.Ctx
 	currentGeneral := a.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		a.Name(),
+	)
+
 	//找到我军队伍
 	pairGeneralArr := util.GetPairGeneralsTwoArr(a.tacticsParams)
 	//使我军群体(2人)造成的伤害降低24%

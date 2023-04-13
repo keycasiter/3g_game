@@ -44,6 +44,11 @@ func (b BraveAmbitionTactic) Prepare() {
 	ctx := b.tacticsParams.Ctx
 	currentGeneral := b.tacticsParams.CurrentGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		b.Name(),
+	)
+
 	//注册效果
 	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 		currentGeneral.BaseInfo.Name,
@@ -64,7 +69,7 @@ func (b BraveAmbitionTactic) Prepare() {
 			enemyGeneral := util.GetEnemyOneGeneral(b.tacticsParams)
 			//造成伤害
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.84)
-			finalDmg, holdNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, triggerGeneral, enemyGeneral, dmg, consts.BattleAction_PassiveTactic)
+			finalDmg, holdNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, triggerGeneral, enemyGeneral, dmg)
 			if !isEffect {
 				return triggerResp
 			}
@@ -120,7 +125,7 @@ func (b BraveAmbitionTactic) Prepare() {
 			//造成伤害
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.76)
 			for _, enemyGeneral := range enemyGenerals {
-				finalDmg, holdNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, triggerGeneral, enemyGeneral, dmg, consts.BattleAction_PassiveTactic)
+				finalDmg, holdNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, triggerGeneral, enemyGeneral, dmg)
 				if !isEffect {
 					continue
 				}

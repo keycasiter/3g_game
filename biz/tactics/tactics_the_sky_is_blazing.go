@@ -59,31 +59,78 @@ func (t TheSkyIsBlazingTactic) Execute() {
 
 	//找到敌军全体
 	enemyGenerals := util.GetEnemyGeneralArr(t.tacticsParams)
-	for _, general := range enemyGenerals {
-		//注册效果
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerRound := params.CurrentRound
-			triggerResp := &vo.TacticsTriggerResult{}
-			//准备1回合
-			if currentRound+1 == triggerRound {
-				hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-					currentGeneral.BaseInfo.Name,
-					t.Name(),
-				)
+	//注册效果
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerRound := params.CurrentRound
+		triggerResp := &vo.TacticsTriggerResult{}
+		//准备1回合
+		if currentRound+1 == triggerRound {
+			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+				currentGeneral.BaseInfo.Name,
+				t.Name(),
+			)
+			for _, general := range enemyGenerals {
 				dmg := cast.ToInt64(1.02 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-				util.TacticDamage(t.tacticsParams, currentGeneral, general, dmg)
-				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d",
+				final, hold, remain, isEffect := util.TacticDamage(t.tacticsParams, currentGeneral, general, dmg)
+				if !isEffect {
+					return triggerResp
+				}
+				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
 					general.BaseInfo.Name,
 					currentGeneral.BaseInfo.Name,
 					t.Name(),
+					final,
+					hold,
+					remain,
 				)
 
 				util.DebuffEffectWrapSet(general, consts.DebuffEffectType_Firing, 1.0)
-				hlog.CtxInfof(ctx, "[%s]的「%v」已施加")
+				hlog.CtxInfof(ctx, "[%s]的「%v」已施加",
+					general.BaseInfo.Name,
+					consts.DebuffEffectType_Firing,
+				)
+				//每回合持续造成伤害（伤害率72%，受智力影响），持续2回合
+				if !util.TacticsDebuffEffectCountWrapIncr(ctx, general, consts.DebuffEffectType_Firing, 2, 2, true) {
+					return triggerResp
+				}
+				//注册持续效果
+				util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					if !util.TacticsDebuffEffectCountWrapDecr(general, consts.DebuffEffectType_Firing, 1) {
+						//次数不足移除效果
+						util.DebuffEffectWrapRemove(general, consts.DebuffEffectType_Firing)
+						hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+							general.BaseInfo.Name,
+							consts.DebuffEffectType_Firing,
+						)
+
+						return triggerResp
+					}
+					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+						general.BaseInfo.Name,
+						t.Name(),
+						consts.DebuffEffectType_Firing,
+					)
+					firingDmg := cast.ToInt64(0.72 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+					final, hold, remain, isEffect := util.TacticDamage(t.tacticsParams, currentGeneral, general, firingDmg)
+					if !isEffect {
+						return triggerResp
+					}
+					hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
+						general.BaseInfo.Name,
+						currentGeneral.BaseInfo.Name,
+						t.Name(),
+						final,
+						hold,
+						remain,
+					)
+					return triggerResp
+				})
+
 			}
-			return triggerResp
-		})
-	}
+		}
+
+		return triggerResp
+	})
 }
 
 func (t TheSkyIsBlazingTactic) Trigger() {

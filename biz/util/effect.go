@@ -70,6 +70,10 @@ func BuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 // @general 要处理的武将
 func DebuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 	for effectType, _ := range general.DeBuffEffectHolderMap {
+		//只能清除主动、突击战法效果
+		if _, ok := consts.SupprtCleanDebuffEffectMap[effectType]; !ok {
+			continue
+		}
 		hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
 			general.BaseInfo.Name,
 			effectType,

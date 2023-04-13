@@ -3,6 +3,20 @@ package consts
 // 负面效果
 type DebuffEffectType int
 
+var (
+	SupprtCleanDebuffEffectMap = map[DebuffEffectType]bool{
+		DebuffEffectType_Methysis:     true,
+		DebuffEffectType_Firing:       true,
+		DebuffEffectType_Defect:       true,
+		DebuffEffectType_Sandstorm:    true,
+		DebuffEffectType_Chaos:        true,
+		DebuffEffectType_NoStrategy:   true,
+		DebuffEffectType_PoorHealth:   true,
+		DebuffEffectType_WaterAttack:  true,
+		DebuffEffectType_CancelWeapon: true,
+	}
+)
+
 const (
 	//效果施加
 	DebuffEffectType_Unknow                      DebuffEffectType = iota //未知

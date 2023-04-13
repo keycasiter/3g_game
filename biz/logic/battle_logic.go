@@ -469,7 +469,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 								currentGeneral.BaseInfo.Name,
 								tactic.Name,
 							)
-							continue
+							break
 						}
 					}
 				}

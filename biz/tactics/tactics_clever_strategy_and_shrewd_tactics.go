@@ -94,7 +94,6 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 					remaindNum,
 				)
 			}
-			triggerResp.IsTerminate = true
 			return triggerResp
 		})
 	}

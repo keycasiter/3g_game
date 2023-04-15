@@ -430,19 +430,18 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			//1.主动
 			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
 				//主动战法拦截
-				if _, okk := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; okk {
-					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
-						currentGeneral.BaseInfo.Name,
-						consts.DebuffEffectType_NoStrategy,
-					)
-					continue
+				debuffEffects := []consts.DebuffEffectType{
+					consts.DebuffEffectType_NoStrategy,
+					consts.DebuffEffectType_PoorHealth,
 				}
-				if _, okk := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; okk {
-					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
-						currentGeneral.BaseInfo.Name,
-						consts.DebuffEffectType_PoorHealth,
-					)
-					continue
+				for _, debuff := range debuffEffects {
+					if _, okk := currentGeneral.DeBuffEffectHolderMap[debuff]; okk {
+						hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
+							currentGeneral.BaseInfo.Name,
+							debuff,
+						)
+						continue
+					}
 				}
 				//触发「主动战法」触发器
 				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_ActiveTactic]; okk {
@@ -489,26 +488,29 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		attackCanCnt := 1
 		if attackCanCnt > 0 {
 			//2.1 普通攻击拦截
-			if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
-				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
-					currentGeneral.BaseInfo.Name,
-					consts.DebuffEffectType_PoorHealth,
-				)
-				return
+			debuffEffects := []consts.DebuffEffectType{
+				consts.DebuffEffectType_PoorHealth,
+				consts.DebuffEffectType_CanNotGeneralAttack,
+				consts.DebuffEffectType_CancelWeapon,
 			}
-			if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
-				hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
-					currentGeneral.BaseInfo.Name,
-					consts.DebuffEffectType_CanNotGeneralAttack,
-				)
-				return
+			for _, debuff := range debuffEffects {
+				if rate, ok := currentGeneral.DeBuffEffectHolderMap[debuff]; ok {
+					if util.GenerateRate(rate) {
+						hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
+							currentGeneral.BaseInfo.Name,
+							debuff,
+						)
+						continue
+					}
+				}
 			}
+
 			//2.2 触发兵书效果
 			//TODO
 			//2.3 触发战法效果
 			//负面效果
 			//增益效果
-			//战法触发器
+			//普通攻击触发器
 			if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
 				for _, f := range funcs {
 					params := &vo.TacticsTriggerParams{}

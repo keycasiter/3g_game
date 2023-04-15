@@ -103,7 +103,6 @@ func GetPairViceGeneralNotSelf(tacticsParams *model.TacticsParams) *vo.BattleGen
 			return general
 		}
 	}
-	panic("can't find vice general not self , data error")
 	return nil
 }
 

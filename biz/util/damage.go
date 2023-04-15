@@ -98,6 +98,29 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		sufferGeneral.BaseInfo.Name,
 	)
 
+	//被伤害效果触发器
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferAttack]; ok {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: sufferGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+
+	//援护效果判断
+	if sufferGeneral.HelpByGeneral != nil {
+		hlog.CtxInfof(ctx, "[%s]执行来自[%s]的「%v」效果",
+			sufferGeneral.BaseInfo.Name,
+			sufferGeneral.HelpByGeneral.BaseInfo.Name,
+			consts.BuffEffectType_Intervene,
+		)
+		AttackDamage(tacticsParams, attackGeneral, sufferGeneral.HelpByGeneral)
+		return
+	}
+
 	//是否可以规避
 	if rate, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
 		if GenerateRate(rate) {
@@ -179,18 +202,6 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 
 	if sufferGeneral.SoldierNum == 0 {
 		hlog.CtxInfof(ctx, "[%s]武将兵力为0，无法再战", sufferGeneral.BaseInfo.Name)
-	}
-
-	//被伤害效果触发器
-	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferAttack]; ok {
-		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: sufferGeneral,
-				AttackGeneral:  attackGeneral,
-			}
-			f(params)
-		}
 	}
 }
 

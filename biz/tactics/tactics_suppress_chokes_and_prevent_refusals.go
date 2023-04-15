@@ -7,6 +7,7 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 战法名称：镇扼防拒
@@ -44,26 +45,141 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 		s.Name(),
 	)
 
-	for i := int(consts.Battle_Round_First); i <= int(consts.Battle_Round_Eighth); i++ {
+	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+		currentGeneral.BaseInfo.Name,
+		consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare,
+	)
+
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerRound := params.CurrentRound
+
 		//每回合有50%概率
 		//TODO（受智力影响）
 		if !util.GenerateRate(0.5) {
-			return
+			hlog.CtxInfof(ctx, "[%s]来自[%s]【%s】的「%v」效果因几率没有生效",
+				currentGeneral.BaseInfo.Name,
+				currentGeneral.BaseInfo.Name,
+				s.Name(),
+				consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare,
+			)
+			return triggerResp
 		}
+
+		hlog.CtxInfof(ctx, "[%s]执行来自[%s]【%s】的「%v」效果",
+			currentGeneral.BaseInfo.Name,
+			currentGeneral.BaseInfo.Name,
+			s.Name(),
+			consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare,
+		)
 		//使我军单体(优先选除自己之外的副将)援护所有友军并获得休整状态（每回合恢复一次兵力，治疗率192%，受智力影响）
 		//找到除当前战法执行外的副将
 		viceGeneral := util.GetPairViceGeneralNotSelf(s.tacticsParams)
+		//如果不存在除自己的副将则选择为自己
+		if viceGeneral == nil {
+			viceGeneral = currentGeneral
+		}
 		//让这个副将援护友军
 		generals := util.GetPairGeneralsNotSelf(s.tacticsParams, viceGeneral)
+		//援护效果
 		for _, general := range generals {
-			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				triggerResp := &vo.TacticsTriggerResult{}
-				//TODO
-				general.HelpByGeneral = viceGeneral
-				return triggerResp
+			//注册
+			if !util.TacticsBuffEffectCountWrapIncr(ctx, general, consts.BuffEffectType_Intervene, 1, 1, false) {
+				hlog.CtxInfof(ctx, "[%s]身上已存在同等或更强的「%v」效果",
+					general.BaseInfo.Name,
+					consts.BuffEffectType_Intervene,
+				)
+				continue
+			}
+
+			hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+				general.BaseInfo.Name,
+				consts.BuffEffectType_Intervene,
+			)
+			util.BuffEffectWrapSet(general, consts.BuffEffectType_Intervene, 1.0)
+			general.HelpByGeneral = viceGeneral
+
+			util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+
+				//消失
+				if triggerRound+1 == params.CurrentRound {
+					if !util.BuffEffectWrapRemove(general, consts.BuffEffectType_Intervene) {
+						return revokeResp
+					}
+
+					hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+						general.BaseInfo.Name,
+						consts.BuffEffectType_Intervene,
+					)
+
+					general.HelpByGeneral = nil
+				}
+
+				return revokeResp
 			})
 		}
-	}
+
+		//休整效果
+		if !util.TacticsBuffEffectCountWrapIncr(ctx, viceGeneral, consts.BuffEffectType_Rest, 1, 1, true) {
+			return triggerResp
+		}
+		hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+			viceGeneral.BaseInfo.Name,
+			consts.BuffEffectType_Rest,
+		)
+		util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			triggerGeneral := params.CurrentGeneral
+			//恢复一次兵力
+			if util.BuffEffectContains(triggerGeneral, consts.BuffEffectType_Rest) &&
+				!util.TacticsBuffEffectCountWrapDecr(viceGeneral, consts.BuffEffectType_Rest, 1) {
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					triggerGeneral.BaseInfo.Name,
+					consts.BuffEffectType_Rest,
+				)
+			}
+			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+				triggerGeneral.BaseInfo.Name,
+				s.Name(),
+				consts.BuffEffectType_Rest,
+			)
+			resumeNum := cast.ToInt64(1.92 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+			finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(viceGeneral, resumeNum)
+			hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
+				triggerGeneral.BaseInfo.Name,
+				finalResumeNum,
+				holdNum,
+				finalNum,
+			)
+
+			return triggerResp
+		})
+
+		//注册被攻击效果
+		util.BuffEffectWrapSet(viceGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare, 1.0)
+		util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			triggerGeneral := params.CurrentGeneral
+			attackGeneral := params.AttackGeneral
+
+			if !util.BuffEffectContains(triggerGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare) {
+				return triggerResp
+			}
+			//55%概率
+			if util.GenerateRate(0.55) {
+				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+					triggerGeneral.BaseInfo.Name,
+					s.Name(),
+					consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare,
+				)
+				//移除攻击者增益效果
+				util.BuffEffectClean(ctx, attackGeneral)
+			}
+			util.BuffEffectWrapRemove(triggerGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare)
+
+			return triggerResp
+		})
+		return triggerResp
+	})
 }
 
 func (s SuppressChokesAndPreventRefusalsTactic) Name() string {

@@ -66,7 +66,6 @@ func (b BlazingWildfireTactic) SupportArmTypes() []consts.ArmType {
 func (b BlazingWildfireTactic) Execute() {
 	ctx := b.tacticsParams.Ctx
 	currentGeneral := b.tacticsParams.CurrentGeneral
-	currentRound := b.tacticsParams.CurrentRound
 
 	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 		currentGeneral.BaseInfo.Name,
@@ -94,6 +93,11 @@ func (b BlazingWildfireTactic) Execute() {
 				origin,
 				remain,
 			)
+			//灼烧次数-1
+			if !util.TacticsDebuffEffectCountWrapDecr(sufferGeneral, consts.DebuffEffectType_Firing, 1) {
+				util.DebuffEffectWrapRemove(sufferGeneral, consts.DebuffEffectType_Firing)
+			}
+
 		} else {
 			//施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合
 			//次数
@@ -109,23 +113,6 @@ func (b BlazingWildfireTactic) Execute() {
 			util.DebuffEffectWrapSet(sufferGeneral, consts.DebuffEffectType_Firing, 1.0)
 			hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 				sufferGeneral.BaseInfo.Name, consts.DebuffEffectType_Firing)
-			//注册消失效果
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				revokeResp := &vo.TacticsTriggerResult{}
-				revokeGeneral := params.CurrentGeneral
-				revokeRound := params.CurrentRound
-				//持续2回合
-				if currentRound+2 == revokeRound {
-					if util.DebuffEffectWrapRemove(revokeGeneral, consts.DebuffEffectType_Firing) {
-						hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-							revokeGeneral.BaseInfo.Name,
-							consts.DebuffEffectType_Firing,
-						)
-					}
-				}
-
-				return revokeResp
-			})
 
 			//注册伤害效果
 			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
@@ -133,9 +120,14 @@ func (b BlazingWildfireTactic) Execute() {
 				triggerResp := &vo.TacticsTriggerResult{
 					IsTerminate: false,
 				}
+
 				//剩余次数判断
 				if !util.TacticsDebuffEffectCountWrapDecr(triggerGeneral, consts.DebuffEffectType_Firing, 1) {
-					//次数不足
+					util.DebuffEffectWrapRemove(triggerGeneral, consts.DebuffEffectType_Firing)
+					hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+						triggerGeneral.BaseInfo.Name,
+						consts.DebuffEffectType_Firing,
+					)
 					return triggerResp
 				}
 

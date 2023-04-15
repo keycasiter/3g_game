@@ -19,6 +19,14 @@ func BuffEffectWrapSet(general *vo.BattleGeneral, effectType consts.BuffEffectTy
 func BuffEffectWrapRemove(general *vo.BattleGeneral, effectType consts.BuffEffectType) bool {
 	if _, ok := general.BuffEffectHolderMap[effectType]; ok {
 		delete(general.BuffEffectHolderMap, effectType)
+		delete(general.BuffEffectCountMap, effectType)
+		return true
+	}
+	return false
+}
+
+func BuffEffectContains(general *vo.BattleGeneral, effectType consts.BuffEffectType) bool {
+	if _, ok := general.BuffEffectHolderMap[effectType]; ok {
 		return true
 	}
 	return false
@@ -35,6 +43,14 @@ func DebuffEffectWrapSet(general *vo.BattleGeneral, effectType consts.DebuffEffe
 func DebuffEffectWrapRemove(general *vo.BattleGeneral, effectType consts.DebuffEffectType) bool {
 	if _, ok := general.DeBuffEffectHolderMap[effectType]; ok {
 		delete(general.DeBuffEffectHolderMap, effectType)
+		delete(general.DeBuffEffectCountMap, effectType)
+		return true
+	}
+	return false
+}
+
+func DeBuffEffectContains(general *vo.BattleGeneral, effectType consts.DebuffEffectType) bool {
+	if _, ok := general.DeBuffEffectHolderMap[effectType]; ok {
 		return true
 	}
 	return false
@@ -57,6 +73,10 @@ func TacticFrozenWrapRemove(general *vo.BattleGeneral, tacticId consts.TacticId)
 // @general 要处理的武将
 func BuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 	for effectType, _ := range general.BuffEffectHolderMap {
+		//只能清除主动、突击战法效果
+		if _, ok := consts.SupprtCleanBuffEffectMap[effectType]; !ok {
+			continue
+		}
 		hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
 			general.BaseInfo.Name,
 			effectType,
@@ -116,9 +136,19 @@ func TacticsTriggerWrapUnregister(general *vo.BattleGeneral, action consts.Battl
 // @effectType 效果类型
 // @cnt 当前次数
 // @v 效果值
-func TacticsBuffEffectCountWrapIncr(general *vo.BattleGeneral, buffEffect consts.BuffEffectType, incrNum int64, maxNum int64) bool {
+func TacticsBuffEffectCountWrapIncr(ctx context.Context, general *vo.BattleGeneral, buffEffect consts.BuffEffectType, incrNum int64, maxNum int64, supportRefresh bool) bool {
 	holdNum := int64(0)
 	if v, ok := general.BuffEffectCountMap[buffEffect]; ok {
+		//v最少为1才算刷新效果
+		if supportRefresh && incrNum <= maxNum {
+			general.BuffEffectCountMap[buffEffect] = incrNum
+			hlog.CtxInfof(ctx, "[%s]的「%v」的效果已刷新",
+				general.BaseInfo.Name,
+				buffEffect,
+			)
+			return false
+		}
+
 		holdNum = v
 	}
 	//超限
@@ -203,7 +233,7 @@ func TacticsBuffCountGet(general *vo.BattleGeneral, buffEffect consts.BuffEffect
 		}
 		return cnt
 	}
-	return -1
+	return 0
 }
 
 // 战法减益次数查询
@@ -214,5 +244,5 @@ func TacticsDebuffCountGet(general *vo.BattleGeneral, debuffEffect consts.Debuff
 		}
 		return cnt
 	}
-	return -1
+	return 0
 }

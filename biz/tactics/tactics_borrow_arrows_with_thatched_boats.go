@@ -122,7 +122,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		//施加急救效果
 		general.BuffEffectHolderMap[consts.BuffEffectType_EmergencyTreatment] = 1.0
 		//持续2回合
-		if !util.TacticsBuffEffectCountWrapIncr(general, consts.BuffEffectType_EmergencyTreatment, 2, 2) {
+		if !util.TacticsBuffEffectCountWrapIncr(ctx, general, consts.BuffEffectType_EmergencyTreatment, 2, 2, true) {
 			continue
 		}
 		hlog.CtxInfof(ctx, "[%s]的「急救」状态已施加", general.BaseInfo.Name)
@@ -144,13 +144,13 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 				)
 				// TODO 受统率影响
 				resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentDamage) * 0.28)
+				finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(triggerGeneral, resumeNum)
 				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
 					triggerGeneral.BaseInfo.Name,
-					resumeNum,
-					triggerGeneral.SoldierNum,
-					triggerGeneral.SoldierNum+resumeNum,
+					finalResumeNum,
+					holdNum,
+					finalNum,
 				)
-				triggerGeneral.SoldierNum += resumeNum
 			}
 			return triggerResp
 		},

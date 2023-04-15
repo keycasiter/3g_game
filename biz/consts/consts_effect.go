@@ -15,6 +15,11 @@ var (
 		DebuffEffectType_WaterAttack:  true,
 		DebuffEffectType_CancelWeapon: true,
 	}
+
+	SupprtCleanBuffEffectMap = map[BuffEffectType]bool{
+		BuffEffectType_SuppressChokesAndPreventRefusals_Prepare: true,
+		BuffEffectType_SeizeTheSoul:                             true,
+	}
 )
 
 const (
@@ -110,25 +115,31 @@ const (
 	BuffEffectType_LaunchWeaponDamageImprove                   //造成兵刃伤害增加
 	BuffEffectType_LaunchStrategyDamageImprove                 //造成谋略伤害增加
 
-	BuffEffectType_TacticsActiveTriggerDecr      //主动战法发动率降低
-	BuffEffectType_TacticsPassiveTriggerDecr     //被动战法发动率降低
-	BuffEffectType_SufferWeaponDamageDeduce      //受到兵刃伤害减少
-	BuffEffectType_SufferStrategyDamageDeduce    //受到谋略伤害减少
-	BuffEffectType_IncrForce                     //增加武力
-	BuffEffectType_IncrIntelligence              //增加智力
-	BuffEffectType_IncrCommand                   //增加统率
-	BuffEffectType_IncrSpeed                     //增加速度
-	BuffEffectType_EmergencyTreatment            //急救
-	BuffEffectType_Charming                      //魅惑
-	BuffEffectType_AppeaseArmyAndPeople_Prepare  //抚辑军民「预备」
-	BuffEffectType_ThreeDaysOfSeparation_Prepare //士别三日「预备」
-	BuffEffectType_SeizeTheSoul                  //夺魂挟魄
-	BuffEffectType_BraveAmbition_Prepare         //义胆雄心「预备」
-	BuffEffectType_HuangTianDangLi               //黄天当立
+	BuffEffectType_TacticsActiveTriggerDecr                 //主动战法发动率降低
+	BuffEffectType_TacticsPassiveTriggerDecr                //被动战法发动率降低
+	BuffEffectType_SufferWeaponDamageDeduce                 //受到兵刃伤害减少
+	BuffEffectType_SufferStrategyDamageDeduce               //受到谋略伤害减少
+	BuffEffectType_IncrForce                                //增加武力
+	BuffEffectType_IncrIntelligence                         //增加智力
+	BuffEffectType_IncrCommand                              //增加统率
+	BuffEffectType_IncrSpeed                                //增加速度
+	BuffEffectType_EmergencyTreatment                       //急救
+	BuffEffectType_Charming                                 //魅惑
+	BuffEffectType_AppeaseArmyAndPeople_Prepare             //抚辑军民「预备」
+	BuffEffectType_ThreeDaysOfSeparation_Prepare            //士别三日「预备」
+	BuffEffectType_SeizeTheSoul                             //夺魂挟魄
+	BuffEffectType_BraveAmbition_Prepare                    //义胆雄心「预备」
+	BuffEffectType_HuangTianDangLi                          //黄天当立
+	BuffEffectType_SuppressChokesAndPreventRefusals_Prepare //镇扼防拒「预备」
+	BuffEffectType_Intervene                                //援护
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_LaunchWeaponDamageImprove:
+		return "造成兵刃伤害增加"
+	case BuffEffectType_LaunchStrategyDamageImprove:
+		return "造成谋略伤害增加"
 	case BuffEffectType_Evade:
 		return "规避"
 	case BuffEffectType_EnhanceWeapon:
@@ -157,6 +168,12 @@ func (b BuffEffectType) String() string {
 		return "黄天当立"
 	case BuffEffectType_Charming:
 		return "魅惑"
+	case BuffEffectType_SuppressChokesAndPreventRefusals_Prepare:
+		return "镇扼防拒[预备]"
+	case BuffEffectType_Intervene:
+		return "援护"
+	case BuffEffectType_Rest:
+		return "休整"
 	}
 	return ""
 }

@@ -73,7 +73,7 @@ func (s SeizeTheSoulTactic) Execute() {
 	)
 
 	//最多叠加两次
-	if !util.TacticsBuffEffectCountWrapIncr(currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1, 2) {
+	if !util.TacticsBuffEffectCountWrapIncr(ctx, currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1, 2, false) {
 		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
 			currentGeneral.BaseInfo.Name,
 			consts.BuffEffectType_SeizeTheSoul,
@@ -124,8 +124,14 @@ func (s SeizeTheSoulTactic) Execute() {
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		revokeResp := &vo.TacticsTriggerResult{}
 		revokeGeneral := params.CurrentGeneral
-		//次数为0
-		if 0 == util.TacticsBuffCountGet(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) {
+
+		//效果存在且次数为0
+		if util.BuffEffectContains(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) &&
+			0 == util.TacticsBuffCountGet(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) {
+
+			if !util.BuffEffectWrapRemove(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) {
+				panic("err")
+			}
 			revokeGeneral.BaseInfo.AbilityAttr.ForceBase -= v
 			revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
 			revokeGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
@@ -154,9 +160,12 @@ func (s SeizeTheSoulTactic) Execute() {
 			hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
 				revokeGeneral.BaseInfo.Name,
 				v)
+			return revokeResp
 		}
 		//消耗次数-1
-		util.TacticsBuffEffectCountWrapDecr(currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1)
+		if !util.TacticsBuffEffectCountWrapDecr(currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1) {
+			return revokeResp
+		}
 		return revokeResp
 	})
 

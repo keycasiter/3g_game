@@ -59,13 +59,13 @@ func (c CurettageTactic) Execute() {
 
 	//为其恢复兵力（治疗率256%，受智力影响）
 	resumeNum := cast.ToInt64(2.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+	finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(maxLossSoldierNumGeneral, resumeNum)
 	hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
 		maxLossSoldierNumGeneral.BaseInfo.Name,
-		resumeNum,
-		maxLossSoldierNumGeneral.SoldierNum,
-		maxLossSoldierNumGeneral.SoldierNum+resumeNum,
+		finalResumeNum,
+		holdNum,
+		finalNum,
 	)
-	maxLossSoldierNumGeneral.SoldierNum += resumeNum
 }
 
 func (c CurettageTactic) Trigger() {

@@ -36,6 +36,8 @@ type BattleGeneral struct {
 	LossSoldierNum int64
 	//被谁援护
 	HelpByGeneral *BattleGeneral
+	//被谁嘲讽
+	TauntByGeneral *BattleGeneral
 
 	//增益效果计数器 map<效果,计数>
 	BuffEffectCountMap map[consts.BuffEffectType]int64

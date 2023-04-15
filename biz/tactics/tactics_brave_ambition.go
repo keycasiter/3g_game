@@ -69,13 +69,16 @@ func (b BraveAmbitionTactic) Prepare() {
 			enemyGeneral := util.GetEnemyOneGeneral(b.tacticsParams)
 			//造成伤害
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.84)
-			util.TacticDamage(&util.TacticDamageParam{
+			_, _, _, isEffect := util.TacticDamage(&util.TacticDamageParam{
 				TacticsParams: b.tacticsParams,
 				AttackGeneral: triggerGeneral,
 				SufferGeneral: enemyGeneral,
 				Damage:        dmg,
 				TacticName:    b.Name(),
 			})
+			if !isEffect {
+				return triggerResp
+			}
 
 			//施加效果
 			if !util.TacticsDebuffEffectCountWrapIncr(ctx, enemyGeneral, consts.DebuffEffectType_BraveAmbition_DecrForce, 2, 2, true) {
@@ -120,14 +123,14 @@ func (b BraveAmbitionTactic) Prepare() {
 			//造成伤害
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.76)
 			for _, enemyGeneral := range enemyGenerals {
-				util.TacticDamage(&util.TacticDamageParam{
+				_, _, _, isEffect := util.TacticDamage(&util.TacticDamageParam{
 					TacticsParams: b.tacticsParams,
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,
 					Damage:        dmg,
 					TacticName:    b.Name(),
 				})
-				if !util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_BraveAmbition_DecrIntelligence, 1.0) {
+				if !isEffect {
 					continue
 				}
 				//持续2回合

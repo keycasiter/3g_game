@@ -440,7 +440,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 							currentGeneral.BaseInfo.Name,
 							debuff,
 						)
-						continue
+						goto activeTacticFlag
 					}
 				}
 				//触发「主动战法」触发器
@@ -483,6 +483,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				}
 			}
 		}
+	activeTacticFlag:
 		//2.普攻
 		//普攻次数(默认一次)
 		attackCanCnt := 1
@@ -500,7 +501,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 							currentGeneral.BaseInfo.Name,
 							debuff,
 						)
-						continue
+						goto AttactTacticFlag
 					}
 				}
 			}
@@ -560,7 +561,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				}
 			}
 		}
-
+	AttactTacticFlag:
 		//武将回合结束处理器
 		runCtx.GeneralRoundPostProcessor(tacticsParams)
 	}

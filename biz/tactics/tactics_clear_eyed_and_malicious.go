@@ -44,7 +44,6 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 		currentGeneral.BaseInfo.Name,
 		consts.BuffEffectType_ClearEyedAndMalicious_Prepare,
 	)
-	hlog.CtxInfof(ctx, "[%s]的")
 	//战斗前4回合，每回合有80%概率使自身获得7%攻心或奇谋几率(每种效果最多叠加2次)
 	//注册效果
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {

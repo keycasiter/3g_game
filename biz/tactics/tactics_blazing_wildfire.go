@@ -89,17 +89,15 @@ func (b BlazingWildfireTactic) Execute() {
 			})
 
 			//灼烧次数-1
-			if !util.TacticsDebuffEffectCountWrapDecr(ctx, sufferGeneral, consts.DebuffEffectType_Firing, 1) {
-				return
-			}
+			util.TacticsDebuffEffectCountWrapDecr(ctx, sufferGeneral, consts.DebuffEffectType_Firing, 1)
 		} else {
 			//施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合
 			if !util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Firing, 1.0) {
-				return
+				continue
 			}
 			//次数
 			if !util.TacticsDebuffEffectCountWrapIncr(ctx, sufferGeneral, consts.DebuffEffectType_Firing, 2, 2, false) {
-				return
+				continue
 			}
 
 			//注册伤害效果

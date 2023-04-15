@@ -20,7 +20,7 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 		return false
 	}
 
-	hlog.CtxInfof(ctx, "[%s]的「%v」已施加",
+	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 		general.BaseInfo.Name,
 		effectType,
 	)
@@ -57,7 +57,7 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 		return false
 	}
 
-	hlog.CtxInfof(ctx, "[%s]的「%v」已施加",
+	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 		general.BaseInfo.Name,
 		effectType,
 	)

@@ -55,6 +55,8 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_CancelWeapon:
+		return "缴械"
 	case DebuffEffectType_Methysis:
 		return "中毒"
 	case DebuffEffectType_Firing:
@@ -146,6 +148,8 @@ func (b BuffEffectType) String() string {
 		return "规避"
 	case BuffEffectType_EnhanceWeapon:
 		return "会心"
+	case BuffEffectType_EnhanceStrategy:
+		return "奇谋"
 	case BuffEffectType_FirstAttack:
 		return "先攻"
 	case BuffEffectType_AppeaseArmyAndPeople_Prepare:

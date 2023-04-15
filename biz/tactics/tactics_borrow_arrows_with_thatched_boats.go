@@ -84,11 +84,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		}
 	}
 	//该战法发动后会进入1回合冷却
-	if !util.TacticFrozenWrapSet(currentGeneral, b.Id(), 1) {
-		hlog.CtxInfof(ctx, "[%s]的已有更强的「%s[冷却]」效果",
-			currentGeneral.BaseInfo.Name,
-			b.Name(),
-		)
+	if !util.TacticFrozenWrapSet(currentGeneral, b.Id(), 1, 1, false) {
 		return
 	}
 	//注册冷却效果消失

@@ -163,9 +163,8 @@ func (s SeizeTheSoulTactic) Execute() {
 			return revokeResp
 		}
 		//消耗次数-1
-		if !util.TacticsBuffEffectCountWrapDecr(currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1) {
-			return revokeResp
-		}
+		util.TacticsBuffEffectCountWrapDecr(ctx, currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1)
+
 		return revokeResp
 	})
 
@@ -223,7 +222,7 @@ func (s SeizeTheSoulTactic) Execute() {
 				v)
 		}
 		//消耗次数-1
-		util.TacticsDebuffEffectCountWrapDecr(currentGeneral, consts.DebuffEffectType_SeizeTheSoul, 1)
+		util.TacticsDebuffEffectCountWrapDecr(ctx, currentGeneral, consts.DebuffEffectType_SeizeTheSoul, 1)
 		return revokeResp
 	})
 }

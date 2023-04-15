@@ -96,7 +96,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 				general.BaseInfo.Name,
 				consts.BuffEffectType_Intervene,
 			)
-			util.BuffEffectWrapSet(general, consts.BuffEffectType_Intervene, 1.0)
+			util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_Intervene, 1.0)
 			general.HelpByGeneral = viceGeneral
 
 			util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
@@ -131,12 +131,8 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 		util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerGeneral := params.CurrentGeneral
 			//恢复一次兵力
-			if util.BuffEffectContains(triggerGeneral, consts.BuffEffectType_Rest) &&
-				!util.TacticsBuffEffectCountWrapDecr(viceGeneral, consts.BuffEffectType_Rest, 1) {
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					triggerGeneral.BaseInfo.Name,
-					consts.BuffEffectType_Rest,
-				)
+			if !util.TacticsBuffEffectCountWrapDecr(ctx, viceGeneral, consts.BuffEffectType_Rest, 1) {
+				return triggerResp
 			}
 			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
 				triggerGeneral.BaseInfo.Name,
@@ -156,7 +152,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 		})
 
 		//注册被攻击效果
-		util.BuffEffectWrapSet(viceGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare, 1.0)
+		util.BuffEffectWrapSet(ctx, viceGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare, 1.0)
 		util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerGeneral := params.CurrentGeneral
 			attackGeneral := params.AttackGeneral

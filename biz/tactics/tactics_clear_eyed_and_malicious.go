@@ -7,6 +7,7 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 战法名称：鹰视狼顾
@@ -39,38 +40,92 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 		c.Name(),
 	)
 
-	//自身为主将时，获得16%奇谋几率
-	if currentGeneral.IsMaster {
-		currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_EnhanceStrategy] += 0.16
-	}
-
+	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+		currentGeneral.BaseInfo.Name,
+		consts.BuffEffectType_ClearEyedAndMalicious_Prepare,
+	)
+	hlog.CtxInfof(ctx, "[%s]的")
 	//战斗前4回合，每回合有80%概率使自身获得7%攻心或奇谋几率(每种效果最多叠加2次)
 	//注册效果
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerGeneral := params.CurrentGeneral
+		currentRound := params.CurrentRound
 		triggerResp := &vo.TacticsTriggerResult{}
 
-		//80%概率
-		if !util.GenerateRate(0.8) {
-			return triggerResp
-		}
-		//攻心或奇谋
-		chosenIdx := util.GenerateHitOneIdx(2)
-		buffs := []consts.BuffEffectType{
-			consts.BuffEffectType_EnhanceStrategy,
-			consts.BuffEffectType_EnhanceWeapon,
-		}
-		buffEffect := buffs[chosenIdx]
+		//前四回合
+		if currentRound >= consts.Battle_Round_First && currentRound <= consts.Battle_Round_Fourth {
+			//80%概率
+			if !util.GenerateRate(0.8) {
+				return triggerResp
+			}
+			//攻心或奇谋
+			chosenIdx := util.GenerateHitOneIdx(2)
+			buffs := []consts.BuffEffectType{
+				consts.BuffEffectType_EnhanceStrategy,
+				consts.BuffEffectType_EnhanceWeapon,
+			}
+			buffEffect := buffs[chosenIdx]
 
-		//一种效果最多叠加2次
-		if !util.TacticsBuffEffectCountWrapIncr(ctx, triggerGeneral, buffEffect, 1, 2, false) {
-			return triggerResp
+			//一种效果最多叠加2次
+			if !util.TacticsBuffEffectCountWrapIncr(ctx, triggerGeneral, buffEffect, 1, 2, false) {
+				return triggerResp
+			}
+			util.BuffEffectWrapSet(ctx, triggerGeneral, buffEffect, 0.07)
 		}
-		util.BuffEffectWrapSet(triggerGeneral, buffEffect, 0.07)
 
 		return triggerResp
 	})
-	//第5回合起，每回合有80%概率对1-2个敌军单体造成谋略伤害(伤害154%，受智力影响)
+
+	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+		currentGeneral.BaseInfo.Name,
+		consts.BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare,
+	)
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		currentRound := params.CurrentRound
+		triggerGeneral := params.CurrentGeneral
+		triggerResp := &vo.TacticsTriggerResult{}
+
+		//第5回合起，每回合有80%概率对1-2个敌军单体造成谋略伤害(伤害154%，受智力影响)；
+		if currentRound == consts.Battle_Round_Fifth {
+			if !util.GenerateRate(0.8) {
+				hlog.CtxInfof(ctx, "[%s]执行来自[%s]【%s】的「%v」效果因几率没有生效",
+					triggerGeneral.BaseInfo.Name,
+					triggerGeneral.BaseInfo.Name,
+					c.Name(),
+					consts.BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare,
+				)
+				return triggerResp
+			}
+
+			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+				triggerGeneral.BaseInfo.Name,
+				c.Name(),
+				consts.BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare,
+			)
+
+			//找到1～2敌人
+			enemyMap := util.GetEnemyGeneralsOneOrTwoMap(c.tacticsParams)
+			for _, enemyGeneral := range enemyMap {
+				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.54)
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: c.tacticsParams,
+					AttackGeneral: currentGeneral,
+					SufferGeneral: enemyGeneral,
+					Damage:        dmg,
+					TacticName:    c.Name(),
+				})
+			}
+		}
+		return triggerResp
+	})
+
+	//自身为主将时，获得16%奇谋几率
+	if currentGeneral.IsMaster {
+		hlog.CtxInfof(ctx, "[%s]的奇谋提高了16%",
+			currentGeneral.BaseInfo.Name,
+		)
+		currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_EnhanceStrategy] += 0.16
+	}
 }
 
 func (c ClearEyedAndMaliciousTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {

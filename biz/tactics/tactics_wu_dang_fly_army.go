@@ -73,7 +73,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 			triggerGeneral := params.CurrentGeneral
 			triggerResp := &vo.TacticsTriggerResult{}
 
-			if !util.TacticsDebuffEffectCountWrapDecr(triggerGeneral, consts.DebuffEffectType_Methysis, 1) {
+			if !util.TacticsDebuffEffectCountWrapDecr(ctx, triggerGeneral, consts.DebuffEffectType_Methysis, 1) {
 				//次数不足
 				return triggerResp
 			}
@@ -83,19 +83,13 @@ func (w WuDangFlyArmyTactic) Prepare() {
 				consts.DebuffEffectType_Methysis,
 			)
 			dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
-			dmg, origin, remain, isEffect := util.TacticDamage(w.tacticsParams, currentGeneral, triggerGeneral, dmgNum)
-			if !isEffect {
-				return triggerResp
-			}
-			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「%v」效果，损失了兵力%d(%d↘%d)",
-				triggerGeneral.BaseInfo.Name,
-				currentGeneral.BaseInfo.Name,
-				w.Name(),
-				consts.DebuffEffectType_Methysis,
-				dmg,
-				origin,
-				remain,
-			)
+			util.TacticDamage(&util.TacticDamageParam{
+				TacticsParams: w.tacticsParams,
+				AttackGeneral: currentGeneral,
+				SufferGeneral: triggerGeneral,
+				Damage:        dmgNum,
+				TacticName:    w.Name(),
+			})
 			return triggerResp
 		})
 	}

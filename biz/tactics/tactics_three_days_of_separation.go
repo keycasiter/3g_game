@@ -68,18 +68,13 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 			for _, sufferGeneral := range enemyGenerals {
 				//TODO 受智力影响
 				dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
-				finalDmg, originNum, remaindNum, isEffect := util.TacticDamage(t.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
-				if !isEffect {
-					return triggerResp
-				}
-				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
-					sufferGeneral.BaseInfo.Name,
-					currentGeneral.BaseInfo.Name,
-					t.Name(),
-					finalDmg,
-					originNum,
-					remaindNum,
-				)
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: t.tacticsParams,
+					AttackGeneral: currentGeneral,
+					SufferGeneral: sufferGeneral,
+					Damage:        dmgNum,
+					TacticName:    t.Name(),
+				})
 			}
 		}
 		return triggerResp

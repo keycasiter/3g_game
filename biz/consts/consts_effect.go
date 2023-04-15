@@ -131,6 +131,8 @@ const (
 	BuffEffectType_BraveAmbition_Prepare                    //义胆雄心「预备」
 	BuffEffectType_HuangTianDangLi                          //黄天当立
 	BuffEffectType_SuppressChokesAndPreventRefusals_Prepare //镇扼防拒「预备」
+	BuffEffectType_ClearEyedAndMalicious_Prepare            //鹰视狼顾「预备」
+	BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare  //鹰视狼顾-鹰视「预备」
 	BuffEffectType_Intervene                                //援护
 )
 
@@ -174,6 +176,10 @@ func (b BuffEffectType) String() string {
 		return "援护"
 	case BuffEffectType_Rest:
 		return "休整"
+	case BuffEffectType_ClearEyedAndMalicious_Prepare:
+		return "鹰视狼顾[预备]"
+	case BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare:
+		return "鹰视狼顾-鹰视[预备]"
 	}
 	return ""
 }

@@ -69,19 +69,15 @@ func (b BraveAmbitionTactic) Prepare() {
 			enemyGeneral := util.GetEnemyOneGeneral(b.tacticsParams)
 			//造成伤害
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.84)
-			finalDmg, holdNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, triggerGeneral, enemyGeneral, dmg)
-			if !isEffect {
-				return triggerResp
-			}
-			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
-				enemyGeneral.BaseInfo.Name,
-				triggerGeneral.BaseInfo.Name,
-				b.Name(),
-				finalDmg,
-				holdNum,
-				remainNum,
-			)
-			//持续2回合
+			util.TacticDamage(&util.TacticDamageParam{
+				TacticsParams: b.tacticsParams,
+				AttackGeneral: triggerGeneral,
+				SufferGeneral: enemyGeneral,
+				Damage:        dmg,
+				TacticName:    b.Name(),
+			})
+
+			//施加效果
 			if !util.TacticsDebuffEffectCountWrapIncr(ctx, enemyGeneral, consts.DebuffEffectType_BraveAmbition_DecrForce, 2, 2, true) {
 				return triggerResp
 			}
@@ -99,44 +95,41 @@ func (b BraveAmbitionTactic) Prepare() {
 			util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				revokeGeneral := params.CurrentGeneral
 				revokeResp := &vo.TacticsTriggerResult{}
-				//次数为0
-				if 0 == util.TacticsDebuffCountGet(revokeGeneral, consts.DebuffEffectType_BraveAmbition_DecrForce) {
+
+				if !util.TacticsDebuffEffectCountWrapDecr(ctx, revokeGeneral, consts.DebuffEffectType_BraveAmbition_DecrForce, 1) {
 					revokeGeneral.BaseInfo.AbilityAttr.ForceBase += decrNum
 
-					hlog.CtxInfof(ctx, "[%s]的「%v」效果消失",
-						revokeGeneral.BaseInfo.Name,
-						consts.DebuffEffectType_BraveAmbition_DecrForce,
-					)
 					hlog.CtxInfof(ctx, "[%s]的武力提高了%.2f",
 						revokeGeneral.BaseInfo.Name,
 						decrNum)
 					return revokeResp
 				}
-				//次数消耗
-				util.TacticsDebuffEffectCountWrapDecr(revokeGeneral, consts.DebuffEffectType_BraveAmbition_DecrForce, 1)
 				return triggerResp
 			})
 		}
 
 		//偶数回合会对敌军群体(2人)造成76%谋略伤害（受智力影响）并降低智力34点，持续2回合；
 		if currentRound%2 == 0 {
+			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+				triggerGeneral.BaseInfo.Name,
+				b.Name(),
+				consts.BuffEffectType_BraveAmbition_Prepare,
+			)
 			//找到敌军2人
 			enemyGenerals := util.GetEnemyGeneralsTwoArr(b.tacticsParams)
 			//造成伤害
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.76)
 			for _, enemyGeneral := range enemyGenerals {
-				finalDmg, holdNum, remainNum, isEffect := util.TacticDamage(b.tacticsParams, triggerGeneral, enemyGeneral, dmg)
-				if !isEffect {
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: b.tacticsParams,
+					AttackGeneral: triggerGeneral,
+					SufferGeneral: enemyGeneral,
+					Damage:        dmg,
+					TacticName:    b.Name(),
+				})
+				if !util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_BraveAmbition_DecrIntelligence, 1.0) {
 					continue
 				}
-				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
-					enemyGeneral.BaseInfo.Name,
-					triggerGeneral.BaseInfo.Name,
-					b.Name(),
-					finalDmg,
-					holdNum,
-					remainNum,
-				)
 				//持续2回合
 				if !util.TacticsDebuffEffectCountWrapIncr(ctx, enemyGeneral, consts.DebuffEffectType_BraveAmbition_DecrIntelligence, 2, 2, true) {
 					continue
@@ -156,21 +149,15 @@ func (b BraveAmbitionTactic) Prepare() {
 				util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 					revokeGeneral := params.CurrentGeneral
 					revokeResp := &vo.TacticsTriggerResult{}
-					//次数为0
-					if 0 == util.TacticsDebuffCountGet(revokeGeneral, consts.DebuffEffectType_BraveAmbition_DecrIntelligence) {
+
+					if !util.TacticsDebuffEffectCountWrapDecr(ctx, revokeGeneral, consts.DebuffEffectType_BraveAmbition_DecrIntelligence, 1) {
 						revokeGeneral.BaseInfo.AbilityAttr.ForceBase += decrNum
 
-						hlog.CtxInfof(ctx, "[%s]的「%v」效果消失",
-							revokeGeneral.BaseInfo.Name,
-							consts.DebuffEffectType_BraveAmbition_DecrIntelligence,
-						)
 						hlog.CtxInfof(ctx, "[%s]的智力提高了%.2f",
 							revokeGeneral.BaseInfo.Name,
 							decrNum)
 						return revokeResp
 					}
-					//次数消耗
-					util.TacticsDebuffEffectCountWrapDecr(revokeGeneral, consts.DebuffEffectType_BraveAmbition_DecrIntelligence, 1)
 					return triggerResp
 				})
 			}

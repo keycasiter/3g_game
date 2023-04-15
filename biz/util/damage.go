@@ -205,13 +205,28 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	}
 }
 
+type TacticDamageParam struct {
+	TacticsParams *model.TacticsParams
+	AttackGeneral *vo.BattleGeneral
+	SufferGeneral *vo.BattleGeneral
+	Damage        int64
+	TacticName    string
+	EffectName    string
+}
+
 // 战法伤害计算
 // @attack 攻击武将
 // @suffer 被攻击武将
 // @damage 伤害量
 // @return 实际伤害/原兵力/剩余兵力
-func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, damage int64) (damageNum, soldierNum, remainSoldierNum int64, isEffect bool) {
-	ctx := tacticsParams.Ctx
+func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldierNum int64, isEffect bool) {
+	ctx := param.TacticsParams.Ctx
+	tacticsParams := param.TacticsParams
+	sufferGeneral := param.SufferGeneral
+	attackGeneral := param.AttackGeneral
+	damage := param.Damage
+	tacticName := param.TacticName
+	effectName := param.EffectName
 	isEffect = true
 
 	//是否可以规避
@@ -249,6 +264,25 @@ func TacticDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		consts.TacticsType_Arm:           consts.BattleAction_SufferArmTactic,
 		consts.TacticsType_Command:       consts.BattleAction_SufferCommandTactic,
 		consts.TacticsType_TroopsTactics: consts.BattleAction_SufferTroopsTactic,
+	}
+	if effectName == "" {
+		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
+			sufferGeneral.BaseInfo.Name,
+			attackGeneral.BaseInfo.Name,
+			tacticName,
+			damageNum,
+			soldierNum,
+			remainSoldierNum,
+		)
+	} else {
+		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
+			sufferGeneral.BaseInfo.Name,
+			attackGeneral.BaseInfo.Name,
+			tacticName,
+			damageNum,
+			soldierNum,
+			remainSoldierNum,
+		)
 	}
 
 	action := sufferEffectTriggerMapping[tacticsParams.TacticsType]

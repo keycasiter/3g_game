@@ -429,32 +429,21 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		for _, tactic := range currentGeneral.EquipTactics {
 			//1.主动
 			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
-				//战法参数设置
-				runCtx.TacticsParams.TacticsType = consts.TacticsType_Active
-
 				//主动战法拦截
-				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; ok {
+				if _, okk := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; okk {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
 						currentGeneral.BaseInfo.Name,
 						consts.DebuffEffectType_NoStrategy,
 					)
 					continue
 				}
-				if _, ok := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
+				if _, okk := currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; okk {
 					hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
 						currentGeneral.BaseInfo.Name,
 						consts.DebuffEffectType_PoorHealth,
 					)
 					continue
 				}
-
-				handler := tactics.TacticsHandlerMap[tactic.Id]
-				tacticHandler := handler.Init(tacticsParams)
-				//发动率判断
-				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
-					continue
-				}
-
 				//触发「主动战法」触发器
 				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_ActiveTactic]; okk {
 					for _, f := range funcs {
@@ -472,6 +461,16 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 							break
 						}
 					}
+				}
+
+				//战法参数设置
+				runCtx.TacticsParams.TacticsType = consts.TacticsType_Active
+
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				tacticHandler := handler.Init(tacticsParams)
+				//发动率判断
+				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+					continue
 				}
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)

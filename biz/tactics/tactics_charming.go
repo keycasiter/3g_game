@@ -84,19 +84,12 @@ func (c CharmingTactic) Prepare() {
 			}
 			hitIdx := util.GenerateHitOneIdx(len(debuffs))
 			debuff := debuffs[hitIdx]
-			//找到攻击者
-			attackGeneral.DeBuffEffectHolderMap[debuff] = 1.0
 
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-				attackGeneral.BaseInfo.Name,
-				debuff,
-			)
+			if !util.DebuffEffectWrapSet(ctx, attackGeneral, debuff, 1.0) {
+				return triggerResp
+			}
 			//次数设置
 			if !util.TacticsDebuffEffectCountWrapIncr(ctx, attackGeneral, debuff, 1, 1, false) {
-				hlog.CtxInfof(ctx, "[%s]身上已有更强的「%v」效果",
-					attackGeneral.BaseInfo.Name,
-					debuff,
-				)
 				return triggerResp
 			}
 			//消失效果注册
@@ -105,13 +98,8 @@ func (c CharmingTactic) Prepare() {
 				revokeRound := params.CurrentRound
 				resp := &vo.TacticsTriggerResult{}
 				//持续一回合
-				if triggerRound+1 == revokeRound {
-					if util.DebuffEffectWrapRemove(revokeGeneral, debuff) {
-						hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-							revokeGeneral.BaseInfo.Name,
-							debuff,
-						)
-					}
+				if triggerRound+2 == revokeRound {
+					util.DebuffEffectWrapRemove(ctx, revokeGeneral, debuff)
 				}
 
 				return resp

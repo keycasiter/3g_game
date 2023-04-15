@@ -80,19 +80,17 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 						dmgNum += cast.ToInt64(diff)
 					}
 				}
-				finalDmg, originNum, remaindNum, isEffect := util.TacticDamage(c.tacticsParams, currentGeneral, sufferGeneral, dmgNum)
+				_, _, _, isEffect := util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: c.tacticsParams,
+					AttackGeneral: currentGeneral,
+					SufferGeneral: sufferGeneral,
+					Damage:        dmgNum,
+					TacticName:    c.Name(),
+				})
 				if !isEffect {
 					triggerResp.IsTerminate = true
 					return triggerResp
 				}
-				hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的「神机妙算」效果，损失了兵力%d(%d↘%d)",
-					triggerGeneral.BaseInfo.Name,
-					currentGeneral.BaseInfo.Name,
-					c.Name(),
-					finalDmg,
-					originNum,
-					remaindNum,
-				)
 			}
 			return triggerResp
 		})

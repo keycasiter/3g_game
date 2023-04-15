@@ -45,7 +45,7 @@ func (t TaipingLawTactic) Prepare() {
 	)
 
 	//获得28%奇谋并提高自带主动战法发动率(6%，若为准备战法则提高12%，受智力影响)，
-	util.BuffEffectWrapSet(currentGeneral, consts.BuffEffectType_EnhanceStrategy, 0.28)
+	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_EnhanceStrategy, 0.28)
 
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerGeneral := params.CurrentGeneral

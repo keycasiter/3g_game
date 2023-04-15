@@ -435,12 +435,14 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 					consts.DebuffEffectType_PoorHealth,
 				}
 				for _, debuff := range debuffEffects {
-					if _, okk := currentGeneral.DeBuffEffectHolderMap[debuff]; okk {
-						hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
-							currentGeneral.BaseInfo.Name,
-							debuff,
-						)
-						goto activeTacticFlag
+					if rate, okk := currentGeneral.DeBuffEffectHolderMap[debuff]; okk {
+						if util.GenerateRate(rate) {
+							hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
+								currentGeneral.BaseInfo.Name,
+								debuff,
+							)
+							goto activeTacticFlag
+						}
 					}
 				}
 				//触发「主动战法」触发器

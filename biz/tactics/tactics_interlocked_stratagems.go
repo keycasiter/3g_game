@@ -98,6 +98,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 			//注册铁锁连环效果
 			registerFunc := func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				lockGeneral := params.CurrentGeneral
+				//不是直接被攻击者不需要反弹伤害
 
 				if !util.DeBuffEffectContains(lockGeneral, consts.DebuffEffectType_InterlockedStratagems) {
 					return triggerResp
@@ -113,12 +114,13 @@ func (i InterlockedStratagemsTactic) Execute() {
 				for _, reboundGeneral := range pairGenerals {
 					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.15)
 					util.TacticDamage(&util.TacticDamageParam{
-						TacticsParams: i.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: reboundGeneral,
-						Damage:        dmg,
-						TacticName:    i.Name(),
-						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_InterlockedStratagems),
+						TacticsParams:          i.tacticsParams,
+						AttackGeneral:          currentGeneral,
+						SufferGeneral:          reboundGeneral,
+						Damage:                 dmg,
+						TacticName:             i.Name(),
+						EffectName:             fmt.Sprintf("%v", consts.DebuffEffectType_InterlockedStratagems),
+						IsBanInterLockedEffect: true,
 					})
 				}
 				return triggerResp

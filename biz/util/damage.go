@@ -206,12 +206,20 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 }
 
 type TacticDamageParam struct {
+	//战法参数
 	TacticsParams *model.TacticsParams
+	//攻击者
 	AttackGeneral *vo.BattleGeneral
+	//被攻击者
 	SufferGeneral *vo.BattleGeneral
-	Damage        int64
-	TacticName    string
-	EffectName    string
+	//伤害
+	Damage int64
+	//战法名
+	TacticName string
+	//效果名
+	EffectName string
+	//是否禁止【连环计】被动器生效
+	IsBanInterLockedEffect bool
 }
 
 // 战法伤害计算
@@ -255,16 +263,6 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	sufferGeneral.SoldierNum -= damageNum
 	remainSoldierNum = sufferGeneral.SoldierNum
 
-	//被伤害效果触发器
-	//映射转换
-	sufferEffectTriggerMapping := map[consts.TacticsType]consts.BattleAction{
-		consts.TacticsType_Active:        consts.BattleAction_SufferActiveTactic,
-		consts.TacticsType_Passive:       consts.BattleAction_SufferPassiveTactic,
-		consts.TacticsType_Assault:       consts.BattleAction_SufferAssaultTactic,
-		consts.TacticsType_Arm:           consts.BattleAction_SufferArmTactic,
-		consts.TacticsType_Command:       consts.BattleAction_SufferCommandTactic,
-		consts.TacticsType_TroopsTactics: consts.BattleAction_SufferTroopsTactic,
-	}
 	if effectName == "" {
 		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
 			sufferGeneral.BaseInfo.Name,
@@ -283,6 +281,21 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 			soldierNum,
 			remainSoldierNum,
 		)
+	}
+
+	//被伤害效果触发器
+	//映射转换
+	sufferEffectTriggerMapping := map[consts.TacticsType]consts.BattleAction{
+		consts.TacticsType_Active:        consts.BattleAction_SufferActiveTactic,
+		consts.TacticsType_Passive:       consts.BattleAction_SufferPassiveTactic,
+		consts.TacticsType_Assault:       consts.BattleAction_SufferAssaultTactic,
+		consts.TacticsType_Arm:           consts.BattleAction_SufferArmTactic,
+		consts.TacticsType_Command:       consts.BattleAction_SufferCommandTactic,
+		consts.TacticsType_TroopsTactics: consts.BattleAction_SufferTroopsTactic,
+	}
+	//触发器禁用开关
+	if tacticName == "连环计" && param.IsBanInterLockedEffect {
+		return
 	}
 
 	action := sufferEffectTriggerMapping[tacticsParams.TacticsType]

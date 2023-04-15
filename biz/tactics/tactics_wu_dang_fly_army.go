@@ -41,6 +41,11 @@ func (w WuDangFlyArmyTactic) Prepare() {
 	ctx := w.tacticsParams.Ctx
 	currentGeneral := w.tacticsParams.CurrentGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		w.Name(),
+	)
+
 	//我军全体统率、速度提高22点
 	//找我我军全体
 	pairGenerals := util.GetPairGeneralArr(w.tacticsParams)

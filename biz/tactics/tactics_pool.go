@@ -71,6 +71,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.BorrowArrowsWithThatchedBoats] = &BorrowArrowsWithThatchedBoatsTactic{}
 	//盛气凌敌
 	TacticsHandlerMap[consts.OverwhelmingTheEnemyWithVigour] = &OverwhelmingTheEnemyWithVigourTactic{}
+	//挫锐
+	TacticsHandlerMap[consts.Demoralize] = &DemoralizeTactic{}
 }
 
 func initTacticsMap() {

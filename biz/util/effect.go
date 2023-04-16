@@ -28,10 +28,15 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 	return true
 }
 
-func BuffEffectWrapRemove(general *vo.BattleGeneral, effectType consts.BuffEffectType) bool {
+func BuffEffectWrapRemove(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType) bool {
 	if _, ok := general.BuffEffectHolderMap[effectType]; ok {
 		delete(general.BuffEffectHolderMap, effectType)
 		delete(general.BuffEffectCountMap, effectType)
+
+		hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+			general.BaseInfo.Name,
+			effectType,
+		)
 		return true
 	}
 	return false

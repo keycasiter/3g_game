@@ -17,7 +17,7 @@ func TestGenerateRate(t *testing.T) {
 	tr := 0
 	f := 0
 	for i := 0; i < 10000; i++ {
-		res := GenerateRate(1)
+		res := GenerateRate(1.2)
 		if res == true {
 			tr++
 		} else {

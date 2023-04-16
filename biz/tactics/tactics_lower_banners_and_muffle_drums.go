@@ -12,6 +12,10 @@ type LowerBannersAndMuffleDrumsTactic struct {
 	triggerRate   float64
 }
 
+func (l LowerBannersAndMuffleDrumsTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (l LowerBannersAndMuffleDrumsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	l.tacticsParams = tacticsParams
 	l.triggerRate = 1.0

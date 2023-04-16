@@ -16,6 +16,10 @@ type DemoralizeTactic struct {
 	triggerRate   float64
 }
 
+func (d DemoralizeTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (d DemoralizeTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	d.tacticsParams = tacticsParams
 	d.triggerRate = 1.0

@@ -16,6 +16,10 @@ type TraitorInTroubledTimesTactic struct {
 	triggerRate   float64
 }
 
+func (t TraitorInTroubledTimesTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (t TraitorInTroubledTimesTactic) SetTriggerRate(rate float64) {
 	t.triggerRate = rate
 }

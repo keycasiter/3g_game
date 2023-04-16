@@ -27,4 +27,6 @@ type Tactics interface {
 	SupportArmTypes() []consts.ArmType
 	//战法执行
 	Execute()
+	//是否需要发动准备
+	IsTriggerPrepare() bool
 }

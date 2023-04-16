@@ -15,6 +15,10 @@ type TheWindOfTheElderlyTactic struct {
 	triggerRate   float64
 }
 
+func (t TheWindOfTheElderlyTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (t TheWindOfTheElderlyTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
 	t.triggerRate = 1.0

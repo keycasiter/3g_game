@@ -18,6 +18,10 @@ type KillingMinisterInDreamTactic struct {
 	triggerRate   float64
 }
 
+func (k KillingMinisterInDreamTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (k KillingMinisterInDreamTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	k.tacticsParams = tacticsParams
 	k.triggerRate = 1.0
@@ -47,7 +51,7 @@ func (k KillingMinisterInDreamTactic) Prepare() {
 			triggerRound := params.CurrentRound
 
 			if triggerRound == consts.Battle_Round_Third {
-				util.BuffEffectWrapRemove(triggerGeneral, consts.BuffEffectType_ShareResponsibilityFor)
+				util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_ShareResponsibilityFor)
 			}
 
 			return triggerResp

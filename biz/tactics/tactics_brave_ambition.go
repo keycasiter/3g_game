@@ -19,6 +19,10 @@ type BraveAmbitionTactic struct {
 	triggerRate   float64
 }
 
+func (b BraveAmbitionTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (b BraveAmbitionTactic) SetTriggerRate(rate float64) {
 	b.triggerRate = rate
 }

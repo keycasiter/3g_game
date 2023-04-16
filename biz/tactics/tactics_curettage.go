@@ -16,6 +16,10 @@ type CurettageTactic struct {
 	triggerRate   float64
 }
 
+func (c CurettageTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (c CurettageTactic) SetTriggerRate(rate float64) {
 	c.triggerRate = rate
 }

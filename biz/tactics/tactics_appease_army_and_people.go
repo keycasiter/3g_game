@@ -19,6 +19,10 @@ type AppeaseArmyAndPeopleTactic struct {
 	triggerRate   float64
 }
 
+func (a AppeaseArmyAndPeopleTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (a AppeaseArmyAndPeopleTactic) SetTriggerRate(rate float64) {
 	a.triggerRate = rate
 }

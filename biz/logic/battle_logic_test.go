@@ -277,7 +277,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "士别三日",
 		},
 		{
-			Id:   consts.CleverPlanAndCleverPlan,
+			Id:   consts.TaipingLaw,
 			Name: "熯天炽地",
 		},
 	}

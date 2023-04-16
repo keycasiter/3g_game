@@ -46,16 +46,27 @@ const (
 	DebuffEffectType_DecrCommand      //降低统率
 	DebuffEffectType_DecrSpeed        //降低速度
 
+	DebuffEffectType_TacticsActiveTriggerDecr  //主动战法发动率降低
+	DebuffEffectType_TacticsPassiveTriggerDecr //被动战法发动率降低
+
 	DebuffEffectType_CleverStrategyAndShrewdTactic //神机妙算
 	DebuffEffectType_InterlockedStratagems         //铁索连环
 	DebuffEffectType_SeizeTheSoul                  //夺魂挟魄
 
 	DebuffEffectType_BraveAmbition_DecrForce        //（义胆雄心）降低武力
 	DebuffEffectType_BraveAmbition_DecrIntelligence //（义胆雄心）降低智力
+
+	DebuffEffectType_LectureField //舌战群儒
 )
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_TacticsPassiveTriggerDecr:
+		return "被动战法发动率降低"
+	case DebuffEffectType_TacticsActiveTriggerDecr:
+		return "主动战法发动率降低"
+	case DebuffEffectType_LectureField:
+		return "舌战群儒"
 	case DebuffEffectType_CancelWeapon:
 		return "缴械"
 	case DebuffEffectType_Taunt:
@@ -105,25 +116,24 @@ type BuffEffectType int
 
 const (
 	//效果施加
-	BuffEffectType_Unknow                       BuffEffectType = iota
-	BuffEffectType_Evade                                       //规避
-	BuffEffectType_EnhanceWeapon                               //会心
-	BuffEffectType_EnhanceStrategy                             //奇谋
-	BuffEffectType_GroupAttack                                 //群攻
-	BuffEffectType_FirstAttack                                 //先攻
-	BuffEffectType_Rest                                        //休整
-	BuffEffectType_Defend                                      //抵御
-	BuffEffectType_ContinuousAttack                            //连击
-	BuffEffectType_StrikeBack                                  //反击
-	BuffEffectType_ShareResponsibilityFor                      //分担
-	BuffEffectType_Insight                                     //洞察
-	BuffEffectType_TacticsActiveTriggerImprove                 //主动战法发动率提升
-	BuffEffectType_TacticsPassiveTriggerImprove                //被动战法发动率提升
-	BuffEffectType_LaunchWeaponDamageImprove                   //造成兵刃伤害增加
-	BuffEffectType_LaunchStrategyDamageImprove                 //造成谋略伤害增加
+	BuffEffectType_Unknow                                    BuffEffectType = iota
+	BuffEffectType_Evade                                                    //规避
+	BuffEffectType_EnhanceWeapon                                            //会心
+	BuffEffectType_EnhanceStrategy                                          //奇谋
+	BuffEffectType_GroupAttack                                              //群攻
+	BuffEffectType_FirstAttack                                              //先攻
+	BuffEffectType_Rest                                                     //休整
+	BuffEffectType_Defend                                                   //抵御
+	BuffEffectType_ContinuousAttack                                         //连击
+	BuffEffectType_StrikeBack                                               //反击
+	BuffEffectType_ShareResponsibilityFor                                   //分担
+	BuffEffectType_Insight                                                  //洞察
+	BuffEffectType_TacticsActiveTriggerImprove                              //主动战法发动率提升
+	BuffEffectType_SelfContained_TacticsActiveTriggerImprove                //(自带)主动战法发动率提升
+	BuffEffectType_TacticsPassiveTriggerImprove                             //被动战法发动率提升
+	BuffEffectType_LaunchWeaponDamageImprove                                //造成兵刃伤害增加
+	BuffEffectType_LaunchStrategyDamageImprove                              //造成谋略伤害增加
 
-	BuffEffectType_TacticsActiveTriggerDecr                 //主动战法发动率降低
-	BuffEffectType_TacticsPassiveTriggerDecr                //被动战法发动率降低
 	BuffEffectType_SufferWeaponDamageDeduce                 //受到兵刃伤害减少
 	BuffEffectType_SufferStrategyDamageDeduce               //受到谋略伤害减少
 	BuffEffectType_IncrForce                                //增加武力
@@ -147,6 +157,8 @@ const (
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_SelfContained_TacticsActiveTriggerImprove:
+		return "(自带)主动战法发动率提升"
 	case BuffEffectType_StrikeBack:
 		return "反击"
 	case BuffEffectType_ShareResponsibilityFor:

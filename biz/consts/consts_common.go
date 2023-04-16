@@ -314,22 +314,23 @@ const (
 type BattleAction int
 
 const (
-	BattleAction_Unknow              BattleAction = 0  //未知动作
-	BattleAction_BeginAction         BattleAction = 1  //开始行动
-	BattleAction_Attack              BattleAction = 2  //普通攻击
-	BattleAction_SufferAttack        BattleAction = 3  //被普通攻击
-	BattleAction_ActiveTactic        BattleAction = 4  //发动主动战法
-	BattleAction_SufferActiveTactic  BattleAction = 5  //被主动战法攻击
-	BattleAction_AssaultTactic       BattleAction = 6  //发动突击战法攻击
-	BattleAction_SufferAssaultTactic BattleAction = 7  //被突击战法攻击
-	BattleAction_CommandTactic       BattleAction = 8  //指挥战法攻击
-	BattleAction_SufferCommandTactic BattleAction = 9  //被指挥战法攻击
-	BattleAction_PassiveTactic       BattleAction = 10 //被动战法攻击
-	BattleAction_SufferPassiveTactic BattleAction = 11 //被被动战法攻击
-	BattleAction_TroopsTactic        BattleAction = 12 //阵法战法攻击
-	BattleAction_SufferTroopsTactic  BattleAction = 13 //被阵法战法攻击
-	BattleAction_ArmTactic           BattleAction = 14 //兵种战法攻击
-	BattleAction_SufferArmTactic     BattleAction = 15 //被兵种战法攻击
+	BattleAction_Unknow              BattleAction = iota //未知动作
+	BattleAction_BeginAction                             //开始行动
+	BattleAction_Attack                                  //普通攻击
+	BattleAction_SufferAttack                            //被普通攻击
+	BattleAction_ActiveTactic                            //发动主动战法开始
+	BattleAction_ActiveTacticEnd                         //发动主动战法结束
+	BattleAction_SufferActiveTactic                      //被主动战法攻击
+	BattleAction_AssaultTactic                           //发动突击战法攻击
+	BattleAction_SufferAssaultTactic                     //被突击战法攻击
+	BattleAction_CommandTactic                           //指挥战法攻击
+	BattleAction_SufferCommandTactic                     //被指挥战法攻击
+	BattleAction_PassiveTactic                           //被动战法攻击
+	BattleAction_SufferPassiveTactic                     //被被动战法攻击
+	BattleAction_TroopsTactic                            //阵法战法攻击
+	BattleAction_SufferTroopsTactic                      //被阵法战法攻击
+	BattleAction_ArmTactic                               //兵种战法攻击
+	BattleAction_SufferArmTactic                         //被兵种战法攻击
 )
 
 func (action BattleAction) String() string {

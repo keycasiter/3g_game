@@ -132,20 +132,6 @@ func GetPairViceGeneralNotSelf(tacticsParams *model.TacticsParams) *vo.BattleGen
 	return nil
 }
 
-// 找到当前传入武将之外的两个队友
-func GetPairGeneralsNotSelf(tacticsParams *model.TacticsParams, targetGeneral *vo.BattleGeneral) []*vo.BattleGeneral {
-	//找到队友
-	pairGeneralArr := GetPairGeneralArr(tacticsParams)
-	pairGenerals := make([]*vo.BattleGeneral, 0)
-	for _, general := range pairGeneralArr {
-		//除传入武将之外的队友
-		if general.BaseInfo.UniqueId != targetGeneral.BaseInfo.UniqueId {
-			pairGenerals = append(pairGenerals, general)
-		}
-	}
-	return pairGenerals
-}
-
 // 找到当前友军两到三个队友
 func GetPairGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	//找到队友
@@ -157,6 +143,32 @@ func GetPairGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) []*vo.Batt
 	for idx, general := range pairGeneralArr {
 		if _, ok := hitIdxMap[int64(idx)]; ok {
 			pairGenerals = append(pairGenerals, general)
+		}
+	}
+	return pairGenerals
+}
+
+// 找到当前我军除自己之外一个人
+func GetPairOneGeneralNotSelf(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	//找到我军
+	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+	//随机1个人
+	totalNum := len(pairGeneralArr)
+	hitIdx := GenerateHitOneIdx(totalNum)
+	if pairGeneralArr[hitIdx] != nil {
+		return pairGeneralArr[hitIdx]
+	}
+	return nil
+}
+
+// 找到武将除自己之外的队友们
+func GetPairGeneralsNotSelf(tacticsParams *model.TacticsParams, general *vo.BattleGeneral) []*vo.BattleGeneral {
+	//找到我军
+	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+	pairGenerals := make([]*vo.BattleGeneral, 0)
+	for _, battleGeneral := range pairGeneralArr {
+		if battleGeneral.BaseInfo.UniqueId != general.BaseInfo.UniqueId {
+			pairGenerals = append(pairGenerals, battleGeneral)
 		}
 	}
 	return pairGenerals

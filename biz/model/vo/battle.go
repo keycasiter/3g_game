@@ -57,8 +57,6 @@ type BattleGeneral struct {
 	//*****战法触发器都是按条件（非回合）会触发的******
 	//战法触发器 map<触发动作,func(触发函数参数)>
 	TacticsTriggerMap map[consts.BattleAction][]func(params *TacticsTriggerParams) *TacticsTriggerResult
-	//战法触发器列表
-	TacticsTriggerManageMap map[string]func(params *TacticsTriggerParams)
 }
 
 // 战法触发参数
@@ -71,6 +69,8 @@ type TacticsTriggerParams struct {
 	AttackGeneral *BattleGeneral
 	//当前造成伤害
 	CurrentDamage int64
+	//当前执行战法
+	CurrentTactic interface{}
 }
 
 // 战法触发结果

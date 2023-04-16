@@ -18,6 +18,10 @@ type CleverStrategyAndShrewdTacticsTactic struct {
 	triggerRate   float64
 }
 
+func (c CleverStrategyAndShrewdTacticsTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (c CleverStrategyAndShrewdTacticsTactic) SetTriggerRate(rate float64) {
 	c.triggerRate = rate
 }

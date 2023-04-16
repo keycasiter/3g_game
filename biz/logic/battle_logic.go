@@ -431,6 +431,11 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		for _, tactic := range currentGeneral.EquipTactics {
 			//1.主动
 			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
+				//战法参数设置
+				runCtx.TacticsParams.TacticsType = consts.TacticsType_Active
+				handler := tactics.TacticsHandlerMap[tactic.Id]
+				tacticHandler := handler.Init(tacticsParams)
+
 				//主动战法拦截
 				debuffEffects := []consts.DebuffEffectType{
 					consts.DebuffEffectType_NoStrategy,
@@ -447,13 +452,14 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 						}
 					}
 				}
-				//触发「主动战法」触发器
+				//触发「发动主动战法前」触发器
 				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_ActiveTactic]; okk {
 					for _, f := range funcs {
 						params := &vo.TacticsTriggerParams{
 							CurrentRound:   currentRound,
 							CurrentGeneral: currentGeneral,
 							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
 						}
 						triggerResp := f(params)
 						if triggerResp.IsTerminate {
@@ -466,17 +472,25 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 					}
 				}
 
-				//战法参数设置
-				runCtx.TacticsParams.TacticsType = consts.TacticsType_Active
-
-				handler := tactics.TacticsHandlerMap[tactic.Id]
-				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
+
+				//触发「发动主动战法后」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_ActiveTacticEnd]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   currentRound,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
+						}
+						f(params)
+					}
+				}
 
 				//武将清理
 				util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)

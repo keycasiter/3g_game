@@ -19,6 +19,10 @@ type BlazingWildfireTactic struct {
 	triggerRate   float64
 }
 
+func (b BlazingWildfireTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (b BlazingWildfireTactic) SetTriggerRate(rate float64) {
 	b.triggerRate = rate
 }

@@ -19,6 +19,10 @@ type WuDangFlyArmyTactic struct {
 	triggerRate   float64
 }
 
+func (w WuDangFlyArmyTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (w WuDangFlyArmyTactic) SetTriggerRate(rate float64) {
 	w.triggerRate = rate
 }

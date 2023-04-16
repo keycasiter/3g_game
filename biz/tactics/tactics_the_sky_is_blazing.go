@@ -19,6 +19,10 @@ type TheSkyIsBlazingTactic struct {
 	triggerRate   float64
 }
 
+func (t TheSkyIsBlazingTactic) IsTriggerPrepare() bool {
+	return true
+}
+
 func (t TheSkyIsBlazingTactic) SetTriggerRate(rate float64) {
 	t.triggerRate = rate
 }

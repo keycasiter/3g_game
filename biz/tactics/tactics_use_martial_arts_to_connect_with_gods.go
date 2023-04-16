@@ -17,6 +17,10 @@ type UseMartialArtsToConnectWithGodsTactic struct {
 	triggerRate   float64
 }
 
+func (u UseMartialArtsToConnectWithGodsTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (u UseMartialArtsToConnectWithGodsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	u.tacticsParams = tacticsParams
 	u.triggerRate = 1.0

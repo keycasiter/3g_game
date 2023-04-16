@@ -17,6 +17,10 @@ type TaipingLawTactic struct {
 	triggerRate   float64
 }
 
+func (t TaipingLawTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (t TaipingLawTactic) SetTriggerRate(rate float64) {
 	t.triggerRate = rate
 }
@@ -46,20 +50,56 @@ func (t TaipingLawTactic) Prepare() {
 
 	//获得28%奇谋并提高自带主动战法发动率(6%，若为准备战法则提高12%，受智力影响)，
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_EnhanceStrategy, 0.28)
+	hlog.CtxInfof(ctx, "[%s]的奇谋提高了28%%",
+		currentGeneral.BaseInfo.Name,
+	)
+	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_HuangTianDangLi, 1.0)
 
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-		triggerGeneral := params.CurrentGeneral
+	//TODO 自身为黄巾军主将时，使黄巾军副将同样获得自带战法发动率提升
+
+	//注册效果
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
+		triggerGeneral := params.CurrentGeneral
+		currentTactic := (params.CurrentTactic).(_interface.Tactics)
 
-		hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-			triggerGeneral.BaseInfo.Name,
-			t.Name(),
-			consts.BuffEffectType_HuangTianDangLi,
-		)
+		if currentTactic.TacticsSource() == consts.TacticsSource_SelfContained {
+			improveRate := 0.06 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
+			if currentTactic.IsTriggerPrepare() {
+				improveRate = 0.12 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
+			}
+			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+				triggerGeneral.BaseInfo.Name,
+				t.Name(),
+				consts.BuffEffectType_HuangTianDangLi,
+			)
+			hlog.CtxInfof(ctx, "[%s]的【%s】发动几率提升了%.2f%%(%.2f%%↗%.2f%%)",
+				triggerGeneral.BaseInfo.Name,
+				currentTactic.Name(),
+				improveRate*100,
+				currentTactic.GetTriggerRate()*100,
+				(currentTactic.GetTriggerRate()+improveRate)*100,
+			)
+
+			triggerRate := currentTactic.GetTriggerRate() + improveRate
+			currentTactic.SetTriggerRate(triggerRate)
+
+			//注册消失效果
+			util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTacticEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeTactic := params.CurrentTactic.(_interface.Tactics)
+
+				if currentTactic.Id() == revokeTactic.Id() {
+					revokeRate := revokeTactic.GetTriggerRate() - improveRate
+					revokeTactic.SetTriggerRate(revokeRate)
+				}
+
+				return revokeResp
+			})
+		}
 
 		return triggerResp
 	})
-	//TODO 自身为黄巾军主将时，使黄巾军副将同样获得自带战法发动率提升
 }
 
 func (t TaipingLawTactic) Id() consts.TacticId {

@@ -19,6 +19,10 @@ type BorrowArrowsWithThatchedBoatsTactic struct {
 	triggerRate   float64
 }
 
+func (b BorrowArrowsWithThatchedBoatsTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (b BorrowArrowsWithThatchedBoatsTactic) SetTriggerRate(rate float64) {
 	b.triggerRate = rate
 }

@@ -18,6 +18,10 @@ type ThreeDaysOfSeparationTactic struct {
 	triggerRate   float64
 }
 
+func (t ThreeDaysOfSeparationTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (t ThreeDaysOfSeparationTactic) SetTriggerRate(rate float64) {
 	t.triggerRate = rate
 }

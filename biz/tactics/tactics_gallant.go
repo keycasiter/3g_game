@@ -16,6 +16,10 @@ type GallantTactic struct {
 	triggerRate   float64
 }
 
+func (g GallantTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (g GallantTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	g.tacticsParams = tacticsParams
 	g.triggerRate = 1.0

@@ -17,6 +17,10 @@ type CharmingTactic struct {
 	triggerRate   float64
 }
 
+func (c CharmingTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (c CharmingTactic) SetTriggerRate(rate float64) {
 	c.triggerRate = rate
 }

@@ -16,6 +16,10 @@ type ToKeepAndBeFirmTactic struct {
 	triggerRate   float64
 }
 
+func (t ToKeepAndBeFirmTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (t ToKeepAndBeFirmTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	t.tacticsParams = tacticsParams
 	t.triggerRate = 1.0

@@ -18,6 +18,10 @@ type SeizeTheSoulTactic struct {
 	triggerRate   float64
 }
 
+func (s SeizeTheSoulTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (s SeizeTheSoulTactic) SetTriggerRate(rate float64) {
 	s.triggerRate = rate
 }
@@ -129,7 +133,7 @@ func (s SeizeTheSoulTactic) Execute() {
 		if util.BuffEffectContains(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) &&
 			0 == util.TacticsBuffCountGet(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) {
 
-			if !util.BuffEffectWrapRemove(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) {
+			if !util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SeizeTheSoul) {
 				panic("err")
 			}
 			revokeGeneral.BaseInfo.AbilityAttr.ForceBase -= v

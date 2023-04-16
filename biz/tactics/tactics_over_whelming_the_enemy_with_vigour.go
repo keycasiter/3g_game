@@ -16,6 +16,10 @@ type OverwhelmingTheEnemyWithVigourTactic struct {
 	triggerRate   float64
 }
 
+func (o OverwhelmingTheEnemyWithVigourTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (o OverwhelmingTheEnemyWithVigourTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	o.tacticsParams = tacticsParams
 	o.triggerRate = 1.0

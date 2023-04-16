@@ -20,6 +20,10 @@ type InterlockedStratagemsTactic struct {
 	triggerRate   float64
 }
 
+func (i InterlockedStratagemsTactic) IsTriggerPrepare() bool {
+	return true
+}
+
 func (i InterlockedStratagemsTactic) SetTriggerRate(rate float64) {
 	i.triggerRate = rate
 }

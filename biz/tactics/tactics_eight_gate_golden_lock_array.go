@@ -17,6 +17,10 @@ type EightGateGoldenLockArrayTactic struct {
 	triggerRate   float64
 }
 
+func (e EightGateGoldenLockArrayTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (e EightGateGoldenLockArrayTactic) SetTriggerRate(rate float64) {
 	e.triggerRate = rate
 }

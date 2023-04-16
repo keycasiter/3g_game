@@ -17,6 +17,10 @@ type CleverPlanAndCleverPlanTactic struct {
 	triggerRate   float64
 }
 
+func (c CleverPlanAndCleverPlanTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (c CleverPlanAndCleverPlanTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	c.tacticsParams = tacticsParams
 	c.triggerRate = 1.0

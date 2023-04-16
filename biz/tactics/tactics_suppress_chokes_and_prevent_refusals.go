@@ -18,6 +18,10 @@ type SuppressChokesAndPreventRefusalsTactic struct {
 	triggerRate   float64
 }
 
+func (s SuppressChokesAndPreventRefusalsTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (s SuppressChokesAndPreventRefusalsTactic) SetTriggerRate(rate float64) {
 	s.triggerRate = rate
 }
@@ -104,7 +108,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 
 				//消失
 				if triggerRound+1 == params.CurrentRound {
-					if !util.BuffEffectWrapRemove(general, consts.BuffEffectType_Intervene) {
+					if !util.BuffEffectWrapRemove(ctx, general, consts.BuffEffectType_Intervene) {
 						return revokeResp
 					}
 
@@ -170,7 +174,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 				//移除攻击者增益效果
 				util.BuffEffectClean(ctx, attackGeneral)
 			}
-			util.BuffEffectWrapRemove(triggerGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare)
+			util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare)
 
 			return triggerResp
 		})

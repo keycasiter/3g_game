@@ -15,6 +15,10 @@ type FrontalVectorArrayTactic struct {
 	triggerRate   float64
 }
 
+func (f FrontalVectorArrayTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (f FrontalVectorArrayTactic) SetTriggerRate(rate float64) {
 	f.triggerRate = rate
 }

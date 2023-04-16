@@ -19,6 +19,10 @@ type ClearEyedAndMaliciousTactic struct {
 	triggerRate   float64
 }
 
+func (c ClearEyedAndMaliciousTactic) IsTriggerPrepare() bool {
+	return false
+}
+
 func (c ClearEyedAndMaliciousTactic) SetTriggerRate(rate float64) {
 	c.triggerRate = rate
 }

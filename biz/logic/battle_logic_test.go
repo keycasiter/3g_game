@@ -277,7 +277,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "士别三日",
 		},
 		{
-			Id:   consts.TaipingLaw,
+			Id:   consts.TheSkyIsBlazing,
 			Name: "熯天炽地",
 		},
 	}
@@ -292,8 +292,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "魅惑",
 		},
 		{
-			Id:   consts.TheWindOfTheElderly,
-			Name: "横戈跃马",
+			Id:   consts.LectureField,
+			Name: "舌战群儒",
 		},
 	}
 	//满宠战法

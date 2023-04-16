@@ -30,6 +30,12 @@ func (l LectureFieldTactic) Init(tacticsParams *model.TacticsParams) _interface.
 func (l LectureFieldTactic) Prepare() {
 	ctx := l.tacticsParams.Ctx
 	currentGeneral := l.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		l.Name(),
+	)
+
 	//敌军尝试发动主动战法时，有25%几率令其发动几率降低5%（受智力影响）
 	//并提高自己及随机友军主动战法4%（受智力影响）发动几率，持续1回合
 	enemyGenerals := util.GetEnemyGeneralArr(l.tacticsParams)

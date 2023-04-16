@@ -75,6 +75,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.Demoralize] = &DemoralizeTactic{}
 	//守而必固
 	TacticsHandlerMap[consts.ToKeepAndBeFirm] = &ToKeepAndBeFirmTactic{}
+	//横戈跃马
+	TacticsHandlerMap[consts.Gallant] = &GallantTactic{}
 }
 
 func initTacticsMap() {

@@ -300,3 +300,8 @@ func MakeGeneralsOrderBySpeed(allGenerals []*vo.BattleGeneral) []*vo.BattleGener
 	sort.Sort(allGeneralsOrderBySpeed)
 	return allGeneralsOrderBySpeed
 }
+
+//获取全部武将
+func GetAllGenerals(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+	return tacticsParams.AllGeneralArr
+}

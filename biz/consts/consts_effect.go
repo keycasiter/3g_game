@@ -186,6 +186,8 @@ func (b BuffEffectType) String() string {
 		return "援护"
 	case BuffEffectType_Rest:
 		return "休整"
+	case BuffEffectType_EmergencyTreatment:
+		return "急救"
 	case BuffEffectType_ClearEyedAndMalicious_Prepare:
 		return "鹰视狼顾[预备]"
 	case BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare:

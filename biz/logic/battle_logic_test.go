@@ -292,8 +292,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "魅惑",
 		},
 		{
-			Id:   consts.ToKeepAndBeFirm,
-			Name: "守而必固",
+			Id:   consts.Gallant,
+			Name: "横戈跃马",
 		},
 	}
 	//满宠战法

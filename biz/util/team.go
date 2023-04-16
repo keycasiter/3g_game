@@ -149,14 +149,14 @@ func GetPairGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) []*vo.Batt
 }
 
 // 找到当前我军除自己之外一个人
-func GetPairOneGeneralNotSelf(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+func GetPairOneGeneralNotSelf(tacticsParams *model.TacticsParams, general *vo.BattleGeneral) *vo.BattleGeneral {
 	//找到我军
-	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+	pairGeneralArrs := GetPairGeneralsNotSelf(tacticsParams, general)
 	//随机1个人
-	totalNum := len(pairGeneralArr)
+	totalNum := len(pairGeneralArrs)
 	hitIdx := GenerateHitOneIdx(totalNum)
-	if pairGeneralArr[hitIdx] != nil {
-		return pairGeneralArr[hitIdx]
+	if pairGeneralArrs[hitIdx] != nil {
+		return pairGeneralArrs[hitIdx]
 	}
 	return nil
 }
@@ -164,11 +164,19 @@ func GetPairOneGeneralNotSelf(tacticsParams *model.TacticsParams) *vo.BattleGene
 // 找到武将除自己之外的队友们
 func GetPairGeneralsNotSelf(tacticsParams *model.TacticsParams, general *vo.BattleGeneral) []*vo.BattleGeneral {
 	//找到我军
-	pairGeneralArr := GetPairGeneralArr(tacticsParams)
 	pairGenerals := make([]*vo.BattleGeneral, 0)
-	for _, battleGeneral := range pairGeneralArr {
-		if battleGeneral.BaseInfo.UniqueId != general.BaseInfo.UniqueId {
-			pairGenerals = append(pairGenerals, battleGeneral)
+	if _, ok := tacticsParams.FightingGeneralMap[general.BaseInfo.UniqueId]; ok {
+		for uniqueId, perGeneral := range tacticsParams.FightingGeneralMap {
+			if uniqueId != general.BaseInfo.UniqueId {
+				pairGenerals = append(pairGenerals, perGeneral)
+			}
+		}
+	}
+	if _, ok := tacticsParams.EnemyGeneralMap[general.BaseInfo.UniqueId]; ok {
+		for uniqueId, perGeneral := range tacticsParams.EnemyGeneralMap {
+			if uniqueId != general.BaseInfo.UniqueId {
+				pairGenerals = append(pairGenerals, perGeneral)
+			}
 		}
 	}
 	return pairGenerals

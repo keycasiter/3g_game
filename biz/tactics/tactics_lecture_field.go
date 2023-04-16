@@ -83,7 +83,7 @@ func (l LectureFieldTactic) Prepare() {
 				})
 
 				//队友单体
-				pairGeneral := util.GetPairOneGeneralNotSelf(l.tacticsParams)
+				pairGeneral := util.GetPairOneGeneralNotSelf(l.tacticsParams, currentGeneral)
 				if pairGeneral != nil {
 					util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove, improveRate)
 

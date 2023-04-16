@@ -39,6 +39,7 @@ const (
 	DebuffEffectType_LaunchStrategyDamageDeduce                          //造成谋略伤害减少
 	DebuffEffectType_CanNotGeneralAttack                                 //无法普通攻击
 	DebuffEffectType_CancelWeapon                                        //缴械（无法普通攻击）
+	DebuffEffectType_Taunt                                               //嘲讽（强制攻击目标）
 
 	DebuffEffectType_DecrForce        //降低武力
 	DebuffEffectType_DecrIntelligence //降低智力
@@ -57,6 +58,8 @@ func (b DebuffEffectType) String() string {
 	switch b {
 	case DebuffEffectType_CancelWeapon:
 		return "缴械"
+	case DebuffEffectType_Taunt:
+		return "嘲讽"
 	case DebuffEffectType_Methysis:
 		return "中毒"
 	case DebuffEffectType_Firing:
@@ -112,6 +115,7 @@ const (
 	BuffEffectType_Defend                                      //抵御
 	BuffEffectType_ContinuousAttack                            //连击
 	BuffEffectType_StrikeBack                                  //反击
+	BuffEffectType_Insight                                     //洞察
 	BuffEffectType_TacticsActiveTriggerImprove                 //主动战法发动率提升
 	BuffEffectType_TacticsPassiveTriggerImprove                //被动战法发动率提升
 	BuffEffectType_LaunchWeaponDamageImprove                   //造成兵刃伤害增加
@@ -140,6 +144,8 @@ const (
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_Insight:
+		return "洞察"
 	case BuffEffectType_LaunchWeaponDamageImprove:
 		return "造成兵刃伤害增加"
 	case BuffEffectType_LaunchStrategyDamageImprove:

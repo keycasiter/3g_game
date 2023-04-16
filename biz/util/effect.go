@@ -57,6 +57,19 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 		return false
 	}
 
+	//嘲讽效果处理
+	if effectType == consts.DebuffEffectType_Taunt {
+		//是否有洞察
+		if BuffEffectContains(general, consts.BuffEffectType_Insight) {
+			hlog.CtxInfof(ctx, "[%s]由于「%v」的效果，「%v」对其无效",
+				general.BaseInfo.Name,
+				consts.BuffEffectType_Insight,
+				consts.DebuffEffectType_Taunt,
+			)
+			return false
+		}
+	}
+
 	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 		general.BaseInfo.Name,
 		effectType,

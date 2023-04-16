@@ -78,6 +78,18 @@ func GetPairMasterGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral 
 	return nil
 }
 
+// 找到当前执行战法武将的敌军主将
+func GetEnemyMasterGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
+	for _, general := range enemyGeneralArr {
+		if general.IsMaster {
+			return general
+		}
+	}
+	panic("can't find master general , data error")
+	return nil
+}
+
 // 找到当前执行战法武将的队伍副将
 func GetPairViceGenerals(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	pairGeneralArr := GetPairGeneralArr(tacticsParams)

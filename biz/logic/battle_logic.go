@@ -401,6 +401,8 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		//设置战法轮次属性
 		runCtx.TacticsParams.CurrentRound = currentRound
 		runCtx.TacticsParams.CurrentGeneral = currentGeneral
+		//普攻次数(默认一次)
+		attackCanCnt := 1
 
 		//武将回合前置处理器
 		if !runCtx.GeneralRoundPreProcessor(tacticsParams) {
@@ -487,8 +489,6 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		}
 	activeTacticFlag:
 		//2.普攻
-		//普攻次数(默认一次)
-		attackCanCnt := 1
 		if attackCanCnt > 0 {
 			//2.1 普通攻击拦截
 			debuffEffects := []consts.DebuffEffectType{

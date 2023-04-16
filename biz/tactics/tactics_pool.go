@@ -73,6 +73,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.OverwhelmingTheEnemyWithVigour] = &OverwhelmingTheEnemyWithVigourTactic{}
 	//挫锐
 	TacticsHandlerMap[consts.Demoralize] = &DemoralizeTactic{}
+	//守而必固
+	TacticsHandlerMap[consts.ToKeepAndBeFirm] = &ToKeepAndBeFirmTactic{}
 }
 
 func initTacticsMap() {

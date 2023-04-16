@@ -143,9 +143,6 @@ func GetPairGeneralsNotSelf(tacticsParams *model.TacticsParams, targetGeneral *v
 			pairGenerals = append(pairGenerals, general)
 		}
 	}
-	if len(pairGenerals) != 2 {
-		panic("general not self num is err , data error")
-	}
 	return pairGenerals
 }
 

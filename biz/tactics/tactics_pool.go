@@ -85,6 +85,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.UseMartialArtsToConnectWithGods] = &UseMartialArtsToConnectWithGodsTactic{}
 	//梦中弑臣
 	TacticsHandlerMap[consts.KillingMinisterInDream] = &KillingMinisterInDreamTactic{}
+	//奇计良谋
+	TacticsHandlerMap[consts.CleverPlanAndCleverPlan] = &CleverPlanAndCleverPlanTactic{}
 }
 
 func initTacticsMap() {
@@ -107,6 +109,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.TheWindOfTheElderly] = true
 	PassiveTacticsMap[consts.UseMartialArtsToConnectWithGods] = true
 	PassiveTacticsMap[consts.KillingMinisterInDream] = true
+	PassiveTacticsMap[consts.CleverPlanAndCleverPlan] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true

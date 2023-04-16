@@ -120,7 +120,7 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 
 	//自身为主将时，获得16%奇谋几率
 	if currentGeneral.IsMaster {
-		hlog.CtxInfof(ctx, "[%s]的奇谋提高了16%",
+		hlog.CtxInfof(ctx, "[%s]的奇谋提高了16%%",
 			currentGeneral.BaseInfo.Name,
 		)
 		currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_EnhanceStrategy] += 0.16

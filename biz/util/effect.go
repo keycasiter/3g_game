@@ -44,6 +44,10 @@ func BuffEffectContains(general *vo.BattleGeneral, effectType consts.BuffEffectT
 	return false
 }
 
+func BuffEffectContainsCheck(general *vo.BattleGeneral) bool {
+	return len(general.BuffEffectHolderMap) > 0
+}
+
 // 减益效果容器处理
 // @holder 效果容器
 // @effectType 效果类型
@@ -97,6 +101,10 @@ func DeBuffEffectContains(general *vo.BattleGeneral, effectType consts.DebuffEff
 		return true
 	}
 	return false
+}
+
+func DeBuffEffectContainsCheck(general *vo.BattleGeneral) bool {
+	return len(general.DeBuffEffectHolderMap) > 0
 }
 
 func TacticFrozenWrapSet(general *vo.BattleGeneral, tacticId consts.TacticId, frozenNum int64, maxNum int64, supportRefresh bool) bool {

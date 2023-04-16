@@ -79,6 +79,10 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.Gallant] = &GallantTactic{}
 	//暂避其锋
 	TacticsHandlerMap[consts.TakeRefugeFromEnemies] = &TakeRefugeFromEnemiesTactic{}
+	//长者之风
+	TacticsHandlerMap[consts.TheWindOfTheElderly] = &TheWindOfTheElderlyTactic{}
+	//用武通神
+	TacticsHandlerMap[consts.UseMartialArtsToConnectWithGods] = &UseMartialArtsToConnectWithGodsTactic{}
 }
 
 func initTacticsMap() {
@@ -98,6 +102,8 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.TraitorInTroubledTimes] = true
 	PassiveTacticsMap[consts.ClearEyedAndMalicious] = true
 	PassiveTacticsMap[consts.CleverStrategyAndShrewdTactics] = true
+	PassiveTacticsMap[consts.TheWindOfTheElderly] = true
+	PassiveTacticsMap[consts.UseMartialArtsToConnectWithGods] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true

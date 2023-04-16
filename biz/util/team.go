@@ -105,6 +105,20 @@ func GetPairViceGenerals(tacticsParams *model.TacticsParams) []*vo.BattleGeneral
 	return viceGenerals
 }
 
+// 找到当前执行战法武将的队伍一个副将
+func GetPairViceGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	viceGenerals := GetPairViceGenerals(tacticsParams)
+	if len(viceGenerals) == 1 {
+		return viceGenerals[0]
+	} else {
+		if GenerateRate(0.5) {
+			return viceGenerals[0]
+		} else {
+			return viceGenerals[1]
+		}
+	}
+}
+
 // 找到当前执行战法武将的队伍除自己之外的副将
 func GetPairViceGeneralNotSelf(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	pairGeneralArr := GetPairGeneralArr(tacticsParams)

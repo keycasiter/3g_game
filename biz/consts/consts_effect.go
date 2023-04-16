@@ -115,6 +115,7 @@ const (
 	BuffEffectType_Defend                                      //抵御
 	BuffEffectType_ContinuousAttack                            //连击
 	BuffEffectType_StrikeBack                                  //反击
+	BuffEffectType_ShareResponsibilityFor                      //分担
 	BuffEffectType_Insight                                     //洞察
 	BuffEffectType_TacticsActiveTriggerImprove                 //主动战法发动率提升
 	BuffEffectType_TacticsPassiveTriggerImprove                //被动战法发动率提升
@@ -139,11 +140,21 @@ const (
 	BuffEffectType_SuppressChokesAndPreventRefusals_Prepare //镇扼防拒「预备」
 	BuffEffectType_ClearEyedAndMalicious_Prepare            //鹰视狼顾「预备」
 	BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare  //鹰视狼顾-鹰视「预备」
+	BuffEffectType_UseMartialArtsToConnectWithGods_Prepare  //用武通神[预备]
+	BuffEffectType_KillingMinisterInDream_Prepare           //梦中弑臣[预备]
 	BuffEffectType_Intervene                                //援护
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_StrikeBack:
+		return "反击"
+	case BuffEffectType_ShareResponsibilityFor:
+		return "分担"
+	case BuffEffectType_KillingMinisterInDream_Prepare:
+		return "梦中弑臣[预备]"
+	case BuffEffectType_UseMartialArtsToConnectWithGods_Prepare:
+		return "用武通神[预备]"
 	case BuffEffectType_Insight:
 		return "洞察"
 	case BuffEffectType_LaunchWeaponDamageImprove:

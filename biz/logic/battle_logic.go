@@ -524,7 +524,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			//找到普攻目标
 			sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
 			//发起攻击
-			util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral)
+			util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
 			//普攻次数减一
 			attackCanCnt--
 

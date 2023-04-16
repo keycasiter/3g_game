@@ -44,6 +44,13 @@ func BuffEffectContains(general *vo.BattleGeneral, effectType consts.BuffEffectT
 	return false
 }
 
+func BuffEffectGet(general *vo.BattleGeneral, effectType consts.BuffEffectType) (float64, bool) {
+	if v, ok := general.BuffEffectHolderMap[effectType]; ok {
+		return v, true
+	}
+	return 0, false
+}
+
 func BuffEffectContainsCheck(general *vo.BattleGeneral) bool {
 	return len(general.BuffEffectHolderMap) > 0
 }
@@ -101,6 +108,13 @@ func DeBuffEffectContains(general *vo.BattleGeneral, effectType consts.DebuffEff
 		return true
 	}
 	return false
+}
+
+func DeBuffEffectGet(general *vo.BattleGeneral, effectType consts.DebuffEffectType) (float64, bool) {
+	if v, ok := general.DeBuffEffectHolderMap[effectType]; ok {
+		return v, true
+	}
+	return 0, false
 }
 
 func DeBuffEffectContainsCheck(general *vo.BattleGeneral) bool {

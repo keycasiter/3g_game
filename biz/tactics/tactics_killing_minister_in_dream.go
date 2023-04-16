@@ -13,18 +13,18 @@ import (
 //战斗前2回合，如果自己为主将，则使随机副将为自己分担20%伤害。
 //战斗第3回合起，自己行动时如果有负面状态，则获得25%概率反击状态（伤害率150%）
 //直到战斗结束
-type KillingMinisterInDream struct {
+type KillingMinisterInDreamTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
 }
 
-func (k KillingMinisterInDream) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
+func (k KillingMinisterInDreamTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	k.tacticsParams = tacticsParams
 	k.triggerRate = 1.0
 	return k
 }
 
-func (k KillingMinisterInDream) Prepare() {
+func (k KillingMinisterInDreamTactic) Prepare() {
 	ctx := k.tacticsParams.Ctx
 	currentGeneral := k.tacticsParams.CurrentGeneral
 
@@ -73,31 +73,31 @@ func (k KillingMinisterInDream) Prepare() {
 	})
 }
 
-func (k KillingMinisterInDream) Id() consts.TacticId {
+func (k KillingMinisterInDreamTactic) Id() consts.TacticId {
 	return consts.KillingMinisterInDream
 }
 
-func (k KillingMinisterInDream) Name() string {
+func (k KillingMinisterInDreamTactic) Name() string {
 	return "梦中弑臣"
 }
 
-func (k KillingMinisterInDream) TacticsSource() consts.TacticsSource {
+func (k KillingMinisterInDreamTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (k KillingMinisterInDream) GetTriggerRate() float64 {
+func (k KillingMinisterInDreamTactic) GetTriggerRate() float64 {
 	return k.triggerRate
 }
 
-func (k KillingMinisterInDream) SetTriggerRate(rate float64) {
+func (k KillingMinisterInDreamTactic) SetTriggerRate(rate float64) {
 	k.triggerRate = rate
 }
 
-func (k KillingMinisterInDream) TacticsType() consts.TacticsType {
+func (k KillingMinisterInDreamTactic) TacticsType() consts.TacticsType {
 	return consts.TacticsType_Command
 }
 
-func (k KillingMinisterInDream) SupportArmTypes() []consts.ArmType {
+func (k KillingMinisterInDreamTactic) SupportArmTypes() []consts.ArmType {
 	return []consts.ArmType{
 		consts.ArmType_Cavalry,
 		consts.ArmType_Mauler,
@@ -107,6 +107,6 @@ func (k KillingMinisterInDream) SupportArmTypes() []consts.ArmType {
 	}
 }
 
-func (k KillingMinisterInDream) Execute() {
+func (k KillingMinisterInDreamTactic) Execute() {
 
 }

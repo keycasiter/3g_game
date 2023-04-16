@@ -305,3 +305,27 @@ func MakeGeneralsOrderBySpeed(allGenerals []*vo.BattleGeneral) []*vo.BattleGener
 func GetAllGenerals(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	return tacticsParams.AllGeneralArr
 }
+
+//获取我军武力最高的武将
+func GetMostForcePairGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(tacticsParams)
+	mostForceGeneral := pairGenerals[0]
+	for _, general := range pairGenerals {
+		if general.BaseInfo.AbilityAttr.ForceBase > mostForceGeneral.BaseInfo.AbilityAttr.ForceBase {
+			mostForceGeneral = general
+		}
+	}
+	return mostForceGeneral
+}
+
+//获取我军智力最高的武将
+func GetMostIntelligencePairGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(tacticsParams)
+	mostIntelligenceGeneral := pairGenerals[0]
+	for _, general := range pairGenerals {
+		if general.BaseInfo.AbilityAttr.IntelligenceBase > mostIntelligenceGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
+			mostIntelligenceGeneral = general
+		}
+	}
+	return mostIntelligenceGeneral
+}

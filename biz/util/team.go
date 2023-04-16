@@ -343,3 +343,27 @@ func GetMostIntelligencePairGeneral(tacticsParams *model.TacticsParams) *vo.Batt
 	}
 	return mostIntelligenceGeneral
 }
+
+//获取敌军武力最高的武将
+func GetMostForceEnemyGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(tacticsParams)
+	mostForceGeneral := enemyGenerals[0]
+	for _, general := range enemyGenerals {
+		if general.BaseInfo.AbilityAttr.ForceBase > mostForceGeneral.BaseInfo.AbilityAttr.ForceBase {
+			mostForceGeneral = general
+		}
+	}
+	return mostForceGeneral
+}
+
+//获取敌军智力最高的武将
+func GetMostIntelligenceEnemyGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(tacticsParams)
+	mostIntelligenceGeneral := enemyGenerals[0]
+	for _, general := range enemyGenerals {
+		if general.BaseInfo.AbilityAttr.IntelligenceBase > mostIntelligenceGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
+			mostIntelligenceGeneral = general
+		}
+	}
+	return mostIntelligenceGeneral
+}

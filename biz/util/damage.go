@@ -273,10 +273,11 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 			remainSoldierNum,
 		)
 	} else {
-		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
+		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】「%v」的伤害，损失了兵力%d(%d↘%d)",
 			sufferGeneral.BaseInfo.Name,
 			attackGeneral.BaseInfo.Name,
 			tacticName,
+			effectName,
 			damageNum,
 			soldierNum,
 			remainSoldierNum,

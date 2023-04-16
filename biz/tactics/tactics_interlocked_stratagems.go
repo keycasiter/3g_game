@@ -98,7 +98,6 @@ func (i InterlockedStratagemsTactic) Execute() {
 			//注册铁锁连环效果
 			registerFunc := func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				lockGeneral := params.CurrentGeneral
-				//不是直接被攻击者不需要反弹伤害
 
 				if !util.DeBuffEffectContains(lockGeneral, consts.DebuffEffectType_InterlockedStratagems) {
 					return triggerResp

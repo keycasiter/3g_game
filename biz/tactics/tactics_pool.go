@@ -77,6 +77,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.ToKeepAndBeFirm] = &ToKeepAndBeFirmTactic{}
 	//横戈跃马
 	TacticsHandlerMap[consts.Gallant] = &GallantTactic{}
+	//暂避其锋
+	TacticsHandlerMap[consts.TakeRefugeFromEnemies] = &TakeRefugeFromEnemiesTactic{}
 }
 
 func initTacticsMap() {

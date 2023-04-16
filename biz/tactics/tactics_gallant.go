@@ -60,7 +60,9 @@ func (g GallantTactic) Prepare() {
 			triggerRound := params.CurrentRound
 
 			if triggerRound == consts.Battle_Round_Third {
-				general.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] += 0.2
+				//受速度影响
+				rate := 0.2 + general.BaseInfo.AbilityAttr.SpeedBase/100/100
+				general.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] += rate
 				hlog.CtxInfof(ctx, "[%s]造成兵刃伤害提高20%%",
 					general.BaseInfo.Name,
 				)

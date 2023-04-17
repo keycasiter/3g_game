@@ -151,11 +151,14 @@ const (
 	BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare  //鹰视狼顾-鹰视「预备」
 	BuffEffectType_UseMartialArtsToConnectWithGods_Prepare  //用武通神[预备]
 	BuffEffectType_KillingMinisterInDream_Prepare           //梦中弑臣[预备]
+	BuffEffectType_BeFullyEquippedFor_Prepare               //整装待发[预备]
 	BuffEffectType_Intervene                                //援护
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_BeFullyEquippedFor_Prepare:
+		return "整装待发[预备]"
 	case BuffEffectType_TacticsActiveTriggerImprove:
 		return "主动战法发动率提升"
 	case BuffEffectType_StrikeBack:

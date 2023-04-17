@@ -89,6 +89,10 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.CleverPlanAndCleverPlan] = &CleverPlanAndCleverPlanTactic{}
 	//舌战群儒
 	TacticsHandlerMap[consts.LectureField] = &LectureFieldTactic{}
+	//整装待发
+	TacticsHandlerMap[consts.BeFullyEquippedFor] = &BeFullyEquippedForTactic{}
+	//御敌屏障
+	TacticsHandlerMap[consts.DefensiveBarrier] = &DefensiveBarrierTactic{}
 }
 
 func initTacticsMap() {
@@ -113,6 +117,8 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.KillingMinisterInDream] = true
 	PassiveTacticsMap[consts.CleverPlanAndCleverPlan] = true
 	PassiveTacticsMap[consts.LectureField] = true
+	PassiveTacticsMap[consts.BeFullyEquippedFor] = true
+	PassiveTacticsMap[consts.DefensiveBarrier] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true

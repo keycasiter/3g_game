@@ -17,10 +17,12 @@ import (
 type LowerBannersAndMuffleDrumsTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
+	//是否已经触发准备战法
+	isTriggerPrepare bool
 }
 
 func (l LowerBannersAndMuffleDrumsTactic) IsTriggerPrepare() bool {
-	return true
+	return l.isTriggerPrepare
 }
 
 func (l LowerBannersAndMuffleDrumsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
@@ -71,6 +73,7 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 	currentGeneral := l.tacticsParams.CurrentGeneral
 	currentRound := l.tacticsParams.CurrentRound
 	//准备1回合。使我军群体（2人）造成谋略伤害增加25%，持续一回合
+	l.isTriggerPrepare = true
 	hlog.CtxInfof(ctx, "[%s]准备发动战法【%s】",
 		currentGeneral.BaseInfo.Name,
 		l.Name(),
@@ -82,6 +85,7 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 		triggerGeneral := params.CurrentGeneral
 
 		if currentRound+1 == triggerRound {
+			l.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				l.Name(),

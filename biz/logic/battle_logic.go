@@ -452,6 +452,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 						}
 					}
 				}
+
 				//触发「发动主动战法前」触发器
 				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_ActiveTactic]; okk {
 					for _, f := range funcs {
@@ -471,11 +472,16 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 						}
 					}
 				}
+				//已发动准备战法跳过
+				if tacticHandler.IsTriggerPrepare() {
+					continue
+				}
 
 				//发动率判断
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
+
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 

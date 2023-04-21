@@ -18,10 +18,12 @@ import (
 type InterlockedStratagemsTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
+	//是否已经触发准备战法
+	isTriggerPrepare bool
 }
 
 func (i InterlockedStratagemsTactic) IsTriggerPrepare() bool {
-	return true
+	return i.isTriggerPrepare
 }
 
 func (i InterlockedStratagemsTactic) SetTriggerRate(rate float64) {
@@ -73,6 +75,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 	currentGeneral := i.tacticsParams.CurrentGeneral
 	currentRound := i.tacticsParams.CurrentRound
 
+	i.isTriggerPrepare = true
 	hlog.CtxInfof(ctx, "[%s]准备发动战法【%s】",
 		currentGeneral.BaseInfo.Name,
 		i.Name(),
@@ -90,6 +93,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 			return triggerResp
 		}
 
+		i.isTriggerPrepare = false
 		hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 			currentGeneral.BaseInfo.Name,
 			i.Name(),

@@ -17,10 +17,12 @@ import (
 type TheSkyIsBlazingTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
+	//是否已经触发准备战法
+	isTriggerPrepare bool
 }
 
 func (t TheSkyIsBlazingTactic) IsTriggerPrepare() bool {
-	return true
+	return t.isTriggerPrepare
 }
 
 func (t TheSkyIsBlazingTactic) SetTriggerRate(rate float64) {
@@ -56,6 +58,7 @@ func (t TheSkyIsBlazingTactic) Execute() {
 	currentRound := t.tacticsParams.CurrentRound
 	currentGeneral := t.tacticsParams.CurrentGeneral
 
+	t.isTriggerPrepare = true
 	hlog.CtxInfof(ctx, "[%s]准备发动战法【%s】",
 		currentGeneral.BaseInfo.Name,
 		t.Name(),
@@ -69,6 +72,7 @@ func (t TheSkyIsBlazingTactic) Execute() {
 		triggerResp := &vo.TacticsTriggerResult{}
 		//准备1回合
 		if currentRound+1 == triggerRound {
+			t.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				t.Name(),

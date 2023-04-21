@@ -97,6 +97,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.RideTigerHardToGetOff] = &RideTigerHardToGetOffTactic{}
 	//才器过人
 	TacticsHandlerMap[consts.OutstandingTalent] = &OutstandingTalentTactic{}
+	//偃旗息鼓
+	TacticsHandlerMap[consts.LowerBannersAndMuffleDrums] = &LowerBannersAndMuffleDrumsTactic{}
 }
 
 func initTacticsMap() {
@@ -137,4 +139,5 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.InterlockedStratagems] = true
 	ActiveTacticsMap[consts.BorrowArrowsWithThatchedBoats] = true
 	ActiveTacticsMap[consts.OutstandingTalent] = true
+	ActiveTacticsMap[consts.LowerBannersAndMuffleDrums] = true
 }

@@ -157,11 +157,14 @@ const (
 	BuffEffectType_BeFullyEquippedFor_Prepare               //整装待发[预备]
 	BuffEffectType_RideTigerHardToGetOff_Prepare            //骑虎难下[预备]
 	BuffEffectType_OutstandingTalent_Prepare                //才器过人[预备]
+	BuffEffectType_LowerBannersAndMuffleDrums_Prepare       //偃旗息鼓[预备]
 	BuffEffectType_Intervene                                //援护
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_LowerBannersAndMuffleDrums_Prepare:
+		return "偃旗息鼓[预备]"
 	case BuffEffectType_OutstandingTalent_Prepare:
 		return "才器过人[预备]"
 	case BuffEffectType_RideTigerHardToGetOff_Prepare:

@@ -72,9 +72,9 @@ func (o OutstandingTalentTactic) Execute() {
 	pairGeneral := util.GetPairGeneralsTwoArr(o.tacticsParams)
 	for _, general := range pairGeneral {
 		//设置效果
-		if util.TacticsBuffEffectCountWrapIncr(ctx, general, consts.BuffEffectType_OutstandingTalent_Prepare, 2, 2, true) {
+		if util.TacticsBuffEffectCountWrapIncr(ctx, general, consts.BuffEffectType_OutstandingTalent_Prepare, 2, 2, false) {
 			rate := 0.27
-			general.BuffEffectHolderMap[consts.BuffEffectType_OutstandingTalent_Prepare] += rate
+			general.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += rate
 			hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提高了%.2f%%",
 				general.BaseInfo.Name,
 				rate*100,
@@ -87,7 +87,7 @@ func (o OutstandingTalentTactic) Execute() {
 
 				if util.BuffEffectContains(revokeGeneral, consts.BuffEffectType_OutstandingTalent_Prepare) &&
 					0 == util.TacticsBuffCountGet(revokeGeneral, consts.BuffEffectType_OutstandingTalent_Prepare) {
-					revokeGeneral.BuffEffectHolderMap[consts.BuffEffectType_OutstandingTalent_Prepare] -= rate
+					revokeGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] -= rate
 					hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了%.2f%%",
 						revokeGeneral.BaseInfo.Name,
 						rate*100,

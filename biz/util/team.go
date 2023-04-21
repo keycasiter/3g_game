@@ -196,6 +196,23 @@ func GetEnemyOneGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	return nil
 }
 
+func GetEnemyOneGeneralByGeneral(general *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := make([]*vo.BattleGeneral, 0)
+	currentGeneralId := general.BaseInfo.UniqueId
+	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
+		for _, general := range tacticsParams.FightingGeneralMap {
+			enemyGenerals = append(enemyGenerals, general)
+		}
+	}
+	if _, ok := tacticsParams.EnemyGeneralMap[currentGeneralId]; !ok {
+		for _, general := range tacticsParams.EnemyGeneralMap {
+			enemyGenerals = append(enemyGenerals, general)
+		}
+	}
+	hitIdx := GenerateHitOneIdx(len(enemyGenerals))
+	return enemyGenerals[hitIdx]
+}
+
 // 找到当前敌军两个人
 func GetEnemyGeneralsTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	//找到敌军

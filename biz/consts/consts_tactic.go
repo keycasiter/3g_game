@@ -258,7 +258,9 @@ const (
 	//奋突
 	RiseUpBravely
 	//骑虎难下
-	RideTigerAndFindItHardToGetOff
+	RideTigerHardToGetOff
+	//才器过人
+	OutstandingTalent
 	//弯弓饮羽
 	BendTheBowAndDrinkTheFeathers
 	//落凤

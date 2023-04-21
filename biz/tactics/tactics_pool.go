@@ -93,6 +93,10 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.BeFullyEquippedFor] = &BeFullyEquippedForTactic{}
 	//御敌屏障
 	TacticsHandlerMap[consts.DefensiveBarrier] = &DefensiveBarrierTactic{}
+	//骑虎难下
+	TacticsHandlerMap[consts.RideTigerHardToGetOff] = &RideTigerHardToGetOffTactic{}
+	//才器过人
+	TacticsHandlerMap[consts.OutstandingTalent] = &OutstandingTalentTactic{}
 }
 
 func initTacticsMap() {
@@ -119,6 +123,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.LectureField] = true
 	PassiveTacticsMap[consts.BeFullyEquippedFor] = true
 	PassiveTacticsMap[consts.DefensiveBarrier] = true
+	PassiveTacticsMap[consts.RideTigerHardToGetOff] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -131,4 +136,5 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.BlazingWildfire] = true
 	ActiveTacticsMap[consts.InterlockedStratagems] = true
 	ActiveTacticsMap[consts.BorrowArrowsWithThatchedBoats] = true
+	ActiveTacticsMap[consts.OutstandingTalent] = true
 }

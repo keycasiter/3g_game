@@ -292,7 +292,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "魅惑",
 		},
 		{
-			Id:   consts.DefensiveBarrier,
+			Id:   consts.OutstandingTalent,
 			Name: "舌战群儒",
 		},
 	}

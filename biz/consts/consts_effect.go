@@ -40,6 +40,7 @@ const (
 	DebuffEffectType_CanNotGeneralAttack                                 //无法普通攻击
 	DebuffEffectType_CancelWeapon                                        //缴械（无法普通攻击）
 	DebuffEffectType_Taunt                                               //嘲讽（强制攻击目标）
+	DebuffEffectType_ProhibitionTreatment                                //禁疗（无法恢复兵力）
 
 	DebuffEffectType_DecrForce        //降低武力
 	DebuffEffectType_DecrIntelligence //降低智力
@@ -61,6 +62,8 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_ProhibitionTreatment:
+		return "禁疗"
 	case DebuffEffectType_TacticsPassiveTriggerDecr:
 		return "被动战法发动率降低"
 	case DebuffEffectType_TacticsActiveTriggerDecr:
@@ -152,11 +155,17 @@ const (
 	BuffEffectType_UseMartialArtsToConnectWithGods_Prepare  //用武通神[预备]
 	BuffEffectType_KillingMinisterInDream_Prepare           //梦中弑臣[预备]
 	BuffEffectType_BeFullyEquippedFor_Prepare               //整装待发[预备]
+	BuffEffectType_RideTigerHardToGetOff_Prepare            //骑虎难下[预备]
+	BuffEffectType_OutstandingTalent_Prepare                //才器过人[预备]
 	BuffEffectType_Intervene                                //援护
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_OutstandingTalent_Prepare:
+		return "才器过人[预备]"
+	case BuffEffectType_RideTigerHardToGetOff_Prepare:
+		return "骑虎难下[预备]"
 	case BuffEffectType_BeFullyEquippedFor_Prepare:
 		return "整装待发[预备]"
 	case BuffEffectType_TacticsActiveTriggerImprove:

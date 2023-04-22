@@ -213,6 +213,27 @@ func GetEnemyOneGeneralByGeneral(general *vo.BattleGeneral, tacticsParams *model
 	return enemyGenerals[hitIdx]
 }
 
+func GetEnemyTwoGeneralByGeneral(general *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+	enemyGenerals := make([]*vo.BattleGeneral, 0)
+	resGenerals := make([]*vo.BattleGeneral, 0)
+	currentGeneralId := general.BaseInfo.UniqueId
+	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
+		for _, general := range tacticsParams.FightingGeneralMap {
+			enemyGenerals = append(enemyGenerals, general)
+		}
+	}
+	if _, ok := tacticsParams.EnemyGeneralMap[currentGeneralId]; !ok {
+		for _, general := range tacticsParams.EnemyGeneralMap {
+			enemyGenerals = append(enemyGenerals, general)
+		}
+	}
+	hitIdxArr := GenerateHitIdxArr(2, len(enemyGenerals))
+	for _, idx := range hitIdxArr {
+		resGenerals = append(resGenerals, enemyGenerals[idx])
+	}
+	return resGenerals
+}
+
 // 找到当前敌军两个人
 func GetEnemyGeneralsTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	//找到敌军

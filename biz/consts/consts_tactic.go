@@ -61,8 +61,6 @@ const (
 	OnesResolveIsUnshaken
 	//所向披靡
 	EverTriumphant
-	//盛气凌敌
-	OvercomingTheEnemyWithGreatEnergy
 	//破阵摧坚
 	BreakingThroughTheFormationAndDestroyingTheFirm
 	//杯蛇鬼车

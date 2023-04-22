@@ -99,6 +99,10 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.OutstandingTalent] = &OutstandingTalentTactic{}
 	//偃旗息鼓
 	TacticsHandlerMap[consts.LowerBannersAndMuffleDrums] = &LowerBannersAndMuffleDrumsTactic{}
+	//出其不意
+	TacticsHandlerMap[consts.TakeBySurprise] = &TakeBySurpriseTactic{}
+	//庐江上甲
+	TacticsHandlerMap[consts.LuJiangRiverOverArmoured] = &LuJiangRiverOverArmouredTactic{}
 }
 
 func initTacticsMap() {
@@ -140,4 +144,6 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.BorrowArrowsWithThatchedBoats] = true
 	ActiveTacticsMap[consts.OutstandingTalent] = true
 	ActiveTacticsMap[consts.LowerBannersAndMuffleDrums] = true
+	ActiveTacticsMap[consts.TakeBySurprise] = true
+	ActiveTacticsMap[consts.LuJiangRiverOverArmoured] = true
 }

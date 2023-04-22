@@ -292,7 +292,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "魅惑",
 		},
 		{
-			Id:   consts.LowerBannersAndMuffleDrums,
+			Id:   consts.LuJiangRiverOverArmoured,
 			Name: "舌战群儒",
 		},
 	}

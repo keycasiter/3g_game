@@ -47,6 +47,11 @@ func GenerateHitIdxArr(hitNum, totalNum int) []int64 {
 
 func GenerateHitIdxMap(hitNum, totalNum int) map[int64]bool {
 	idxMap := make(map[int64]bool, 0)
+
+	if hitNum > totalNum {
+		hitNum = totalNum
+	}
+
 	for {
 		if len(idxMap) == hitNum {
 			break

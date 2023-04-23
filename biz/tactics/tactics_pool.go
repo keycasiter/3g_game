@@ -109,6 +109,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.OnesResolveIsUnshaken] = &OnesResolveIsUnshakenTactic{}
 	//所向披靡
 	TacticsHandlerMap[consts.EverTriumphant] = &EverTriumphantTactic{}
+	//破阵摧坚
+	TacticsHandlerMap[consts.BreakingThroughTheFormationAndDestroyingTheFirm] = &BreakingThroughTheFormationAndDestroyingTheFirmTactic{}
 }
 
 func initTacticsMap() {
@@ -155,4 +157,5 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.LuJiangRiverOverArmoured] = true
 	ActiveTacticsMap[consts.Humility] = true
 	ActiveTacticsMap[consts.EverTriumphant] = true
+	ActiveTacticsMap[consts.BreakingThroughTheFormationAndDestroyingTheFirm] = true
 }

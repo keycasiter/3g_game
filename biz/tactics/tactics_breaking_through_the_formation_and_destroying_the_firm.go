@@ -1,9 +1,13 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 破阵摧坚
@@ -58,7 +62,75 @@ func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) SupportArmTypes()
 }
 
 func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Execute() {
+	ctx := b.tacticsParams.Ctx
+	currentGeneral := b.tacticsParams.CurrentGeneral
+	currentRound := b.tacticsParams.CurrentRound
 
+	//准备1回合，使敌军群体（2人）统率、智力降低80点（受武力影响），持续2回合，并对其发动一次兵刃攻击（伤害率158%）
+	b.isTriggerPrepare = true
+	hlog.CtxInfof(ctx, "[%s]准备发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		b.Name(),
+	)
+	//注册效果
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerGeneral := params.CurrentGeneral
+		triggerRound := params.CurrentRound
+
+		if currentRound+1 == triggerRound {
+			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+				currentGeneral.BaseInfo.Name,
+				b.Name(),
+			)
+			//找到敌军2人
+			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, b.tacticsParams)
+			for _, general := range enemyGenerals {
+				//降低属性
+				v := 80 + triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100
+				general.BaseInfo.AbilityAttr.CommandBase -= v
+				general.BaseInfo.AbilityAttr.IntelligenceBase -= v
+				hlog.CtxInfof(ctx, "[%]的统率降低了%.2f",
+					general.BaseInfo.Name, v)
+
+				//注册消失效果
+				util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					revokeResp := &vo.TacticsTriggerResult{}
+					revokeRound := params.CurrentRound
+
+					if currentRound+2 == revokeRound {
+						general.BaseInfo.AbilityAttr.CommandBase -= v
+						general.BaseInfo.AbilityAttr.IntelligenceBase -= v
+						hlog.CtxInfof(ctx, "[%]的统率提高了%.2f",
+							general.BaseInfo.Name, v)
+					}
+
+					return revokeResp
+				})
+
+				//攻击
+				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.58)
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: b.tacticsParams,
+					AttackGeneral: triggerGeneral,
+					SufferGeneral: general,
+					Damage:        dmg,
+					TacticName:    b.Name(),
+				})
+			}
+		}
+
+		if currentRound+2 == triggerRound {
+			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				b.isTriggerPrepare = false
+
+				return revokeResp
+			})
+		}
+
+		return triggerResp
+	})
 }
 
 func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) IsTriggerPrepare() bool {

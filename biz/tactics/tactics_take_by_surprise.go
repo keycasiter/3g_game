@@ -79,7 +79,6 @@ func (t TakeBySurpriseTactic) Execute() {
 		triggerGeneral := params.CurrentGeneral
 
 		if currentRound+1 == triggerRound {
-			t.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				triggerGeneral.BaseInfo.Name,
 				t.Name(),
@@ -115,6 +114,15 @@ func (t TakeBySurpriseTactic) Execute() {
 					}
 				}
 			}
+		}
+
+		if currentRound+2 == triggerRound {
+			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				t.isTriggerPrepare = false
+
+				return revokeResp
+			})
 		}
 		return triggerResp
 	})

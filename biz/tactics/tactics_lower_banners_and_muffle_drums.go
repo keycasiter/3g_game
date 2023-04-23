@@ -79,13 +79,12 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 		l.Name(),
 	)
 	//注册延迟效果
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
 		triggerRound := params.CurrentRound
 		triggerGeneral := params.CurrentGeneral
 
 		if currentRound+1 == triggerRound {
-			l.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				l.Name(),
@@ -139,6 +138,15 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 					})
 				}
 				return resp
+			})
+		}
+
+		if currentRound+2 == triggerRound {
+			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				l.isTriggerPrepare = false
+
+				return revokeResp
 			})
 		}
 

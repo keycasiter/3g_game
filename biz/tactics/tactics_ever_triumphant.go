@@ -79,7 +79,6 @@ func (e EverTriumphantTactic) Execute() {
 		triggerGeneral := params.CurrentGeneral
 
 		if currentRound+1 == triggerRound {
-			e.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				e.Name(),
@@ -96,6 +95,15 @@ func (e EverTriumphantTactic) Execute() {
 					TacticName:    e.Name(),
 				})
 			}
+		}
+
+		if currentRound+2 == triggerRound {
+			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				e.isTriggerPrepare = false
+
+				return revokeResp
+			})
 		}
 
 		return triggerResp

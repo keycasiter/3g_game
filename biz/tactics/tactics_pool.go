@@ -107,6 +107,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.Humility] = &HumilityTactic{}
 	//矢志不移
 	TacticsHandlerMap[consts.OnesResolveIsUnshaken] = &OnesResolveIsUnshakenTactic{}
+	//所向披靡
+	TacticsHandlerMap[consts.EverTriumphant] = &EverTriumphantTactic{}
 }
 
 func initTacticsMap() {
@@ -152,4 +154,5 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.TakeBySurprise] = true
 	ActiveTacticsMap[consts.LuJiangRiverOverArmoured] = true
 	ActiveTacticsMap[consts.Humility] = true
+	ActiveTacticsMap[consts.EverTriumphant] = true
 }

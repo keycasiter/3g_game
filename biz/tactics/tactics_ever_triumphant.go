@@ -88,7 +88,13 @@ func (e EverTriumphantTactic) Execute() {
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, e.tacticsParams)
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 2.46)
 			for _, enemyGeneral := range enemyGenerals {
-				util.AttackDamage(e.tacticsParams, triggerGeneral, enemyGeneral, dmg)
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: e.tacticsParams,
+					AttackGeneral: triggerGeneral,
+					SufferGeneral: enemyGeneral,
+					Damage:        dmg,
+					TacticName:    e.Name(),
+				})
 			}
 		}
 

@@ -103,6 +103,10 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.TakeBySurprise] = &TakeBySurpriseTactic{}
 	//庐江上甲
 	TacticsHandlerMap[consts.LuJiangRiverOverArmoured] = &LuJiangRiverOverArmouredTactic{}
+	//谦让
+	TacticsHandlerMap[consts.Humility] = &HumilityTactic{}
+	//矢志不移
+	TacticsHandlerMap[consts.OnesResolveIsUnshaken] = &OnesResolveIsUnshakenTactic{}
 }
 
 func initTacticsMap() {
@@ -111,6 +115,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.Charming] = true
 	PassiveTacticsMap[consts.TaipingLaw] = true
 	PassiveTacticsMap[consts.BraveAmbition] = true
+	PassiveTacticsMap[consts.OnesResolveIsUnshaken] = true
 	//指挥战法
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[consts.Demoralize] = true
@@ -120,16 +125,16 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.SuppressChokesAndPreventRefusals] = true
 	CommandTacticsMap[consts.AppeaseArmyAndPeople] = true
 	CommandTacticsMap[consts.TraitorInTroubledTimes] = true
-	PassiveTacticsMap[consts.ClearEyedAndMalicious] = true
-	PassiveTacticsMap[consts.CleverStrategyAndShrewdTactics] = true
-	PassiveTacticsMap[consts.TheWindOfTheElderly] = true
-	PassiveTacticsMap[consts.UseMartialArtsToConnectWithGods] = true
-	PassiveTacticsMap[consts.KillingMinisterInDream] = true
-	PassiveTacticsMap[consts.CleverPlanAndCleverPlan] = true
-	PassiveTacticsMap[consts.LectureField] = true
-	PassiveTacticsMap[consts.BeFullyEquippedFor] = true
-	PassiveTacticsMap[consts.DefensiveBarrier] = true
-	PassiveTacticsMap[consts.RideTigerHardToGetOff] = true
+	CommandTacticsMap[consts.ClearEyedAndMalicious] = true
+	CommandTacticsMap[consts.CleverStrategyAndShrewdTactics] = true
+	CommandTacticsMap[consts.TheWindOfTheElderly] = true
+	CommandTacticsMap[consts.UseMartialArtsToConnectWithGods] = true
+	CommandTacticsMap[consts.KillingMinisterInDream] = true
+	CommandTacticsMap[consts.CleverPlanAndCleverPlan] = true
+	CommandTacticsMap[consts.LectureField] = true
+	CommandTacticsMap[consts.BeFullyEquippedFor] = true
+	CommandTacticsMap[consts.DefensiveBarrier] = true
+	CommandTacticsMap[consts.RideTigerHardToGetOff] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -146,4 +151,5 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.LowerBannersAndMuffleDrums] = true
 	ActiveTacticsMap[consts.TakeBySurprise] = true
 	ActiveTacticsMap[consts.LuJiangRiverOverArmoured] = true
+	ActiveTacticsMap[consts.Humility] = true
 }

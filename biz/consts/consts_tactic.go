@@ -57,6 +57,8 @@ const (
 	TakeBySurprise
 	//庐江上甲
 	LuJiangRiverOverArmoured
+	//谦让
+	Humility
 	//矢志不移
 	OnesResolveIsUnshaken
 	//所向披靡

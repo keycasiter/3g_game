@@ -533,20 +533,26 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			//2.3 触发战法效果
 			//负面效果
 			//增益效果
-			//普通攻击触发器
-			if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
-				for _, f := range funcs {
-					params := &vo.TacticsTriggerParams{}
-					f(params)
-				}
-			}
 
 			//找到普攻目标
 			sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
+			tacticsParams.CurrentSufferGeneral = sufferGeneral
 			//发起攻击
 			util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
 			//普攻次数减一
 			attackCanCnt--
+
+			//普通攻击触发器
+			if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
+				for _, f := range funcs {
+					params := &vo.TacticsTriggerParams{
+						CurrentRound:   currentRound,
+						CurrentGeneral: currentGeneral,
+						AttackGeneral:  currentGeneral,
+					}
+					f(params)
+				}
+			}
 
 			//武将清理
 			util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)

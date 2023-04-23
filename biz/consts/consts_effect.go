@@ -158,11 +158,19 @@ const (
 	BuffEffectType_RideTigerHardToGetOff_Prepare            //骑虎难下[预备]
 	BuffEffectType_OutstandingTalent_Prepare                //才器过人[预备]
 	BuffEffectType_LowerBannersAndMuffleDrums_Prepare       //偃旗息鼓[预备]
+	BuffEffectType_Humility_Prepare                         //谦让[预备]
+	BuffEffectType_OnesResolveIsUnshaken_Prepare            //矢志不移[预备]
 	BuffEffectType_Intervene                                //援护
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_GroupAttack:
+		return "群攻"
+	case BuffEffectType_OnesResolveIsUnshaken_Prepare:
+		return "矢志不移[预备]"
+	case BuffEffectType_Humility_Prepare:
+		return "谦让[预备]"
 	case BuffEffectType_LowerBannersAndMuffleDrums_Prepare:
 		return "偃旗息鼓[预备]"
 	case BuffEffectType_OutstandingTalent_Prepare:

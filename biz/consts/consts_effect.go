@@ -28,8 +28,10 @@ const (
 	DebuffEffectType_Methysis                                            //中毒
 	DebuffEffectType_Firing                                              //灼烧
 	DebuffEffectType_Defect                                              //叛逃（受武力或智力最高一项影响，无视防御）
+	DebuffEffectType_Escape                                              //溃逃（受武力影响，无视防御）
 	DebuffEffectType_Sandstorm                                           //沙暴（每回合持续造成伤害）
 	DebuffEffectType_Chaos                                               //混乱（攻击和战法无差别选择目标）
+	DebuffEffectType_Awe                                                 //震慑
 	DebuffEffectType_NoStrategy                                          //计穷（无法发动主动战法）
 	DebuffEffectType_PoorHealth                                          //虚弱（无法造成伤害）
 	DebuffEffectType_WaterAttack                                         //水攻（每回合持续造成伤害）
@@ -41,6 +43,10 @@ const (
 	DebuffEffectType_CancelWeapon                                        //缴械（无法普通攻击）
 	DebuffEffectType_Taunt                                               //嘲讽（强制攻击目标）
 	DebuffEffectType_ProhibitionTreatment                                //禁疗（无法恢复兵力）
+	DebuffEffectType_FalseReport                                         //伪报（禁用指挥和被动战法，无视洞察）
+	DebuffEffectType_Capture                                             //捕获（无法行动和造成伤害、禁用指挥和被动战法，进入禁疗状态、无法被友方武将选中，且无法被净化）
+	DebuffEffectType_Break                                               //破坏（携带的装备失效）
+	DebuffEffectType_Provoking                                           //挑拨（强迫目标释放的战法选择自己）
 
 	DebuffEffectType_DecrForce        //降低武力
 	DebuffEffectType_DecrIntelligence //降低智力
@@ -62,6 +68,8 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_Escape:
+		return "溃逃"
 	case DebuffEffectType_ProhibitionTreatment:
 		return "禁疗"
 	case DebuffEffectType_TacticsPassiveTriggerDecr:

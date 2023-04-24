@@ -53,6 +53,10 @@ type BattleGeneral struct {
 
 	//战法冷却器 map<战法,冷却回合>
 	TacticsFrozenMap map[consts.TacticId]int64
+	//战法正面效果绑定 map<战法Id，正面效果>
+	TacticsRefBuffEffectMap map[consts.TacticId]consts.BuffEffectType
+	//战法负面效果绑定 map<战法Id，负面效果>
+	TacticsRefDebuffEffectMap map[consts.TacticId]consts.DebuffEffectType
 
 	//*****战法触发器都是按条件（非回合）会触发的******
 	//战法触发器 map<触发动作,func(触发函数参数)>

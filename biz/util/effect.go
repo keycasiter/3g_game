@@ -7,14 +7,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
 
-/*
-	属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
+/*	属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
 			武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
-
 	持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
-
 	功能性状态：通常不可叠加，不同来源时不可刷新
-
 	控制状态：不可叠加，不可刷新，负面效果
 */
 
@@ -23,6 +19,14 @@ var (
 	attrBuffEffectMap = map[consts.BuffEffectType]bool{
 		consts.BuffEffectType_LaunchStrategyDamageImprove: true,
 		consts.BuffEffectType_LaunchWeaponDamageImprove:   true,
+		consts.BuffEffectType_SufferStrategyDamageDeduce:  true,
+		consts.BuffEffectType_SufferWeaponDamageDeduce:    true,
+	}
+	attrDebuffEffectMap = map[consts.DebuffEffectType]bool{
+		consts.DebuffEffectType_SufferWeaponDamageImprove:   true,
+		consts.DebuffEffectType_SufferStrategyDamageImprove: true,
+		consts.DebuffEffectType_LaunchWeaponDamageDeduce:    true,
+		consts.DebuffEffectType_LaunchStrategyDamageDeduce:  true,
 	}
 	//持续性状态
 	continuousDebuffEffectMap = map[consts.DebuffEffectType]bool{
@@ -47,10 +51,16 @@ var (
 	}
 	//功能性状态
 	functionBuffEffectMap = map[consts.BuffEffectType]bool{
-		//急救
-		consts.BuffEffectType_EmergencyTreatment: true,
-		//休整
-		consts.BuffEffectType_Rest: true,
+		//群攻
+		consts.BuffEffectType_GroupAttack: true,
+		//反击
+		consts.BuffEffectType_StrikeBack: true,
+		//倒戈
+		consts.BuffEffectType_Defection: true,
+		//会心
+		consts.BuffEffectType_EnhanceWeapon: true,
+		//奇谋
+		consts.BuffEffectType_EnhanceStrategy: true,
 	}
 	//控制状态
 	controlDebuffEffectMap = map[consts.DebuffEffectType]bool{

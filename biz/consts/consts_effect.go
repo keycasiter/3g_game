@@ -137,6 +137,7 @@ const (
 	BuffEffectType_Defend                                      //抵御
 	BuffEffectType_ContinuousAttack                            //连击
 	BuffEffectType_StrikeBack                                  //反击
+	BuffEffectType_Defection                                   //倒戈
 	BuffEffectType_ShareResponsibilityFor                      //分担
 	BuffEffectType_Insight                                     //洞察
 	BuffEffectType_TacticsActiveTriggerImprove                 //主动战法发动率提升
@@ -191,6 +192,8 @@ func (b BuffEffectType) String() string {
 		return "主动战法发动率提升"
 	case BuffEffectType_StrikeBack:
 		return "反击"
+	case BuffEffectType_Defection:
+		return "倒戈"
 	case BuffEffectType_ShareResponsibilityFor:
 		return "分担"
 	case BuffEffectType_KillingMinisterInDream_Prepare:

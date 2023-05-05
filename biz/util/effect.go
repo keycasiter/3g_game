@@ -15,20 +15,23 @@ import (
 */
 
 var (
-	//属性状态
+	//**属性状态**
 	attrBuffEffectMap = map[consts.BuffEffectType]bool{
 		consts.BuffEffectType_LaunchStrategyDamageImprove: true,
 		consts.BuffEffectType_LaunchWeaponDamageImprove:   true,
 		consts.BuffEffectType_SufferStrategyDamageDeduce:  true,
 		consts.BuffEffectType_SufferWeaponDamageDeduce:    true,
 	}
+
 	attrDebuffEffectMap = map[consts.DebuffEffectType]bool{
 		consts.DebuffEffectType_SufferWeaponDamageImprove:   true,
 		consts.DebuffEffectType_SufferStrategyDamageImprove: true,
 		consts.DebuffEffectType_LaunchWeaponDamageDeduce:    true,
 		consts.DebuffEffectType_LaunchStrategyDamageDeduce:  true,
 	}
-	//持续性状态
+	//**持续性状态**
+	//不可叠加，但会刷新回合
+	//灼烧、水攻、中毒、溃逃、沙暴、叛逃
 	continuousDebuffEffectMap = map[consts.DebuffEffectType]bool{
 		//灼烧
 		consts.DebuffEffectType_Firing: true,
@@ -86,6 +89,8 @@ var (
 		consts.DebuffEffectType_Break: true,
 		//捕获
 		consts.DebuffEffectType_Capture: true,
+		//无法普通攻击
+		consts.DebuffEffectType_CanNotGeneralAttack: true,
 	}
 )
 
@@ -93,37 +98,96 @@ var (
 // @holder 效果容器
 // @effectType 效果类型
 // @v 效果值
-func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, v float64) bool {
-	if _, ok := general.BuffEffectHolderMap[effectType]; ok {
-		hlog.CtxInfof(ctx, "[%s]身上已有同等或更强的「%v」效果",
-			general.BaseInfo.Name,
-			effectType,
-		)
-		return false
+//  属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
+//			武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
+//	持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
+//	功能性状态：通常不可叠加，不同来源时不可刷新
+//	控制状态：不可叠加，不可刷新，负面效果
+func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, effectParam *vo.EffectHolderParams) bool {
+	//是否包含正面效果判断
+	_, isContainBuffEffect := general.BuffEffectHolderMap[effectType]
+	//是否包含属性正面效果判断
+	_, isContainAttrBuffEffect := attrBuffEffectMap[effectType]
+	//是否包含持续性正面效果判断
+	_, isContainContinuousBuffEffect := continuousBuffEffectMap[effectType]
+
+	//属性正面状态
+	// 增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
+	// 武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
+	if isContainBuffEffect && isContainAttrBuffEffect {
+		//来自同一战法的属性效果
+		for _, effectHolderParam := range general.BuffEffectHolderMap[effectType] {
+			if effectHolderParam.FromTactic == effectParam.FromTactic {
+				effectHolderParam.EffectRound = effectParam.EffectRound
+				hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已刷新",
+					general.BaseInfo.Name,
+					effectParam.FromTactic,
+					effectType,
+				)
+				return true
+			}
+		}
+		//不来自同一战法的属性效果
+		if effectHolderParams, ok := general.BuffEffectHolderMap[effectType]; ok {
+			effectHolderParams = append(effectHolderParams, effectParam)
+			hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已施加",
+				general.BaseInfo.Name,
+				effectParam.FromTactic,
+				effectType,
+			)
+			return true
+		}
 	}
 
+	//持续性负面效果：不可叠加，刷新回合
+	if isContainBuffEffect && isContainContinuousBuffEffect {
+		for _, effectHolderParam := range general.BuffEffectHolderMap[effectType] {
+			effectHolderParam.EffectRound = effectParam.EffectRound
+			hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已刷新",
+				general.BaseInfo.Name,
+				effectParam.FromTactic,
+				effectType,
+			)
+			return true
+		}
+	}
+
+	//施加效果
+	if isContainBuffEffect {
+		general.BuffEffectHolderMap[effectType] = append(general.BuffEffectHolderMap[effectType], effectParam)
+	} else {
+		general.BuffEffectHolderMap[effectType] = []*vo.EffectHolderParams{
+			effectParam,
+		}
+	}
 	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 		general.BaseInfo.Name,
 		effectType,
 	)
-	general.BuffEffectHolderMap[effectType] = v
 	return true
 }
 
-func BuffEffectWrapRemove(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType) bool {
-	if _, ok := general.BuffEffectHolderMap[effectType]; ok {
-		delete(general.BuffEffectHolderMap, effectType)
-		delete(general.BuffEffectCountMap, effectType)
-
-		hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-			general.BaseInfo.Name,
-			effectType,
-		)
-		return true
+// 移除增益效果
+func BuffEffectWrapRemove(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, tacticId consts.TacticId) bool {
+	if effectParams, ok := general.BuffEffectHolderMap[effectType]; ok {
+		idx := 0
+		for _, effectParam := range effectParams {
+			if effectParam.FromTactic == tacticId {
+				general.BuffEffectHolderMap[effectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+				hlog.CtxInfof(ctx, "[%s]的【%v】「%v」效果已消失",
+					general.BaseInfo.Name,
+					effectParam.FromTactic,
+					effectType,
+				)
+				return true
+			}
+			idx++
+		}
 	}
 	return false
 }
 
+// 是否包含某个增益效果
 func BuffEffectContains(general *vo.BattleGeneral, effectType consts.BuffEffectType) bool {
 	if _, ok := general.BuffEffectHolderMap[effectType]; ok {
 		return true
@@ -131,13 +195,15 @@ func BuffEffectContains(general *vo.BattleGeneral, effectType consts.BuffEffectT
 	return false
 }
 
-func BuffEffectGet(general *vo.BattleGeneral, effectType consts.BuffEffectType) (float64, bool) {
+// 获取增益效果
+func BuffEffectGet(general *vo.BattleGeneral, effectType consts.BuffEffectType) ([]*vo.EffectHolderParams, bool) {
 	if v, ok := general.BuffEffectHolderMap[effectType]; ok {
 		return v, true
 	}
-	return 0, false
+	return nil, false
 }
 
+// 是否存在增益效果
 func BuffEffectContainsCheck(general *vo.BattleGeneral) bool {
 	return len(general.BuffEffectHolderMap) > 0
 }
@@ -146,8 +212,64 @@ func BuffEffectContainsCheck(general *vo.BattleGeneral) bool {
 // @holder 效果容器
 // @effectType 效果类型
 // @v 效果值
-func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.DebuffEffectType, v float64) bool {
-	if _, ok := general.DeBuffEffectHolderMap[effectType]; ok {
+//  属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
+//			武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
+//	持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
+//	功能性状态：通常不可叠加，不同来源时不可刷新
+//	控制状态：不可叠加，不可刷新，负面效果
+func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.DebuffEffectType, effectParam *vo.EffectHolderParams) bool {
+	//是否包含负面效果判断
+	_, isContainDebuffEffect := general.DeBuffEffectHolderMap[effectType]
+	//是否包含属性负面效果判断
+	_, isContainAttrDebuffEffect := attrDebuffEffectMap[effectType]
+	//是否包含持续性负面效果判断
+	_, isContainContinuousDebuffEffect := continuousDebuffEffectMap[effectType]
+	//是否包含控制负面效果判断
+	_, isContainControlDebuffEffect := controlDebuffEffectMap[effectType]
+
+	//属性负面状态
+	// 增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
+	// 武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
+	if isContainDebuffEffect && isContainAttrDebuffEffect {
+		//来自同一战法的属性效果
+		for _, effectHolderParam := range general.DeBuffEffectHolderMap[effectType] {
+			if effectHolderParam.FromTactic == effectParam.FromTactic {
+				effectHolderParam.EffectRound = effectParam.EffectRound
+				hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已刷新",
+					general.BaseInfo.Name,
+					effectParam.FromTactic,
+					effectType,
+				)
+				return true
+			}
+		}
+		//不来自同一战法的属性效果
+		if effectHolderParams, ok := general.DeBuffEffectHolderMap[effectType]; ok {
+			effectHolderParams = append(effectHolderParams, effectParam)
+			hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已施加",
+				general.BaseInfo.Name,
+				effectParam.FromTactic,
+				effectType,
+			)
+			return true
+		}
+	}
+
+	//持续性负面效果：不可叠加，刷新回合
+	if isContainDebuffEffect && isContainContinuousDebuffEffect {
+		for _, effectHolderParam := range general.DeBuffEffectHolderMap[effectType] {
+			effectHolderParam.EffectRound = effectParam.EffectRound
+			hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已刷新",
+				general.BaseInfo.Name,
+				effectParam.FromTactic,
+				effectType,
+			)
+			return true
+		}
+	}
+
+	//控制状态：不可叠加，不可刷新，负面效果
+	if isContainDebuffEffect && isContainControlDebuffEffect {
 		hlog.CtxInfof(ctx, "[%s]身上已有同等或更强的「%v」效果",
 			general.BaseInfo.Name,
 			effectType,
@@ -168,28 +290,42 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 		}
 	}
 
+	//施加效果
+	if isContainDebuffEffect {
+		general.DeBuffEffectHolderMap[effectType] = append(general.DeBuffEffectHolderMap[effectType], effectParam)
+	} else {
+		general.DeBuffEffectHolderMap[effectType] = []*vo.EffectHolderParams{
+			effectParam,
+		}
+	}
 	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 		general.BaseInfo.Name,
 		effectType,
 	)
-	general.DeBuffEffectHolderMap[effectType] = v
 	return true
 }
 
-func DebuffEffectWrapRemove(ctx context.Context, general *vo.BattleGeneral, effectType consts.DebuffEffectType) bool {
-	if _, ok := general.DeBuffEffectHolderMap[effectType]; ok {
-		delete(general.DeBuffEffectHolderMap, effectType)
-		delete(general.DeBuffEffectCountMap, effectType)
-
-		hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-			general.BaseInfo.Name,
-			effectType,
-		)
-		return true
+// 移除负面效果
+func DebuffEffectWrapRemove(ctx context.Context, general *vo.BattleGeneral, effectType consts.DebuffEffectType, tacticId consts.TacticId) bool {
+	if effectParams, ok := general.DeBuffEffectHolderMap[effectType]; ok {
+		idx := 0
+		for _, effectParam := range effectParams {
+			if effectParam.FromTactic == tacticId {
+				general.DeBuffEffectHolderMap[effectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+				hlog.CtxInfof(ctx, "[%s]的【%v】「%v」效果已消失",
+					general.BaseInfo.Name,
+					effectParam.FromTactic,
+					effectType,
+				)
+				return true
+			}
+			idx++
+		}
 	}
 	return false
 }
 
+// 负面效果判断
 func DeBuffEffectContains(general *vo.BattleGeneral, effectType consts.DebuffEffectType) bool {
 	if _, ok := general.DeBuffEffectHolderMap[effectType]; ok {
 		return true
@@ -197,17 +333,20 @@ func DeBuffEffectContains(general *vo.BattleGeneral, effectType consts.DebuffEff
 	return false
 }
 
-func DeBuffEffectGet(general *vo.BattleGeneral, effectType consts.DebuffEffectType) (float64, bool) {
+// 负面效果获取
+func DeBuffEffectGet(general *vo.BattleGeneral, effectType consts.DebuffEffectType) ([]*vo.EffectHolderParams, bool) {
 	if v, ok := general.DeBuffEffectHolderMap[effectType]; ok {
 		return v, true
 	}
-	return 0, false
+	return nil, false
 }
 
+// 检查是否有负面效果
 func DeBuffEffectContainsCheck(general *vo.BattleGeneral) bool {
 	return len(general.DeBuffEffectHolderMap) > 0
 }
 
+// 设置战法冻结
 func TacticFrozenWrapSet(general *vo.BattleGeneral, tacticId consts.TacticId, frozenNum int64, maxNum int64, supportRefresh bool) bool {
 	holdNum := int64(0)
 	if v, ok := general.TacticsFrozenMap[tacticId]; ok {
@@ -230,6 +369,7 @@ func TacticFrozenWrapSet(general *vo.BattleGeneral, tacticId consts.TacticId, fr
 	return true
 }
 
+//战法冻结清零
 func TacticFrozenWrapRemove(general *vo.BattleGeneral, tacticId consts.TacticId) bool {
 	if _, ok := general.TacticsFrozenMap[tacticId]; ok {
 		delete(general.TacticsFrozenMap, tacticId)
@@ -251,8 +391,7 @@ func BuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 			effectType,
 		)
 	}
-	general.DeBuffEffectCountMap = map[consts.DebuffEffectType]int64{}
-	general.DeBuffEffectHolderMap = map[consts.DebuffEffectType]float64{}
+	general.DeBuffEffectHolderMap = map[consts.DebuffEffectType][]*vo.EffectHolderParams{}
 }
 
 // 负面效果清除
@@ -268,8 +407,7 @@ func DebuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 			effectType,
 		)
 	}
-	general.DeBuffEffectCountMap = map[consts.DebuffEffectType]int64{}
-	general.DeBuffEffectHolderMap = map[consts.DebuffEffectType]float64{}
+	general.DeBuffEffectHolderMap = map[consts.DebuffEffectType][]*vo.EffectHolderParams{}
 }
 
 // 战法触发器注册
@@ -282,148 +420,4 @@ func TacticsTriggerWrapRegister(general *vo.BattleGeneral, action consts.BattleA
 		fs = append(fs, newFunc)
 		general.TacticsTriggerMap[action] = fs
 	}
-}
-
-// 增益效果次数容器处理
-// @holder 效果容器
-// @effectType 效果类型
-// @cnt 当前次数
-// @v 效果值
-func TacticsBuffEffectCountWrapIncr(ctx context.Context, general *vo.BattleGeneral, buffEffect consts.BuffEffectType, incrNum int64, maxNum int64, supportRefresh bool) bool {
-	holdNum := int64(0)
-	if v, ok := general.BuffEffectCountMap[buffEffect]; ok {
-		//v最少为1才算刷新效果
-		if supportRefresh && incrNum <= maxNum {
-			general.BuffEffectCountMap[buffEffect] = incrNum
-			hlog.CtxInfof(ctx, "[%s]的「%v」的效果已刷新",
-				general.BaseInfo.Name,
-				buffEffect,
-			)
-			return false
-		}
-
-		holdNum = v
-	}
-	//超限
-	totalNum := holdNum + incrNum
-	if totalNum > maxNum {
-		return false
-	}
-	//更新
-	general.BuffEffectCountMap[buffEffect] = totalNum
-
-	return true
-}
-
-// 增益效果次数容器处理
-// @holder 效果容器
-// @effectType 效果类型
-// @cnt 当前次数
-// @v 效果值
-func TacticsBuffEffectCountWrapDecr(ctx context.Context, general *vo.BattleGeneral, buffEffect consts.BuffEffectType, decrNum int64) bool {
-	if _, ok := general.BuffEffectHolderMap[buffEffect]; !ok {
-		return false
-	}
-
-	holdNum := general.BuffEffectCountMap[buffEffect]
-	if holdNum == 0 {
-		delete(general.BuffEffectHolderMap, buffEffect)
-		delete(general.BuffEffectCountMap, buffEffect)
-		hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-			general.BaseInfo.Name,
-			buffEffect,
-		)
-		return false
-	}
-
-	//消费次数不足
-	if decrNum > holdNum {
-		return false
-	}
-
-	general.BuffEffectCountMap[buffEffect]--
-	return true
-}
-
-// 增益效果次数容器处理
-// @holder 效果容器
-// @effectType 效果类型
-// @cnt 当前次数
-// @v 效果值
-func TacticsDebuffEffectCountWrapIncr(ctx context.Context, general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, incrNum int64, maxNum int64, supportRefresh bool) bool {
-	holdNum := int64(0)
-	if v, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
-		//v最少为1才算刷新效果
-		if supportRefresh && incrNum <= maxNum {
-			general.DeBuffEffectCountMap[debuffEffect] = incrNum
-			hlog.CtxInfof(ctx, "[%s]的「%v」的效果已刷新",
-				general.BaseInfo.Name,
-				debuffEffect,
-			)
-			return false
-		}
-
-		holdNum = v
-	}
-	//超限
-	totalNum := holdNum + incrNum
-	if totalNum > maxNum {
-		return false
-	}
-	//更新
-	general.DeBuffEffectCountMap[debuffEffect] = totalNum
-
-	return true
-}
-
-// 战法减益次数消耗
-// @general 执行武将
-// @debuffEffect 减益效果
-// @costNum 消耗次数
-func TacticsDebuffEffectCountWrapDecr(ctx context.Context, general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType, decrNum int64) bool {
-	if _, ok := general.DeBuffEffectHolderMap[debuffEffect]; !ok {
-		return false
-	}
-
-	holdNum := general.DeBuffEffectCountMap[debuffEffect]
-	if holdNum == 0 {
-		delete(general.DeBuffEffectCountMap, debuffEffect)
-		delete(general.DeBuffEffectHolderMap, debuffEffect)
-		hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-			general.BaseInfo.Name,
-			debuffEffect,
-		)
-		return false
-	}
-
-	//消费次数不足
-	if decrNum > holdNum {
-		hlog.CtxWarnf(ctx, "效果消费次数不足，expect:%d , real:%d", decrNum, holdNum)
-		return false
-	}
-
-	general.DeBuffEffectCountMap[debuffEffect]--
-	return true
-}
-
-// 战法增益次数查询
-func TacticsBuffCountGet(general *vo.BattleGeneral, buffEffect consts.BuffEffectType) int64 {
-	if cnt, ok := general.BuffEffectCountMap[buffEffect]; ok {
-		if cnt == 0 {
-			delete(general.BuffEffectCountMap, buffEffect)
-		}
-		return cnt
-	}
-	return 0
-}
-
-// 战法减益次数查询
-func TacticsDebuffCountGet(general *vo.BattleGeneral, debuffEffect consts.DebuffEffectType) int64 {
-	if cnt, ok := general.DeBuffEffectCountMap[debuffEffect]; ok {
-		if cnt == 0 {
-			delete(general.DeBuffEffectCountMap, debuffEffect)
-		}
-		return cnt
-	}
-	return 0
 }

@@ -442,8 +442,9 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 					consts.DebuffEffectType_PoorHealth,
 				}
 				for _, debuff := range debuffEffects {
-					if rate, okk := currentGeneral.DeBuffEffectHolderMap[debuff]; okk {
-						if util.GenerateRate(rate) {
+					util.DeBuffEffectContains(currentGeneral, debuff)
+					if effectParams, okk := currentGeneral.DeBuffEffectHolderMap[debuff]; okk && len(effectParams) > 0 {
+						if util.GenerateRate(effectParams[0].EffectRate) {
 							hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
 								currentGeneral.BaseInfo.Name,
 								debuff,
@@ -517,8 +518,8 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				consts.DebuffEffectType_CancelWeapon,
 			}
 			for _, debuff := range debuffEffects {
-				if rate, ok := currentGeneral.DeBuffEffectHolderMap[debuff]; ok {
-					if util.GenerateRate(rate) {
+				if effectParams, ok := currentGeneral.DeBuffEffectHolderMap[debuff]; ok && len(effectParams) > 0 {
+					if util.GenerateRate(effectParams[0].EffectRate) {
 						hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
 							currentGeneral.BaseInfo.Name,
 							debuff,
@@ -658,16 +659,10 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 	//初始化增益效果/负面效果
 	for _, general := range tacticsParams.AllGeneralArr {
 		if general.BuffEffectHolderMap == nil {
-			general.BuffEffectHolderMap = map[consts.BuffEffectType]float64{}
+			general.BuffEffectHolderMap = map[consts.BuffEffectType][]*vo.EffectHolderParams{}
 		}
 		if general.DeBuffEffectHolderMap == nil {
-			general.DeBuffEffectHolderMap = map[consts.DebuffEffectType]float64{}
-		}
-		if general.BuffEffectCountMap == nil {
-			general.BuffEffectCountMap = map[consts.BuffEffectType]int64{}
-		}
-		if general.DeBuffEffectCountMap == nil {
-			general.DeBuffEffectCountMap = map[consts.DebuffEffectType]int64{}
+			general.DeBuffEffectHolderMap = map[consts.DebuffEffectType][]*vo.EffectHolderParams{}
 		}
 		if general.TacticsTriggerMap == nil {
 			general.TacticsTriggerMap = map[consts.BattleAction][]func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult{}

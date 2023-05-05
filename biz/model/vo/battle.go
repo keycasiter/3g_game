@@ -20,6 +20,17 @@ type BattleTeam struct {
 	BuildingTechGroupAddition BuildingTechGroupAddition
 }
 
+type EffectHolderParams struct {
+	//影响百分比
+	EffectRate float64
+	//影响回合
+	EffectRound int64
+	//影响次数
+	EffectTimes int64
+	//来源于哪个战法
+	FromTactic consts.TacticId
+}
+
 // 对战武将信息
 type BattleGeneral struct {
 	//基础信息
@@ -41,22 +52,13 @@ type BattleGeneral struct {
 	//被谁分担伤害
 	ShareResponsibilityForByGeneral *BattleGeneral
 
-	//增益效果计数器 map<效果,计数>
-	BuffEffectCountMap map[consts.BuffEffectType]int64
-	//减益效果计数器 map<效果,计数>
-	DeBuffEffectCountMap map[consts.DebuffEffectType]int64
-
-	//增益效果变量 map<效果,效果值>
-	BuffEffectHolderMap map[consts.BuffEffectType]float64
-	//减益效果变量 map<效果,效果值>
-	DeBuffEffectHolderMap map[consts.DebuffEffectType]float64
+	//增益效果变量 map<效果,容器属性>
+	BuffEffectHolderMap map[consts.BuffEffectType][]*EffectHolderParams
+	//减益效果变量 map<效果,容器属性>
+	DeBuffEffectHolderMap map[consts.DebuffEffectType][]*EffectHolderParams
 
 	//战法冷却器 map<战法,冷却回合>
 	TacticsFrozenMap map[consts.TacticId]int64
-	//战法正面效果绑定 map<战法Id，正面效果>
-	TacticsRefBuffEffectMap map[consts.TacticId]consts.BuffEffectType
-	//战法负面效果绑定 map<战法Id，负面效果>
-	TacticsRefDebuffEffectMap map[consts.TacticId]consts.DebuffEffectType
 
 	//*****战法触发器都是按条件（非回合）会触发的******
 	//战法触发器 map<触发动作,func(触发函数参数)>

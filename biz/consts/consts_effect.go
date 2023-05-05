@@ -4,6 +4,7 @@ package consts
 type DebuffEffectType int
 
 var (
+	//可以被清除的负面效果
 	SupprtCleanDebuffEffectMap = map[DebuffEffectType]bool{
 		DebuffEffectType_Methysis:     true,
 		DebuffEffectType_Firing:       true,
@@ -15,7 +16,7 @@ var (
 		DebuffEffectType_WaterAttack:  true,
 		DebuffEffectType_CancelWeapon: true,
 	}
-
+	//可以被清除的正面效果
 	SupprtCleanBuffEffectMap = map[BuffEffectType]bool{
 		BuffEffectType_SuppressChokesAndPreventRefusals_Prepare: true,
 		BuffEffectType_SeizeTheSoul:                             true,
@@ -60,9 +61,6 @@ const (
 	DebuffEffectType_InterlockedStratagems         //铁索连环
 	DebuffEffectType_SeizeTheSoul                  //夺魂挟魄
 
-	DebuffEffectType_BraveAmbition_DecrForce        //（义胆雄心）降低武力
-	DebuffEffectType_BraveAmbition_DecrIntelligence //（义胆雄心）降低智力
-
 	DebuffEffectType_LectureField //舌战群儒
 )
 
@@ -106,10 +104,6 @@ func (b DebuffEffectType) String() string {
 		return "夺魂挟魄"
 	case DebuffEffectType_CleverStrategyAndShrewdTactic:
 		return "神机妙算"
-	case DebuffEffectType_BraveAmbition_DecrForce:
-		return "武力降低"
-	case DebuffEffectType_BraveAmbition_DecrIntelligence:
-		return "智力降低"
 	case DebuffEffectType_DecrForce:
 		return "武力降低"
 	case DebuffEffectType_DecrIntelligence:

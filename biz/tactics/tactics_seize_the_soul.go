@@ -69,7 +69,7 @@ func (s SeizeTheSoulTactic) SupportArmTypes() []consts.ArmType {
 func (s SeizeTheSoulTactic) Execute() {
 	ctx := s.tacticsParams.Ctx
 	currentGeneral := s.tacticsParams.CurrentGeneral
-	enemyGeneral := util.GetEnemyOneGeneral(s.tacticsParams)
+	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
 
 	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 		currentGeneral.BaseInfo.Name,

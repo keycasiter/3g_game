@@ -36,7 +36,7 @@ func (d DemoralizeTactic) Prepare() {
 	)
 
 	//找到敌人单体
-	enemyGeneral := util.GetEnemyOneGeneral(d.tacticsParams)
+	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, d.tacticsParams)
 	//施加效果
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_PoorHealth, 0.9) {
 		//注册消失效果

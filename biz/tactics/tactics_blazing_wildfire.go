@@ -83,53 +83,52 @@ func (b BlazingWildfireTactic) Execute() {
 		//若目标已有灼烧状态则造成兵刃攻击(伤害率118%)
 		//判断当前被攻击武将是否有灼烧状态
 		if util.DeBuffEffectContains(sufferGeneral, consts.DebuffEffectType_Firing) {
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
-			util.TacticDamage(&util.TacticDamageParam{
-				TacticsParams: b.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: sufferGeneral,
-				Damage:        dmg,
-				TacticName:    b.Name(),
-			})
-
-			//灼烧次数-1
-			util.TacticsDebuffEffectCountWrapDecr(ctx, sufferGeneral, consts.DebuffEffectType_Firing, 1)
-		} else {
-			//施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合
-			if !util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Firing, 1.0) {
-				continue
-			}
-			//次数
-			if !util.TacticsDebuffEffectCountWrapIncr(ctx, sufferGeneral, consts.DebuffEffectType_Firing, 2, 2, false) {
-				continue
-			}
-
-			//注册伤害效果
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				triggerGeneral := params.CurrentGeneral
-				triggerResp := &vo.TacticsTriggerResult{}
-
-				//剩余次数判断
-				if !util.TacticsDebuffEffectCountWrapDecr(ctx, triggerGeneral, consts.DebuffEffectType_Firing, 1) {
-					return triggerResp
-				}
-
-				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-					triggerGeneral.BaseInfo.Name,
-					b.Name(),
-					consts.DebuffEffectType_Firing,
-				)
-				dmgNum := cast.ToInt64(0.56 * triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+			//效果消耗
+			if util.DeBuffEffectOfTacticCost(sufferGeneral, consts.DebuffEffectType_Firing, b.Id(), 1) {
+				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
 				util.TacticDamage(&util.TacticDamageParam{
 					TacticsParams: b.tacticsParams,
 					AttackGeneral: currentGeneral,
-					SufferGeneral: triggerGeneral,
-					Damage:        dmgNum,
+					SufferGeneral: sufferGeneral,
+					Damage:        dmg,
 					TacticName:    b.Name(),
 				})
+			}
+		} else {
+			//施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合
+			if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Firing, &vo.EffectHolderParams{
+				EffectTimes: 2,
+				FromTactic:  b.Id(),
+			}).IsSuccess {
+				//注册伤害效果
+				util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					triggerGeneral := params.CurrentGeneral
+					triggerResp := &vo.TacticsTriggerResult{}
 
-				return triggerResp
-			})
+					//效果消耗
+					if util.DeBuffEffectOfTacticCost(triggerGeneral, consts.DebuffEffectType_Firing, b.Id(), 1) {
+						hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+							triggerGeneral.BaseInfo.Name,
+							b.Name(),
+							consts.DebuffEffectType_Firing,
+						)
+						dmgNum := cast.ToInt64(0.56 * triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+						util.TacticDamage(&util.TacticDamageParam{
+							TacticsParams: b.tacticsParams,
+							AttackGeneral: currentGeneral,
+							SufferGeneral: triggerGeneral,
+							Damage:        dmgNum,
+							TacticName:    b.Name(),
+						})
+					}
+					//注册中毒效果消失
+					if util.DeBuffEffectOfTacticIsDeplete(triggerGeneral, consts.DebuffEffectType_Firing, b.Id()) {
+						util.DebuffEffectWrapRemove(ctx, triggerGeneral, consts.DebuffEffectType_Firing, b.Id())
+					}
+
+					return triggerResp
+				})
+			}
 		}
 	}
 }

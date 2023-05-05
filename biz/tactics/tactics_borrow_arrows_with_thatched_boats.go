@@ -119,42 +119,47 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 	//并使我军群体(2人)获得急救状态，每次受到伤害时有70%几率回复一定兵力（伤害量的28%，受统率影响）,持续2回合
 	twoGenerals := util.GetPairGeneralsTwoArr(b.tacticsParams)
 	for _, general := range twoGenerals {
-		//施加急救效果
-		general.BuffEffectHolderMap[consts.BuffEffectType_EmergencyTreatment] = 1.0
-		//持续2回合
-		if !util.TacticsBuffEffectCountWrapIncr(ctx, general, consts.BuffEffectType_EmergencyTreatment, 2, 2, true) {
-			continue
-		}
-		hlog.CtxInfof(ctx, "[%s]的「急救」状态已施加", general.BaseInfo.Name)
+		//施加急救效果，持续2回合
+		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_EmergencyTreatment, &vo.EffectHolderParams{
+			EffectTimes: 2,
+			FromTactic:  b.Id(),
+		}).IsSuccess {
+			//注册触发效果
+			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerGeneral := params.CurrentGeneral
+				triggerResp := &vo.TacticsTriggerResult{}
+				//效果消耗
+				if util.BuffEffectOfTacticCost(triggerGeneral, consts.BuffEffectType_EmergencyTreatment, b.Id(), 1) {
+					if !util.GenerateRate(0.7) {
+						hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果因几率没有生效",
+							triggerGeneral.BaseInfo.Name,
+							b.Name(),
+						)
+						return triggerResp
+					} else {
+						hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果",
+							triggerGeneral.BaseInfo.Name,
+							b.Name(),
+						)
+						// TODO 受统率影响
+						resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentDamage) * 0.28)
+						finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(triggerGeneral, resumeNum)
+						hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
+							triggerGeneral.BaseInfo.Name,
+							finalResumeNum,
+							holdNum,
+							finalNum,
+						)
+					}
+				}
 
-		//注册触发效果
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerGeneral := params.CurrentGeneral
-			triggerResp := &vo.TacticsTriggerResult{}
-			if !util.GenerateRate(0.7) {
-				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果因几率没有生效",
-					triggerGeneral.BaseInfo.Name,
-					b.Name(),
-				)
+				//效果消失
+				if util.BuffEffectOfTacticIsDeplete(triggerGeneral, consts.BuffEffectType_EmergencyTreatment, b.Id()) {
+					util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_EmergencyTreatment, b.Id())
+				}
 				return triggerResp
-			} else {
-				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果",
-					triggerGeneral.BaseInfo.Name,
-					b.Name(),
-				)
-				// TODO 受统率影响
-				resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentDamage) * 0.28)
-				finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(triggerGeneral, resumeNum)
-				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
-					triggerGeneral.BaseInfo.Name,
-					finalResumeNum,
-					holdNum,
-					finalNum,
-				)
-			}
-			return triggerResp
-		},
-		)
+			})
+		}
 	}
 	return
 }

@@ -31,11 +31,9 @@ func (b BeFullyEquippedForTactic) Prepare() {
 		currentGeneral.BaseInfo.Name,
 		b.Name(),
 	)
-
-	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-		currentGeneral.BaseInfo.Name,
-		consts.BuffEffectType_BeFullyEquippedFor_Prepare,
-	)
+	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_BeFullyEquippedFor_Prepare, &vo.EffectHolderParams{
+		FromTactic: b.Id(),
+	})
 
 	//战斗中，偶数回合，恢复我军群体（2人）兵力（治疗率88%，受智力影响）
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {

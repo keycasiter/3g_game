@@ -29,6 +29,8 @@ type EffectHolderParams struct {
 	EffectRound int64
 	//影响次数
 	EffectTimes int64
+	//触发概率
+	EffectTriggerRate float64
 	//来源于哪个战法
 	FromTactic consts.TacticId
 }

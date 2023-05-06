@@ -57,66 +57,66 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 
 	for _, sufferGeneral := range enemyGenerals {
 		//效果施加
-		sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] += effectRate
-		hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害降低了%.2f%%",
-			sufferGeneral.BaseInfo.Name,
-			effectRate*100,
-		)
-		sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] += effectRate
-		hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了%.2f%%",
-			sufferGeneral.BaseInfo.Name,
-			effectRate*100,
-		)
+		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: effectRate,
+			FromTactic: e.Id(),
+		}).IsSuccess {
+			hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害降低了%.2f%%",
+				sufferGeneral.BaseInfo.Name,
+				effectRate*100,
+			)
+		}
+
+		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_LaunchStrategyDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: effectRate,
+			FromTactic: e.Id(),
+		}).IsSuccess {
+			hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了%.2f%%",
+				sufferGeneral.BaseInfo.Name,
+				effectRate*100,
+			)
+		}
+
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerResp := &vo.TacticsTriggerResult{}
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
 
 			//第四回合消失
 			if params.CurrentRound == consts.Battle_Round_Fourth {
-				triggerGeneral := params.CurrentGeneral
 
-				triggerGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] -= effectRate
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					triggerGeneral.BaseInfo.Name,
-					consts.DebuffEffectType_LaunchStrategyDamageDeduce,
-				)
-				hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提高了%.2f%%",
-					triggerGeneral.BaseInfo.Name,
-					effectRate*100,
-				)
-				triggerGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] -= effectRate
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					triggerGeneral.BaseInfo.Name,
-					consts.DebuffEffectType_LaunchStrategyDamageDeduce,
-				)
-				hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提高了%.2f%%",
-					triggerGeneral.BaseInfo.Name,
-					effectRate*100,
-				)
+				if util.DebuffEffectWrapRemove(ctx, revokeGeneral, consts.DebuffEffectType_LaunchWeaponDamageDeduce, e.Id()) {
+					hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提高了%.2f%%",
+						revokeGeneral.BaseInfo.Name,
+						effectRate*100,
+					)
+				}
+				if util.DebuffEffectWrapRemove(ctx, revokeGeneral, consts.DebuffEffectType_LaunchStrategyDamageDeduce, e.Id()) {
+					hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提高了%.2f%%",
+						revokeGeneral.BaseInfo.Name,
+						effectRate*100,
+					)
+				}
 			}
-			return triggerResp
+			return revokeResp
 		})
 	}
 	//并使我军主将获得先攻状态（优先行动）
 	//找到我军主将
 	pairMasterGeneral := util.GetPairMasterGeneral(e.tacticsParams)
-	pairMasterGeneral.BuffEffectHolderMap[consts.BuffEffectType_FirstAttack] = 1.0
-	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-		pairMasterGeneral.BaseInfo.Name,
-		consts.BuffEffectType_FirstAttack,
-	)
-	//注册消失效果
-	util.TacticsTriggerWrapRegister(pairMasterGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-		triggerResp := &vo.TacticsTriggerResult{}
-		if params.CurrentRound == consts.Battle_Round_Third {
-			triggerGeneral := params.CurrentGeneral
-
-			delete(triggerGeneral.BuffEffectHolderMap, consts.BuffEffectType_FirstAttack)
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				triggerGeneral.BaseInfo.Name, consts.BuffEffectType_FirstAttack)
-		}
-		return triggerResp
-	})
+	if util.BuffEffectWrapSet(ctx, pairMasterGeneral, consts.BuffEffectType_FirstAttack, &vo.EffectHolderParams{
+		FromTactic: e.Id(),
+	}).IsSuccess {
+		//注册消失效果
+		util.TacticsTriggerWrapRegister(pairMasterGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+			if params.CurrentRound == consts.Battle_Round_Third {
+				util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_FirstAttack, e.Id())
+			}
+			return revokeResp
+		})
+	}
 }
 
 func (e EightGateGoldenLockArrayTactic) Id() consts.TacticId {

@@ -9,10 +9,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//梦中弑臣
-//战斗前2回合，如果自己为主将，则使随机副将为自己分担20%伤害。
-//战斗第3回合起，自己行动时如果有负面状态，则获得25%概率反击状态（伤害率150%）
-//直到战斗结束
+// 梦中弑臣
+// 战斗前2回合，如果自己为主将，则使随机副将为自己分担20%伤害。
+// 战斗第3回合起，自己行动时如果有负面状态，则获得25%概率反击状态（伤害率150%）
+// 直到战斗结束
 type KillingMinisterInDreamTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -39,42 +39,50 @@ func (k KillingMinisterInDreamTactic) Prepare() {
 			k.Name(),
 		)
 		//施加分担效果
-		if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_ShareResponsibilityFor, 0.2) {
+		if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_ShareResponsibilityFor, &vo.EffectHolderParams{
+			EffectRate: 0.2,
+			FromTactic: k.Id(),
+		}).IsSuccess {
 			//找到随机副将
 			viceGeneral := util.GetPairViceGeneral(k.tacticsParams)
 			currentGeneral.ShareResponsibilityForByGeneral = viceGeneral
+
+			//注册消失效果
+			util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerResp := &vo.TacticsTriggerResult{}
+				triggerGeneral := params.CurrentGeneral
+				triggerRound := params.CurrentRound
+
+				if triggerRound == consts.Battle_Round_Third {
+					util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_ShareResponsibilityFor, k.Id())
+				}
+
+				return triggerResp
+			})
 		}
-		//注册消失效果
+	}
+	//战斗第3回合起，自己行动时如果有负面状态，则获得25%概率反击状态（伤害率150%），直到战斗结束
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_KillingMinisterInDream_Prepare, &vo.EffectHolderParams{
+		FromTactic: k.Id(),
+	}).IsSuccess {
 		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
 			triggerRound := params.CurrentRound
+			triggerGeneral := params.CurrentGeneral
 
 			if triggerRound == consts.Battle_Round_Third {
-				util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_ShareResponsibilityFor)
+				//是否有负面效果
+				if util.DeBuffEffectContainsCheck(triggerGeneral) {
+					util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_StrikeBack, &vo.EffectHolderParams{
+						EffectRate:        1.5,
+						EffectTriggerRate: 0.25,
+						FromTactic:        k.Id(),
+					})
+				}
 			}
-
 			return triggerResp
 		})
 	}
-	//战斗第3回合起，自己行动时如果有负面状态，则获得25%概率反击状态（伤害率150%），直到战斗结束
-	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_KillingMinisterInDream_Prepare, 1.0)
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-		triggerResp := &vo.TacticsTriggerResult{}
-		triggerRound := params.CurrentRound
-		triggerGeneral := params.CurrentGeneral
-
-		if triggerRound == consts.Battle_Round_Third {
-			//是否有负面效果
-			if util.DeBuffEffectContainsCheck(triggerGeneral) {
-				//25%
-				if util.GenerateRate(0.25) {
-					util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_StrikeBack, 1.5)
-				}
-			}
-		}
-		return triggerResp
-	})
 }
 
 func (k KillingMinisterInDreamTactic) Id() consts.TacticId {

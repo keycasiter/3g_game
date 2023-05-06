@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -48,17 +49,42 @@ func (f FrontalVectorArrayTactic) Prepare() {
 
 	//使我军主将造成的伤害提升30%，受到的伤害提升20%
 	masterGeneral := util.GetPairMasterGeneral(f.tacticsParams)
-	masterGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += 0.3
-	masterGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] += 0.3
-	masterGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_SufferWeaponDamageImprove] += 0.2
-	masterGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_SufferStrategyDamageImprove] += 0.2
+	util.BuffEffectWrapSet(ctx, masterGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove, &vo.EffectHolderParams{
+		EffectRate: 0.3,
+		FromTactic: f.Id(),
+	})
+	util.BuffEffectWrapSet(ctx, masterGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{
+		EffectRate: 0.3,
+		FromTactic: f.Id(),
+	})
+	util.DebuffEffectWrapSet(ctx, masterGeneral, consts.DebuffEffectType_SufferWeaponDamageImprove, &vo.EffectHolderParams{
+		EffectRate: 0.2,
+		FromTactic: f.Id(),
+	})
+	util.DebuffEffectWrapSet(ctx, masterGeneral, consts.DebuffEffectType_SufferStrategyDamageImprove, &vo.EffectHolderParams{
+		EffectRate: 0.2,
+		FromTactic: f.Id(),
+	})
+
 	//我军副将造成的伤害降低15%，受到的伤害降低25%
 	viceGenerals := util.GetPairViceGenerals(f.tacticsParams)
 	for _, general := range viceGenerals {
-		general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchStrategyDamageDeduce] += 0.15
-		general.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] += 0.15
-		general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += 0.25
-		general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += 0.25
+		util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_LaunchStrategyDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: 0.15,
+			FromTactic: f.Id(),
+		})
+		util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: 0.15,
+			FromTactic: f.Id(),
+		})
+		util.BuffEffectWrapSet(ctx, masterGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: 0.25,
+			FromTactic: f.Id(),
+		})
+		util.BuffEffectWrapSet(ctx, masterGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: 0.25,
+			FromTactic: f.Id(),
+		})
 	}
 }
 

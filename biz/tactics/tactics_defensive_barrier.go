@@ -9,8 +9,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//御敌屏障
-//战斗前4回合，使我军群体（2人）受到的伤害降低25%
+// 御敌屏障
+// 战斗前4回合，使我军群体（2人）受到的伤害降低25%
 type DefensiveBarrierTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -34,37 +34,41 @@ func (d DefensiveBarrierTactic) Prepare() {
 	//找到随机友军2人
 	pairGenerals := util.GetPairGeneralsTwoArr(d.tacticsParams)
 	for _, general := range pairGenerals {
-		general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += 0.25
-		general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += 0.25
-		hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了25%%",
-			general.BaseInfo.Name,
-		)
-		hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了25%%",
-			general.BaseInfo.Name,
-		)
+		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: 0.25,
+			FromTactic: d.Id(),
+		}).IsSuccess {
+			hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了25%%",
+				general.BaseInfo.Name,
+			)
+		}
+
+		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: 0.25,
+			FromTactic: d.Id(),
+		}).IsSuccess {
+			hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了25%%",
+				general.BaseInfo.Name,
+			)
+		}
 
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeRound := params.CurrentRound
 			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
 
 			if revokeRound == consts.Battle_Round_Fifth {
-				general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] -= 0.25
-				general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] -= 0.25
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					general.BaseInfo.Name,
-					consts.BuffEffectType_SufferWeaponDamageDeduce,
-				)
-				hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害提高了25%%",
-					general.BaseInfo.Name,
-				)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					general.BaseInfo.Name,
-					consts.BuffEffectType_SufferStrategyDamageDeduce,
-				)
-				hlog.CtxInfof(ctx, "[%s]受到的谋略伤害提高了25%%",
-					general.BaseInfo.Name,
-				)
+				if util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, d.Id()) {
+					hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害提高了25%%",
+						general.BaseInfo.Name,
+					)
+				}
+				if util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, d.Id()) {
+					hlog.CtxInfof(ctx, "[%s]受到的谋略伤害提高了25%%",
+						general.BaseInfo.Name,
+					)
+				}
 			}
 
 			return revokeResp

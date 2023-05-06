@@ -70,10 +70,14 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 			buffEffect := buffs[chosenIdx]
 
 			//一种效果最多叠加2次
-			if !util.TacticsBuffEffectCountWrapIncr(ctx, triggerGeneral, buffEffect, 1, 2, false) {
-				return triggerResp
+			if effectParams, ok := util.BuffEffectOfTacticGet(triggerGeneral, buffEffect, c.Id()); ok {
+				if len(effectParams) < 2 {
+					util.BuffEffectWrapSet(ctx, triggerGeneral, buffEffect, &vo.EffectHolderParams{
+						EffectRate: 0.07,
+						FromTactic: c.Id(),
+					})
+				}
 			}
-			util.BuffEffectWrapSet(ctx, triggerGeneral, buffEffect, 0.07)
 		}
 
 		return triggerResp
@@ -124,10 +128,10 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 
 	//自身为主将时，获得16%奇谋几率
 	if currentGeneral.IsMaster {
-		hlog.CtxInfof(ctx, "[%s]的奇谋提高了16%%",
-			currentGeneral.BaseInfo.Name,
-		)
-		currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_EnhanceStrategy] += 0.16
+		util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_EnhanceStrategy, &vo.EffectHolderParams{
+			EffectRate: 0.16,
+			FromTactic: c.Id(),
+		})
 	}
 }
 

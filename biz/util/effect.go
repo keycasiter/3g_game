@@ -110,11 +110,12 @@ var (
 // @holder 效果容器
 // @effectType 效果类型
 // @v 效果值
-//  属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
-//			武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
-//	持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
-//	功能性状态：通常不可叠加，不同来源时不可刷新
-//	控制状态：不可叠加，不可刷新，负面效果
+//
+//	 属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
+//				武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
+//		持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
+//		功能性状态：通常不可叠加，不同来源时不可刷新
+//		控制状态：不可叠加，不可刷新，负面效果
 func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, effectParam *vo.EffectHolderParams) *EffectWrapSetResp {
 	//是否包含正面效果判断
 	_, isContainBuffEffect := general.BuffEffectHolderMap[effectType]
@@ -245,6 +246,24 @@ func BuffEffectGet(general *vo.BattleGeneral, effectType consts.BuffEffectType) 
 	return nil, false
 }
 
+// 获取增益效果
+func BuffEffectOfTacticGet(general *vo.BattleGeneral, effectType consts.BuffEffectType, tacticId consts.TacticId) ([]*vo.EffectHolderParams, bool) {
+	res := make([]*vo.EffectHolderParams, 0)
+
+	if tacticId <= 0 {
+		return res, false
+	}
+	if effectParams, ok := general.BuffEffectHolderMap[effectType]; ok {
+		for _, effectParam := range effectParams {
+			if effectParam.FromTactic == tacticId {
+				res = append(res, effectParam)
+			}
+		}
+		return res, true
+	}
+	return res, false
+}
+
 // 是否存在增益效果
 func BuffEffectContainsCheck(general *vo.BattleGeneral) bool {
 	return len(general.BuffEffectHolderMap) > 0
@@ -307,11 +326,12 @@ type EffectWrapSetResp struct {
 // @holder 效果容器
 // @effectType 效果类型
 // @v 效果值
-//  属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
-//			武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
-//	持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
-//	功能性状态：通常不可叠加，不同来源时不可刷新
-//	控制状态：不可叠加，不可刷新，负面效果
+//
+//	 属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
+//				武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
+//		持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
+//		功能性状态：通常不可叠加，不同来源时不可刷新
+//		控制状态：不可叠加，不可刷新，负面效果
 func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.DebuffEffectType, effectParam *vo.EffectHolderParams) *EffectWrapSetResp {
 	//是否包含负面效果判断
 	_, isContainDebuffEffect := general.DeBuffEffectHolderMap[effectType]
@@ -516,20 +536,21 @@ func DeBuffEffectOfTacticCost(general *vo.BattleGeneral, effectType consts.Debuf
 	return false
 }
 
-// 负面效果获取
-func DeBuffEffectOfTacticGet(general *vo.BattleGeneral, effectType consts.DebuffEffectType, tacticId consts.TacticId) (*vo.EffectHolderParams, bool) {
-	if effectParams, ok := general.DeBuffEffectHolderMap[effectType]; ok {
-		//按战法Id获取效果
-		if tacticId > 0 {
-			for _, effectParam := range effectParams {
-				if effectParam.FromTactic == tacticId {
-					return effectParam, true
-				}
-			}
-			return nil, false
-		}
+// 获取负面效果
+func DeBuffEffectOfTacticGet(general *vo.BattleGeneral, effectType consts.DebuffEffectType, tacticId consts.TacticId) ([]*vo.EffectHolderParams, bool) {
+	res := make([]*vo.EffectHolderParams, 0)
+	if tacticId <= 0 {
+		return res, false
 	}
-	return nil, false
+	if effectParams, ok := general.DeBuffEffectHolderMap[effectType]; ok {
+		for _, effectParam := range effectParams {
+			if effectParam.FromTactic == tacticId {
+				res = append(res, effectParam)
+			}
+		}
+		return res, true
+	}
+	return res, false
 }
 
 // 负面效果获取
@@ -568,7 +589,7 @@ func TacticFrozenWrapSet(general *vo.BattleGeneral, tacticId consts.TacticId, fr
 	return true
 }
 
-//战法冻结清零
+// 战法冻结清零
 func TacticFrozenWrapRemove(general *vo.BattleGeneral, tacticId consts.TacticId) bool {
 	if _, ok := general.TacticsFrozenMap[tacticId]; ok {
 		delete(general.TacticsFrozenMap, tacticId)

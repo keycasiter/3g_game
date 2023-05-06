@@ -88,81 +88,81 @@ func (i InterlockedStratagemsTactic) Execute() {
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
 
-		//准备一回合
-		if !(currentRound+1 == params.CurrentRound) {
-			return triggerResp
-		}
+		if currentRound+1 == params.CurrentRound {
+			//准备回合释放
+			i.isTriggerPrepare = false
+			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+				currentGeneral.BaseInfo.Name,
+				i.Name(),
+			)
+			for _, sufferGeneral := range allEnemyGenerals {
+				//施加效果
+				if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_InterlockedStratagems, &vo.EffectHolderParams{
+					FromTactic: i.Id(),
+				}).IsSuccess {
+					//注册铁锁连环效果
+					registerFunc := func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						lockGeneral := params.CurrentGeneral
 
-		i.isTriggerPrepare = false
-		hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-			currentGeneral.BaseInfo.Name,
-			i.Name(),
-		)
-		for _, sufferGeneral := range allEnemyGenerals {
-			//施加效果
-			if !util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_InterlockedStratagems, 1.0) {
-				continue
-			}
-			//注册铁锁连环效果
-			registerFunc := func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				lockGeneral := params.CurrentGeneral
+						if !util.DeBuffEffectContains(lockGeneral, consts.DebuffEffectType_InterlockedStratagems) {
+							return triggerResp
+						}
+						//释放效果
+						hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+							lockGeneral.BaseInfo.Name,
+							i.Name(),
+							consts.DebuffEffectType_InterlockedStratagems,
+						)
+						//找到2个队友进行伤害反弹
+						pairGenerals := util.GetPairGeneralsTwoArrByGeneral(lockGeneral, i.tacticsParams)
+						for _, reboundGeneral := range pairGenerals {
+							dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.15)
+							util.TacticDamage(&util.TacticDamageParam{
+								TacticsParams:          i.tacticsParams,
+								AttackGeneral:          currentGeneral,
+								SufferGeneral:          reboundGeneral,
+								Damage:                 dmg,
+								TacticName:             i.Name(),
+								EffectName:             fmt.Sprintf("%v", consts.DebuffEffectType_InterlockedStratagems),
+								IsBanInterLockedEffect: true,
+							})
+						}
+						return triggerResp
+					}
 
-				if !util.DeBuffEffectContains(lockGeneral, consts.DebuffEffectType_InterlockedStratagems) {
-					return triggerResp
-				}
-				//释放效果
-				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-					lockGeneral.BaseInfo.Name,
-					i.Name(),
-					consts.DebuffEffectType_InterlockedStratagems,
-				)
-				//找到2个队友进行伤害反弹
-				pairGenerals := util.GetPairGeneralsTwoArrByGeneral(lockGeneral, i.tacticsParams)
-				for _, reboundGeneral := range pairGenerals {
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.15)
-					util.TacticDamage(&util.TacticDamageParam{
-						TacticsParams:          i.tacticsParams,
-						AttackGeneral:          currentGeneral,
-						SufferGeneral:          reboundGeneral,
-						Damage:                 dmg,
-						TacticName:             i.Name(),
-						EffectName:             fmt.Sprintf("%v", consts.DebuffEffectType_InterlockedStratagems),
-						IsBanInterLockedEffect: true,
+					//被战法攻击
+					util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferTroopsTactic, registerFunc)
+					util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferArmTactic, registerFunc)
+					util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferCommandTactic, registerFunc)
+					util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferAssaultTactic, registerFunc)
+					util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferPassiveTactic, registerFunc)
+					util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferActiveTactic, registerFunc)
+					//被普攻
+					util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferAttack, registerFunc)
+
+					//效果消失注册
+					util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeRound := params.CurrentRound
+						//持续2回合
+						if currentRound+3 == revokeRound {
+							util.DebuffEffectWrapRemove(ctx, sufferGeneral, consts.DebuffEffectType_InterlockedStratagems, i.Id())
+						}
+						return triggerResp
 					})
 				}
-				return triggerResp
 			}
 
-			//被战法攻击
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferTroopsTactic, registerFunc)
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferArmTactic, registerFunc)
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferCommandTactic, registerFunc)
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferAssaultTactic, registerFunc)
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferPassiveTactic, registerFunc)
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferActiveTactic, registerFunc)
-			//被普攻
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferAttack, registerFunc)
-
-			//效果消失注册
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				revokeRound := params.CurrentRound
-				//持续2回合
-				if currentRound+3 == revokeRound {
-					util.DebuffEffectWrapRemove(ctx, sufferGeneral, consts.DebuffEffectType_InterlockedStratagems)
-				}
-				return triggerResp
-			})
-		}
-		//并发动谋略攻击（伤害率156%，受智力影响）
-		for _, sufferGeneral := range allEnemyGenerals {
-			dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.56)
-			util.TacticDamage(&util.TacticDamageParam{
-				TacticsParams: i.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: sufferGeneral,
-				Damage:        dmgNum,
-				TacticName:    i.Name(),
-			})
+			//并发动谋略攻击（伤害率156%，受智力影响）
+			for _, sufferGeneral := range allEnemyGenerals {
+				dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.56)
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: i.tacticsParams,
+					AttackGeneral: currentGeneral,
+					SufferGeneral: sufferGeneral,
+					Damage:        dmgNum,
+					TacticName:    i.Name(),
+				})
+			}
 		}
 		return triggerResp
 	})

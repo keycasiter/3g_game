@@ -79,6 +79,8 @@ func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Execute() {
 		triggerRound := params.CurrentRound
 
 		if currentRound+1 == triggerRound {
+			//准备回合释放
+			b.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				b.Name(),
@@ -118,15 +120,6 @@ func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Execute() {
 					TacticName:    b.Name(),
 				})
 			}
-		}
-
-		if currentRound+2 == triggerRound {
-			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				revokeResp := &vo.TacticsTriggerResult{}
-				b.isTriggerPrepare = false
-
-				return revokeResp
-			})
 		}
 
 		return triggerResp

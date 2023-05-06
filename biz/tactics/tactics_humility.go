@@ -73,15 +73,25 @@ func (h HumilityTactic) Execute() {
 	//找到我军
 	pairGeneral := util.GetPairOneGeneral(h.tacticsParams, currentGeneral)
 	//注册效果
-	if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_Humility_Prepare, 1.0) {
+	if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_Humility_Prepare, &vo.EffectHolderParams{
+		FromTactic: h.Id(),
+	}).IsSuccess {
 		rate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.22
-		pairGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += rate
-		pairGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += rate
+		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: rate,
+			FromTactic: h.Id(),
+		}).IsSuccess {
+			hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了%.2f%%", pairGeneral.BaseInfo.Name,
+				rate*100)
+		}
+		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: rate,
+			FromTactic: h.Id(),
+		}).IsSuccess {
+			hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了%.2f%%", pairGeneral.BaseInfo.Name,
+				rate*100)
+		}
 
-		hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了%.2f%%", pairGeneral.BaseInfo.Name,
-			rate*100)
-		hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了%.2f%%", pairGeneral.BaseInfo.Name,
-			rate*100)
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeResp := &vo.TacticsTriggerResult{}
@@ -89,13 +99,14 @@ func (h HumilityTactic) Execute() {
 			revokeGeneral := params.CurrentGeneral
 
 			if currentRound+3 == revokeRound {
-				pairGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] -= rate
-				pairGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] -= rate
-				util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_Humility_Prepare)
-				hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害提高了%.2f%%", pairGeneral.BaseInfo.Name,
-					rate*100)
-				hlog.CtxInfof(ctx, "[%s]受到的谋略伤害提高了%.2f%%", pairGeneral.BaseInfo.Name,
-					rate*100)
+				if util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, h.Id()) {
+					hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害提高了%.2f%%", pairGeneral.BaseInfo.Name,
+						rate*100)
+				}
+				if util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, h.Id()) {
+					hlog.CtxInfof(ctx, "[%s]受到的谋略伤害提高了%.2f%%", pairGeneral.BaseInfo.Name,
+						rate*100)
+				}
 			}
 
 			return revokeResp

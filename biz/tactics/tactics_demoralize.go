@@ -38,15 +38,19 @@ func (d DemoralizeTactic) Prepare() {
 	//找到敌人单体
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, d.tacticsParams)
 	//施加效果
-	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_PoorHealth, 0.9) {
+	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_PoorHealth, &vo.EffectHolderParams{
+		EffectRate: 0.9,
+		FromTactic: d.Id(),
+	}).IsSuccess {
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
 			triggerRound := params.CurrentRound
+			triggerGeneral := params.CurrentGeneral
 
 			//第四回合消失
 			if triggerRound == consts.Battle_Round_Fourth {
-				util.DebuffEffectWrapRemove(ctx, enemyGeneral, consts.DebuffEffectType_CancelWeapon)
+				util.DebuffEffectWrapRemove(ctx, triggerGeneral, consts.DebuffEffectType_CancelWeapon, d.Id())
 			}
 
 			return triggerResp

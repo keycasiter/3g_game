@@ -36,7 +36,10 @@ func (o OnesResolveIsUnshakenTactic) Prepare() {
 
 	// 前2回合获得群攻（伤害率100%）状态，但只有50%概率发动群攻（普通攻击时对目标同部队其他武将造成伤害）效果，
 	//施加效果
-	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_GroupAttack, 1.0) {
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_GroupAttack, &vo.EffectHolderParams{
+		EffectRate: 1.0,
+		FromTactic: o.Id(),
+	}).IsSuccess {
 		hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
 			currentGeneral.BaseInfo.Name,
 			consts.BuffEffectType_OnesResolveIsUnshaken_Prepare,

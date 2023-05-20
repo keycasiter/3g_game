@@ -100,7 +100,10 @@ func (i InterlockedStratagemsTactic) Execute() {
 		)
 		for _, sufferGeneral := range allEnemyGenerals {
 			//施加效果
-			if !util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_InterlockedStratagems, 1.0) {
+			if !util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_InterlockedStratagems, &vo.EffectHolderParams{
+				EffectRate: 1.0,
+				FromTactic: i.Id(),
+			}).IsSuccess {
 				continue
 			}
 			//注册铁锁连环效果
@@ -148,7 +151,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 				revokeRound := params.CurrentRound
 				//持续2回合
 				if currentRound+3 == revokeRound {
-					util.DebuffEffectWrapRemove(ctx, sufferGeneral, consts.DebuffEffectType_InterlockedStratagems)
+					util.DebuffEffectWrapRemove(ctx, sufferGeneral, consts.DebuffEffectType_InterlockedStratagems, i.Id())
 				}
 				return triggerResp
 			})

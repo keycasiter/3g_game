@@ -84,49 +84,41 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 		return triggerResp
 	})
 	//战斗前3回合，获得30%概率规避效果
-	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-		currentGeneral.BaseInfo.Name,
-		consts.BuffEffectType_Evade,
-	)
 	hlog.CtxInfof(ctx, "[%s]的规避率提高了30.00%%",
 		currentGeneral.BaseInfo.Name,
 	)
-	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] += 0.3
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-		triggerResp := &vo.TacticsTriggerResult{}
-		//第四回合
-		if params.CurrentRound == consts.Battle_Round_Fourth {
-			currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade] -= 0.3
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				currentGeneral.BaseInfo.Name,
-				consts.BuffEffectType_Evade,
-			)
-			hlog.CtxInfof(ctx, "[%s]的规避率降低了30.00%%",
-				currentGeneral.BaseInfo.Name,
-			)
-		}
-		return triggerResp
-	})
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_Evade, &vo.EffectHolderParams{
+		EffectRate: 0.3,
+		FromTactic: t.Id(),
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			triggerResp := &vo.TacticsTriggerResult{}
+			triggerGeneral := params.CurrentGeneral
+			//第四回合
+			if params.CurrentRound == consts.Battle_Round_Fourth {
+				util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_Evade, t.Id())
+				hlog.CtxInfof(ctx, "[%s]的规避率降低了30.00%%",
+					currentGeneral.BaseInfo.Name,
+				)
+			}
+			return triggerResp
+		})
 
-	//战斗前3回合，无法进行普通攻击
-	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-		currentGeneral.BaseInfo.Name,
-		consts.DebuffEffectType_CanNotGeneralAttack,
-	)
-	currentGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack] = 1.0
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-		triggerResp := &vo.TacticsTriggerResult{}
-		//第四回合
-		if params.CurrentRound == consts.Battle_Round_Fourth {
-			delete(currentGeneral.DeBuffEffectHolderMap, consts.DebuffEffectType_CanNotGeneralAttack)
-
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				currentGeneral.BaseInfo.Name,
-				consts.DebuffEffectType_CanNotGeneralAttack,
-			)
+		//战斗前3回合，无法进行普通攻击
+		if util.DebuffEffectWrapSet(ctx, currentGeneral, consts.DebuffEffectType_CanNotGeneralAttack, &vo.EffectHolderParams{
+			FromTactic: t.Id(),
+		}).IsSuccess {
+			util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerResp := &vo.TacticsTriggerResult{}
+				triggerGeneral := params.CurrentGeneral
+				//第四回合
+				if params.CurrentRound == consts.Battle_Round_Fourth {
+					util.DebuffEffectWrapRemove(ctx, triggerGeneral, consts.DebuffEffectType_CanNotGeneralAttack, t.Id())
+				}
+				return triggerResp
+			})
 		}
-		return triggerResp
-	})
+	}
 }
 
 func (t ThreeDaysOfSeparationTactic) Execute() {

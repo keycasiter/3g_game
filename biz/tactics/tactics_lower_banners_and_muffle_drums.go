@@ -91,9 +91,11 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 			)
 			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, l.tacticsParams)
 			for _, general := range pairGenerals {
-				if util.TacticsBuffEffectCountWrapIncr(ctx, general, consts.BuffEffectType_LowerBannersAndMuffleDrums_Prepare, 1, 1, false) {
-					rate := 0.25
-					general.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += rate
+				rate := 0.25
+				if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_LaunchStrategyDamageImprove, &vo.EffectHolderParams{
+					EffectRate: rate,
+					FromTactic: l.Id(),
+				}).IsSuccess {
 					hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提高了%.2f%%",
 						general.BaseInfo.Name,
 						rate*100,
@@ -103,17 +105,16 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 					util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 						revokeResp := &vo.TacticsTriggerResult{}
 						revokeGeneral := params.CurrentGeneral
+						revokeRound := params.CurrentRound
 
-						if util.BuffEffectContains(revokeGeneral, consts.BuffEffectType_LowerBannersAndMuffleDrums_Prepare) &&
-							0 == util.TacticsBuffCountGet(revokeGeneral, consts.BuffEffectType_LowerBannersAndMuffleDrums_Prepare) {
-							revokeGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] -= rate
-							hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了%.2f%%",
-								revokeGeneral.BaseInfo.Name,
-								rate*100,
-							)
+						if triggerRound+1 == revokeRound {
+							if util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove, l.Id()) {
+								hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了%.2f%%",
+									revokeGeneral.BaseInfo.Name,
+									rate*100,
+								)
+							}
 						}
-
-						util.TacticsBuffEffectCountWrapDecr(ctx, revokeGeneral, consts.BuffEffectType_LowerBannersAndMuffleDrums_Prepare, 1)
 
 						return revokeResp
 					})

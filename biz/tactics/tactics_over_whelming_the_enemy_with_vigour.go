@@ -38,7 +38,10 @@ func (o OverwhelmingTheEnemyWithVigourTactic) Prepare() {
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(o.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
 		//施加效果
-		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_CancelWeapon, 0.9) {
+		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_CancelWeapon, &vo.EffectHolderParams{
+			EffectRate: 0.9,
+			FromTactic: o.Id(),
+		}).IsSuccess {
 			//注册消失效果
 			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				triggerResp := &vo.TacticsTriggerResult{}
@@ -46,7 +49,7 @@ func (o OverwhelmingTheEnemyWithVigourTactic) Prepare() {
 
 				//第三回合消失
 				if triggerRound == consts.Battle_Round_Third {
-					util.DebuffEffectWrapRemove(ctx, sufferGeneral, consts.DebuffEffectType_CancelWeapon)
+					util.DebuffEffectWrapRemove(ctx, sufferGeneral, consts.DebuffEffectType_CancelWeapon, o.Id())
 				}
 
 				return triggerResp

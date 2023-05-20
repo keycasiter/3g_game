@@ -68,39 +68,34 @@ func (w WuDangFlyArmyTactic) Prepare() {
 	enemyGenerals := util.GetEnemyGeneralsTwoArr(w.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
 		//持续3回合
-		if !util.TacticsDebuffEffectCountWrapIncr(ctx, sufferGeneral, consts.DebuffEffectType_Methysis, 3, 3, false) {
-			return
-		}
-		//施加中毒效果
-		sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_Methysis] = 1.0
-		hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-			sufferGeneral.BaseInfo.Name,
-			consts.DebuffEffectType_Methysis,
-		)
-		//注册效果
-		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerGeneral := params.CurrentGeneral
-			triggerResp := &vo.TacticsTriggerResult{}
+		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Methysis, &vo.EffectHolderParams{
+			EffectRate: 1.0,
+			FromTactic: w.Id(),
+		}).IsSuccess {
+			//注册效果
+			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerGeneral := params.CurrentGeneral
+				triggerRound := params.CurrentRound
+				triggerResp := &vo.TacticsTriggerResult{}
 
-			if !util.TacticsDebuffEffectCountWrapDecr(ctx, triggerGeneral, consts.DebuffEffectType_Methysis, 1) {
-				//次数不足
+				if triggerRound <= consts.Battle_Round_Third {
+					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+						triggerGeneral.BaseInfo.Name,
+						w.Name(),
+						consts.DebuffEffectType_Methysis,
+					)
+					dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
+					util.TacticDamage(&util.TacticDamageParam{
+						TacticsParams: w.tacticsParams,
+						AttackGeneral: currentGeneral,
+						SufferGeneral: triggerGeneral,
+						Damage:        dmgNum,
+						TacticName:    w.Name(),
+					})
+				}
 				return triggerResp
-			}
-			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-				triggerGeneral.BaseInfo.Name,
-				w.Name(),
-				consts.DebuffEffectType_Methysis,
-			)
-			dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
-			util.TacticDamage(&util.TacticDamageParam{
-				TacticsParams: w.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: triggerGeneral,
-				Damage:        dmgNum,
-				TacticName:    w.Name(),
 			})
-			return triggerResp
-		})
+		}
 	}
 
 	//TODO 若王平统领，对敌军全体施加中毒状态，但伤害率降低（伤害率66%，受智力影响）

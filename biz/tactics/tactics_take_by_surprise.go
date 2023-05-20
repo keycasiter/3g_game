@@ -92,26 +92,27 @@ func (t TakeBySurpriseTactic) Execute() {
 				hitIdx := util.GenerateHitOneIdx(2)
 				debuff := debuffs[hitIdx]
 				//施加效果
-				if util.DebuffEffectWrapSet(ctx, enemyGeneral, debuff, 1.0) {
+				if util.DebuffEffectWrapSet(ctx, enemyGeneral, debuff, &vo.EffectHolderParams{
+					EffectRate: 1.0,
+					FromTactic: t.Id(),
+				}).IsSuccess {
 					//回合数设置
 					effectRound := int64(1)
 					if util.GenerateRate(0.3) {
 						effectRound = 2
 					}
 
-					if util.TacticsDebuffEffectCountWrapIncr(ctx, enemyGeneral, debuff, effectRound, effectRound, false) {
-						//注册消失效果
-						util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-							revokeResp := &vo.TacticsTriggerResult{}
-							revokeGeneral := params.CurrentGeneral
+					//注册消失效果
+					util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeResp := &vo.TacticsTriggerResult{}
+						revokeGeneral := params.CurrentGeneral
+						revokeRound := params.CurrentRound
 
-							if util.DeBuffEffectContains(revokeGeneral, debuff) &&
-								!util.TacticsDebuffEffectCountWrapDecr(ctx, revokeGeneral, debuff, 1) {
-
-							}
-							return revokeResp
-						})
-					}
+						if revokeRound == consts.BattleRound(int64(currentRound)+effectRound) {
+							util.DebuffEffectWrapRemove(ctx, revokeGeneral, debuff, t.Id())
+						}
+						return revokeResp
+					})
 				}
 			}
 		}

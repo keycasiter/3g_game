@@ -41,56 +41,62 @@ func (r RideTigerHardToGetOffTactic) Prepare() {
 	pairGenerals := util.GetPairGeneralsTwoArr(r.tacticsParams)
 	//注册效果
 	for _, general := range pairGenerals {
-		util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_RideTigerHardToGetOff_Prepare, 1.0)
+		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_RideTigerHardToGetOff_Prepare, &vo.EffectHolderParams{
+			EffectRate: 1.0,
+			FromTactic: r.Id(),
+		}).IsSuccess {
+			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerResp := &vo.TacticsTriggerResult{}
+				triggerGeneral := params.CurrentGeneral
+				triggerRound := params.CurrentRound
 
-		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
-			triggerRound := params.CurrentRound
+				if !util.BuffEffectContains(triggerGeneral, consts.BuffEffectType_RideTigerHardToGetOff_Prepare) {
+					return triggerResp
+				}
 
-			if !util.BuffEffectContains(triggerGeneral, consts.BuffEffectType_RideTigerHardToGetOff_Prepare) {
+				if !util.GenerateRate(0.35) {
+					hlog.CtxInfof(ctx, "[%s]的「%v」因几率没有生效",
+						triggerGeneral.BaseInfo.Name,
+						consts.BuffEffectType_RideTigerHardToGetOff_Prepare,
+					)
+					return triggerResp
+				}
+
+				//当回合禁疗
+				if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_ProhibitionTreatment, &vo.EffectHolderParams{
+					EffectRate: 1.0,
+					FromTactic: r.Id(),
+				}).IsSuccess {
+					//注册下回合解除禁疗
+					util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeResp := &vo.TacticsTriggerResult{}
+						revokeGeneral := params.CurrentGeneral
+						revokeRound := params.CurrentRound
+
+						if triggerRound+1 == revokeRound {
+							util.DebuffEffectWrapRemove(ctx, revokeGeneral, consts.DebuffEffectType_ProhibitionTreatment, r.Id())
+						}
+
+						return revokeResp
+					})
+				}
+
+				//并对敌军群体（2人）造成兵刃攻击（伤害率72%）
+				enemyGenerals := util.GetEnemyGeneralsTwoArr(r.tacticsParams)
+				for _, enemyGeneral := range enemyGenerals {
+					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.72)
+					util.TacticDamage(&util.TacticDamageParam{
+						TacticsParams: r.tacticsParams,
+						AttackGeneral: currentGeneral,
+						SufferGeneral: enemyGeneral,
+						Damage:        dmg,
+						TacticName:    r.Name(),
+						EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_RideTigerHardToGetOff_Prepare),
+					})
+				}
 				return triggerResp
-			}
-
-			if !util.GenerateRate(0.35) {
-				hlog.CtxInfof(ctx, "[%s]的「%v」因几率没有生效",
-					triggerGeneral.BaseInfo.Name,
-					consts.BuffEffectType_RideTigerHardToGetOff_Prepare,
-				)
-				return triggerResp
-			}
-
-			//当回合禁疗
-			if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_ProhibitionTreatment, 1.0) {
-				//注册下回合解除禁疗
-				util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-					revokeResp := &vo.TacticsTriggerResult{}
-					revokeGeneral := params.CurrentGeneral
-					revokeRound := params.CurrentRound
-
-					if triggerRound+1 == revokeRound {
-						util.DebuffEffectWrapRemove(ctx, revokeGeneral, consts.DebuffEffectType_ProhibitionTreatment)
-					}
-
-					return revokeResp
-				})
-			}
-
-			//并对敌军群体（2人）造成兵刃攻击（伤害率72%）
-			enemyGenerals := util.GetEnemyGeneralsTwoArr(r.tacticsParams)
-			for _, enemyGeneral := range enemyGenerals {
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.72)
-				util.TacticDamage(&util.TacticDamageParam{
-					TacticsParams: r.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: enemyGeneral,
-					Damage:        dmg,
-					TacticName:    r.Name(),
-					EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_RideTigerHardToGetOff_Prepare),
-				})
-			}
-			return triggerResp
-		})
+			})
+		}
 	}
 }
 

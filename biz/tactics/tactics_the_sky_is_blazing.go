@@ -88,42 +88,39 @@ func (t TheSkyIsBlazingTactic) Execute() {
 				})
 
 				//每回合持续造成伤害（伤害率72%，受智力影响），持续2回合
-				if !util.TacticsDebuffEffectCountWrapIncr(ctx, general, consts.DebuffEffectType_Firing, 2, 2, true) {
-					return triggerResp
-				}
-				if !util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_Firing, 1.0) {
-					return triggerResp
-				}
-				//注册持续效果
-				util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-					if util.DeBuffEffectContains(general, consts.DebuffEffectType_Firing) &&
-						!util.TacticsDebuffEffectCountWrapDecr(ctx, general, consts.DebuffEffectType_Firing, 1) {
-						//次数不足移除效果
-						util.DebuffEffectWrapRemove(ctx, general, consts.DebuffEffectType_Firing)
-						hlog.CtxInfof(ctx, "[%s]的【%s】「%v」效果已消失",
+				if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_Firing, &vo.EffectHolderParams{
+					FromTactic: t.Id(),
+				}).IsSuccess {
+					//注册持续效果
+					util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeGeneral := params.CurrentGeneral
+						revokeRound := params.CurrentRound
+
+						hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
 							general.BaseInfo.Name,
 							t.Name(),
 							consts.DebuffEffectType_Firing,
 						)
+						firingDmg := cast.ToInt64(0.72 * revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+						util.TacticDamage(&util.TacticDamageParam{
+							TacticsParams: t.tacticsParams,
+							AttackGeneral: revokeGeneral,
+							SufferGeneral: general,
+							Damage:        firingDmg,
+							TacticName:    t.Name(),
+						})
 
+						if currentRound+2 == revokeRound {
+							util.DebuffEffectWrapRemove(ctx, revokeGeneral, consts.DebuffEffectType_Firing, t.Id())
+							hlog.CtxInfof(ctx, "[%s]的【%s】「%v」效果已消失",
+								revokeGeneral.BaseInfo.Name,
+								t.Name(),
+								consts.DebuffEffectType_Firing,
+							)
+						}
 						return triggerResp
-					}
-					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-						general.BaseInfo.Name,
-						t.Name(),
-						consts.DebuffEffectType_Firing,
-					)
-					firingDmg := cast.ToInt64(0.72 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-					util.TacticDamage(&util.TacticDamageParam{
-						TacticsParams: t.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: general,
-						Damage:        firingDmg,
-						TacticName:    t.Name(),
 					})
-					return triggerResp
-				})
-
+				}
 			}
 		}
 

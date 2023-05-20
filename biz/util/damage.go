@@ -122,7 +122,11 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	}
 
 	//是否可以规避
-	if rate, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
+	if effectParams, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
+		rate := float64(0)
+		for _, param := range effectParams {
+			rate += param.EffectRate
+		}
 		if GenerateRate(rate) {
 			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效", sufferGeneral.BaseInfo.Name)
 			return
@@ -143,7 +147,7 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	//	int64(numDmg), atkDefDmg, attackDmg, atk, def, inc*100, dec*100, incDecRate)
 
 	//伤害分担
-	if v, ok := BuffEffectGet(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
+	if v, ok := BuffEffectGetAggrEffectRate(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
 		hlog.CtxInfof(ctx, "[%s]由于「%v」效果，本次攻击受到的伤害减少了%.2f%%",
 			sufferGeneral.BaseInfo.Name,
 			consts.BuffEffectType_ShareResponsibilityFor,
@@ -205,10 +209,31 @@ func calculateAttackDmg(soldierNum int64, attackGeneral *vo.BattleGeneral, suffe
 	}
 	atk := attackGeneral.BaseInfo.AbilityAttr.ForceBase
 	def := sufferGeneral.BaseInfo.AbilityAttr.CommandBase
-	inc := attackGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] +
-		sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_SufferWeaponDamageImprove]
-	dec := attackGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce] +
-		sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce]
+
+	lwdiEffectRate := float64(0)
+	swdiEffectRate := float64(0)
+	lwdiEffectParams := attackGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove]
+	swdiEffectParams := sufferGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_SufferWeaponDamageImprove]
+	for _, rate := range lwdiEffectParams {
+		lwdiEffectRate += rate.EffectRate
+	}
+	for _, rate := range swdiEffectParams {
+		swdiEffectRate += rate.EffectRate
+	}
+
+	inc := lwdiEffectRate + swdiEffectRate
+
+	lwddEffectRate := float64(0)
+	swddEffectRate := float64(0)
+	lwddEffectParams := attackGeneral.DeBuffEffectHolderMap[consts.DebuffEffectType_LaunchWeaponDamageDeduce]
+	swddEffectParams := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce]
+	for _, rate := range lwddEffectParams {
+		lwddEffectRate += rate.EffectRate
+	}
+	for _, rate := range swddEffectParams {
+		swddEffectRate += rate.EffectRate
+	}
+	dec := lwddEffectRate + swddEffectRate
 
 	// 总伤害 = (兵力伤害 + 攻击 - 防御) * (1 + 增益比例 - 减益比例)
 	//（攻击 - 防御）伤害结算
@@ -268,7 +293,11 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	isEffect = true
 
 	//是否可以规避
-	if rate, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
+	if effectParams, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
+		rate := float64(0)
+		for _, param := range effectParams {
+			rate += param.EffectRate
+		}
 		if GenerateRate(rate) {
 			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效", sufferGeneral.BaseInfo.Name)
 			return 0, sufferGeneral.SoldierNum, sufferGeneral.SoldierNum, false
@@ -277,7 +306,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		}
 	}
 	//伤害分担
-	if v, ok := BuffEffectGet(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
+	if v, ok := BuffEffectGetAggrEffectRate(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
 		hlog.CtxInfof(ctx, "[%s]由于「%v」效果，本次攻击受到的伤害减少了%.2f%%",
 			sufferGeneral.BaseInfo.Name,
 			consts.BuffEffectType_ShareResponsibilityFor,

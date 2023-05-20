@@ -88,96 +88,92 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 		//援护效果
 		for _, general := range generals {
 			//注册
-			if !util.TacticsBuffEffectCountWrapIncr(ctx, general, consts.BuffEffectType_Intervene, 1, 1, false) {
-				hlog.CtxInfof(ctx, "[%s]身上已存在同等或更强的「%v」效果",
-					general.BaseInfo.Name,
-					consts.BuffEffectType_Intervene,
-				)
-				continue
-			}
+			if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_Intervene, &vo.EffectHolderParams{
+				EffectRate: 1.0,
+				FromTactic: s.Id(),
+			}).IsSuccess {
+				general.HelpByGeneral = viceGeneral
 
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-				general.BaseInfo.Name,
-				consts.BuffEffectType_Intervene,
-			)
-			util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_Intervene, 1.0)
-			general.HelpByGeneral = viceGeneral
+				util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					revokeResp := &vo.TacticsTriggerResult{}
 
-			util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				revokeResp := &vo.TacticsTriggerResult{}
+					//消失
+					if triggerRound+1 == params.CurrentRound {
+						if !util.BuffEffectWrapRemove(ctx, general, consts.BuffEffectType_Intervene, s.Id()) {
+							return revokeResp
+						}
 
-				//消失
-				if triggerRound+1 == params.CurrentRound {
-					if !util.BuffEffectWrapRemove(ctx, general, consts.BuffEffectType_Intervene) {
-						return revokeResp
+						hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+							general.BaseInfo.Name,
+							consts.BuffEffectType_Intervene,
+						)
+
+						general.HelpByGeneral = nil
 					}
 
-					hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-						general.BaseInfo.Name,
-						consts.BuffEffectType_Intervene,
-					)
-
-					general.HelpByGeneral = nil
-				}
-
-				return revokeResp
-			})
+					return revokeResp
+				})
+			}
 		}
 
 		//休整效果
-		if !util.TacticsBuffEffectCountWrapIncr(ctx, viceGeneral, consts.BuffEffectType_Rest, 1, 1, true) {
-			return triggerResp
+		if util.BuffEffectWrapSet(ctx, viceGeneral, consts.BuffEffectType_Rest, &vo.EffectHolderParams{
+			EffectRate: 1.0,
+			FromTactic: s.Id(),
+		}).IsSuccess {
+			util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerGeneral := params.CurrentGeneral
+				//恢复一次兵力
+				if util.BuffEffectWrapSet(ctx, viceGeneral, consts.BuffEffectType_Rest, &vo.EffectHolderParams{
+					EffectRate: 1.0,
+					FromTactic: s.Id(),
+				}).IsSuccess {
+					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+						triggerGeneral.BaseInfo.Name,
+						s.Name(),
+						consts.BuffEffectType_Rest,
+					)
+					resumeNum := cast.ToInt64(1.92 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+					finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(viceGeneral, resumeNum)
+					hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
+						triggerGeneral.BaseInfo.Name,
+						finalResumeNum,
+						holdNum,
+						finalNum,
+					)
+				}
+				return triggerResp
+			})
+
+			//注册被攻击效果
+			if util.BuffEffectWrapSet(ctx, viceGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare, &vo.EffectHolderParams{
+				EffectRate: 1.0,
+				FromTactic: s.Id(),
+			}).IsSuccess {
+				util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					triggerGeneral := params.CurrentGeneral
+					attackGeneral := params.AttackGeneral
+
+					if !util.BuffEffectContains(triggerGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare) {
+						return triggerResp
+					}
+					//55%概率
+					if util.GenerateRate(0.55) {
+						hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+							triggerGeneral.BaseInfo.Name,
+							s.Name(),
+							consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare,
+						)
+						//移除攻击者增益效果
+						util.BuffEffectClean(ctx, attackGeneral)
+					}
+					util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare, s.Id())
+
+					return triggerResp
+				})
+				return triggerResp
+			}
 		}
-		hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
-			viceGeneral.BaseInfo.Name,
-			consts.BuffEffectType_Rest,
-		)
-		util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerGeneral := params.CurrentGeneral
-			//恢复一次兵力
-			if !util.TacticsBuffEffectCountWrapDecr(ctx, viceGeneral, consts.BuffEffectType_Rest, 1) {
-				return triggerResp
-			}
-			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-				triggerGeneral.BaseInfo.Name,
-				s.Name(),
-				consts.BuffEffectType_Rest,
-			)
-			resumeNum := cast.ToInt64(1.92 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-			finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(viceGeneral, resumeNum)
-			hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
-				triggerGeneral.BaseInfo.Name,
-				finalResumeNum,
-				holdNum,
-				finalNum,
-			)
-
-			return triggerResp
-		})
-
-		//注册被攻击效果
-		util.BuffEffectWrapSet(ctx, viceGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare, 1.0)
-		util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerGeneral := params.CurrentGeneral
-			attackGeneral := params.AttackGeneral
-
-			if !util.BuffEffectContains(triggerGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare) {
-				return triggerResp
-			}
-			//55%概率
-			if util.GenerateRate(0.55) {
-				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-					triggerGeneral.BaseInfo.Name,
-					s.Name(),
-					consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare,
-				)
-				//移除攻击者增益效果
-				util.BuffEffectClean(ctx, attackGeneral)
-			}
-			util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare)
-
-			return triggerResp
-		})
 		return triggerResp
 	})
 }

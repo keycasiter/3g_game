@@ -670,6 +670,12 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 		if general.TacticsFrozenMap == nil {
 			general.TacticsFrozenMap = map[consts.TacticId]int64{}
 		}
+		if general.BuffEffectCountMap == nil {
+			general.BuffEffectCountMap = map[consts.BuffEffectType]int64{}
+		}
+		if general.DeBuffEffectCountMap == nil {
+			general.DeBuffEffectCountMap = map[consts.DebuffEffectType]int64{}
+		}
 	}
 
 	runCtx.TacticsParams = tacticsParams

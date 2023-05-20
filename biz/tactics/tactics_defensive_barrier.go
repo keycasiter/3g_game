@@ -34,8 +34,15 @@ func (d DefensiveBarrierTactic) Prepare() {
 	//找到随机友军2人
 	pairGenerals := util.GetPairGeneralsTwoArr(d.tacticsParams)
 	for _, general := range pairGenerals {
-		general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += 0.25
-		general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += 0.25
+		util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: 0.25,
+			FromTactic: d.Id(),
+		})
+		util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
+			EffectRate: 0.25,
+			FromTactic: d.Id(),
+		})
+
 		hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了25%%",
 			general.BaseInfo.Name,
 		)
@@ -47,10 +54,12 @@ func (d DefensiveBarrierTactic) Prepare() {
 		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeRound := params.CurrentRound
 			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
 
 			if revokeRound == consts.Battle_Round_Fifth {
-				general.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] -= 0.25
-				general.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] -= 0.25
+				util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, d.Id())
+				util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, d.Id())
+
 				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
 					general.BaseInfo.Name,
 					consts.BuffEffectType_SufferWeaponDamageDeduce,

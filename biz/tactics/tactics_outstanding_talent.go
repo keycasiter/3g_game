@@ -62,6 +62,7 @@ func (o OutstandingTalentTactic) SupportArmTypes() []consts.ArmType {
 func (o OutstandingTalentTactic) Execute() {
 	ctx := o.tacticsParams.Ctx
 	currentGeneral := o.tacticsParams.CurrentGeneral
+	currentRound := o.tacticsParams.CurrentRound
 
 	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 		currentGeneral.BaseInfo.Name,
@@ -72,9 +73,11 @@ func (o OutstandingTalentTactic) Execute() {
 	pairGeneral := util.GetPairGeneralsTwoArr(o.tacticsParams)
 	for _, general := range pairGeneral {
 		//设置效果
-		if util.TacticsBuffEffectCountWrapIncr(ctx, general, consts.BuffEffectType_OutstandingTalent_Prepare, 2, 2, false) {
-			rate := 0.27
-			general.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += rate
+		rate := 0.27
+		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_LaunchStrategyDamageImprove, &vo.EffectHolderParams{
+			EffectRate: rate,
+			FromTactic: o.Id(),
+		}).IsSuccess {
 			hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提高了%.2f%%",
 				general.BaseInfo.Name,
 				rate*100,
@@ -84,18 +87,15 @@ func (o OutstandingTalentTactic) Execute() {
 			util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				revokeResp := &vo.TacticsTriggerResult{}
 				revokeGeneral := params.CurrentGeneral
+				revokeRound := params.CurrentRound
 
-				if util.BuffEffectContains(revokeGeneral, consts.BuffEffectType_OutstandingTalent_Prepare) &&
-					0 == util.TacticsBuffCountGet(revokeGeneral, consts.BuffEffectType_OutstandingTalent_Prepare) {
-					revokeGeneral.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] -= rate
+				if currentRound+2 == revokeRound {
+					util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove, o.Id())
 					hlog.CtxInfof(ctx, "[%s]造成的谋略伤害降低了%.2f%%",
 						revokeGeneral.BaseInfo.Name,
 						rate*100,
 					)
 				}
-
-				util.TacticsBuffEffectCountWrapDecr(ctx, revokeGeneral, consts.BuffEffectType_OutstandingTalent_Prepare, 1)
-
 				return revokeResp
 			})
 		}

@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -53,32 +54,44 @@ func (t TraitorInTroubledTimesTactic) Prepare() {
 		//造成伤害提高16% TODO （受智力影响）
 		rate := 0.16
 		rate += general.BaseInfo.AbilityAttr.IntelligenceBase / 100 / 100
-		general.BuffEffectHolderMap[consts.BuffEffectType_LaunchStrategyDamageImprove] += rate
-		general.BuffEffectHolderMap[consts.BuffEffectType_LaunchWeaponDamageImprove] += rate
-		hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提高了%.2f%%",
-			general.BaseInfo.Name,
-			rate*100,
-		)
-		hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提高了%.2f%%",
-			general.BaseInfo.Name,
-			rate*100,
-		)
+		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_LaunchStrategyDamageImprove, &vo.EffectHolderParams{
+			EffectRate: rate,
+			FromTactic: t.Id(),
+		}).IsSuccess {
+			hlog.CtxInfof(ctx, "[%s]造成的兵刃伤害提高了%.2f%%",
+				general.BaseInfo.Name,
+				rate*100,
+			)
+		}
+
+		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{
+			EffectRate: rate,
+			FromTactic: t.Id(),
+		}).IsSuccess {
+			hlog.CtxInfof(ctx, "[%s]造成的谋略伤害提高了%.2f%%",
+				general.BaseInfo.Name,
+				rate*100,
+			)
+		}
+
 	}
 
 	//自己受到伤害降低18%  TODO（受智力影响）
 	rate := 0.18
 	rate += currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100 / 100
-	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferWeaponDamageDeduce] += rate
-	currentGeneral.BuffEffectHolderMap[consts.BuffEffectType_SufferStrategyDamageDeduce] += rate
-	hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了%.2f%%",
-		currentGeneral.BaseInfo.Name,
-		rate*100,
-	)
-	hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了%.2f%%",
-		currentGeneral.BaseInfo.Name,
-		rate*100,
-	)
 
+	if util.BuffEffectWrapRemove(ctx, currentGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, t.Id()) {
+		hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了%.2f%%",
+			currentGeneral.BaseInfo.Name,
+			rate*100,
+		)
+	}
+	if util.BuffEffectWrapRemove(ctx, currentGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, t.Id()) {
+		hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了%.2f%%",
+			currentGeneral.BaseInfo.Name,
+			rate*100,
+		)
+	}
 	//TODO 如果自己为主将，副将造成伤害时，会为主将恢复其伤害量10%的兵力
 }
 

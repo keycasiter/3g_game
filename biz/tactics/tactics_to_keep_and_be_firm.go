@@ -39,7 +39,10 @@ func (t ToKeepAndBeFirmTactic) Prepare() {
 	enemyMaster := util.GetEnemyMasterGeneral(t.tacticsParams)
 	enemyMaster.TauntByGeneral = currentGeneral
 
-	if util.DebuffEffectWrapSet(ctx, enemyMaster, consts.DebuffEffectType_Taunt, 1.0) {
+	if util.DebuffEffectWrapSet(ctx, enemyMaster, consts.DebuffEffectType_Taunt, &vo.EffectHolderParams{
+		EffectRate: 1.0,
+		FromTactic: t.Id(),
+	}).IsSuccess {
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(enemyMaster, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
@@ -47,7 +50,7 @@ func (t ToKeepAndBeFirmTactic) Prepare() {
 			triggerGeneral := params.CurrentGeneral
 			//第五回合消失
 			if triggerRound == consts.Battle_Round_Fifth {
-				util.DebuffEffectWrapRemove(ctx, triggerGeneral, consts.DebuffEffectType_Taunt)
+				util.DebuffEffectWrapRemove(ctx, triggerGeneral, consts.DebuffEffectType_Taunt, t.Id())
 
 				//统率效果消失
 				currentGeneral.BaseInfo.AbilityAttr.CommandBase -= 40

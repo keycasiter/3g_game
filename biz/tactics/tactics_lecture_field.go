@@ -40,76 +40,89 @@ func (l LectureFieldTactic) Prepare() {
 	//并提高自己及随机友军主动战法4%（受智力影响）发动几率，持续1回合
 	enemyGenerals := util.GetEnemyGeneralArr(l.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
-		util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_LectureField, 1.0)
-		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
-			triggerRound := params.CurrentRound
+		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_LectureField, &vo.EffectHolderParams{
+			EffectRate: 1.0,
+			FromTactic: l.Id(),
+		}).IsSuccess {
+			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerResp := &vo.TacticsTriggerResult{}
+				triggerGeneral := params.CurrentGeneral
+				triggerRound := params.CurrentRound
 
-			if util.GenerateRate(0.25) {
-				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
-					triggerGeneral.BaseInfo.Name,
-					l.Name(),
-					consts.DebuffEffectType_LectureField,
-				)
-				//敌人
-				DecrRate := 0.05 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
-				util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_TacticsActiveTriggerDecr, DecrRate)
-				//注册消失
-				util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-					revokeResp := &vo.TacticsTriggerResult{}
-					revokeRound := params.CurrentRound
-					revokeGeneral := params.CurrentGeneral
+				if util.GenerateRate(0.25) {
+					hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
+						triggerGeneral.BaseInfo.Name,
+						l.Name(),
+						consts.DebuffEffectType_LectureField,
+					)
+					//敌人
+					DecrRate := 0.05 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
+					if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_TacticsActiveTriggerDecr, &vo.EffectHolderParams{
+						EffectRate: DecrRate,
+						FromTactic: l.Id(),
+					}).IsSuccess {
+						//注册消失
+						util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+							revokeResp := &vo.TacticsTriggerResult{}
+							revokeRound := params.CurrentRound
+							revokeGeneral := params.CurrentGeneral
 
-					if triggerRound+1 == revokeRound {
-						util.DebuffEffectWrapRemove(ctx, revokeGeneral, consts.DebuffEffectType_TacticsActiveTriggerDecr)
-					}
-					return revokeResp
-				})
+							if triggerRound+1 == revokeRound {
+								util.DebuffEffectWrapRemove(ctx, revokeGeneral, consts.DebuffEffectType_TacticsActiveTriggerDecr, l.Id())
+							}
+							return revokeResp
+						})
 
-				//自己
-				improveRate := 0.04 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
-				util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove, improveRate)
-				//注册消失
-				util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-					revokeResp := &vo.TacticsTriggerResult{}
-					revokeRound := params.CurrentRound
-					revokeGeneral := params.CurrentGeneral
+						//自己
+						improveRate := 0.04 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
+						if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove, &vo.EffectHolderParams{
+							EffectRate: improveRate,
+							FromTactic: l.Id(),
+						}).IsSuccess {
+							//注册消失
+							util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+								revokeResp := &vo.TacticsTriggerResult{}
+								revokeRound := params.CurrentRound
+								revokeGeneral := params.CurrentGeneral
 
-					if triggerRound+1 == revokeRound {
-						util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove)
-					}
-					return revokeResp
-				})
-
-				//队友单体
-				pairGeneral := util.GetPairOneGeneralNotSelf(l.tacticsParams, currentGeneral)
-				if pairGeneral != nil {
-					util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove, improveRate)
-
-					//注册消失
-					util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-						revokeResp := &vo.TacticsTriggerResult{}
-						revokeRound := params.CurrentRound
-						revokeGeneral := params.CurrentGeneral
-
-						if triggerRound+1 == revokeRound {
-							util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove)
+								if triggerRound+1 == revokeRound {
+									util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove, l.Id())
+								}
+								return revokeResp
+							})
 						}
-						return revokeResp
-					})
-				}
+						//队友单体
+						pairGeneral := util.GetPairOneGeneralNotSelf(l.tacticsParams, currentGeneral)
+						if pairGeneral != nil {
+							if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove, &vo.EffectHolderParams{
+								EffectRate: improveRate,
+								FromTactic: l.Id(),
+							}).IsSuccess {
+								//注册消失
+								util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+									revokeResp := &vo.TacticsTriggerResult{}
+									revokeRound := params.CurrentRound
+									revokeGeneral := params.CurrentGeneral
 
-			} else {
-				hlog.CtxInfof(ctx, "[%s]来自[%s]【%s】的「%v」效果因几率没有生效",
-					triggerGeneral.BaseInfo.Name,
-					currentGeneral.BaseInfo.Name,
-					l.Name(),
-					consts.DebuffEffectType_LectureField,
-				)
-			}
-			return triggerResp
-		})
+									if triggerRound+1 == revokeRound {
+										util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove, l.Id())
+									}
+									return revokeResp
+								})
+							}
+						}
+					}
+				} else {
+					hlog.CtxInfof(ctx, "[%s]来自[%s]【%s】的「%v」效果因几率没有生效",
+						triggerGeneral.BaseInfo.Name,
+						currentGeneral.BaseInfo.Name,
+						l.Name(),
+						consts.DebuffEffectType_LectureField,
+					)
+				}
+				return triggerResp
+			})
+		}
 	}
 }
 

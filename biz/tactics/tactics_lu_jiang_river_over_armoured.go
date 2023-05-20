@@ -78,7 +78,10 @@ func (l LuJiangRiverOverArmouredTactic) Execute() {
 	pairGeneral := util.GetPairOneGeneralNotSelf(l.tacticsParams, currentGeneral)
 	pairGeneral.ShareResponsibilityForByGeneral = currentGeneral
 	//施加效果
-	if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_ShareResponsibilityFor, 0.4) {
+	if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_ShareResponsibilityFor, &vo.EffectHolderParams{
+		EffectRate: 0.4,
+		FromTactic: l.Id(),
+	}).IsSuccess {
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeResp := &vo.TacticsTriggerResult{}
@@ -86,7 +89,7 @@ func (l LuJiangRiverOverArmouredTactic) Execute() {
 			revokeRound := params.CurrentRound
 			//设置回合
 			if currentRound+2 == revokeRound {
-				util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_ShareResponsibilityFor)
+				util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_ShareResponsibilityFor, l.Id())
 			}
 
 			return revokeResp

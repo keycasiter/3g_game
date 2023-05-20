@@ -184,6 +184,32 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 		general.BaseInfo.Name,
 		effectType,
 	)
+
+	//次数逻辑
+	currentTimes := general.BuffEffectCountMap[effectType]
+	//超过最大次数限制
+	if effectParam.EffectTimes > effectParam.MaxEffectTimes {
+		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
+			general.BaseInfo.Name,
+			effectType,
+		)
+		return &EffectWrapSetResp{
+			IsSuccess: false,
+		}
+	}
+	//叠加逻辑
+	if effectParam.EffectTimes+currentTimes > effectParam.MaxEffectTimes {
+		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
+			general.BaseInfo.Name,
+			effectType,
+		)
+		return &EffectWrapSetResp{
+			IsSuccess: false,
+		}
+	} else {
+		general.BuffEffectCountMap[effectType] = currentTimes + effectParam.EffectTimes
+	}
+
 	return &EffectWrapSetResp{
 		IsSuccess: true,
 	}
@@ -243,6 +269,18 @@ func BuffEffectGet(general *vo.BattleGeneral, effectType consts.BuffEffectType) 
 		return v, true
 	}
 	return nil, false
+}
+
+// 获取增益效果(汇总)
+func BuffEffectGetAggrEffectRate(general *vo.BattleGeneral, effectType consts.BuffEffectType) (float64, bool) {
+	effectRate := float64(0)
+	if v, ok := general.BuffEffectHolderMap[effectType]; ok {
+		for _, effectParam := range v {
+			effectRate += effectParam.EffectRate
+		}
+		return effectRate, true
+	}
+	return 0, false
 }
 
 // 是否存在增益效果

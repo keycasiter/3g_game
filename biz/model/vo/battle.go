@@ -26,11 +26,15 @@ type EffectHolderParams struct {
 	//影响百分比
 	EffectRate float64
 	//影响回合
-	EffectRound int64
+	EffectRound consts.BattleRound
 	//影响次数
 	EffectTimes int64
+	//最大次数
+	MaxEffectTimes int64
 	//来源于哪个战法
 	FromTactic consts.TacticId
+	//是否可以刷新
+	IsSupportRefresh bool
 }
 
 // 对战武将信息
@@ -58,6 +62,11 @@ type BattleGeneral struct {
 	BuffEffectHolderMap map[consts.BuffEffectType][]*EffectHolderParams
 	//减益效果变量 map<效果,容器属性>
 	DeBuffEffectHolderMap map[consts.DebuffEffectType][]*EffectHolderParams
+
+	//增益效果次数
+	BuffEffectCountMap map[consts.BuffEffectType]int64
+	//减益效果次数
+	DeBuffEffectCountMap map[consts.DebuffEffectType]int64
 
 	//战法冷却器 map<战法,冷却回合>
 	TacticsFrozenMap map[consts.TacticId]int64

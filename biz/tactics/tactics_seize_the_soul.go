@@ -69,6 +69,7 @@ func (s SeizeTheSoulTactic) SupportArmTypes() []consts.ArmType {
 func (s SeizeTheSoulTactic) Execute() {
 	ctx := s.tacticsParams.Ctx
 	currentGeneral := s.tacticsParams.CurrentGeneral
+	currentRound := s.tacticsParams.CurrentRound
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
 
 	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
@@ -77,156 +78,142 @@ func (s SeizeTheSoulTactic) Execute() {
 	)
 
 	//最多叠加两次
-	if !util.TacticsBuffEffectCountWrapIncr(ctx, currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1, 2, false) {
-		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
+	if !util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_SeizeTheSoul, &vo.EffectHolderParams{
+		EffectTimes:    1,
+		MaxEffectTimes: 2,
+		FromTactic:     s.Id(),
+	}).IsSuccess {
+		//偷取敌军单体38点武力、智力、速度、统率（受智力影响）
+		v := 38 + (currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100)
+		//提高我军武将
+		hlog.CtxInfof(ctx, "[%s]的武力提高了%.2f(%.2f↗%.2f)",
 			currentGeneral.BaseInfo.Name,
-			consts.BuffEffectType_SeizeTheSoul,
+			v,
+			currentGeneral.BaseInfo.AbilityAttr.ForceBase,
+			currentGeneral.BaseInfo.AbilityAttr.ForceBase+v,
 		)
-		return
-	}
-	if !util.TacticsDebuffEffectCountWrapIncr(ctx, enemyGeneral, consts.DebuffEffectType_SeizeTheSoul, 1, 2, false) {
-		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
-			enemyGeneral.BaseInfo.Name,
-			consts.DebuffEffectType_SeizeTheSoul,
+		hlog.CtxInfof(ctx, "[%s]的智力提高了%.2f(%.2f↗%.2f)",
+			currentGeneral.BaseInfo.Name,
+			v,
+			currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase,
+			currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase+v,
 		)
-		return
-	}
+		hlog.CtxInfof(ctx, "[%s]的速度提高了%.2f(%.2f↗%.2f)",
+			currentGeneral.BaseInfo.Name,
+			v,
+			currentGeneral.BaseInfo.AbilityAttr.SpeedBase,
+			currentGeneral.BaseInfo.AbilityAttr.SpeedBase+v,
+		)
+		hlog.CtxInfof(ctx, "[%s]的统率提高了%.2f(%.2f↗%.2f)",
+			currentGeneral.BaseInfo.Name,
+			v,
+			currentGeneral.BaseInfo.AbilityAttr.CommandBase,
+			currentGeneral.BaseInfo.AbilityAttr.CommandBase+v,
+		)
+		currentGeneral.BaseInfo.AbilityAttr.ForceBase += v
+		currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase += v
+		currentGeneral.BaseInfo.AbilityAttr.SpeedBase += v
+		currentGeneral.BaseInfo.AbilityAttr.CommandBase += v
 
-	//偷取敌军单体38点武力、智力、速度、统率（受智力影响）
-	v := 38 + (currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100)
-	//提高我军武将
-	hlog.CtxInfof(ctx, "[%s]的武力提高了%.2f(%.2f↗%.2f)",
-		currentGeneral.BaseInfo.Name,
-		v,
-		currentGeneral.BaseInfo.AbilityAttr.ForceBase,
-		currentGeneral.BaseInfo.AbilityAttr.ForceBase+v,
-	)
-	hlog.CtxInfof(ctx, "[%s]的智力提高了%.2f(%.2f↗%.2f)",
-		currentGeneral.BaseInfo.Name,
-		v,
-		currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase,
-		currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase+v,
-	)
-	hlog.CtxInfof(ctx, "[%s]的速度提高了%.2f(%.2f↗%.2f)",
-		currentGeneral.BaseInfo.Name,
-		v,
-		currentGeneral.BaseInfo.AbilityAttr.SpeedBase,
-		currentGeneral.BaseInfo.AbilityAttr.SpeedBase+v,
-	)
-	hlog.CtxInfof(ctx, "[%s]的统率提高了%.2f(%.2f↗%.2f)",
-		currentGeneral.BaseInfo.Name,
-		v,
-		currentGeneral.BaseInfo.AbilityAttr.CommandBase,
-		currentGeneral.BaseInfo.AbilityAttr.CommandBase+v,
-	)
-	currentGeneral.BaseInfo.AbilityAttr.ForceBase += v
-	currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase += v
-	currentGeneral.BaseInfo.AbilityAttr.SpeedBase += v
-	currentGeneral.BaseInfo.AbilityAttr.CommandBase += v
+		//注册撤销效果
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+			revokeRound := params.CurrentRound
 
-	//注册撤销效果
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-		revokeResp := &vo.TacticsTriggerResult{}
-		revokeGeneral := params.CurrentGeneral
+			if currentRound+2 == revokeRound {
+				util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SeizeTheSoul, s.Id())
 
-		//效果存在且次数为0
-		if util.BuffEffectContains(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) &&
-			0 == util.TacticsBuffCountGet(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) {
+				revokeGeneral.BaseInfo.AbilityAttr.ForceBase -= v
+				revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
+				revokeGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
+				revokeGeneral.BaseInfo.AbilityAttr.CommandBase -= v
 
-			if !util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SeizeTheSoul) {
-				panic("err")
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					revokeGeneral.BaseInfo.Name,
+					consts.BuffEffectType_IncrForce)
+				hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
+					revokeGeneral.BaseInfo.Name,
+					v)
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					revokeGeneral.BaseInfo.Name,
+					consts.BuffEffectType_IncrIntelligence)
+				hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
+					revokeGeneral.BaseInfo.Name,
+					v)
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					revokeGeneral.BaseInfo.Name,
+					consts.BuffEffectType_IncrSpeed)
+				hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
+					revokeGeneral.BaseInfo.Name,
+					v)
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					revokeGeneral.BaseInfo.Name,
+					consts.BuffEffectType_IncrCommand)
+				hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
+					revokeGeneral.BaseInfo.Name,
+					v)
+				return revokeResp
 			}
-			revokeGeneral.BaseInfo.AbilityAttr.ForceBase -= v
-			revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
-			revokeGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
-			revokeGeneral.BaseInfo.AbilityAttr.CommandBase -= v
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				revokeGeneral.BaseInfo.Name,
-				consts.BuffEffectType_IncrForce)
-			hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
-				revokeGeneral.BaseInfo.Name,
-				v)
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				revokeGeneral.BaseInfo.Name,
-				consts.BuffEffectType_IncrIntelligence)
-			hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
-				revokeGeneral.BaseInfo.Name,
-				v)
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				revokeGeneral.BaseInfo.Name,
-				consts.BuffEffectType_IncrSpeed)
-			hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
-				revokeGeneral.BaseInfo.Name,
-				v)
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				revokeGeneral.BaseInfo.Name,
-				consts.BuffEffectType_IncrCommand)
-			hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
-				revokeGeneral.BaseInfo.Name,
-				v)
+
 			return revokeResp
-		}
-		//消耗次数-1
-		util.TacticsBuffEffectCountWrapDecr(ctx, currentGeneral, consts.BuffEffectType_SeizeTheSoul, 1)
+		})
 
-		return revokeResp
-	})
+		//降低敌军武将
+		enemyGeneral.BaseInfo.AbilityAttr.ForceBase -= v
+		enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
+		enemyGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
+		enemyGeneral.BaseInfo.AbilityAttr.CommandBase -= v
+		hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
+			enemyGeneral.BaseInfo.Name,
+			v)
+		hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
+			enemyGeneral.BaseInfo.Name,
+			v)
+		hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
+			enemyGeneral.BaseInfo.Name,
+			v)
+		hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
+			enemyGeneral.BaseInfo.Name,
+			v)
 
-	//降低敌军武将
-	enemyGeneral.BaseInfo.AbilityAttr.ForceBase -= v
-	enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
-	enemyGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
-	enemyGeneral.BaseInfo.AbilityAttr.CommandBase -= v
-	hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
-		enemyGeneral.BaseInfo.Name,
-		v)
-	hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
-		enemyGeneral.BaseInfo.Name,
-		v)
-	hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
-		enemyGeneral.BaseInfo.Name,
-		v)
-	hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
-		enemyGeneral.BaseInfo.Name,
-		v)
+		//注册撤销效果
+		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+			revokeRound := params.CurrentRound
 
-	//注册撤销效果
-	util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-		revokeResp := &vo.TacticsTriggerResult{}
-		revokeGeneral := params.CurrentGeneral
-		//次数为0
-		if 0 == util.TacticsBuffCountGet(revokeGeneral, consts.BuffEffectType_SeizeTheSoul) {
-			revokeGeneral.BaseInfo.AbilityAttr.ForceBase += v
-			revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase += v
-			revokeGeneral.BaseInfo.AbilityAttr.SpeedBase += v
-			revokeGeneral.BaseInfo.AbilityAttr.CommandBase += v
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				revokeGeneral.BaseInfo.Name,
-				consts.DebuffEffectType_DecrForce)
-			hlog.CtxInfof(ctx, "[%s]的武力提升了%.2f",
-				revokeGeneral.BaseInfo.Name,
-				v)
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				revokeGeneral.BaseInfo.Name,
-				consts.DebuffEffectType_DecrIntelligence)
-			hlog.CtxInfof(ctx, "[%s]的智力提升了%.2f",
-				revokeGeneral.BaseInfo.Name,
-				v)
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				revokeGeneral.BaseInfo.Name,
-				consts.DebuffEffectType_DecrSpeed)
-			hlog.CtxInfof(ctx, "[%s]的速度提升了%.2f",
-				revokeGeneral.BaseInfo.Name,
-				v)
-			hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-				revokeGeneral.BaseInfo.Name,
-				consts.DebuffEffectType_DecrCommand)
-			hlog.CtxInfof(ctx, "[%s]的统率提升了%.2f",
-				revokeGeneral.BaseInfo.Name,
-				v)
-		}
-		//消耗次数-1
-		util.TacticsDebuffEffectCountWrapDecr(ctx, currentGeneral, consts.DebuffEffectType_SeizeTheSoul, 1)
-		return revokeResp
-	})
+			if currentRound+2 == revokeRound {
+				revokeGeneral.BaseInfo.AbilityAttr.ForceBase += v
+				revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase += v
+				revokeGeneral.BaseInfo.AbilityAttr.SpeedBase += v
+				revokeGeneral.BaseInfo.AbilityAttr.CommandBase += v
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					revokeGeneral.BaseInfo.Name,
+					consts.DebuffEffectType_DecrForce)
+				hlog.CtxInfof(ctx, "[%s]的武力提升了%.2f",
+					revokeGeneral.BaseInfo.Name,
+					v)
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					revokeGeneral.BaseInfo.Name,
+					consts.DebuffEffectType_DecrIntelligence)
+				hlog.CtxInfof(ctx, "[%s]的智力提升了%.2f",
+					revokeGeneral.BaseInfo.Name,
+					v)
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					revokeGeneral.BaseInfo.Name,
+					consts.DebuffEffectType_DecrSpeed)
+				hlog.CtxInfof(ctx, "[%s]的速度提升了%.2f",
+					revokeGeneral.BaseInfo.Name,
+					v)
+				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+					revokeGeneral.BaseInfo.Name,
+					consts.DebuffEffectType_DecrCommand)
+				hlog.CtxInfof(ctx, "[%s]的统率提升了%.2f",
+					revokeGeneral.BaseInfo.Name,
+					v)
+			}
+			return revokeResp
+		})
+	}
 }

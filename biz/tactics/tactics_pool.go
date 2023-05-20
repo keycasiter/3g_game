@@ -113,6 +113,10 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.BreakingThroughTheFormationAndDestroyingTheFirm] = &BreakingThroughTheFormationAndDestroyingTheFirmTactic{}
 	//杯蛇鬼车
 	TacticsHandlerMap[consts.CupSnakeGhostCar] = &CupSnakeGhostCarTactic{}
+	//瞋目横矛
+	TacticsHandlerMap[consts.AngryEyeHorizontalSpear] = &AngryEyeHorizontalSpearTactic{}
+	//暴戾无仁
+	TacticsHandlerMap[consts.ViolentAndHeartless] = &ViolentAndHeartlessTactic{}
 }
 
 func initTacticsMap() {
@@ -161,4 +165,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.EverTriumphant] = true
 	ActiveTacticsMap[consts.BreakingThroughTheFormationAndDestroyingTheFirm] = true
 	ActiveTacticsMap[consts.CupSnakeGhostCar] = true
+	ActiveTacticsMap[consts.AngryEyeHorizontalSpear] = true
+	//突击
+	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 }

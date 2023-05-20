@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-//四面楚歌
-//准备1回合，对敌军群体（2人）施加中毒状态，每回合持续造成伤害（伤害率144%，受智力影响），持续2回合
+// 四面楚歌
+// 准备1回合，对敌军群体（2人）施加中毒状态，每回合持续造成伤害（伤害率144%，受智力影响），持续2回合
 type BeBesiegedOnAllSidesTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
@@ -78,12 +78,12 @@ func (b BeBesiegedOnAllSidesTactic) Execute() {
 		triggerGeneral := params.CurrentGeneral
 
 		if currentRound+1 == triggerRound {
+			//准备回合释放
+			b.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				b.Name(),
 			)
-			//准备回合释放
-			b.isTriggerPrepare = false
 
 			//找到敌军2人
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, b.tacticsParams)

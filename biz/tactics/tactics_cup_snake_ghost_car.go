@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cast"
 )
 
-//杯蛇鬼车
-//准备1回合，对敌军群体(2人)发动一次谋略攻击（伤害率153%，受智力影响），
-//并为我军群体(2人)恢复一定兵力（恢复率102%，受智力影响）
+// 杯蛇鬼车
+// 准备1回合，对敌军群体(2人)发动一次谋略攻击（伤害率153%，受智力影响），
+// 并为我军群体(2人)恢复一定兵力（恢复率102%，受智力影响）
 type CupSnakeGhostCarTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
@@ -79,10 +79,13 @@ func (c CupSnakeGhostCarTactic) Execute() {
 		triggerGeneral := params.CurrentGeneral
 
 		if currentRound+1 == triggerRound {
+			//准备回合释放
+			c.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				c.Name(),
 			)
+
 			//找到敌军2人
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, c.tacticsParams)
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.53)
@@ -108,16 +111,6 @@ func (c CupSnakeGhostCarTactic) Execute() {
 				origin,
 				final,
 			)
-		}
-
-		//准备回合恢复
-		if currentRound+2 == triggerRound {
-			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				revokeResp := &vo.TacticsTriggerResult{}
-				c.isTriggerPrepare = false
-
-				return revokeResp
-			})
 		}
 
 		return triggerResp

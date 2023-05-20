@@ -9,10 +9,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//出其不意
-//发动概率35%
-//准备1回合，对敌军群体（2人）随机造成计穷（无法发动主动战法）或缴械（无法进行普通攻击），
-//持续1回合（有30%概率持续2回合）
+// 出其不意
+// 发动概率35%
+// 准备1回合，对敌军群体（2人）随机造成计穷（无法发动主动战法）或缴械（无法进行普通攻击），
+// 持续1回合（有30%概率持续2回合）
 type TakeBySurpriseTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
@@ -79,6 +79,8 @@ func (t TakeBySurpriseTactic) Execute() {
 		triggerGeneral := params.CurrentGeneral
 
 		if currentRound+1 == triggerRound {
+			//准备回合释放
+			t.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				triggerGeneral.BaseInfo.Name,
 				t.Name(),
@@ -115,15 +117,6 @@ func (t TakeBySurpriseTactic) Execute() {
 					})
 				}
 			}
-		}
-
-		if currentRound+2 == triggerRound {
-			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				revokeResp := &vo.TacticsTriggerResult{}
-				t.isTriggerPrepare = false
-
-				return revokeResp
-			})
 		}
 		return triggerResp
 	})

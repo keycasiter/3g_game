@@ -305,6 +305,196 @@ const (
 	SweepAway
 	//追伤
 	ChasingInjury
+	//机鉴先识
+	OpportunityIdentificationFirst
+	//古之恶来
+	AncientEvilComes
+	//神机莫测
+	DivinelyInspiredStratagem
+	//陷阵突袭
+	RaidInFormation
+	//水淹七军
+	FloodedSeventhArmy
+	//计定谋决
+	PlanAndDecide
+	//死战不退
+	NeverRetreatFromDeadBattle
+	//经天纬地
+	AbilityToRuleTheCountry
+	//虎痴
+	TigerIdiot
+	//金城汤池
+	RampartsOfMetalsAndAMoatOfHotWater
+	//固若金汤
+	Impregnable
+	//十面埋伏
+	AmbushOnAllSides
+	//十二奇策
+	TwelveWonderfulStrategies
+	//长驱直入
+	MarchInto
+	//刚烈不屈
+	StrongAndUnyielding
+	//抬棺决战
+	TheBattleOfCarryingCoffin
+	//精练策数
+	RefinedStrategies
+	//震骇四境
+	ShockingFourRealms
+	//垂心万物
+	FocusingOnAllThings
+	//持军毅重
+	HoldTheArmyWithDeterminationAndDetermination
+	//临战先登
+	ToAscendBeforeBattle
+	//暗渡陈仓
+	AdvancingSecretlyByUnknownPath
+	//将行其疾
+	ToCureOnesSpeed
+	//十胜十败
+	TenWinsAndTenLosses
+	//沉断机谋
+	DecisiveStrategy
+	//仁德载世
+	BenevolentAndVirtuousThroughoutTheWorld
+	//槊血纵横
+	BloodyAndUnrestrained
+	//威震华夏
+	BecomeFamousAndFearInspiringThroughoutChina
+	//锦囊妙计
+	BrocadeBagAndCleverPlan
+	//才辩机捷
+	BeQuickInDebatingOpportunities
+	//誓守无降
+	PromiseToKeepWithoutSurrender
+	//枪舞如风
+	GunDanceLikeTheWind
+	//刀出如霆
+	TheKnifeLikeThunderbolt
+	//将门虎女
+	GeneralBraveGirl
+	//鸱苕凤姿
+	ThePostureOfAPhoenixWithAChickAndASweetPotato
+	//奇兵间道
+	SpecialSoldierPassRoad
+	//百步穿杨
+	HitTheTargetAtEveryShot
+	//一身是胆
+	BebraveAllThrough
+	//燕人咆哮
+	YanPeopleRoar
+	//处兹不惑
+	InChaosNotConfused
+	//奋矛英姿
+	BraveSpearHeroicPose
+	//工神
+	TheGodOfCraftsmen
+	//以逸待劳
+	WaitAtOnesEaseForTheFatigued
+	//溯江摇橹
+	ChasingTheRiverAndRidingRows
+	//弓腰姬
+	BowWaistConcubine
+	//火烧连营
+	FireJointVenture
+	//江天长焰
+	RiverFireFlame
+	//暗箭难防
+	HiddenArrowsAreDifficultToGuardAgainst
+	//国士将风
+	CountryPersonGeneralStyle
+	//济贫好施
+	HelpingThePoorAndGivingGenerously
+	//坐断东南
+	SittingIntheSoutheast
+	//锦帆百翎
+	JinfanArmyHundredFeathers
+	//肉身铁壁
+	CorporealIronWall
+	//白衣渡江
+	CrossingTheRiverInWhiteClothes
+	//神射
+	DivineEjaculation
+	//江东猛虎
+	JiangdongTiger
+	//校胜帷幄
+	WinsTent
+	//神火计
+	DivineFireMeter
+	//苦肉计
+	InjuryOnOneself
+	//勇烈持重
+	BraveAndResolute
+	//江东小霸王
+	JiangdongLittleOverlord
+	//挥兵谋胜
+	WieldTroopsToSeekVictory
+	//围师必阙
+	SurroundingTheTeacherMustBePalace
+	//高橹连营
+	HighWoodenPaddlesConnectedToTheCamp
+	//符命自立
+	FumingSelfReliance
+	//南蛮渠魁
+	NanManQuKui
+	//兴云布雨
+	MakeCloudAndRain
+	//酒池肉林
+	ExtravagantOrgy
+	//天下无双
+	Unique
+	//傲睨王侯
+	ProudPrince
+	//毒泉拒蜀
+	PoisonousSpringRefusesShu
+	//监统震军
+	SuperviseLeadAndSeizureArmy
+	//竭忠尽智
+	WithAllTheHeart
+	//狮子奋迅
+	TheLionFliesFast
+	//火神英风
+	FireGodHeroStyle
+	//累世立名
+	EstablishingNameThroughGenerations
+	//五雷轰顶
+	ThunderStruck
+	//窃幸乘宠
+	StealingLuckAndRidingPets
+	//振军击营
+	ExcitingArmyAttackCamp
+	//鸩毒
+	PoisonedWine
+	//登锋陷阵
+	ChargeIntoTheEnemyRanks
+	//搦战群雄
+	ToSeizeThePowerOfGroupOfHeroes
+	//勇冠三军
+	PeerlessOrMatchlessBraveryOrValour
+	//青囊
+	MedicalPractice
+	//金丹秘术
+	GoldenPillSecretTechnique
+	//闭月
+	ClosedMoon
+	//百计多谋
+	HundredStrategiesAndManyStrategies
+	//顾盼生姿
+	LookAroundCharmingly
+	//云聚影从
+	CloudGatheringShadowFrom
+	//胡笳余音
+	HuJiaLingeringSound
+	//腹背受敌
+	ScyllaAndCharybdis
+	//威风凛凛
+	AweInspiring
+	//骁健神行
+	VigorousAndWalk
+	//暗潮涌动
+	UndercurrentSurge
+	//镇压黄巾
+	SuppressYellowScarves
 )
 
 func (b TacticId) String() string {
@@ -762,6 +952,291 @@ func (b TacticId) String() string {
 	//追伤
 	case ChasingInjury:
 		return "追伤"
+	//机鉴先识
+	case OpportunityIdentificationFirst:
+		return "机鉴先识"
+	//古之恶来
+	case AncientEvilComes:
+		return "古之恶来"
+	//神机莫测
+	case DivinelyInspiredStratagem:
+		return "神机莫测"
+	//陷阵突袭
+	case RaidInFormation:
+		return "陷阵突袭"
+	//水淹七军
+	case FloodedSeventhArmy:
+		return "水淹七军"
+	//计定谋决
+	case PlanAndDecide:
+		return "计定谋决"
+	//死战不退
+	case NeverRetreatFromDeadBattle:
+		return "死战不退"
+	//经天纬地
+	case AbilityToRuleTheCountry:
+		return "经天纬地"
+	//虎痴
+	case TigerIdiot:
+		return "虎痴"
+	//金城汤池
+	case RampartsOfMetalsAndAMoatOfHotWater:
+		return "金城汤池"
+	//固若金汤
+	case Impregnable:
+		return "固若金汤"
+	//十面埋伏
+	case AmbushOnAllSides:
+		return "十面埋伏"
+	//十二奇策
+	case TwelveWonderfulStrategies:
+		return "十二奇策"
+	//长驱直入
+	case MarchInto:
+		return "长驱直入"
+	//刚烈不屈
+	case StrongAndUnyielding:
+		return "刚烈不屈"
+	//抬棺决战
+	case TheBattleOfCarryingCoffin:
+		return "抬棺决战"
+	//精练策数
+	case RefinedStrategies:
+		return "精练策数"
+	//震骇四境
+	case ShockingFourRealms:
+		return "震骇四境"
+	//垂心万物
+	case FocusingOnAllThings:
+		return "垂心万物"
+	//持军毅重
+	case HoldTheArmyWithDeterminationAndDetermination:
+		return "持军毅重"
+	//临战先登
+	case ToAscendBeforeBattle:
+		return "临战先登"
+	//暗渡陈仓
+	case AdvancingSecretlyByUnknownPath:
+		return "暗渡陈仓"
+	//将行其疾
+	case ToCureOnesSpeed:
+		return "将行其疾"
+	//十胜十败
+	case TenWinsAndTenLosses:
+		return "十胜十败"
+	//沉断机谋
+	case DecisiveStrategy:
+		return "沉断机谋"
+	//仁德载世
+	case BenevolentAndVirtuousThroughoutTheWorld:
+		return "仁德载世"
+	//槊血纵横
+	case BloodyAndUnrestrained:
+		return "槊血纵横"
+	//威震华夏
+	case BecomeFamousAndFearInspiringThroughoutChina:
+		return "威震华夏"
+	//锦囊妙计
+	case BrocadeBagAndCleverPlan:
+		return "锦囊妙计"
+	//才辩机捷
+	case BeQuickInDebatingOpportunities:
+		return "才辩机捷"
+	//誓守无降
+	case PromiseToKeepWithoutSurrender:
+		return "誓守无降"
+	//枪舞如风
+	case GunDanceLikeTheWind:
+		return "枪舞如风"
+	//刀出如霆
+	case TheKnifeLikeThunderbolt:
+		return "刀出如霆"
+	//将门虎女
+	case GeneralBraveGirl:
+		return "将门虎女"
+	//鸱苕凤姿
+	case ThePostureOfAPhoenixWithAChickAndASweetPotato:
+		return "鸱苕凤姿"
+	//奇兵间道
+	case SpecialSoldierPassRoad:
+		return "奇兵间道"
+	//百步穿杨
+	case HitTheTargetAtEveryShot:
+		return "百步穿杨"
+	//一身是胆
+	case BebraveAllThrough:
+		return "一身是胆"
+	//燕人咆哮
+	case YanPeopleRoar:
+		return "燕人咆哮"
+	//处兹不惑
+	case InChaosNotConfused:
+		return "处兹不惑"
+	//奋矛英姿
+	case BraveSpearHeroicPose:
+		return "奋矛英姿"
+	//工神
+	case TheGodOfCraftsmen:
+		return "工神"
+	//以逸待劳
+	case WaitAtOnesEaseForTheFatigued:
+		return "以逸待劳"
+	//溯江摇橹
+	case ChasingTheRiverAndRidingRows:
+		return "溯江摇橹"
+	//弓腰姬
+	case BowWaistConcubine:
+		return "弓腰姬"
+	//火烧连营
+	case FireJointVenture:
+		return "火烧连营"
+	//江天长焰
+	case RiverFireFlame:
+		return "江天长焰"
+	//暗箭难防
+	case HiddenArrowsAreDifficultToGuardAgainst:
+		return "暗箭难防"
+	//国士将风
+	case CountryPersonGeneralStyle:
+		return "国士将风"
+	//济贫好施
+	case HelpingThePoorAndGivingGenerously:
+		return "济贫好施"
+	//坐断东南
+	case SittingIntheSoutheast:
+		return "坐断东南"
+	//锦帆百翎
+	case JinfanArmyHundredFeathers:
+		return "锦帆百翎"
+	//肉身铁壁
+	case CorporealIronWall:
+		return "肉身铁壁"
+	//白衣渡江
+	case CrossingTheRiverInWhiteClothes:
+		return "白衣渡江"
+	//神射
+	case DivineEjaculation:
+		return "神射"
+	//江东猛虎
+	case JiangdongTiger:
+		return "江东猛虎"
+	//校胜帷幄
+	case WinsTent:
+		return "校胜帷幄"
+	//神火计
+	case DivineFireMeter:
+		return "神火计"
+	//苦肉计
+	case InjuryOnOneself:
+		return "苦肉计"
+	//勇烈持重
+	case BraveAndResolute:
+		return "勇烈持重"
+	//江东小霸王
+	case JiangdongLittleOverlord:
+		return "江东小霸王"
+	//挥兵谋胜
+	case WieldTroopsToSeekVictory:
+		return "挥兵谋胜"
+	//围师必阙
+	case SurroundingTheTeacherMustBePalace:
+		return "围师必阙"
+	//高橹连营
+	case HighWoodenPaddlesConnectedToTheCamp:
+		return "高橹连营"
+	//符命自立
+	case FumingSelfReliance:
+		return "符命自立"
+	//南蛮渠魁
+	case NanManQuKui:
+		return "南蛮渠魁"
+	//兴云布雨
+	case MakeCloudAndRain:
+		return "兴云布雨"
+	//酒池肉林
+	case ExtravagantOrgy:
+		return "酒池肉林"
+	//天下无双
+	case Unique:
+		return "天下无双"
+	//傲睨王侯
+	case ProudPrince:
+		return "傲睨王侯"
+	//毒泉拒蜀
+	case PoisonousSpringRefusesShu:
+		return "毒泉拒蜀"
+	//监统震军
+	case SuperviseLeadAndSeizureArmy:
+		return "监统震军"
+	//竭忠尽智
+	case WithAllTheHeart:
+		return "竭忠尽智"
+	//狮子奋迅
+	case TheLionFliesFast:
+		return "狮子奋迅"
+	//火神英风
+	case FireGodHeroStyle:
+		return "FireGodHeroStyle"
+	//累世立名
+	case EstablishingNameThroughGenerations:
+		return "累世立名"
+	//五雷轰顶
+	case ThunderStruck:
+		return "五雷轰顶"
+	//窃幸乘宠
+	case StealingLuckAndRidingPets:
+		return "窃幸乘宠"
+	//振军击营
+	case ExcitingArmyAttackCamp:
+		return "振军击营"
+	//鸩毒
+	case PoisonedWine:
+		return "鸩毒"
+	//登锋陷阵
+	case ChargeIntoTheEnemyRanks:
+		return "登锋陷阵"
+	//搦战群雄
+	case ToSeizeThePowerOfGroupOfHeroes:
+		return "搦战群雄"
+	//勇冠三军
+	case PeerlessOrMatchlessBraveryOrValour:
+		return "勇冠三军"
+	//青囊
+	case MedicalPractice:
+		return "青囊"
+	//金丹秘术
+	case GoldenPillSecretTechnique:
+		return "金丹秘术"
+	//闭月
+	case ClosedMoon:
+		return "闭月"
+	//百计多谋
+	case HundredStrategiesAndManyStrategies:
+		return "百计多谋"
+	//顾盼生姿
+	case LookAroundCharmingly:
+		return "顾盼生姿"
+	//云聚影从
+	case CloudGatheringShadowFrom:
+		return "云聚影从"
+	//胡笳余音
+	case HuJiaLingeringSound:
+		return "胡笳余音"
+	//腹背受敌
+	case ScyllaAndCharybdis:
+		return "腹背受敌"
+	//威风凛凛
+	case AweInspiring:
+		return "威风凛凛"
+	//骁健神行
+	case VigorousAndWalk:
+		return "骁健神行"
+	//暗潮涌动
+	case UndercurrentSurge:
+		return "暗潮涌动"
+	//镇压黄巾
+	case SuppressYellowScarves:
+		return "镇压黄巾"
 	}
 	return "未知战法"
 }

@@ -100,7 +100,7 @@ const (
 	//白马义从
 	WhiteHorseFollowsWithLoyalty
 	//文武双全
-	BeAdeptWithBothThePenAndTheSword
+	BeAdeptWithBothPenAndSword
 	//兵无常势
 	WorkOutMeasuresToSuitLocalConditions
 	//藤甲兵
@@ -167,6 +167,8 @@ const (
 	TakeAdvantageOfQuickly
 	//士争先赴
 	ScholarsStriveToGoFirst
+	//众动万计
+	CrowdMovesTenThousandCounts
 	//先成其虑
 	TakeCareOfYourselfFirst
 	//竭力佐谋
@@ -644,7 +646,7 @@ func (b TacticId) String() string {
 	case WhiteHorseFollowsWithLoyalty:
 		return "白马义从"
 		//文武双全
-	case BeAdeptWithBothThePenAndTheSword:
+	case BeAdeptWithBothPenAndSword:
 		return "文武双全"
 		//兵无常势
 	case WorkOutMeasuresToSuitLocalConditions:
@@ -868,6 +870,9 @@ func (b TacticId) String() string {
 		//御敌屏障
 	case DefensiveBarrier:
 		return "御敌屏障"
+		//众动万计
+	case CrowdMovesTenThousandCounts:
+		return "众动万计"
 		//料事如神
 	case ForetellLikeProphet:
 		return "料事如神"

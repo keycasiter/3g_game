@@ -267,6 +267,8 @@ const (
 	BendTheBowAndDrinkTheFeathers
 	//落凤
 	FallingPhoenix
+	//鲁莽
+	Reckless
 	//落雷
 	Thunderbolt
 	//声东击西
@@ -897,6 +899,9 @@ func (b TacticId) String() string {
 	//落凤
 	case FallingPhoenix:
 		return "落凤"
+	//鲁莽
+	case Reckless:
+		return "鲁莽"
 	//落雷
 	case Thunderbolt:
 		return "落雷"

@@ -550,30 +550,49 @@ func DeBuffEffectOfTacticIsDeplete(general *vo.BattleGeneral, effectType consts.
 	return false
 }
 
+type DebuffEffectOfTacticCostRoundParams struct {
+	//上下文
+	Ctx context.Context
+	//操作武将
+	General *vo.BattleGeneral
+	//负面效果
+	EffectType consts.DebuffEffectType
+	//关联战法
+	TacticId consts.TacticId
+	//效果消耗完成回调函数
+	CostOverTriggerFunc func()
+}
+
 // 负面效果消耗
-func DeBuffEffectOfTacticCost(general *vo.BattleGeneral, effectType consts.DebuffEffectType, tacticId consts.TacticId, useTimes int64) bool {
-	if useTimes < 1 {
-		return false
-	}
-	if tacticId <= 0 {
+func DeBuffEffectOfTacticCostRound(params *DebuffEffectOfTacticCostRoundParams) bool {
+	if params.TacticId <= 0 {
 		return false
 	}
 
-	if effectParams, ok := general.DeBuffEffectHolderMap[effectType]; ok {
-		for _, effectParam := range effectParams {
+	if effectParams, ok := params.General.DeBuffEffectHolderMap[params.EffectType]; ok {
+		for idx, effectParam := range effectParams {
 			//找到指定战法
-			if effectParam.FromTactic == tacticId {
+			if effectParam.FromTactic == params.TacticId {
 				//消耗
-				if useTimes > effectParam.EffectTimes {
-					return false
-				} else {
-					effectParam.EffectTimes -= useTimes
-					return true
+				if effectParam.EffectRound > 0 {
+					effectParam.EffectRound--
+				}
+				//清除
+				if effectParam.EffectRound == 0 {
+					params.General.DeBuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+					hlog.CtxInfof(params.Ctx, "[%s]的「%v」效果已消失",
+						params.General.BaseInfo.Name,
+						params.EffectType,
+					)
+					//执行回调函数
+					if params.CostOverTriggerFunc != nil {
+						params.CostOverTriggerFunc()
+					}
 				}
 			}
 		}
 	}
-	return false
+	return true
 }
 
 // 负面效果获取
@@ -679,4 +698,105 @@ func TacticsTriggerWrapRegister(general *vo.BattleGeneral, action consts.BattleA
 		fs = append(fs, newFunc)
 		general.TacticsTriggerMap[action] = fs
 	}
+}
+
+//是否可以行动
+func IsCanBeginAction(ctx context.Context, general *vo.BattleGeneral) bool {
+	//震慑
+	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_Awe]; ok {
+		if len(effectParams) > 0 && GenerateRate(effectParams[0].EffectRate) {
+			hlog.CtxInfof(ctx, "武将[%s]处于「%v」状态，无法行动",
+				general.BaseInfo.Name,
+				consts.DebuffEffectType_Awe,
+			)
+			return false
+		}
+	}
+	return true
+}
+
+//是否可以发动主动战法
+func IsCanActiveTactic(ctx context.Context, general *vo.BattleGeneral) bool {
+	//计穷
+	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; ok {
+		if len(effectParams) > 0 && GenerateRate(effectParams[0].EffectRate) {
+			hlog.CtxInfof(ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
+				general.BaseInfo.Name,
+				consts.DebuffEffectType_NoStrategy,
+			)
+			return false
+		}
+	}
+	return true
+}
+
+//是否可以造成伤害
+func IsCanDamage(ctx context.Context, general *vo.BattleGeneral) bool {
+	//虚弱
+	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
+		if len(effectParams) > 0 && GenerateRate(effectParams[0].EffectRate) {
+			hlog.CtxInfof(ctx, "武将[%s]处于「%v」状态，无法造成伤害",
+				general.BaseInfo.Name,
+				consts.DebuffEffectType_PoorHealth,
+			)
+			return false
+		}
+	}
+	return true
+}
+
+//是否可以普通攻击
+func IsCanGeneralAttack(ctx context.Context, general *vo.BattleGeneral) bool {
+	//缴械
+	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_CancelWeapon]; ok {
+		if len(effectParams) > 0 && GenerateRate(effectParams[0].EffectRate) {
+			hlog.CtxInfof(ctx, "武将[%s]处于「%v」状态，无法普通攻击",
+				general.BaseInfo.Name,
+				consts.DebuffEffectType_CancelWeapon,
+			)
+			return false
+		}
+	}
+	//无法普通攻击
+	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotGeneralAttack]; ok {
+		if len(effectParams) > 0 && GenerateRate(effectParams[0].EffectRate) {
+			hlog.CtxInfof(ctx, "武将[%s]处于「%v」状态，无法普通攻击",
+				general.BaseInfo.Name,
+				consts.DebuffEffectType_CanNotGeneralAttack,
+			)
+			return false
+		}
+	}
+	return true
+}
+
+//是否可以恢复兵力
+func IsCanResume(ctx context.Context, general *vo.BattleGeneral) bool {
+	//禁疗
+	if _, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_ProhibitionTreatment]; ok {
+		hlog.CtxInfof(ctx, "武将[%s]处于「%v」状态，无法恢复兵力",
+			general.BaseInfo.Name,
+			consts.DebuffEffectType_ProhibitionTreatment,
+		)
+		return false
+	}
+	return true
+}
+
+//是否可以规避
+func IsCanEvade(ctx context.Context, general *vo.BattleGeneral) bool {
+	if effectParams, ok := general.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
+		rate := float64(0)
+		for _, param := range effectParams {
+			rate += param.EffectRate
+		}
+		if GenerateRate(rate) {
+			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效", general.BaseInfo.Name)
+			return true
+		} else {
+			hlog.CtxInfof(ctx, "[%s]规避失败", general.BaseInfo.Name)
+			return false
+		}
+	}
+	return false
 }

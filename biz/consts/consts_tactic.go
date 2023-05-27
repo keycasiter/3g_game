@@ -1,10 +1,14 @@
 package consts
 
+import "fmt"
+
 type TacticId int64
 
 const (
+	//未知战法
+	Unknown TacticId = iota
 	//鹰视狼顾
-	ClearEyedAndMalicious TacticId = iota + 1
+	ClearEyedAndMalicious
 	//士别三日
 	ThreeDaysOfSeparation
 	//熯天炽地
@@ -1248,5 +1252,6 @@ func (b TacticId) String() string {
 	case SuppressYellowScarves:
 		return "镇压黄巾"
 	}
+	fmt.Printf("%p", b)
 	return "未知战法"
 }

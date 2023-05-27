@@ -76,6 +76,8 @@ var (
 		consts.BuffEffectType_EnhanceWeapon: true,
 		//奇谋
 		consts.BuffEffectType_EnhanceStrategy: true,
+		//攻心
+		consts.BuffEffectType_AttackHeart: true,
 	}
 	//控制状态
 	controlDebuffEffectMap = map[consts.DebuffEffectType]bool{
@@ -309,30 +311,49 @@ func BuffEffectOfTacticIsDeplete(general *vo.BattleGeneral, effectType consts.Bu
 	return false
 }
 
+type BuffEffectOfTacticCostRoundParams struct {
+	//上下文
+	Ctx context.Context
+	//操作武将
+	General *vo.BattleGeneral
+	//正面效果
+	EffectType consts.BuffEffectType
+	//关联战法
+	TacticId consts.TacticId
+	//效果消耗完成回调函数
+	CostOverTriggerFunc func()
+}
+
 // 正面效果消耗
-func BuffEffectOfTacticCost(general *vo.BattleGeneral, effectType consts.BuffEffectType, tacticId consts.TacticId, useTimes int64) bool {
-	if useTimes < 1 {
-		return false
-	}
-	if tacticId <= 0 {
+func BuffEffectOfTacticCostRound(params *BuffEffectOfTacticCostRoundParams) bool {
+	if params.TacticId <= 0 {
 		return false
 	}
 
-	if effectParams, ok := general.BuffEffectHolderMap[effectType]; ok {
-		for _, effectParam := range effectParams {
+	if effectParams, ok := params.General.BuffEffectHolderMap[params.EffectType]; ok {
+		for idx, effectParam := range effectParams {
 			//找到指定战法
-			if effectParam.FromTactic == tacticId {
+			if effectParam.FromTactic == params.TacticId {
 				//消耗
-				if useTimes > effectParam.EffectTimes {
-					return false
-				} else {
-					effectParam.EffectTimes -= useTimes
-					return true
+				if effectParam.EffectRound > 0 {
+					effectParam.EffectRound--
+				}
+				//清除
+				if effectParam.EffectRound == 0 {
+					params.General.BuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+					hlog.CtxInfof(params.Ctx, "[%s]的「%v」效果已消失",
+						params.General.BaseInfo.Name,
+						params.EffectType,
+					)
+					//执行回调函数
+					if params.CostOverTriggerFunc != nil {
+						params.CostOverTriggerFunc()
+					}
 				}
 			}
 		}
 	}
-	return false
+	return true
 }
 
 type EffectWrapSetResp struct {

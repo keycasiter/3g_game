@@ -29,7 +29,7 @@ type EffectHolderParams struct {
 	EffectRound consts.BattleRound
 	//影响次数
 	EffectTimes int64
-	//最大次数
+	//最大影响次数
 	MaxEffectTimes int64
 	//来源于哪个战法
 	FromTactic consts.TacticId

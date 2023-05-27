@@ -373,7 +373,7 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 	}
 
 	//打印每队战况
-	hlog.CtxInfof(runCtx.Ctx, "******************《 战报 》********************")
+	hlog.CtxInfof(runCtx.Ctx, "******************《 战报总结 》********************")
 	hlog.CtxInfof(runCtx.Ctx, "战斗结束 , 结束时回合数：%d", currentRound)
 	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
 		hlog.CtxInfof(runCtx.Ctx, "[%s]兵力[%d]", general.BaseInfo.Name, general.SoldierNum)
@@ -578,6 +578,19 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 					}
 					//战法执行
 					execute.TacticsExecute(runCtx.Ctx, tacticHandler)
+
+					//触发「发动主动战法后」触发器
+					if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_AssaultTacticEnd]; okk {
+						for _, f := range funcs {
+							params := &vo.TacticsTriggerParams{
+								CurrentRound:   currentRound,
+								CurrentGeneral: currentGeneral,
+								CurrentDamage:  0,
+								CurrentTactic:  tacticHandler,
+							}
+							f(params)
+						}
+					}
 
 					//武将清理
 					util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)

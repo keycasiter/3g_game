@@ -321,7 +321,8 @@ const (
 	BattleAction_ActiveTactic                            //发动主动战法开始
 	BattleAction_ActiveTacticEnd                         //发动主动战法结束
 	BattleAction_SufferActiveTactic                      //被主动战法攻击
-	BattleAction_AssaultTactic                           //发动突击战法攻击
+	BattleAction_AssaultTactic                           //发动突击战法开始
+	BattleAction_AssaultTacticEnd                        //发动突击战法结束
 	BattleAction_SufferAssaultTactic                     //被突击战法攻击
 	BattleAction_CommandTactic                           //指挥战法攻击
 	BattleAction_SufferCommandTactic                     //被指挥战法攻击

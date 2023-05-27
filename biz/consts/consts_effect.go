@@ -100,8 +100,6 @@ func (b DebuffEffectType) String() string {
 		return "铁索连环"
 	case DebuffEffectType_CanNotGeneralAttack:
 		return "无法攻击"
-	case DebuffEffectType_SeizeTheSoul:
-		return "夺魂挟魄"
 	case DebuffEffectType_CleverStrategyAndShrewdTactic:
 		return "神机妙算"
 	case DebuffEffectType_DecrForce:
@@ -124,6 +122,7 @@ const (
 	BuffEffectType_Unknow                       BuffEffectType = iota
 	BuffEffectType_Evade                                       //规避
 	BuffEffectType_EnhanceWeapon                               //会心
+	BuffEffectType_AttackHeart                                 //攻心
 	BuffEffectType_EnhanceStrategy                             //奇谋
 	BuffEffectType_GroupAttack                                 //群攻
 	BuffEffectType_FirstAttack                                 //先攻
@@ -163,11 +162,18 @@ const (
 	BuffEffectType_LowerBannersAndMuffleDrums_Prepare       //偃旗息鼓[预备]
 	BuffEffectType_Humility_Prepare                         //谦让[预备]
 	BuffEffectType_OnesResolveIsUnshaken_Prepare            //矢志不移[预备]
+	BuffEffectType_AbilityToRuleTheCountry_Prepare          //经天纬地[预备]
 	BuffEffectType_Intervene                                //援护
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_SeizeTheSoul:
+		return "夺魂挟魄"
+	case BuffEffectType_AttackHeart:
+		return "攻心"
+	case BuffEffectType_AbilityToRuleTheCountry_Prepare:
+		return "经天纬地[预备]"
 	case BuffEffectType_GroupAttack:
 		return "群攻"
 	case BuffEffectType_OnesResolveIsUnshaken_Prepare:

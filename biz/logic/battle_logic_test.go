@@ -292,7 +292,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "魅惑",
 		},
 		{
-			Id:   consts.ViolentAndHeartless,
+			Id:   consts.AppeaseArmyAndPeople,
 			Name: "",
 		},
 	}
@@ -323,8 +323,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "夺魂挟魄",
 		},
 		{
-			Id:   consts.BlazingWildfire,
-			Name: "火炽原燎",
+			Id:   consts.AbilityToRuleTheCountry,
+			Name: "经天纬地",
 		},
 	}
 	//庞统战法

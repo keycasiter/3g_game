@@ -89,6 +89,20 @@ func FluctuateDamage(dmg int64) int64 {
 // @attack 攻击武将
 // @suffer 被攻击武将
 func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, attackDmg int64) {
+	defer func() {
+		//被伤害效果结束触发器
+		if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferGeneralAttackEnd]; ok {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: sufferGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
+	}()
+
 	ctx := tacticsParams.Ctx
 	soldierNum := attackGeneral.SoldierNum
 	defSoldierNum := sufferGeneral.SoldierNum
@@ -98,8 +112,8 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		sufferGeneral.BaseInfo.Name,
 	)
 
-	//被伤害效果触发器
-	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferAttack]; ok {
+	//被伤害效果开始触发器
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferGeneralAttack]; ok {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
 				CurrentRound:   tacticsParams.CurrentRound,
@@ -340,6 +354,10 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		damageNum = damage
 	} else {
 		damageNum = damage - cast.ToInt64(sufferGeneral.BaseInfo.AbilityAttr.CommandBase)
+	}
+	//兜底伤害为负的情况
+	if damageNum < 0 {
+		damageNum = 0
 	}
 	//兜底伤害大于剩余兵力情况
 	soldierNum = sufferGeneral.SoldierNum

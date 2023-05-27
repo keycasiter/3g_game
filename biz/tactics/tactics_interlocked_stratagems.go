@@ -144,7 +144,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferPassiveTactic, registerFunc)
 			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferActiveTactic, registerFunc)
 			//被普攻
-			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferAttack, registerFunc)
+			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_SufferGeneralAttack, registerFunc)
 
 			//效果消失注册
 			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {

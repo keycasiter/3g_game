@@ -319,8 +319,8 @@ const (
 	BattleAction_EndAction                                  //结束行动
 	BattleAction_Attack                                     //普通攻击开始
 	BattleAction_AttackEnd                                  //普通攻击结束
-	BattleAction_SufferAttack                               //被普通攻击开始
-	BattleAction_SufferAttackEnd                            //被普通攻击结束
+	BattleAction_SufferGeneralAttack                        //被普通攻击开始
+	BattleAction_SufferGeneralAttackEnd                     //被普通攻击结束
 	BattleAction_ActiveTactic                               //发动主动战法开始
 	BattleAction_ActiveTacticEnd                            //发动主动战法结束
 	BattleAction_SufferActiveTactic                         //被主动战法攻击开始
@@ -357,9 +357,9 @@ func (action BattleAction) String() string {
 		return "普通攻击开始"
 	case BattleAction_AttackEnd: //普通攻击结束
 		return "普通攻击结束"
-	case BattleAction_SufferAttack: //被普通攻击开始
+	case BattleAction_SufferGeneralAttack: //被普通攻击开始
 		return "被普通攻击开始"
-	case BattleAction_SufferAttackEnd: //被普通攻击结束
+	case BattleAction_SufferGeneralAttackEnd: //被普通攻击结束
 		return "被普通攻击结束"
 	case BattleAction_ActiveTactic: //发动主动战法开始
 		return "发动主动战法开始"

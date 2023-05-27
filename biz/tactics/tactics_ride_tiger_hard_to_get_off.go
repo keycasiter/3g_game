@@ -45,7 +45,7 @@ func (r RideTigerHardToGetOffTactic) Prepare() {
 			EffectRate: 1.0,
 			FromTactic: r.Id(),
 		}).IsSuccess {
-			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				triggerResp := &vo.TacticsTriggerResult{}
 				triggerGeneral := params.CurrentGeneral
 				triggerRound := params.CurrentRound

@@ -17,10 +17,22 @@ import (
 var (
 	//**属性状态**
 	attrBuffEffectMap = map[consts.BuffEffectType]bool{
+		//造成谋略伤害增加
 		consts.BuffEffectType_LaunchStrategyDamageImprove: true,
-		consts.BuffEffectType_LaunchWeaponDamageImprove:   true,
-		consts.BuffEffectType_SufferStrategyDamageDeduce:  true,
-		consts.BuffEffectType_SufferWeaponDamageDeduce:    true,
+		//造成兵刃伤害增加
+		consts.BuffEffectType_LaunchWeaponDamageImprove: true,
+		//受到谋略伤害降低
+		consts.BuffEffectType_SufferStrategyDamageDeduce: true,
+		//受到兵刃伤害降低
+		consts.BuffEffectType_SufferWeaponDamageDeduce: true,
+		//倒戈
+		consts.BuffEffectType_Defection: true,
+		//会心
+		consts.BuffEffectType_EnhanceWeapon: true,
+		//奇谋
+		consts.BuffEffectType_EnhanceStrategy: true,
+		//攻心
+		consts.BuffEffectType_AttackHeart: true,
 	}
 
 	attrDebuffEffectMap = map[consts.DebuffEffectType]bool{
@@ -70,14 +82,6 @@ var (
 		consts.BuffEffectType_GroupAttack: true,
 		//反击
 		consts.BuffEffectType_StrikeBack: true,
-		//倒戈
-		consts.BuffEffectType_Defection: true,
-		//会心
-		consts.BuffEffectType_EnhanceWeapon: true,
-		//奇谋
-		consts.BuffEffectType_EnhanceStrategy: true,
-		//攻心
-		consts.BuffEffectType_AttackHeart: true,
 	}
 	//控制状态
 	controlDebuffEffectMap = map[consts.DebuffEffectType]bool{
@@ -124,6 +128,8 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 	_, isContainAttrBuffEffect := attrBuffEffectMap[effectType]
 	//是否包含持续性正面效果判断
 	_, isContainContinuousBuffEffect := continuousBuffEffectMap[effectType]
+	//是否包含功能性正面效果判断
+	_, isContainFunctionBuffEffectEffect := functionBuffEffectMap[effectType]
 
 	//属性正面状态
 	// 增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
@@ -171,6 +177,14 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 				IsSuccess:       true,
 				IsRefreshEffect: true,
 			}
+		}
+	}
+
+	//功能性状态：通常不可叠加，不同来源时不可刷新
+	if isContainBuffEffect && isContainFunctionBuffEffectEffect {
+		return &EffectWrapSetResp{
+			IsSuccess:       true,
+			IsRefreshEffect: true,
 		}
 	}
 
@@ -461,8 +475,9 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 			effectParam,
 		}
 	}
-	hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",
+	hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已施加",
 		general.BaseInfo.Name,
+		effectParam.FromTactic,
 		effectType,
 	)
 	return &EffectWrapSetResp{

@@ -11,6 +11,7 @@ import (
 
 //瞋目横矛
 //使自己武力提升50点，并获得群攻（普通攻击时对目标同部队其他武将造成伤害）效果（伤害率70%），持续2回合
+//主动战法
 type AngryEyeHorizontalSpearTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -18,7 +19,7 @@ type AngryEyeHorizontalSpearTactic struct {
 
 func (a AngryEyeHorizontalSpearTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	a.tacticsParams = tacticsParams
-	a.triggerRate = 1.0
+	a.triggerRate = 0.4
 	return a
 }
 
@@ -59,10 +60,14 @@ func (a AngryEyeHorizontalSpearTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (a AngryEyeHorizontalSpearTactic) Execute() {
-	//使自己武力提升50点，并获得群攻（普通攻击时对目标同部队其他武将造成伤害）效果（伤害率70%），持续2回合
 	ctx := a.tacticsParams.Ctx
 	currentGeneral := a.tacticsParams.CurrentGeneral
-	currentRound := a.tacticsParams.CurrentRound
+
+	//使自己武力提升50点，并获得群攻（普通攻击时对目标同部队其他武将造成伤害）效果（伤害率70%），持续2回合
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		a.Name(),
+	)
 	//武力提升
 	currentGeneral.BaseInfo.AbilityAttr.ForceBase += 50
 	hlog.CtxInfof(ctx, "[%s]的武力提高了%d",
@@ -71,25 +76,29 @@ func (a AngryEyeHorizontalSpearTactic) Execute() {
 	)
 	//群攻效果
 	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_GroupAttack, &vo.EffectHolderParams{
-		EffectRate: 0.7,
-		FromTactic: a.Id(),
+		EffectRate:  0.7,
+		EffectRound: 2,
+		FromTactic:  a.Id(),
 	}).IsSuccess {
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
 			triggerGeneral := params.CurrentGeneral
-			triggerRound := params.CurrentRound
 
-			if currentRound+2 == triggerRound {
-				//武力增益消失
-				triggerGeneral.BaseInfo.AbilityAttr.ForceBase -= 50
-				hlog.CtxInfof(ctx, "[%s]的武力降低了%d",
-					currentGeneral.BaseInfo.Name,
-					50,
-				)
-				//移除群攻效果
-				util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_GroupAttack, a.Id())
-			}
+			util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    triggerGeneral,
+				EffectType: consts.BuffEffectType_GroupAttack,
+				TacticId:   a.Id(),
+				CostOverTriggerFunc: func() {
+					//武力增益消失
+					triggerGeneral.BaseInfo.AbilityAttr.ForceBase -= 50
+					hlog.CtxInfof(ctx, "[%s]的武力降低了%d",
+						currentGeneral.BaseInfo.Name,
+						50,
+					)
+				},
+			})
 
 			return triggerResp
 		})

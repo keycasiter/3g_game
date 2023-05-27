@@ -165,11 +165,14 @@ const (
 	BuffEffectType_Humility_Prepare                         //谦让[预备]
 	BuffEffectType_OnesResolveIsUnshaken_Prepare            //矢志不移[预备]
 	BuffEffectType_AbilityToRuleTheCountry_Prepare          //经天纬地[预备]
+	BuffEffectType_AncientEvilComes_Prepare                 //古之恶来[预备]
 	BuffEffectType_Intervene                                //援护
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_AncientEvilComes_Prepare:
+		return "古之恶来[预备]"
 	case BuffEffectType_SeizeTheSoul:
 		return "夺魂挟魄"
 	case BuffEffectType_AttackHeart:

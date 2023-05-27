@@ -128,7 +128,7 @@ func (a AbilityToRuleTheCountryTactic) Name() string {
 }
 
 func (a AbilityToRuleTheCountryTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (a AbilityToRuleTheCountryTactic) GetTriggerRate() float64 {

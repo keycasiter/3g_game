@@ -77,9 +77,11 @@ func (b BeBesiegedOnAllSidesTactic) Execute() {
 		triggerRound := params.CurrentRound
 		triggerGeneral := params.CurrentGeneral
 
-		if currentRound+1 == triggerRound {
-			//准备回合释放
+		//准备回合释放
+		if currentRound+2 == triggerRound {
 			b.isTriggerPrepare = false
+		}
+		if currentRound+1 == triggerRound {
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				b.Name(),
@@ -90,7 +92,7 @@ func (b BeBesiegedOnAllSidesTactic) Execute() {
 			//中毒效果设置
 			for _, enemyGeneral := range enemyGenerals {
 				util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_Methysis, &vo.EffectHolderParams{
-					EffectTimes: 2,
+					EffectRound: 2,
 					FromTactic:  b.Id(),
 				})
 				//注册伤害效果
@@ -99,7 +101,12 @@ func (b BeBesiegedOnAllSidesTactic) Execute() {
 					triggerDmgResp := &vo.TacticsTriggerResult{}
 
 					//效果消耗
-					if util.DeBuffEffectOfTacticCost(triggerDmgGeneral, consts.DebuffEffectType_Methysis, b.Id(), 1) {
+					if util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    triggerGeneral,
+						EffectType: consts.DebuffEffectType_Methysis,
+						TacticId:   b.Id(),
+					}) {
 						hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
 							triggerDmgGeneral.BaseInfo.Name,
 							b.Name(),

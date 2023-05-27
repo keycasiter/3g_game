@@ -414,6 +414,12 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			currentGeneral.BaseInfo.GeneralBattleType,
 			currentGeneral.BaseInfo.Name,
 		)
+
+		//是否可以行动
+		if !util.IsCanBeginAction(runCtx.Ctx, currentGeneral) {
+			continue
+		}
+
 		//触发「开始行动」触发器
 		if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_BeginAction]; ok {
 			for _, f := range funcs {
@@ -437,21 +443,8 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				tacticHandler := handler.Init(tacticsParams)
 
 				//主动战法拦截
-				debuffEffects := []consts.DebuffEffectType{
-					consts.DebuffEffectType_NoStrategy,
-					consts.DebuffEffectType_PoorHealth,
-				}
-				for _, debuff := range debuffEffects {
-					util.DeBuffEffectContains(currentGeneral, debuff)
-					if effectParams, okk := currentGeneral.DeBuffEffectHolderMap[debuff]; okk && len(effectParams) > 0 {
-						if util.GenerateRate(effectParams[0].EffectRate) {
-							hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
-								currentGeneral.BaseInfo.Name,
-								debuff,
-							)
-							goto activeTacticFlag
-						}
-					}
+				if !util.IsCanActiveTactic(runCtx.Ctx, currentGeneral) {
+					goto activeTacticFlag
 				}
 
 				//触发「发动主动战法前」触发器
@@ -473,6 +466,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 						}
 					}
 				}
+
 				//已发动准备战法跳过
 				if tacticHandler.IsTriggerPrepare() {
 					continue
@@ -512,21 +506,8 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		//2.普攻
 		if attackCanCnt > 0 {
 			//2.1 普通攻击拦截
-			debuffEffects := []consts.DebuffEffectType{
-				consts.DebuffEffectType_PoorHealth,
-				consts.DebuffEffectType_CanNotGeneralAttack,
-				consts.DebuffEffectType_CancelWeapon,
-			}
-			for _, debuff := range debuffEffects {
-				if effectParams, ok := currentGeneral.DeBuffEffectHolderMap[debuff]; ok && len(effectParams) > 0 {
-					if util.GenerateRate(effectParams[0].EffectRate) {
-						hlog.CtxInfof(runCtx.Ctx, "武将[%s]处于「%v」状态，无法普通攻击",
-							currentGeneral.BaseInfo.Name,
-							debuff,
-						)
-						goto AttactTacticFlag
-					}
-				}
+			if !util.IsCanGeneralAttack(runCtx.Ctx, currentGeneral) {
+				goto AttactTacticFlag
 			}
 
 			//2.2 触发兵书效果

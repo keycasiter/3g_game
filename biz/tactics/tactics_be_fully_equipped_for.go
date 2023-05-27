@@ -50,7 +50,7 @@ func (b BeFullyEquippedForTactic) Prepare() {
 			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, b.tacticsParams)
 			for _, general := range pairGenerals {
 				resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.88)
-				finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(general, resumeNum)
+				finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(ctx, general, resumeNum)
 				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
 					general.BaseInfo.Name,
 					finalResumeNum,

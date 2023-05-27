@@ -55,7 +55,7 @@ func (c CharmingTactic) Prepare() {
 		FromTactic: c.Id(),
 	}).IsSuccess {
 		//触发效果注册
-		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerGeneral := params.CurrentGeneral
 			triggerResp := &vo.TacticsTriggerResult{}
 			attackGeneral := params.AttackGeneral
@@ -87,7 +87,7 @@ func (c CharmingTactic) Prepare() {
 				debuff := debuffs[hitIdx]
 
 				if util.DebuffEffectWrapSet(ctx, attackGeneral, debuff, &vo.EffectHolderParams{
-					EffectTimes: 1,
+					EffectRound: 1,
 					FromTactic:  c.Id(),
 				}).IsSuccess {
 					//效果注册
@@ -95,7 +95,12 @@ func (c CharmingTactic) Prepare() {
 						revokeGeneral := params.CurrentGeneral
 						revokeResp := &vo.TacticsTriggerResult{}
 						//效果消耗
-						util.DeBuffEffectOfTacticCost(revokeGeneral, debuff, c.Id(), 1)
+						util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+							Ctx:        ctx,
+							General:    revokeGeneral,
+							EffectType: debuff,
+							TacticId:   c.Id(),
+						})
 						//效果移除
 						if util.DeBuffEffectOfTacticIsDeplete(revokeGeneral, debuff, c.Id()) {
 							util.DebuffEffectWrapRemove(ctx, revokeGeneral, debuff, c.Id())

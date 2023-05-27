@@ -104,7 +104,7 @@ func (c CupSnakeGhostCarTactic) Execute() {
 		pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, c.tacticsParams)
 		for _, pairGeneral := range pairGenerals {
 			resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.02)
-			resume, origin, final := util.ResumeSoldierNum(pairGeneral, resumeNum)
+			resume, origin, final := util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
 			hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
 				pairGeneral.BaseInfo.Name,
 				resume,

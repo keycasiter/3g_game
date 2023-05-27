@@ -102,12 +102,6 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 						if !util.BuffEffectWrapRemove(ctx, general, consts.BuffEffectType_Intervene, s.Id()) {
 							return revokeResp
 						}
-
-						hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-							general.BaseInfo.Name,
-							consts.BuffEffectType_Intervene,
-						)
-
 						general.HelpByGeneral = nil
 					}
 
@@ -134,7 +128,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 						consts.BuffEffectType_Rest,
 					)
 					resumeNum := cast.ToInt64(1.92 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-					finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(viceGeneral, resumeNum)
+					finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(ctx, viceGeneral, resumeNum)
 					hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
 						triggerGeneral.BaseInfo.Name,
 						finalResumeNum,
@@ -150,7 +144,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 				EffectRate: 1.0,
 				FromTactic: s.Id(),
 			}).IsSuccess {
-				util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 					triggerGeneral := params.CurrentGeneral
 					attackGeneral := params.AttackGeneral
 

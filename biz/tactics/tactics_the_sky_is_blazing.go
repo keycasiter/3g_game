@@ -70,9 +70,12 @@ func (t TheSkyIsBlazingTactic) Execute() {
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerRound := params.CurrentRound
 		triggerResp := &vo.TacticsTriggerResult{}
+		//释放回合
+		if currentRound+2 == triggerRound {
+			t.isTriggerPrepare = false
+		}
 		//准备1回合
 		if currentRound+1 == triggerRound {
-			t.isTriggerPrepare = false
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				t.Name(),

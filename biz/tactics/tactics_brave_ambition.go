@@ -84,7 +84,7 @@ func (b BraveAmbitionTactic) Prepare() {
 
 				//施加效果
 				debuffSetResp := util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrForce, &vo.EffectHolderParams{
-					EffectTimes: 2,
+					EffectRound: 2,
 					FromTactic:  b.Id(),
 				})
 				//降低武力64点
@@ -104,7 +104,12 @@ func (b BraveAmbitionTactic) Prepare() {
 					triggerCostGeneral := params.CurrentGeneral
 					triggerCostResp := &vo.TacticsTriggerResult{}
 					//效果消耗
-					util.DeBuffEffectOfTacticCost(triggerCostGeneral, consts.DebuffEffectType_DecrForce, b.Id(), 1)
+					util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    triggerCostGeneral,
+						EffectType: consts.DebuffEffectType_DecrForce,
+						TacticId:   b.Id(),
+					})
 					//效果恢复
 					if util.DeBuffEffectOfTacticIsDeplete(enemyGeneral, consts.DebuffEffectType_DecrForce, b.Id()) {
 						util.DebuffEffectWrapRemove(ctx, enemyGeneral, consts.DebuffEffectType_DecrForce, b.Id())
@@ -141,7 +146,7 @@ func (b BraveAmbitionTactic) Prepare() {
 					decrNum := float64(34)
 					//施加效果
 					debuffSetResp := util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrIntelligence, &vo.EffectHolderParams{
-						EffectTimes: 2,
+						EffectRound: 2,
 						FromTactic:  b.Id(),
 					})
 					if debuffSetResp.IsSuccess && !debuffSetResp.IsRefreshEffect {
@@ -159,7 +164,12 @@ func (b BraveAmbitionTactic) Prepare() {
 						triggerCostGeneral := params.CurrentGeneral
 						triggerCostResp := &vo.TacticsTriggerResult{}
 						//效果消耗
-						util.DeBuffEffectOfTacticCost(triggerCostGeneral, consts.DebuffEffectType_DecrIntelligence, b.Id(), 1)
+						util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+							Ctx:        ctx,
+							General:    triggerCostGeneral,
+							EffectType: consts.DebuffEffectType_DecrIntelligence,
+							TacticId:   b.Id(),
+						})
 
 						//效果恢复
 						if util.DeBuffEffectOfTacticIsDeplete(enemyGeneral, consts.DebuffEffectType_DecrIntelligence, b.Id()) {

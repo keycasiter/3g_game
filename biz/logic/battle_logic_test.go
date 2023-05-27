@@ -182,10 +182,10 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 	qiLinGong := []*po.MetadataGeneral{
 		//姜维
 		{
-			Id:       int64(consts.SiMaYi),
-			UniqueId: 20 + int64(consts.SiMaYi),
+			Id:       int64(consts.JiangWei),
+			UniqueId: 20 + int64(consts.JiangWei),
 			Name:     "姜维",
-			Group:    consts.Group_WeiGuo,
+			Group:    consts.Group_ShuGuo,
 			AbilityAttr: &po.AbilityAttr{
 				ForceBase:        198.54,
 				ForceRate:        0,
@@ -210,10 +210,10 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		},
 		//庞统
 		{
-			Id:       int64(consts.CaoCao),
-			UniqueId: 20 + int64(consts.CaoCao),
+			Id:       int64(consts.PangTong),
+			UniqueId: 20 + int64(consts.PangTong),
 			Name:     "庞统",
-			Group:    consts.Group_WeiGuo,
+			Group:    consts.Group_ShuGuo,
 			AbilityAttr: &po.AbilityAttr{
 				ForceBase:        58.96,
 				ForceRate:        0,
@@ -238,10 +238,10 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		},
 		//诸葛亮
 		{
-			Id:       int64(consts.ManChong),
-			UniqueId: 20 + int64(consts.ManChong),
+			Id:       int64(consts.ZhuGeLiang),
+			UniqueId: 20 + int64(consts.ZhuGeLiang),
 			Name:     "诸葛亮",
-			Group:    consts.Group_WeiGuo,
+			Group:    consts.Group_ShuGuo,
 			AbilityAttr: &po.AbilityAttr{
 				ForceBase:        62.13,
 				ForceRate:        0,
@@ -307,8 +307,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "锋矢阵",
 		},
 		{
-			Id:   consts.Curettage,
-			Name: "刮骨疗毒",
+			Id:   consts.AncientEvilComes,
+			Name: "古之恶来",
 		},
 	}
 
@@ -323,8 +323,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "夺魂挟魄",
 		},
 		{
-			Id:   consts.AbilityToRuleTheCountry,
-			Name: "经天纬地",
+			Id:   consts.AngryEyeHorizontalSpear,
+			Name: "瞋目横矛",
 		},
 	}
 	//庞统战法

@@ -84,7 +84,12 @@ func (b BlazingWildfireTactic) Execute() {
 		//判断当前被攻击武将是否有灼烧状态
 		if util.DeBuffEffectContains(sufferGeneral, consts.DebuffEffectType_Firing) {
 			//效果消耗
-			if util.DeBuffEffectOfTacticCost(sufferGeneral, consts.DebuffEffectType_Firing, b.Id(), 1) {
+			if util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    sufferGeneral,
+				EffectType: consts.DebuffEffectType_Firing,
+				TacticId:   b.Id(),
+			}) {
 				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
 				util.TacticDamage(&util.TacticDamageParam{
 					TacticsParams: b.tacticsParams,
@@ -97,7 +102,7 @@ func (b BlazingWildfireTactic) Execute() {
 		} else {
 			//施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合
 			if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Firing, &vo.EffectHolderParams{
-				EffectTimes: 2,
+				EffectRound: 2,
 				FromTactic:  b.Id(),
 			}).IsSuccess {
 				//注册伤害效果
@@ -106,7 +111,12 @@ func (b BlazingWildfireTactic) Execute() {
 					triggerResp := &vo.TacticsTriggerResult{}
 
 					//效果消耗
-					if util.DeBuffEffectOfTacticCost(triggerGeneral, consts.DebuffEffectType_Firing, b.Id(), 1) {
+					if util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    triggerGeneral,
+						EffectType: consts.DebuffEffectType_Firing,
+						TacticId:   b.Id(),
+					}) {
 						hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「%v」效果",
 							triggerGeneral.BaseInfo.Name,
 							b.Name(),

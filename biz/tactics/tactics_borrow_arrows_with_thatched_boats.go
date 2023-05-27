@@ -125,7 +125,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 			FromTactic:  b.Id(),
 		}).IsSuccess {
 			//注册触发效果
-			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				triggerGeneral := params.CurrentGeneral
 				triggerResp := &vo.TacticsTriggerResult{}
 				//效果消耗
@@ -148,7 +148,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 						)
 						// TODO 受统率影响
 						resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentDamage) * 0.28)
-						finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(triggerGeneral, resumeNum)
+						finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(ctx, triggerGeneral, resumeNum)
 						hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
 							triggerGeneral.BaseInfo.Name,
 							finalResumeNum,

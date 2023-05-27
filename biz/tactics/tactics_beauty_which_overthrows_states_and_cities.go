@@ -11,6 +11,8 @@ type BeautyWhichOverthrowsStatesAndCitiesTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
 	isTriggerPrepare bool
+	//是否已经触发
+	isTriggered bool
 }
 
 func (b BeautyWhichOverthrowsStatesAndCitiesTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {

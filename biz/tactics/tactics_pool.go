@@ -119,6 +119,14 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.ViolentAndHeartless] = &ViolentAndHeartlessTactic{}
 	//经天纬地
 	TacticsHandlerMap[consts.AbilityToRuleTheCountry] = &AbilityToRuleTheCountryTactic{}
+	//暗渡陈仓
+	TacticsHandlerMap[consts.AdvancingSecretlyByUnknownPath] = &AdvancingSecretlyByUnknownPathTactic{}
+	//四面楚歌
+	TacticsHandlerMap[consts.BeBesiegedOnAllSides] = &BeBesiegedOnAllSidesTactic{}
+	//十面埋伏
+	TacticsHandlerMap[consts.AmbushOnAllSides] = &AmbushOnAllSidesTactic{}
+	//古之恶来
+	TacticsHandlerMap[consts.AncientEvilComes] = &AncientEvilComesTactic{}
 }
 
 func initTacticsMap() {
@@ -148,6 +156,7 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.DefensiveBarrier] = true
 	CommandTacticsMap[consts.RideTigerHardToGetOff] = true
 	CommandTacticsMap[consts.AbilityToRuleTheCountry] = true
+	CommandTacticsMap[consts.AncientEvilComes] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -169,6 +178,9 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.BreakingThroughTheFormationAndDestroyingTheFirm] = true
 	ActiveTacticsMap[consts.CupSnakeGhostCar] = true
 	ActiveTacticsMap[consts.AngryEyeHorizontalSpear] = true
+	ActiveTacticsMap[consts.AdvancingSecretlyByUnknownPath] = true
+	ActiveTacticsMap[consts.BeBesiegedOnAllSides] = true
+	ActiveTacticsMap[consts.AmbushOnAllSides] = true
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 }

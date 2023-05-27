@@ -1,0 +1,56 @@
+package tactics
+
+import (
+	"github.com/keycasiter/3g_game/biz/consts"
+	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
+	"github.com/keycasiter/3g_game/biz/tactics/model"
+)
+
+type EstablishingNameThroughGenerationsTactic struct {
+	tacticsParams *model.TacticsParams
+	triggerRate   float64
+}
+
+func (e EstablishingNameThroughGenerationsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) Prepare() {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) Id() consts.TacticId {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) Name() string {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) TacticsSource() consts.TacticsSource {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) GetTriggerRate() float64 {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) SetTriggerRate(rate float64) {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) TacticsType() consts.TacticsType {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) SupportArmTypes() []consts.ArmType {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) Execute() {
+	panic("implement me")
+}
+
+func (e EstablishingNameThroughGenerationsTactic) IsTriggerPrepare() bool {
+	panic("implement me")
+}

@@ -6,6 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+//水淹七军
 type FloodedSeventhArmyTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

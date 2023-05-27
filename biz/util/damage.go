@@ -275,6 +275,8 @@ type TacticDamageParam struct {
 	EffectName string
 	//是否禁止【连环计】被动器生效
 	IsBanInterLockedEffect bool
+	//是否无视防御
+	IsIgnoreDefend bool
 }
 
 // 战法伤害计算
@@ -290,20 +292,17 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	damage := param.Damage
 	tacticName := param.TacticName
 	effectName := param.EffectName
+	isIgnoreDefend := param.IsIgnoreDefend
 	isEffect = true
 
+	//是否可以造成伤害
+	if !IsCanDamage(ctx, attackGeneral) {
+		return 0, 0, 0, false
+	}
+
 	//是否可以规避
-	if effectParams, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
-		rate := float64(0)
-		for _, param := range effectParams {
-			rate += param.EffectRate
-		}
-		if GenerateRate(rate) {
-			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效", sufferGeneral.BaseInfo.Name)
-			return 0, sufferGeneral.SoldierNum, sufferGeneral.SoldierNum, false
-		} else {
-			hlog.CtxInfof(ctx, "[%s]规避失败", sufferGeneral.BaseInfo.Name)
-		}
+	if IsCanEvade(ctx, sufferGeneral) {
+		return 0, 0, 0, false
 	}
 	//伤害分担
 	if v, ok := BuffEffectGetAggrEffectRate(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
@@ -322,22 +321,29 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 			consts.BuffEffectType_ShareResponsibilityFor,
 		)
 		TacticDamage(&TacticDamageParam{
-			TacticsParams: tacticsParams,
-			AttackGeneral: attackGeneral,
-			SufferGeneral: sufferGeneral.ShareResponsibilityForByGeneral,
-			Damage:        shareDmg,
-			TacticName:    tacticName,
+			TacticsParams:  tacticsParams,
+			AttackGeneral:  attackGeneral,
+			SufferGeneral:  sufferGeneral.ShareResponsibilityForByGeneral,
+			Damage:         shareDmg,
+			TacticName:     tacticName,
+			IsIgnoreDefend: isIgnoreDefend,
 		})
 	}
 
-	//伤害结算
+	//伤害计算
 	if sufferGeneral.SoldierNum == 0 {
 		return 0, 0, 0, false
 	}
-	damageNum = damage
+	//伤害计算公式：攻击者伤害值 - 防御者统率值 = 实际伤害
+	//是否无视防御
+	if isIgnoreDefend {
+		damageNum = damage
+	} else {
+		damageNum = damage - cast.ToInt64(sufferGeneral.BaseInfo.AbilityAttr.CommandBase)
+	}
+	//兜底伤害大于剩余兵力情况
 	soldierNum = sufferGeneral.SoldierNum
-
-	if damage >= soldierNum {
+	if damageNum >= soldierNum {
 		damageNum = soldierNum
 	}
 	//记录伤兵

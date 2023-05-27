@@ -117,6 +117,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.AngryEyeHorizontalSpear] = &AngryEyeHorizontalSpearTactic{}
 	//暴戾无仁
 	TacticsHandlerMap[consts.ViolentAndHeartless] = &ViolentAndHeartlessTactic{}
+	//经天纬地
+	TacticsHandlerMap[consts.AbilityToRuleTheCountry] = &AbilityToRuleTheCountryTactic{}
 }
 
 func initTacticsMap() {
@@ -145,6 +147,7 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.BeFullyEquippedFor] = true
 	CommandTacticsMap[consts.DefensiveBarrier] = true
 	CommandTacticsMap[consts.RideTigerHardToGetOff] = true
+	CommandTacticsMap[consts.AbilityToRuleTheCountry] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true

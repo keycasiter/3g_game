@@ -71,7 +71,9 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 
 			//一种效果最多叠加2次
 			util.BuffEffectWrapSet(ctx, triggerGeneral, buffEffect, &vo.EffectHolderParams{
-				EffectTimes: 2,
+				EffectTimes:    1,
+				MaxEffectTimes: 2,
+				FromTactic:     c.Id(),
 			})
 		}
 

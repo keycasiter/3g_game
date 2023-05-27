@@ -129,7 +129,12 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 				triggerGeneral := params.CurrentGeneral
 				triggerResp := &vo.TacticsTriggerResult{}
 				//效果消耗
-				if util.BuffEffectOfTacticCost(triggerGeneral, consts.BuffEffectType_EmergencyTreatment, b.Id(), 1) {
+				if util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    triggerGeneral,
+					EffectType: consts.BuffEffectType_EmergencyTreatment,
+					TacticId:   b.Id(),
+				}) {
 					if !util.GenerateRate(0.7) {
 						hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「急救」效果因几率没有生效",
 							triggerGeneral.BaseInfo.Name,

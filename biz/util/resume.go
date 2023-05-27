@@ -1,6 +1,7 @@
 package util
 
 import (
+	"context"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
@@ -8,7 +9,11 @@ import (
 //恢复兵力结算
 //@general 当前武将
 //@resumeNum 恢复兵力
-func ResumeSoldierNum(general *vo.BattleGeneral, resumeNum int64) (finalResumeNum, originNum, finalSoldierNum int64) {
+func ResumeSoldierNum(ctx context.Context, general *vo.BattleGeneral, resumeNum int64) (finalResumeNum, originNum, finalSoldierNum int64) {
+	if !IsCanResume(ctx, general) {
+		return 0, general.SoldierNum, general.SoldierNum
+	}
+
 	if general.SoldierNum == 0 {
 		return 0, general.SoldierNum, general.SoldierNum
 	}

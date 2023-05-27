@@ -32,7 +32,7 @@ const (
 	DebuffEffectType_Escape                                              //溃逃（受武力影响，无视防御）
 	DebuffEffectType_Sandstorm                                           //沙暴（每回合持续造成伤害）
 	DebuffEffectType_Chaos                                               //混乱（攻击和战法无差别选择目标）
-	DebuffEffectType_Awe                                                 //震慑
+	DebuffEffectType_Awe                                                 //震慑（无法行动）
 	DebuffEffectType_NoStrategy                                          //计穷（无法发动主动战法）
 	DebuffEffectType_PoorHealth                                          //虚弱（无法造成伤害）
 	DebuffEffectType_WaterAttack                                         //水攻（每回合持续造成伤害）
@@ -66,6 +66,8 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_Awe:
+		return "震慑"
 	case DebuffEffectType_Escape:
 		return "溃逃"
 	case DebuffEffectType_ProhibitionTreatment:

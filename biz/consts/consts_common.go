@@ -314,58 +314,101 @@ const (
 type BattleAction int
 
 const (
-	BattleAction_Unknow              BattleAction = iota //未知动作
-	BattleAction_BeginAction                             //开始行动
-	BattleAction_Attack                                  //普通攻击
-	BattleAction_SufferAttack                            //被普通攻击
-	BattleAction_ActiveTactic                            //发动主动战法开始
-	BattleAction_ActiveTacticEnd                         //发动主动战法结束
-	BattleAction_SufferActiveTactic                      //被主动战法攻击
-	BattleAction_AssaultTactic                           //发动突击战法开始
-	BattleAction_AssaultTacticEnd                        //发动突击战法结束
-	BattleAction_SufferAssaultTactic                     //被突击战法攻击
-	BattleAction_CommandTactic                           //指挥战法攻击
-	BattleAction_SufferCommandTactic                     //被指挥战法攻击
-	BattleAction_PassiveTactic                           //被动战法攻击
-	BattleAction_SufferPassiveTactic                     //被被动战法攻击
-	BattleAction_TroopsTactic                            //阵法战法攻击
-	BattleAction_SufferTroopsTactic                      //被阵法战法攻击
-	BattleAction_ArmTactic                               //兵种战法攻击
-	BattleAction_SufferArmTactic                         //被兵种战法攻击
+	BattleAction_Unknow                 BattleAction = iota //未知动作
+	BattleAction_BeginAction                                //开始行动
+	BattleAction_EndAction                                  //结束行动
+	BattleAction_Attack                                     //普通攻击开始
+	BattleAction_AttackEnd                                  //普通攻击结束
+	BattleAction_SufferAttack                               //被普通攻击开始
+	BattleAction_SufferAttackEnd                            //被普通攻击结束
+	BattleAction_ActiveTactic                               //发动主动战法开始
+	BattleAction_ActiveTacticEnd                            //发动主动战法结束
+	BattleAction_SufferActiveTactic                         //被主动战法攻击开始
+	BattleAction_SufferActiveTacticEnd                      //被主动战法攻击结束
+	BattleAction_AssaultTactic                              //发动突击战法开始
+	BattleAction_AssaultTacticEnd                           //发动突击战法结束
+	BattleAction_SufferAssaultTactic                        //被突击战法攻击开始
+	BattleAction_SufferAssaultTacticEnd                     //被突击战法攻击结束
+	BattleAction_CommandTactic                              //指挥战法攻击开始
+	BattleAction_CommandTacticEnd                           //指挥战法攻击结束
+	BattleAction_SufferCommandTactic                        //被指挥战法攻击开始
+	BattleAction_SufferCommandTacticEnd                     //被指挥战法攻击结束
+	BattleAction_PassiveTactic                              //被动战法攻击开始
+	BattleAction_PassiveTacticEnd                           //被动战法攻击结束
+	BattleAction_SufferPassiveTactic                        //被被动战法攻击开始
+	BattleAction_SufferPassiveTacticEnd                     //被被动战法攻击结束
+	BattleAction_TroopsTactic                               //阵法战法攻击开始
+	BattleAction_TroopsTacticEnd                            //阵法战法攻击结束
+	BattleAction_SufferTroopsTactic                         //被阵法战法攻击开始
+	BattleAction_SufferTroopsTacticEnd                      //被阵法战法攻击结束
+	BattleAction_ArmTactic                                  //兵种战法攻击开始
+	BattleAction_ArmTacticEnd                               //兵种战法攻击借宿
+	BattleAction_SufferArmTactic                            //被兵种战法攻击开始
+	BattleAction_SufferArmTacticEnd                         //被兵种战法攻击结束
 )
 
 func (action BattleAction) String() string {
 	switch action {
 	case BattleAction_BeginAction: //开始行动
 		return "开始行动"
-	case BattleAction_Attack: //普通攻击
-		return "普通攻击"
-	case BattleAction_SufferAttack: //被普通攻击
-		return "被普通攻击"
-	case BattleAction_ActiveTactic: //发动主动战法
-		return "发动主动战法"
-	case BattleAction_SufferActiveTactic: //被主动战法攻击
-		return "被主动战法攻击"
-	case BattleAction_AssaultTactic: //发动突击战法攻击
-		return "发动突击战法攻击"
-	case BattleAction_SufferAssaultTactic: //被突击战法攻击
-		return "被突击战法攻击"
-	case BattleAction_CommandTactic: //指挥战法攻击
-		return "指挥战法攻击"
-	case BattleAction_SufferCommandTactic: //被指挥战法攻击
-		return "被指挥战法攻击"
-	case BattleAction_PassiveTactic: //被动战法攻击
-		return "被动战法攻击"
-	case BattleAction_SufferPassiveTactic: //被被动战法攻击
-		return "被被动战法攻击"
-	case BattleAction_TroopsTactic: //阵法战法攻击
-		return "阵法战法攻击"
-	case BattleAction_SufferTroopsTactic: //被阵法战法攻击
-		return "被阵法战法攻击"
-	case BattleAction_ArmTactic: //兵种战法攻击
-		return "兵种战法攻击"
-	case BattleAction_SufferArmTactic: //被兵种战法攻击
-		return "被兵种战法攻击"
+	case BattleAction_EndAction: //结束行动
+		return "结束行动"
+	case BattleAction_Attack: //普通攻击开始
+		return "普通攻击开始"
+	case BattleAction_AttackEnd: //普通攻击结束
+		return "普通攻击结束"
+	case BattleAction_SufferAttack: //被普通攻击开始
+		return "被普通攻击开始"
+	case BattleAction_SufferAttackEnd: //被普通攻击结束
+		return "被普通攻击结束"
+	case BattleAction_ActiveTactic: //发动主动战法开始
+		return "发动主动战法开始"
+	case BattleAction_ActiveTacticEnd: //发动主动战法结束
+		return "发动主动战法结束"
+	case BattleAction_SufferActiveTactic: //被主动战法攻击开始
+		return "被主动战法攻击开始"
+	case BattleAction_SufferActiveTacticEnd: //被主动战法攻击结束
+		return "被主动战法攻击结束"
+	case BattleAction_AssaultTactic: //发动突击战法攻击开始
+		return "发动突击战法攻击开始"
+	case BattleAction_AssaultTacticEnd: //发动突击战法攻击结束
+		return "发动突击战法攻击结束"
+	case BattleAction_SufferAssaultTactic: //被突击战法攻击开始
+		return "被突击战法攻击开始"
+	case BattleAction_SufferAssaultTacticEnd: //被突击战法攻击结束
+		return "被突击战法攻击结束"
+	case BattleAction_CommandTactic: //指挥战法攻击开始
+		return "指挥战法攻击开始"
+	case BattleAction_CommandTacticEnd: //指挥战法攻击结束
+		return "指挥战法攻击结束"
+	case BattleAction_SufferCommandTactic: //被指挥战法攻击开始
+		return "被指挥战法攻击开始"
+	case BattleAction_SufferCommandTacticEnd: //被指挥战法攻击结束
+		return "被指挥战法攻击结束"
+	case BattleAction_PassiveTactic: //被动战法攻击开始
+		return "被动战法攻击开始"
+	case BattleAction_PassiveTacticEnd: //被动战法攻击结束
+		return "被动战法攻击结束"
+	case BattleAction_SufferPassiveTactic: //被被动战法攻击开始
+		return "被被动战法攻击开始"
+	case BattleAction_SufferPassiveTacticEnd: //被被动战法攻击结束
+		return "被被动战法攻击结束"
+	case BattleAction_TroopsTactic: //阵法战法攻击开始
+		return "阵法战法攻击开始"
+	case BattleAction_TroopsTacticEnd: //阵法战法攻击结束
+		return "阵法战法攻击结束"
+	case BattleAction_SufferTroopsTactic: //被阵法战法攻击开始
+		return "被阵法战法攻击开始"
+	case BattleAction_SufferTroopsTacticEnd: //被阵法战法攻击结束
+		return "被阵法战法攻击结束"
+	case BattleAction_ArmTactic: //兵种战法攻击开始
+		return "兵种战法攻击开始"
+	case BattleAction_ArmTacticEnd: //兵种战法攻击结束
+		return "兵种战法攻击结束"
+	case BattleAction_SufferArmTactic: //被兵种战法攻击开始
+		return "被兵种战法攻击开始"
+	case BattleAction_SufferArmTacticEnd: //被兵种战法攻击结束
+		return "被兵种战法攻击结束"
 	}
 	return ""
 }

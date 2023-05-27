@@ -6,7 +6,7 @@ type TacticId int64
 
 const (
 	//未知战法
-	Unknown TacticId = iota
+	UnknownTactic TacticId = iota
 	//鹰视狼顾
 	ClearEyedAndMalicious
 	//士别三日

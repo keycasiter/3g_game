@@ -21,6 +21,8 @@ type BattleTeam struct {
 }
 
 type EffectHolderParams struct {
+	//触发率
+	TriggerRate float64
 	//影响数值
 	EffectValue int64
 	//影响百分比

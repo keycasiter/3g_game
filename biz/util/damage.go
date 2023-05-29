@@ -90,6 +90,17 @@ func FluctuateDamage(dmg int64) int64 {
 // @suffer 被攻击武将
 func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, attackDmg int64) {
 	defer func() {
+		//「遭受伤害结束」触发器
+		if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamageEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: attackGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
 		//「普通攻击结束」触发器
 		if funcs, ok := attackGeneral.TacticsTriggerMap[consts.BattleAction_AttackEnd]; ok {
 			for _, f := range funcs {
@@ -143,6 +154,51 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 				AttackGeneral:  attackGeneral,
 			}
 			f(params)
+		}
+	}
+	//「遭受伤害开始」触发器
+	if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+
+	//抵御效果判断
+	if effectParams, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Defend]; ok {
+		effectType := consts.BuffEffectType_Defend
+		for idx, effectParam := range effectParams {
+			if effectParam.EffectTimes > 0 {
+				effectParam.EffectTimes--
+				hlog.CtxInfof(ctx, "[%s]来自【%v】的「%v」效果，本次免疫伤害",
+					sufferGeneral.BaseInfo.Name,
+					effectParam.FromTactic,
+					effectType,
+				)
+				//清除
+				if effectParam.EffectTimes == 0 {
+					sufferGeneral.BuffEffectHolderMap[effectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+					//如果该效果绑定参数结构体为空，则顺便移除该效果
+					if len(sufferGeneral.BuffEffectHolderMap[effectType]) == 0 {
+						delete(sufferGeneral.BuffEffectHolderMap, effectType)
+						hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+							sufferGeneral.BaseInfo.Name,
+							effectType,
+						)
+					} else {
+						hlog.CtxInfof(ctx, "[%s]的【%v】「%v」效果已消失",
+							sufferGeneral.BaseInfo.Name,
+							effectParam.FromTactic,
+							effectType,
+						)
+					}
+				}
+				return
+			}
 		}
 	}
 
@@ -335,6 +391,17 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	isEffect = true
 
 	defer func() {
+		// 「遭受伤害结束」触发器
+		if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamageEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: attackGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
 		//「发动兵刃/谋略伤害结束」触发器
 		battleAction := consts.BattleAction_StrategyDamageEnd
 		if damageType == consts.DamageType_Weapon {
@@ -350,11 +417,71 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 				f(params)
 			}
 		}
+		//被伤害效果后触发器
+		//映射转换
+		sufferEffectTriggerMapping := map[consts.TacticsType]consts.BattleAction{
+			consts.TacticsType_Active:        consts.BattleAction_SufferActiveTacticEnd,
+			consts.TacticsType_Passive:       consts.BattleAction_SufferPassiveTacticEnd,
+			consts.TacticsType_Assault:       consts.BattleAction_SufferAssaultTacticEnd,
+			consts.TacticsType_Arm:           consts.BattleAction_SufferArmTacticEnd,
+			consts.TacticsType_Command:       consts.BattleAction_SufferCommandTacticEnd,
+			consts.TacticsType_TroopsTactics: consts.BattleAction_SufferTroopsTacticEnd,
+		}
+		action := sufferEffectTriggerMapping[tacticsParams.TacticsType]
+		if funcs, ok := sufferGeneral.TacticsTriggerMap[action]; ok {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: sufferGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
 	}()
 
 	//必填参数
 	if attackGeneral == nil || sufferGeneral == nil || damage <= 0 || damageType == consts.DamageType_None {
 		panic("params err")
+	}
+
+	// 「遭受伤害开始」触发器
+	if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+
+	//触发器禁用开关
+	if tacticName == "连环计" && param.IsBanInterLockedEffect {
+		return
+	}
+
+	//被伤害效果触发器
+	//映射转换
+	sufferEffectTriggerMapping := map[consts.TacticsType]consts.BattleAction{
+		consts.TacticsType_Active:        consts.BattleAction_SufferActiveTactic,
+		consts.TacticsType_Passive:       consts.BattleAction_SufferPassiveTactic,
+		consts.TacticsType_Assault:       consts.BattleAction_SufferAssaultTactic,
+		consts.TacticsType_Arm:           consts.BattleAction_SufferArmTactic,
+		consts.TacticsType_Command:       consts.BattleAction_SufferCommandTactic,
+		consts.TacticsType_TroopsTactics: consts.BattleAction_SufferTroopsTactic,
+	}
+	action := sufferEffectTriggerMapping[tacticsParams.TacticsType]
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[action]; ok {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: sufferGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
 	}
 
 	//是否可以造成伤害
@@ -366,6 +493,43 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	if IsCanEvade(ctx, sufferGeneral) {
 		return 0, 0, 0, false
 	}
+
+	//抵御效果判断
+	if effectParams, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Defend]; ok {
+		effectType := consts.BuffEffectType_Defend
+		for idx, effectParam := range effectParams {
+			if effectParam.EffectTimes > 0 {
+				effectParam.EffectTimes--
+				hlog.CtxInfof(ctx, "[%s]来自【%v】的「%v」效果，本次免疫伤害",
+					sufferGeneral.BaseInfo.Name,
+					effectParam.FromTactic,
+					effectType,
+				)
+
+				//清除
+				if effectParam.EffectTimes == 0 {
+					sufferGeneral.BuffEffectHolderMap[effectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+					//如果该效果绑定参数结构体为空，则顺便移除该效果
+					if len(sufferGeneral.BuffEffectHolderMap[effectType]) == 0 {
+						delete(sufferGeneral.BuffEffectHolderMap, effectType)
+						hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
+							sufferGeneral.BaseInfo.Name,
+							effectType,
+						)
+					} else {
+						hlog.CtxInfof(ctx, "[%s]的【%v】「%v」效果已消失",
+							sufferGeneral.BaseInfo.Name,
+							effectParam.FromTactic,
+							effectType,
+						)
+					}
+				}
+
+				return
+			}
+		}
+	}
+
 	//伤害分担
 	if v, ok := BuffEffectGetAggrEffectRate(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
 		hlog.CtxInfof(ctx, "[%s]由于「%v」效果，本次攻击受到的伤害减少了%.2f%%",
@@ -437,33 +601,6 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 			soldierNum,
 			remainSoldierNum,
 		)
-	}
-
-	//触发器禁用开关
-	if tacticName == "连环计" && param.IsBanInterLockedEffect {
-		return
-	}
-
-	//被伤害效果触发器
-	//映射转换
-	sufferEffectTriggerMapping := map[consts.TacticsType]consts.BattleAction{
-		consts.TacticsType_Active:        consts.BattleAction_SufferActiveTactic,
-		consts.TacticsType_Passive:       consts.BattleAction_SufferPassiveTactic,
-		consts.TacticsType_Assault:       consts.BattleAction_SufferAssaultTactic,
-		consts.TacticsType_Arm:           consts.BattleAction_SufferArmTactic,
-		consts.TacticsType_Command:       consts.BattleAction_SufferCommandTactic,
-		consts.TacticsType_TroopsTactics: consts.BattleAction_SufferTroopsTactic,
-	}
-	action := sufferEffectTriggerMapping[tacticsParams.TacticsType]
-	if funcs, ok := sufferGeneral.TacticsTriggerMap[action]; ok {
-		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: sufferGeneral,
-				AttackGeneral:  attackGeneral,
-			}
-			f(params)
-		}
 	}
 
 	return

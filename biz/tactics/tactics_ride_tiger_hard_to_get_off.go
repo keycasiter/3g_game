@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cast"
 )
 
-//骑虎难下
-//当除自己之外的友军受到普通攻击时，有35概率对该友军造成当回合禁疗（无法恢复兵力）
-//并对敌军群体（2人）造成兵刃攻击（伤害率72%）
+// 骑虎难下
+// 当除自己之外的友军受到普通攻击时，有35概率对该友军造成当回合禁疗（无法恢复兵力）
+// 并对敌军群体（2人）造成兵刃攻击（伤害率72%）
 type RideTigerHardToGetOffTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -90,6 +90,7 @@ func (r RideTigerHardToGetOffTactic) Prepare() {
 						AttackGeneral: currentGeneral,
 						SufferGeneral: enemyGeneral,
 						Damage:        dmg,
+						DamageType:    consts.DamageType_Weapon,
 						TacticName:    r.Name(),
 						EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_RideTigerHardToGetOff_Prepare),
 					})

@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/cast"
 )
 
-//经天纬地
-//战斗中，我军全体发动主动战法及突击战法时，自身有35%概率（受智力影响）会对敌军单体发动谋略攻击（伤害率50%，受智力影响）
-//若由自身触发，则额外由50%概率使我军群体（2人）获得5%攻心（造成谋略伤害时，恢复自身基于伤害量的一定兵力），持续2回合 ，可叠加3次攻心值；
-//自身为主将时，攻心效果提高之10%
+// 经天纬地
+// 战斗中，我军全体发动主动战法及突击战法时，自身有35%概率（受智力影响）会对敌军单体发动谋略攻击（伤害率50%，受智力影响）
+// 若由自身触发，则额外由50%概率使我军群体（2人）获得5%攻心（造成谋略伤害时，恢复自身基于伤害量的一定兵力），持续2回合 ，可叠加3次攻心值；
+// 自身为主将时，攻心效果提高之10%
 type AbilityToRuleTheCountryTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -61,6 +61,7 @@ func (a AbilityToRuleTheCountryTactic) Prepare() {
 				AttackGeneral: currentGeneral,
 				SufferGeneral: enemyGeneral,
 				Damage:        dmg,
+				DamageType:    consts.DamageType_Strategy,
 				TacticName:    a.Name(),
 			})
 

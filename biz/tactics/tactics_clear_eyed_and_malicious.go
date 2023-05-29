@@ -116,6 +116,7 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 					AttackGeneral: currentGeneral,
 					SufferGeneral: enemyGeneral,
 					Damage:        dmg,
+					DamageType:    consts.DamageType_Strategy,
 					TacticName:    c.Name(),
 				})
 			}

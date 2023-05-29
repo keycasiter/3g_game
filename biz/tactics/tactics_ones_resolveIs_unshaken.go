@@ -70,6 +70,7 @@ func (o OnesResolveIsUnshakenTactic) Prepare() {
 						AttackGeneral: triggerGeneral,
 						SufferGeneral: enemyGeneral,
 						Damage:        dmg,
+						DamageType:    consts.DamageType_Weapon,
 						TacticName:    o.Name(),
 						EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_GroupAttack),
 					})

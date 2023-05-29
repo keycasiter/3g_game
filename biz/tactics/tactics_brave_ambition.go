@@ -79,6 +79,7 @@ func (b BraveAmbitionTactic) Prepare() {
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,
 					Damage:        dmg,
+					DamageType:    consts.DamageType_Weapon,
 					TacticName:    b.Name(),
 				})
 
@@ -140,6 +141,7 @@ func (b BraveAmbitionTactic) Prepare() {
 						AttackGeneral: triggerGeneral,
 						SufferGeneral: enemyGeneral,
 						Damage:        dmg,
+						DamageType:    consts.DamageType_Strategy,
 						TacticName:    b.Name(),
 					})
 					//降低智力34点，持续2回合；

@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cast"
 )
 
-//古之恶来
-//我军主将即将受到普通攻击时，自身会对攻击者进行一次猛击（伤害率80%）并使其造成兵刃伤害降低18%，持续1回合，
-//随后为我军主将承担此次普通攻击
+// 古之恶来
+// 我军主将即将受到普通攻击时，自身会对攻击者进行一次猛击（伤害率80%）并使其造成兵刃伤害降低18%，持续1回合，
+// 随后为我军主将承担此次普通攻击
 type AncientEvilComesTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -61,6 +61,7 @@ func (a AncientEvilComesTactic) Prepare() {
 			AttackGeneral: currentGeneral,
 			SufferGeneral: attackGeneral,
 			Damage:        dmg,
+			DamageType:    consts.DamageType_Weapon,
 			TacticName:    a.Name(),
 		})
 		//造成兵刃伤害降低18%，持续1回合

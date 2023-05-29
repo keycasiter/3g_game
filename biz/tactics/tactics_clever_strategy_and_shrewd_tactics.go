@@ -89,6 +89,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 					AttackGeneral: currentGeneral,
 					SufferGeneral: sufferGeneral,
 					Damage:        dmgNum,
+					DamageType:    consts.DamageType_Strategy,
 					TacticName:    c.Name(),
 				})
 				if !isEffect {

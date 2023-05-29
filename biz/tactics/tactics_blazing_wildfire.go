@@ -96,6 +96,7 @@ func (b BlazingWildfireTactic) Execute() {
 					AttackGeneral: currentGeneral,
 					SufferGeneral: sufferGeneral,
 					Damage:        dmg,
+					DamageType:    consts.DamageType_Weapon,
 					TacticName:    b.Name(),
 				})
 			}
@@ -128,6 +129,7 @@ func (b BlazingWildfireTactic) Execute() {
 							AttackGeneral: currentGeneral,
 							SufferGeneral: triggerGeneral,
 							Damage:        dmgNum,
+							DamageType:    consts.DamageType_Strategy,
 							TacticName:    b.Name(),
 						})
 					}

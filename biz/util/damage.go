@@ -281,6 +281,8 @@ type TacticDamageParam struct {
 	AttackGeneral *vo.BattleGeneral
 	//被攻击者
 	SufferGeneral *vo.BattleGeneral
+	//伤害类型
+	DamageType consts.DamageType
 	//伤害
 	Damage int64
 	//战法名
@@ -303,11 +305,17 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	tacticsParams := param.TacticsParams
 	sufferGeneral := param.SufferGeneral
 	attackGeneral := param.AttackGeneral
+	damageType := param.DamageType
 	damage := param.Damage
 	tacticName := param.TacticName
 	effectName := param.EffectName
 	isIgnoreDefend := param.IsIgnoreDefend
 	isEffect = true
+
+	//必填参数
+	if attackGeneral == nil || sufferGeneral == nil || damage <= 0 || damageType == consts.DamageType_None {
+		panic("params err")
+	}
 
 	//是否可以造成伤害
 	if !IsCanDamage(ctx, attackGeneral) {
@@ -391,6 +399,11 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		)
 	}
 
+	//触发器禁用开关
+	if tacticName == "连环计" && param.IsBanInterLockedEffect {
+		return
+	}
+
 	//被伤害效果触发器
 	//映射转换
 	sufferEffectTriggerMapping := map[consts.TacticsType]consts.BattleAction{
@@ -401,11 +414,6 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		consts.TacticsType_Command:       consts.BattleAction_SufferCommandTactic,
 		consts.TacticsType_TroopsTactics: consts.BattleAction_SufferTroopsTactic,
 	}
-	//触发器禁用开关
-	if tacticName == "连环计" && param.IsBanInterLockedEffect {
-		return
-	}
-
 	action := sufferEffectTriggerMapping[tacticsParams.TacticsType]
 	if funcs, ok := sufferGeneral.TacticsTriggerMap[action]; ok {
 		for _, f := range funcs {

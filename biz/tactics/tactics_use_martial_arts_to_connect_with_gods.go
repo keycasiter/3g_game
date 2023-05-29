@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-//用武通神
-//战斗开始的第2、4、6、8回合，对敌军群体（2人）逐渐造成75%、105%、135%、165%谋略伤害（受智力影响）
+// 用武通神
+// 战斗开始的第2、4、6、8回合，对敌军群体（2人）逐渐造成75%、105%、135%、165%谋略伤害（受智力影响）
 type UseMartialArtsToConnectWithGodsTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -57,6 +57,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: sufferGeneral,
 					Damage:        dmg,
+					DamageType:    consts.DamageType_Strategy,
 					TacticName:    u.Name(),
 				})
 			}
@@ -74,6 +75,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: sufferGeneral,
 					Damage:        dmg,
+					DamageType:    consts.DamageType_Strategy,
 					TacticName:    u.Name(),
 				})
 			}
@@ -91,6 +93,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: sufferGeneral,
 					Damage:        dmg,
+					DamageType:    consts.DamageType_Strategy,
 					TacticName:    u.Name(),
 				})
 			}
@@ -108,6 +111,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: sufferGeneral,
 					Damage:        dmg,
+					DamageType:    consts.DamageType_Strategy,
 					TacticName:    u.Name(),
 				})
 			}

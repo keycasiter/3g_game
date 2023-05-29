@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"sort"
@@ -486,11 +487,11 @@ func GetMostIntelligenceEnemyGeneral(tacticsParams *model.TacticsParams) *vo.Bat
 }
 
 // 获取武将武力/智力最高一项
-func GetGeneralHighestBetweenForceOrIntelligence(general *vo.BattleGeneral) float64 {
+func GetGeneralHighestBetweenForceOrIntelligence(general *vo.BattleGeneral) (consts.AbilityAttr, float64) {
 	if general.BaseInfo.AbilityAttr.ForceBase > general.BaseInfo.AbilityAttr.IntelligenceBase {
-		return general.BaseInfo.AbilityAttr.ForceBase
+		return consts.AbilityAttr_Force, general.BaseInfo.AbilityAttr.ForceBase
 	}
-	return general.BaseInfo.AbilityAttr.IntelligenceBase
+	return consts.AbilityAttr_Intelligence, general.BaseInfo.AbilityAttr.IntelligenceBase
 }
 
 // 获取统率最低的敌军单体

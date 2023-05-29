@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-//暗渡陈仓
-//准备1回合，对敌军单体造成谋略攻击（伤害率260%，受智力影响）并使其进入震慑状态（无法行动），持续2回合（发动几率50%）
+// 暗渡陈仓
+// 准备1回合，对敌军单体造成谋略攻击（伤害率260%，受智力影响）并使其进入震慑状态（无法行动），持续2回合（发动几率50%）
 type AdvancingSecretlyByUnknownPathTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -107,6 +107,7 @@ func (a AdvancingSecretlyByUnknownPathTactic) Execute() {
 				AttackGeneral: triggerGeneral,
 				SufferGeneral: enemyGeneral,
 				Damage:        dmg,
+				DamageType:    consts.DamageType_Strategy,
 				TacticName:    a.Name(),
 			})
 			if isEffect {

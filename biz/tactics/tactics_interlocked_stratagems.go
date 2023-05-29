@@ -128,6 +128,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 						AttackGeneral:          currentGeneral,
 						SufferGeneral:          reboundGeneral,
 						Damage:                 dmg,
+						DamageType:             consts.DamageType_Strategy,
 						TacticName:             i.Name(),
 						EffectName:             fmt.Sprintf("%v", consts.DebuffEffectType_InterlockedStratagems),
 						IsBanInterLockedEffect: true,
@@ -164,6 +165,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 				AttackGeneral: currentGeneral,
 				SufferGeneral: sufferGeneral,
 				Damage:        dmgNum,
+				DamageType:    consts.DamageType_Strategy,
 				TacticName:    i.Name(),
 			})
 		}

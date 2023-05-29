@@ -70,13 +70,13 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 			//找到敌军全体
 			enemyGenerals := util.GetEnemyGeneralArr(t.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
-				//TODO 受智力影响
 				dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
 				util.TacticDamage(&util.TacticDamageParam{
 					TacticsParams: t.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: sufferGeneral,
 					Damage:        dmgNum,
+					DamageType:    consts.DamageType_Strategy,
 					TacticName:    t.Name(),
 				})
 			}

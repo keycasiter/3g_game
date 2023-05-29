@@ -345,6 +345,11 @@ const (
 	BattleAction_ArmTacticEnd                               //兵种战法攻击借宿
 	BattleAction_SufferArmTactic                            //被兵种战法攻击开始
 	BattleAction_SufferArmTacticEnd                         //被兵种战法攻击结束
+	BattleAction_WeaponDamage                               //发动兵刃伤害开始
+	BattleAction_WeaponDamageEnd                            //发动兵刃伤害结束
+	BattleAction_StrategyDamage                             //发动谋略伤害开始
+	BattleAction_StrategyDamageEnd                          //发动谋略伤害结束
+
 )
 
 func (action BattleAction) String() string {
@@ -409,6 +414,14 @@ func (action BattleAction) String() string {
 		return "被兵种战法攻击开始"
 	case BattleAction_SufferArmTacticEnd: //被兵种战法攻击结束
 		return "被兵种战法攻击结束"
+	case BattleAction_WeaponDamage: //发动兵刃伤害开始
+		return "发动兵刃伤害开始"
+	case BattleAction_WeaponDamageEnd: //发动兵刃伤害结束
+		return "发动兵刃伤害结束"
+	case BattleAction_StrategyDamage: //发动谋略伤害开始
+		return "发动谋略伤害开始"
+	case BattleAction_StrategyDamageEnd: //发动谋略伤害结束
+		return "发动谋略伤害结束"
 	}
 	return ""
 }

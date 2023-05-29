@@ -69,6 +69,7 @@ func (a AvoidTheSolidAndStrikeTheWeakTactic) Execute() {
 		AttackGeneral: currentGeneral,
 		SufferGeneral: sufferGeneral,
 		Damage:        dmg,
+		DamageType:    consts.DamageType_Weapon,
 		TacticName:    a.Name(),
 	})
 }

@@ -117,6 +117,7 @@ func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Execute() {
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: general,
 					Damage:        dmg,
+					DamageType:    consts.DamageType_Weapon,
 					TacticName:    b.Name(),
 				})
 			}

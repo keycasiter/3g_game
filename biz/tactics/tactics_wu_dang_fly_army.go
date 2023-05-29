@@ -90,6 +90,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 						AttackGeneral: currentGeneral,
 						SufferGeneral: triggerGeneral,
 						Damage:        dmgNum,
+						DamageType:    consts.DamageType_Strategy,
 						TacticName:    w.Name(),
 					})
 				}

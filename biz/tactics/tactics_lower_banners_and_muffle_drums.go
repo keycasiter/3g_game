@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cast"
 )
 
-//偃旗息鼓
-//准备1回合。使我军群体（2人）造成谋略伤害增加25%，持续一回合，
-//随后对敌军单体造成谋略攻击（伤害率210%，受智力影响）
+// 偃旗息鼓
+// 准备1回合。使我军群体（2人）造成谋略伤害增加25%，持续一回合，
+// 随后对敌军单体造成谋略攻击（伤害率210%，受智力影响）
 type LowerBannersAndMuffleDrumsTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -134,6 +134,7 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 						AttackGeneral: currentGeneral,
 						SufferGeneral: enemyGeneral,
 						Damage:        dmg,
+						DamageType:    consts.DamageType_Strategy,
 						TacticName:    l.Name(),
 						EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_LowerBannersAndMuffleDrums_Prepare),
 					})

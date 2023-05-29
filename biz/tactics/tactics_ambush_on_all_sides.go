@@ -11,9 +11,9 @@ import (
 	"github.com/spf13/cast"
 )
 
-//十面埋伏
-//对有负面状态的敌军造成谋略攻击（伤害率96%，受智力影响），并对敌军群体（2人）施加禁疗（无法恢复兵力）
-//及叛逃状态，每回合持续造成伤害（伤害率74%，受武力或智力最高一项影响，无视防御），持续2回合
+// 十面埋伏
+// 对有负面状态的敌军造成谋略攻击（伤害率96%，受智力影响），并对敌军群体（2人）施加禁疗（无法恢复兵力）
+// 及叛逃状态，每回合持续造成伤害（伤害率74%，受武力或智力最高一项影响，无视防御），持续2回合
 type AmbushOnAllSidesTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -83,6 +83,7 @@ func (a AmbushOnAllSidesTactic) Execute() {
 				AttackGeneral: currentGeneral,
 				SufferGeneral: sufferGeneral,
 				Damage:        dmg,
+				DamageType:    consts.DamageType_Strategy,
 				TacticName:    a.Name(),
 			})
 		}
@@ -125,13 +126,18 @@ func (a AmbushOnAllSidesTactic) Execute() {
 
 				//叛逃状态，每回合持续造成伤害（伤害率74%，受武力或智力最高一项影响，无视防御），持续2回合
 				//触发效果
-				attr := util.GetGeneralHighestBetweenForceOrIntelligence(currentGeneral)
+				attrType, attr := util.GetGeneralHighestBetweenForceOrIntelligence(currentGeneral)
+				damageType := consts.DamageType_Weapon
+				if attrType == consts.AbilityAttr_Intelligence {
+					damageType = consts.DamageType_Strategy
+				}
 				dmg := cast.ToInt64(attr * 0.74)
 				util.TacticDamage(&util.TacticDamageParam{
 					TacticsParams:  a.tacticsParams,
 					AttackGeneral:  currentGeneral,
 					SufferGeneral:  triggerGeneral,
 					Damage:         dmg,
+					DamageType:     damageType,
 					TacticName:     a.Name(),
 					EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
 					IsIgnoreDefend: true,

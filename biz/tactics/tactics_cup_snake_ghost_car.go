@@ -95,6 +95,7 @@ func (c CupSnakeGhostCarTactic) Execute() {
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,
 					Damage:        dmg,
+					DamageType:    consts.DamageType_Strategy,
 					TacticName:    c.Name(),
 				})
 			}

@@ -323,8 +323,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "夺魂挟魄",
 		},
 		{
-			Id:   consts.AngryEyeHorizontalSpear,
-			Name: "瞋目横矛",
+			Id:   consts.BlackArt,
+			Name: "妖术",
 		},
 	}
 	//庞统战法

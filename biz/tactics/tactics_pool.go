@@ -127,6 +127,12 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.AmbushOnAllSides] = &AmbushOnAllSidesTactic{}
 	//古之恶来
 	TacticsHandlerMap[consts.AncientEvilComes] = &AncientEvilComesTactic{}
+	//文武双全
+	TacticsHandlerMap[consts.BeAdeptWithBothPenAndSword] = &BeAdeptWithBothPenAndSwordTactic{}
+	//弯弓饮羽
+	TacticsHandlerMap[consts.BendTheBowAndDrinkTheFeathers] = &BendTheBowAndDrinkTheFeathersTactic{}
+	//妖术
+	TacticsHandlerMap[consts.BlackArt] = &BlackArtTactic{}
 }
 
 func initTacticsMap() {
@@ -136,6 +142,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.TaipingLaw] = true
 	PassiveTacticsMap[consts.BraveAmbition] = true
 	PassiveTacticsMap[consts.OnesResolveIsUnshaken] = true
+	PassiveTacticsMap[consts.BeAdeptWithBothPenAndSword] = true
 	//指挥战法
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[consts.Demoralize] = true
@@ -181,6 +188,8 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.AdvancingSecretlyByUnknownPath] = true
 	ActiveTacticsMap[consts.BeBesiegedOnAllSides] = true
 	ActiveTacticsMap[consts.AmbushOnAllSides] = true
+	ActiveTacticsMap[consts.BlackArt] = true
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
+	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true
 }

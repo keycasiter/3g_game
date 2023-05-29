@@ -66,6 +66,8 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_Sandstorm:
+		return "沙暴"
 	case DebuffEffectType_Awe:
 		return "震慑"
 	case DebuffEffectType_Escape:
@@ -171,6 +173,8 @@ const (
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_Defend:
+		return "抵御"
 	case BuffEffectType_AncientEvilComes_Prepare:
 		return "古之恶来[预备]"
 	case BuffEffectType_SeizeTheSoul:

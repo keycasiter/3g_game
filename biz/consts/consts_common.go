@@ -7,6 +7,12 @@ const (
 	RUN_ENV_PROD = "prod"
 )
 
+// 最小值/最大值
+const (
+	INT_MIN = ^INT_MAX
+	INT_MAX = int(^uint(0) >> 1)
+)
+
 // 兵力范围
 const (
 	//每个武将最低带兵数量
@@ -350,6 +356,9 @@ const (
 	BattleAction_StrategyDamage                             //发动谋略伤害开始
 	BattleAction_StrategyDamageEnd                          //发动谋略伤害结束
 
+	//遭受伤害
+	BattleAction_SufferDamage    //遭受伤害开始
+	BattleAction_SufferDamageEnd //遭受伤害结束
 )
 
 func (action BattleAction) String() string {

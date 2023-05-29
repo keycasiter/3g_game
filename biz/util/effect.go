@@ -82,6 +82,8 @@ var (
 		consts.BuffEffectType_GroupAttack: true,
 		//反击
 		consts.BuffEffectType_StrikeBack: true,
+		//抵御
+		consts.BuffEffectType_Defend: true,
 	}
 	//控制状态
 	controlDebuffEffectMap = map[consts.DebuffEffectType]bool{
@@ -116,12 +118,39 @@ var (
 // @holder 效果容器
 // @effectType 效果类型
 // @v 效果值
-//  属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
-//			武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
-//	持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
-//	功能性状态：通常不可叠加，不同来源时不可刷新
-//	控制状态：不可叠加，不可刷新，负面效果
+//
+//	 属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
+//				武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
+//		持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
+//		功能性状态：通常不可叠加，不同来源时不可刷新
+//		控制状态：不可叠加，不可刷新，负面效果
 func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, effectParam *vo.EffectHolderParams) *EffectWrapSetResp {
+	//次数逻辑
+	currentTimes := general.BuffEffectCountMap[effectType]
+	//超过最大次数限制
+	if effectParam.EffectTimes > effectParam.MaxEffectTimes {
+		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
+			general.BaseInfo.Name,
+			effectType,
+		)
+		return &EffectWrapSetResp{
+			IsSuccess: false,
+		}
+	}
+	//叠加逻辑
+	if effectParam.EffectTimes+currentTimes > effectParam.MaxEffectTimes {
+		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
+			general.BaseInfo.Name,
+			effectType,
+		)
+		return &EffectWrapSetResp{
+			IsSuccess: false,
+		}
+	} else {
+		general.BuffEffectCountMap[effectType] = currentTimes + effectParam.EffectTimes
+	}
+	//属性
+
 	//是否包含正面效果判断
 	_, isContainBuffEffect := general.BuffEffectHolderMap[effectType]
 	//是否包含属性正面效果判断
@@ -182,9 +211,13 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 
 	//功能性状态：通常不可叠加，不同来源时不可刷新
 	if isContainBuffEffect && isContainFunctionBuffEffectEffect {
+		hlog.CtxInfof(ctx, "[%s]身上已有同等或更强的「%v」效果",
+			general.BaseInfo.Name,
+			effectType,
+		)
 		return &EffectWrapSetResp{
-			IsSuccess:       true,
-			IsRefreshEffect: true,
+			IsSuccess:       false,
+			IsRefreshEffect: false,
 		}
 	}
 
@@ -201,31 +234,6 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 		effectParam.FromTactic,
 		effectType,
 	)
-
-	//次数逻辑
-	currentTimes := general.BuffEffectCountMap[effectType]
-	//超过最大次数限制
-	if effectParam.EffectTimes > effectParam.MaxEffectTimes {
-		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
-			general.BaseInfo.Name,
-			effectType,
-		)
-		return &EffectWrapSetResp{
-			IsSuccess: false,
-		}
-	}
-	//叠加逻辑
-	if effectParam.EffectTimes+currentTimes > effectParam.MaxEffectTimes {
-		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
-			general.BaseInfo.Name,
-			effectType,
-		)
-		return &EffectWrapSetResp{
-			IsSuccess: false,
-		}
-	} else {
-		general.BuffEffectCountMap[effectType] = currentTimes + effectParam.EffectTimes
-	}
 
 	return &EffectWrapSetResp{
 		IsSuccess: true,
@@ -381,11 +389,12 @@ type EffectWrapSetResp struct {
 // @holder 效果容器
 // @effectType 效果类型
 // @v 效果值
-//  属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
-//			武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
-//	持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
-//	功能性状态：通常不可叠加，不同来源时不可刷新
-//	控制状态：不可叠加，不可刷新，负面效果
+//
+//	 属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
+//				武力/智力/统率/速度/政治/美丽/会心几率/奇谋几率/发动几率/战法造成伤害/受到战法伤害
+//		持续性状态：每回合武将开始行动时，对武将造成伤害或治疗；同种状态不可叠加，但会刷新
+//		功能性状态：通常不可叠加，不同来源时不可刷新
+//		控制状态：不可叠加，不可刷新，负面效果
 func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.DebuffEffectType, effectParam *vo.EffectHolderParams) *EffectWrapSetResp {
 	//是否包含负面效果判断
 	_, isContainDebuffEffect := general.DeBuffEffectHolderMap[effectType]
@@ -604,10 +613,11 @@ func DeBuffEffectOfTacticCostRound(params *DebuffEffectOfTacticCostRoundParams) 
 						params.CostOverTriggerFunc()
 					}
 				}
+				return true
 			}
 		}
 	}
-	return true
+	return false
 }
 
 // 负面效果获取
@@ -662,7 +672,7 @@ func TacticFrozenWrapSet(general *vo.BattleGeneral, tacticId consts.TacticId, fr
 	return true
 }
 
-//战法冻结清零
+// 战法冻结清零
 func TacticFrozenWrapRemove(general *vo.BattleGeneral, tacticId consts.TacticId) bool {
 	if _, ok := general.TacticsFrozenMap[tacticId]; ok {
 		delete(general.TacticsFrozenMap, tacticId)
@@ -715,7 +725,7 @@ func TacticsTriggerWrapRegister(general *vo.BattleGeneral, action consts.BattleA
 	}
 }
 
-//是否可以行动
+// 是否可以行动
 func IsCanBeginAction(ctx context.Context, general *vo.BattleGeneral) bool {
 	//震慑
 	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_Awe]; ok {
@@ -730,7 +740,7 @@ func IsCanBeginAction(ctx context.Context, general *vo.BattleGeneral) bool {
 	return true
 }
 
-//是否可以发动主动战法
+// 是否可以发动主动战法
 func IsCanActiveTactic(ctx context.Context, general *vo.BattleGeneral) bool {
 	//计穷
 	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; ok {
@@ -745,7 +755,7 @@ func IsCanActiveTactic(ctx context.Context, general *vo.BattleGeneral) bool {
 	return true
 }
 
-//是否可以造成伤害
+// 是否可以造成伤害
 func IsCanDamage(ctx context.Context, general *vo.BattleGeneral) bool {
 	//虚弱
 	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_PoorHealth]; ok {
@@ -760,7 +770,7 @@ func IsCanDamage(ctx context.Context, general *vo.BattleGeneral) bool {
 	return true
 }
 
-//是否可以普通攻击
+// 是否可以普通攻击
 func IsCanGeneralAttack(ctx context.Context, general *vo.BattleGeneral) bool {
 	//缴械
 	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_CancelWeapon]; ok {
@@ -785,7 +795,7 @@ func IsCanGeneralAttack(ctx context.Context, general *vo.BattleGeneral) bool {
 	return true
 }
 
-//是否可以恢复兵力
+// 是否可以恢复兵力
 func IsCanResume(ctx context.Context, general *vo.BattleGeneral) bool {
 	//禁疗
 	if _, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_ProhibitionTreatment]; ok {
@@ -798,7 +808,7 @@ func IsCanResume(ctx context.Context, general *vo.BattleGeneral) bool {
 	return true
 }
 
-//是否可以规避
+// 是否可以规避
 func IsCanEvade(ctx context.Context, general *vo.BattleGeneral) bool {
 	if effectParams, ok := general.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
 		rate := float64(0)

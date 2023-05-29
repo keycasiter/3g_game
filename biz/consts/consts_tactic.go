@@ -1,7 +1,5 @@
 package consts
 
-import "fmt"
-
 type TacticId int64
 
 const (
@@ -1252,6 +1250,5 @@ func (b TacticId) String() string {
 	case SuppressYellowScarves:
 		return "镇压黄巾"
 	}
-	fmt.Printf("%p", b)
 	return "未知战法"
 }

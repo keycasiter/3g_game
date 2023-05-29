@@ -484,3 +484,25 @@ func GetMostIntelligenceEnemyGeneral(tacticsParams *model.TacticsParams) *vo.Bat
 	}
 	return mostIntelligenceGeneral
 }
+
+// 获取武将武力/智力最高一项
+func GetGeneralHighestBetweenForceOrIntelligence(general *vo.BattleGeneral) float64 {
+	if general.BaseInfo.AbilityAttr.ForceBase > general.BaseInfo.AbilityAttr.IntelligenceBase {
+		return general.BaseInfo.AbilityAttr.ForceBase
+	}
+	return general.BaseInfo.AbilityAttr.IntelligenceBase
+}
+
+// 获取统率最低的敌军单体
+func GetEnemyGeneralWhoLowestCommand(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
+	//找到敌军全体
+	enemyGenerals := GetEnemyGeneralsByGeneral(currentGeneral, params)
+	//找到统率最低的敌军单体
+	lowestCommandGeneral := enemyGenerals[0]
+	for _, general := range enemyGenerals {
+		if general.BaseInfo.AbilityAttr.CommandBase < lowestCommandGeneral.BaseInfo.AbilityAttr.CommandBase {
+			lowestCommandGeneral = general
+		}
+	}
+	return lowestCommandGeneral
+}

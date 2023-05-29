@@ -9,9 +9,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//瞋目横矛
-//使自己武力提升50点，并获得群攻（普通攻击时对目标同部队其他武将造成伤害）效果（伤害率70%），持续2回合
-//主动战法
+// 瞋目横矛
+// 使自己武力提升50点，并获得群攻（普通攻击时对目标同部队其他武将造成伤害）效果（伤害率70%），持续2回合
+// 主动战法
 type AngryEyeHorizontalSpearTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -76,6 +76,7 @@ func (a AngryEyeHorizontalSpearTactic) Execute() {
 	)
 	//群攻效果
 	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_GroupAttack, &vo.EffectHolderParams{
+		TriggerRate: 1.0,
 		EffectRate:  0.7,
 		EffectRound: 2,
 		FromTactic:  a.Id(),

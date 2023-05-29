@@ -90,7 +90,29 @@ func FluctuateDamage(dmg int64) int64 {
 // @suffer 被攻击武将
 func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, attackDmg int64) {
 	defer func() {
-		//被伤害效果结束触发器
+		//「普通攻击结束」触发器
+		if funcs, ok := attackGeneral.TacticsTriggerMap[consts.BattleAction_AttackEnd]; ok {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: sufferGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
+		//「发动兵刃伤害结束」触发器
+		if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_WeaponDamageEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: attackGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
+		//「被普通攻击结束」触发器
 		if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferGeneralAttackEnd]; ok {
 			for _, f := range funcs {
 				params := &vo.TacticsTriggerParams{
@@ -311,6 +333,24 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	effectName := param.EffectName
 	isIgnoreDefend := param.IsIgnoreDefend
 	isEffect = true
+
+	defer func() {
+		//「发动兵刃/谋略伤害结束」触发器
+		battleAction := consts.BattleAction_StrategyDamageEnd
+		if damageType == consts.DamageType_Weapon {
+			battleAction = consts.BattleAction_WeaponDamageEnd
+		}
+		if funcs, okk := attackGeneral.TacticsTriggerMap[battleAction]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: attackGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
+	}()
 
 	//必填参数
 	if attackGeneral == nil || sufferGeneral == nil || damage <= 0 || damageType == consts.DamageType_None {

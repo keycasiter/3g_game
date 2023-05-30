@@ -19,6 +19,7 @@ type LowerBannersAndMuffleDrumsTactic struct {
 	triggerRate   float64
 	//是否已经触发准备战法
 	isTriggerPrepare bool
+	isTriggered      bool
 }
 
 func (l LowerBannersAndMuffleDrumsTactic) IsTriggerPrepare() bool {
@@ -84,7 +85,18 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 		triggerRound := params.CurrentRound
 		triggerGeneral := params.CurrentGeneral
 
+		//准备回合释放
+		if currentRound+2 == triggerRound {
+			l.isTriggerPrepare = false
+		}
+
 		if currentRound+1 == triggerRound {
+			if l.isTriggered {
+				return triggerResp
+			} else {
+				l.isTriggered = true
+			}
+
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				l.Name(),
@@ -140,15 +152,6 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 					})
 				}
 				return resp
-			})
-		}
-
-		if currentRound+2 == triggerRound {
-			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				revokeResp := &vo.TacticsTriggerResult{}
-				l.isTriggerPrepare = false
-
-				return revokeResp
 			})
 		}
 

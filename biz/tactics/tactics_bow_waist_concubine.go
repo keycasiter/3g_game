@@ -6,6 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+// 弓腰姬
 type BowWaistConcubineTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

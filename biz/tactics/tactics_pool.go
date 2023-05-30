@@ -133,6 +133,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.BendTheBowAndDrinkTheFeathers] = &BendTheBowAndDrinkTheFeathersTactic{}
 	//妖术
 	TacticsHandlerMap[consts.BlackArt] = &BlackArtTactic{}
+	//破军威胜
+	TacticsHandlerMap[consts.BreakingThroughTheArmyAndWinningVictories] = &BreakingThroughTheArmyAndWinningVictoriesTactic{}
 }
 
 func initTacticsMap() {
@@ -189,6 +191,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.BeBesiegedOnAllSides] = true
 	ActiveTacticsMap[consts.AmbushOnAllSides] = true
 	ActiveTacticsMap[consts.BlackArt] = true
+	ActiveTacticsMap[consts.BreakingThroughTheArmyAndWinningVictories] = true
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true

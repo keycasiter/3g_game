@@ -73,6 +73,9 @@ func (b BendTheBowAndDrinkTheFeathersTactic) Execute() {
 
 	//使攻击目标降低150点统率
 	util.DeduceGeneralAttr(sufferGeneral, consts.AbilityAttr_Command, 150)
+	hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
+		sufferGeneral.BaseInfo.Name,
+		150)
 	//造成计穷（无法发动主动战法）状态，持续1回合
 	if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_NoStrategy, &vo.EffectHolderParams{
 		EffectRate:  1.0,
@@ -82,12 +85,19 @@ func (b BendTheBowAndDrinkTheFeathersTactic) Execute() {
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
 
 			util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
 				Ctx:        ctx,
 				General:    sufferGeneral,
 				EffectType: consts.DebuffEffectType_NoStrategy,
 				TacticId:   b.Id(),
+				CostOverTriggerFunc: func() {
+					util.DeduceGeneralAttr(revokeGeneral, consts.AbilityAttr_Command, 150)
+					hlog.CtxInfof(ctx, "[%s]的统率提高了%.2f",
+						revokeGeneral.BaseInfo.Name,
+						150)
+				},
 			})
 			return revokeResp
 		})

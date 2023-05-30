@@ -16,6 +16,7 @@ type BreakingThroughTheFormationAndDestroyingTheFirmTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
 	isTriggerPrepare bool
+	isTriggered      bool
 }
 
 func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
@@ -78,9 +79,18 @@ func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Execute() {
 		triggerGeneral := params.CurrentGeneral
 		triggerRound := params.CurrentRound
 
-		if currentRound+1 == triggerRound {
-			//准备回合释放
+		//准备回合释放
+		if currentRound+2 == triggerRound {
 			b.isTriggerPrepare = false
+		}
+
+		if currentRound+1 == triggerRound {
+			if b.isTriggered {
+				return triggerResp
+			} else {
+				b.isTriggered = true
+			}
+
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				b.Name(),
@@ -122,7 +132,6 @@ func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Execute() {
 				})
 			}
 		}
-
 		return triggerResp
 	})
 }

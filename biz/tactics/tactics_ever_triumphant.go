@@ -16,6 +16,7 @@ type EverTriumphantTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
 	isTriggerPrepare bool
+	isTriggered      bool
 }
 
 func (e EverTriumphantTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
@@ -78,9 +79,18 @@ func (e EverTriumphantTactic) Execute() {
 		triggerRound := params.CurrentRound
 		triggerGeneral := params.CurrentGeneral
 
-		if currentRound+1 == triggerRound {
-			//准备回合释放
+		//准备回合释放
+		if currentRound+2 == triggerRound {
 			e.isTriggerPrepare = false
+		}
+
+		if currentRound+1 == triggerRound {
+			if e.isTriggered {
+				return triggerResp
+			} else {
+				e.isTriggered = true
+			}
+
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				e.Name(),

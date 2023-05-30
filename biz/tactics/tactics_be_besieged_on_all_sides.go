@@ -16,6 +16,7 @@ type BeBesiegedOnAllSidesTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
 	isTriggerPrepare bool
+	isTriggered      bool
 }
 
 func (b BeBesiegedOnAllSidesTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
@@ -82,6 +83,12 @@ func (b BeBesiegedOnAllSidesTactic) Execute() {
 			b.isTriggerPrepare = false
 		}
 		if currentRound+1 == triggerRound {
+			if b.isTriggered {
+				return triggerResp
+			} else {
+				b.isTriggered = true
+			}
+
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				b.Name(),

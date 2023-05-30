@@ -17,6 +17,7 @@ type CupSnakeGhostCarTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
 	isTriggerPrepare bool
+	isTriggered      bool
 }
 
 func (c CupSnakeGhostCarTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
@@ -68,6 +69,7 @@ func (c CupSnakeGhostCarTactic) Execute() {
 	currentRound := c.tacticsParams.CurrentRound
 
 	//准备1回合，对敌军群体(2人)发动一次谋略攻击（伤害率153%，受智力影响）
+
 	c.isTriggerPrepare = true
 	hlog.CtxInfof(ctx, "[%s]准备发动战法【%s】",
 		currentGeneral.BaseInfo.Name,
@@ -78,9 +80,18 @@ func (c CupSnakeGhostCarTactic) Execute() {
 		triggerRound := params.CurrentRound
 		triggerGeneral := params.CurrentGeneral
 
-		if currentRound+1 == triggerRound {
-			//准备回合释放
+		//准备回合释放
+		if currentRound+2 == triggerRound {
 			c.isTriggerPrepare = false
+		}
+
+		if currentRound+1 == triggerRound {
+			if c.isTriggered {
+				return triggerResp
+			} else {
+				c.isTriggered = true
+			}
+
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 				currentGeneral.BaseInfo.Name,
 				c.Name(),
@@ -99,19 +110,20 @@ func (c CupSnakeGhostCarTactic) Execute() {
 					TacticName:    c.Name(),
 				})
 			}
-		}
-		//并为我军群体(2人)恢复一定兵力（恢复率102%，受智力影响）
-		//找到我军2人
-		pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, c.tacticsParams)
-		for _, pairGeneral := range pairGenerals {
-			resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.02)
-			resume, origin, final := util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
-			hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
-				pairGeneral.BaseInfo.Name,
-				resume,
-				origin,
-				final,
-			)
+
+			//并为我军群体(2人)恢复一定兵力（恢复率102%，受智力影响）
+			//找到我军2人
+			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, c.tacticsParams)
+			for _, pairGeneral := range pairGenerals {
+				resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.02)
+				resume, origin, final := util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
+				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
+					pairGeneral.BaseInfo.Name,
+					resume,
+					origin,
+					final,
+				)
+			}
 		}
 
 		return triggerResp

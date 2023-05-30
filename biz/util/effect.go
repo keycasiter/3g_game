@@ -296,6 +296,17 @@ func BuffEffectGet(general *vo.BattleGeneral, effectType consts.BuffEffectType) 
 	return nil, false
 }
 
+// 获取增益效果总次数
+func BuffEffectGetCount(general *vo.BattleGeneral, effectType consts.BuffEffectType) int64 {
+	times := int64(0)
+	if effectParams, ok := general.BuffEffectHolderMap[effectType]; ok {
+		for _, effectParam := range effectParams {
+			times += effectParam.EffectTimes
+		}
+	}
+	return times
+}
+
 // 获取增益效果(汇总)
 func BuffEffectGetAggrEffectRate(general *vo.BattleGeneral, effectType consts.BuffEffectType) (float64, bool) {
 	effectRate := float64(0)

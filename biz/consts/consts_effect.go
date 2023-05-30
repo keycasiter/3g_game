@@ -137,11 +137,13 @@ const (
 	BuffEffectType_Defection                                   //倒戈
 	BuffEffectType_ShareResponsibilityFor                      //分担
 	BuffEffectType_Insight                                     //洞察
+	BuffEffectType_FightHard                                   //酣斗
 	BuffEffectType_TacticsActiveTriggerImprove                 //主动战法发动率提升
 	BuffEffectType_TacticsPassiveTriggerImprove                //被动战法发动率提升
 	BuffEffectType_LaunchWeaponDamageImprove                   //造成兵刃伤害增加
 	BuffEffectType_LaunchStrategyDamageImprove                 //造成谋略伤害增加
 
+	BuffEffectType_GeneralAttackDamageImprove               //普通攻击伤害提升
 	BuffEffectType_SufferWeaponDamageDeduce                 //受到兵刃伤害减少
 	BuffEffectType_SufferStrategyDamageDeduce               //受到谋略伤害减少
 	BuffEffectType_IncrForce                                //增加武力
@@ -173,6 +175,10 @@ const (
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_FightHard:
+		return "酣斗"
+	case BuffEffectType_GeneralAttackDamageImprove:
+		return "普通攻击伤害提升"
 	case BuffEffectType_Defend:
 		return "抵御"
 	case BuffEffectType_AncientEvilComes_Prepare:

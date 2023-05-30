@@ -508,6 +508,24 @@ func GetEnemyGeneralWhoLowestCommand(currentGeneral *vo.BattleGeneral, params *m
 	return lowestCommandGeneral
 }
 
+// 提高武将属性
+func ImproveGeneralAttr(general *vo.BattleGeneral, attr consts.AbilityAttr, attrValue float64) {
+	switch attr {
+	//武力
+	case consts.AbilityAttr_Force:
+		general.BaseInfo.AbilityAttr.ForceBase += attrValue
+	//智力
+	case consts.AbilityAttr_Intelligence:
+		general.BaseInfo.AbilityAttr.IntelligenceBase += attrValue
+	//统率
+	case consts.AbilityAttr_Command:
+		general.BaseInfo.AbilityAttr.CommandBase += attrValue
+	//速度
+	case consts.AbilityAttr_Speed:
+		general.BaseInfo.AbilityAttr.SpeedBase += attrValue
+	}
+}
+
 // 降低武将属性
 func DeduceGeneralAttr(general *vo.BattleGeneral, attr consts.AbilityAttr, attrValue float64) {
 	switch attr {

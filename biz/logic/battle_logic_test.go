@@ -293,7 +293,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		},
 		{
 			Id:   consts.AppeaseArmyAndPeople,
-			Name: "",
+			Name: "抚揖军民",
 		},
 	}
 	//满宠战法
@@ -307,8 +307,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "锋矢阵",
 		},
 		{
-			Id:   consts.AncientEvilComes,
-			Name: "古之恶来",
+			Id:   consts.Curettage,
+			Name: "刮骨疗毒",
 		},
 	}
 
@@ -323,8 +323,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "夺魂挟魄",
 		},
 		{
-			Id:   consts.BlackArt,
-			Name: "妖术",
+			Id:   consts.BreakingThroughTheArmyAndWinningVictories,
+			Name: "破军威胜",
 		},
 	}
 	//庞统战法

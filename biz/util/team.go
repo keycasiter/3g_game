@@ -557,3 +557,11 @@ func DeduceGeneralAttr(general *vo.BattleGeneral, attr consts.AbilityAttr, attrV
 		general.BaseInfo.AbilityAttr.SpeedBase = 0
 	}
 }
+
+// 计算属性之差
+func CalculateAttrDiff(a float64, b float64) float64 {
+	if a > b {
+		return a
+	}
+	return 0
+}

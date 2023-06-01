@@ -135,6 +135,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.BlackArt] = &BlackArtTactic{}
 	//破军威胜
 	TacticsHandlerMap[consts.BreakingThroughTheArmyAndWinningVictories] = &BreakingThroughTheArmyAndWinningVictoriesTactic{}
+	//决水溃城
+	TacticsHandlerMap[consts.BreakingThroughTheWaterAndCrushingTheCity] = &BreakingThroughTheWaterAndCrushingTheCityTactic{}
 }
 
 func initTacticsMap() {
@@ -192,6 +194,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.AmbushOnAllSides] = true
 	ActiveTacticsMap[consts.BlackArt] = true
 	ActiveTacticsMap[consts.BreakingThroughTheArmyAndWinningVictories] = true
+	ActiveTacticsMap[consts.BreakingThroughTheWaterAndCrushingTheCity] = true
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true

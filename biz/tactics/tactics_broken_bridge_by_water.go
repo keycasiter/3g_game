@@ -1,9 +1,13 @@
 package tactics
 
 import (
+	"fmt"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 据水断桥
@@ -59,7 +63,91 @@ func (b BrokenBridgeByWaterTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (b BrokenBridgeByWaterTactic) Execute() {
+	ctx := b.tacticsParams.Ctx
+	currentGeneral := b.tacticsParams.CurrentGeneral
+	// 对敌军群体（2-3人）造成溃逃状态，每回合持续造成伤害（伤害率78%，受武力影响），并使其造成伤害降低8%（受双方武力之差影响），
+	// 同时使自身获得16%倒戈（造成兵刃伤害时，恢复自身基于伤害量的一定兵力），持续2回合，该战法发动后回进入1回合冷却
 
+	//找到敌军2～3人
+	enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
+	for _, sufferGeneral := range enemyGenerals {
+		//施加溃逃状态
+		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Escape, &vo.EffectHolderParams{
+			EffectRate:  1.0,
+			EffectRound: 2,
+			FromTactic:  b.Id(),
+		}).IsSuccess {
+			//注册消失效果
+			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+
+				//消耗回合
+				if util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    revokeGeneral,
+					EffectType: consts.DebuffEffectType_Escape,
+					TacticId:   b.Id(),
+				}) {
+					//每回合持续造成伤害（伤害率78%，受武力影响）
+					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.78)
+					util.TacticDamage(&util.TacticDamageParam{
+						TacticsParams: b.tacticsParams,
+						AttackGeneral: currentGeneral,
+						SufferGeneral: revokeGeneral,
+						DamageType:    consts.DamageType_Weapon,
+						Damage:        dmg,
+						TacticName:    b.Name(),
+						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
+					})
+				}
+				return revokeResp
+			})
+		}
+
+		//并使其造成伤害降低8%（受双方武力之差影响）
+		//兵刃伤害降低效果
+		diff := util.CalculateAttrDiff(currentGeneral.BaseInfo.AbilityAttr.ForceBase, sufferGeneral.BaseInfo.AbilityAttr.ForceBase)
+		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate:  0.08 + diff/100/100,
+			EffectRound: 2,
+			FromTactic:  b.Id(),
+		}).IsSuccess {
+			//注册消失效果
+			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+
+				util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    revokeGeneral,
+					EffectType: consts.DebuffEffectType_LaunchWeaponDamageDeduce,
+					TacticId:   b.Id(),
+				})
+				return revokeResp
+			})
+		}
+		//谋略伤害降低效果
+		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_LaunchStrategyDamageDeduce, &vo.EffectHolderParams{
+			EffectRate:  0.08 + diff/100/100,
+			EffectRound: 2,
+			FromTactic:  b.Id(),
+		}).IsSuccess {
+			//注册消失效果
+			util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+
+				util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    revokeGeneral,
+					EffectType: consts.DebuffEffectType_LaunchStrategyDamageDeduce,
+					TacticId:   b.Id(),
+				})
+				return revokeResp
+			})
+		}
+	}
 }
 
 func (b BrokenBridgeByWaterTactic) IsTriggerPrepare() bool {

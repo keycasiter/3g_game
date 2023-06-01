@@ -66,6 +66,10 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_WaterAttack:
+		return "水攻"
+	case DebuffEffectType_Break:
+		return "破坏"
 	case DebuffEffectType_Sandstorm:
 		return "沙暴"
 	case DebuffEffectType_Awe:

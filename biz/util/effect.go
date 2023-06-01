@@ -370,23 +370,25 @@ func BuffEffectOfTacticCostRound(params *BuffEffectOfTacticCostRoundParams) bool
 				//消耗
 				if effectParam.EffectRound > 0 {
 					effectParam.EffectRound--
-				}
-				//清除
-				if effectParam.EffectRound == 0 {
-					params.General.BuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
-					hlog.CtxInfof(params.Ctx, "[%s]的「%v」效果已消失",
-						params.General.BaseInfo.Name,
-						params.EffectType,
-					)
-					//执行回调函数
-					if params.CostOverTriggerFunc != nil {
-						params.CostOverTriggerFunc()
+
+					//清除
+					if effectParam.EffectRound == 0 {
+						params.General.BuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+						hlog.CtxInfof(params.Ctx, "[%s]的「%v」效果已消失",
+							params.General.BaseInfo.Name,
+							params.EffectType,
+						)
+						//执行回调函数
+						if params.CostOverTriggerFunc != nil {
+							params.CostOverTriggerFunc()
+						}
 					}
+					return true
 				}
 			}
 		}
 	}
-	return true
+	return false
 }
 
 type EffectWrapSetResp struct {
@@ -611,20 +613,21 @@ func DeBuffEffectOfTacticCostRound(params *DebuffEffectOfTacticCostRoundParams) 
 				//消耗
 				if effectParam.EffectRound > 0 {
 					effectParam.EffectRound--
-				}
-				//清除
-				if effectParam.EffectRound == 0 {
-					params.General.DeBuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
-					hlog.CtxInfof(params.Ctx, "[%s]的「%v」效果已消失",
-						params.General.BaseInfo.Name,
-						params.EffectType,
-					)
-					//执行回调函数
-					if params.CostOverTriggerFunc != nil {
-						params.CostOverTriggerFunc()
+
+					//清除
+					if effectParam.EffectRound == 0 {
+						params.General.DeBuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+						hlog.CtxInfof(params.Ctx, "[%s]的「%v」效果已消失",
+							params.General.BaseInfo.Name,
+							params.EffectType,
+						)
+						//执行回调函数
+						if params.CostOverTriggerFunc != nil {
+							params.CostOverTriggerFunc()
+						}
 					}
+					return true
 				}
-				return true
 			}
 		}
 	}

@@ -15,8 +15,9 @@ import (
 // 移除我军群体(2-3人)负面效果，并使我军群体(2人)获得急救状态，每次受到伤害时有70%几率回复一定兵力（伤害量的28%，受统率影响）
 // 持续2回合，该战法发动后会进入1回合冷却
 type BorrowArrowsWithThatchedBoatsTactic struct {
-	tacticsParams *model.TacticsParams
-	triggerRate   float64
+	tacticsParams  *model.TacticsParams
+	triggerRate    float64
+	isTacticFrozen bool
 }
 
 func (b BorrowArrowsWithThatchedBoatsTactic) IsTriggerPrepare() bool {
@@ -72,36 +73,29 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 	currentGeneral := b.tacticsParams.CurrentGeneral
 	currentRound := b.tacticsParams.CurrentRound
 
+	//判断是否冷却
+	if b.isTacticFrozen {
+		hlog.CtxInfof(ctx, "[%s]的「%s[冷却]」效果生效，无法发动",
+			currentGeneral.BaseInfo.Name,
+			b.Name(),
+		)
+		return
+	}
+
+	b.isTacticFrozen = true
 	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 		currentGeneral.BaseInfo.Name,
 		b.Name(),
 	)
 
-	//判断是否冷却
-	if cnt, ok := currentGeneral.TacticsFrozenMap[b.Id()]; ok {
-		if cnt > 0 {
-			hlog.CtxInfof(ctx, "[%s]的「%s[冷却]」效果生效中",
-				currentGeneral.BaseInfo.Name,
-				b.Name(),
-			)
-			return
-		}
-	}
-	//该战法发动后会进入1回合冷却
-	if !util.TacticFrozenWrapSet(currentGeneral, b.Id(), 1, 1, false) {
-		return
-	}
 	//注册冷却效果消失
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		revokeResp := &vo.TacticsTriggerResult{}
 		revokeRound := params.CurrentRound
-		revokeGeneral := params.CurrentGeneral
+
 		//1回合冷却，下下回合冷却结束
 		if currentRound+2 == revokeRound {
-			if !util.TacticFrozenWrapRemove(revokeGeneral, b.Id()) {
-				hlog.CtxErrorf(ctx, "TacticFrozenWrapRemove err")
-				panic("TacticFrozenWrapRemove err")
-			}
+			b.isTacticFrozen = false
 
 			hlog.CtxInfof(ctx, "[%s]的「%s[冷却]」效果已消失",
 				currentGeneral.BaseInfo.Name,

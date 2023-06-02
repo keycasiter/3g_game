@@ -70,9 +70,6 @@ type BattleGeneral struct {
 	//减益效果次数
 	DeBuffEffectCountMap map[consts.DebuffEffectType]int64
 
-	//战法冷却器 map<战法,冷却回合>
-	TacticsFrozenMap map[consts.TacticId]int64
-
 	//*****战法触发器都是按条件（非回合）会触发的******
 	//战法触发器 map<触发动作,func(触发函数参数)>
 	TacticsTriggerMap map[consts.BattleAction][]func(params *TacticsTriggerParams) *TacticsTriggerResult

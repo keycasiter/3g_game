@@ -663,38 +663,6 @@ func DeBuffEffectContainsCheck(general *vo.BattleGeneral) bool {
 	return len(general.DeBuffEffectHolderMap) > 0
 }
 
-// 设置战法冻结
-func TacticFrozenWrapSet(general *vo.BattleGeneral, tacticId consts.TacticId, frozenNum int64, maxNum int64, supportRefresh bool) bool {
-	holdNum := int64(0)
-	if v, ok := general.TacticsFrozenMap[tacticId]; ok {
-		//v最少为1才算刷新效果
-		if supportRefresh && frozenNum <= maxNum {
-			general.TacticsFrozenMap[tacticId] = frozenNum
-			return false
-		}
-
-		holdNum = v
-	}
-	//超限
-	totalNum := holdNum + frozenNum
-	if totalNum > maxNum {
-		return false
-	}
-	//更新
-	general.TacticsFrozenMap[tacticId] = totalNum
-
-	return true
-}
-
-// 战法冻结清零
-func TacticFrozenWrapRemove(general *vo.BattleGeneral, tacticId consts.TacticId) bool {
-	if _, ok := general.TacticsFrozenMap[tacticId]; ok {
-		delete(general.TacticsFrozenMap, tacticId)
-		return true
-	}
-	return false
-}
-
 // 增益效果清除
 // @general 要处理的武将
 func BuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {

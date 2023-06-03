@@ -174,11 +174,14 @@ const (
 	BuffEffectType_OnesResolveIsUnshaken_Prepare            //矢志不移[预备]
 	BuffEffectType_AbilityToRuleTheCountry_Prepare          //经天纬地[预备]
 	BuffEffectType_AncientEvilComes_Prepare                 //古之恶来[预备]
+	BuffEffectType_CrowdMovesTenThousandCounts_Prepare      //众动万计[预备]
 	BuffEffectType_Intervene                                //援护
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_CrowdMovesTenThousandCounts_Prepare:
+		return "众动万计[预备]"
 	case BuffEffectType_FightHard:
 		return "酣斗"
 	case BuffEffectType_GeneralAttackDamageImprove:

@@ -1,17 +1,22 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
-//运筹决算
-//准备1回合，对敌军全体发动一次谋略攻击（伤害率176%，受智力影响）
+// 运筹决算
+// 准备1回合，对敌军全体发动一次谋略攻击（伤害率176%，受智力影响）
 type DecisionMakingThroughOperationsResearchTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
 	isTriggerPrepare bool
+	isTriggered      bool
 }
 
 func (d DecisionMakingThroughOperationsResearchTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
@@ -58,7 +63,55 @@ func (d DecisionMakingThroughOperationsResearchTactic) SupportArmTypes() []const
 }
 
 func (d DecisionMakingThroughOperationsResearchTactic) Execute() {
+	ctx := d.tacticsParams.Ctx
+	currentGeneral := d.tacticsParams.CurrentGeneral
+	currentRound := d.tacticsParams.CurrentRound
 
+	//准备1回合，对敌军全体发动一次谋略攻击（伤害率176%，受智力影响）
+	d.isTriggerPrepare = true
+	hlog.CtxInfof(ctx, "[%s]准备发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		d.Name(),
+	)
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerRound := params.CurrentRound
+		triggerGeneral := params.CurrentGeneral
+
+		//准备回合释放
+		if currentRound+2 == triggerRound {
+			d.isTriggerPrepare = false
+		}
+
+		if currentRound+1 == triggerRound {
+			if d.isTriggered {
+				return triggerResp
+			} else {
+				d.isTriggered = true
+			}
+
+			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+				currentGeneral.BaseInfo.Name,
+				d.Name(),
+			)
+			//对敌军全体发动一次谋略攻击（伤害率176%，受智力影响）
+			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, d.tacticsParams)
+			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.76)
+
+			for _, sufferGeneral := range enemyGenerals {
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: d.tacticsParams,
+					AttackGeneral: currentGeneral,
+					SufferGeneral: sufferGeneral,
+					DamageType:    consts.DamageType_Strategy,
+					Damage:        dmg,
+					TacticName:    d.Name(),
+				})
+			}
+		}
+
+		return triggerResp
+	})
 }
 
 func (d DecisionMakingThroughOperationsResearchTactic) IsTriggerPrepare() bool {

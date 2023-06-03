@@ -141,6 +141,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.BrokenBridgeByWater] = &BrokenBridgeByWaterTactic{}
 	//众动万计
 	TacticsHandlerMap[consts.CrowdMovesTenThousandCounts] = &CrowdMovesTenThousandCountsTactic{}
+	//运筹决算
+	TacticsHandlerMap[consts.DecisionMakingThroughOperationsResearch] = &DecisionMakingThroughOperationsResearchTactic{}
 }
 
 func initTacticsMap() {
@@ -201,6 +203,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.BreakingThroughTheArmyAndWinningVictories] = true
 	ActiveTacticsMap[consts.BreakingThroughTheWaterAndCrushingTheCity] = true
 	ActiveTacticsMap[consts.BrokenBridgeByWater] = true
+	ActiveTacticsMap[consts.DecisionMakingThroughOperationsResearch] = true
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true

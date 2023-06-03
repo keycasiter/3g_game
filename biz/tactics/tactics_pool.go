@@ -137,6 +137,10 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.BreakingThroughTheArmyAndWinningVictories] = &BreakingThroughTheArmyAndWinningVictoriesTactic{}
 	//决水溃城
 	TacticsHandlerMap[consts.BreakingThroughTheWaterAndCrushingTheCity] = &BreakingThroughTheWaterAndCrushingTheCityTactic{}
+	//据水断桥
+	TacticsHandlerMap[consts.BrokenBridgeByWater] = &BrokenBridgeByWaterTactic{}
+	//众动万计
+	TacticsHandlerMap[consts.CrowdMovesTenThousandCounts] = &CrowdMovesTenThousandCountsTactic{}
 }
 
 func initTacticsMap() {
@@ -147,6 +151,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.BraveAmbition] = true
 	PassiveTacticsMap[consts.OnesResolveIsUnshaken] = true
 	PassiveTacticsMap[consts.BeAdeptWithBothPenAndSword] = true
+	PassiveTacticsMap[consts.CrowdMovesTenThousandCounts] = true
 	//指挥战法
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[consts.Demoralize] = true
@@ -195,6 +200,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.BlackArt] = true
 	ActiveTacticsMap[consts.BreakingThroughTheArmyAndWinningVictories] = true
 	ActiveTacticsMap[consts.BreakingThroughTheWaterAndCrushingTheCity] = true
+	ActiveTacticsMap[consts.BrokenBridgeByWater] = true
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true

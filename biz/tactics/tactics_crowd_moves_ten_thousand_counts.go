@@ -1,13 +1,19 @@
 package tactics
 
 import (
+	"fmt"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
-//众动万计
-//受到普通攻击时，有45%概率对攻击来源造成兵刃伤害（伤害率140%），并使其下一次造成的伤害伤减少40%
+// 众动万计
+// 受到普通攻击时，有45%概率对攻击来源造成兵刃伤害（伤害率140%），并使其下一次造成的伤害伤减少40%
+// 被动 100%
 type CrowdMovesTenThousandCountsTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -20,6 +26,84 @@ func (c CrowdMovesTenThousandCountsTactic) Init(tacticsParams *model.TacticsPara
 }
 
 func (c CrowdMovesTenThousandCountsTactic) Prepare() {
+	ctx := c.tacticsParams.Ctx
+	currentGeneral := c.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		c.Name(),
+	)
+	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_CrowdMovesTenThousandCounts_Prepare, &vo.EffectHolderParams{
+		EffectRate: 1.0,
+		FromTactic: c.Id(),
+	})
+
+	//受到普通攻击时，有45%概率对攻击来源造成兵刃伤害（伤害率140%），并使其下一次造成的伤害伤减少40%
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+
+		//概率攻击
+		if util.GenerateRate(0.45) {
+			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.4)
+			util.TacticDamage(&util.TacticDamageParam{
+				TacticsParams: c.tacticsParams,
+				AttackGeneral: currentGeneral,
+				SufferGeneral: params.AttackGeneral,
+				DamageType:    consts.DamageType_Weapon,
+				Damage:        dmg,
+				TacticName:    c.Name(),
+				EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_CrowdMovesTenThousandCounts_Prepare),
+			})
+
+			//施加效果
+			if util.DebuffEffectWrapSet(ctx, params.AttackGeneral, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
+				EffectRate:     0.4,
+				EffectRound:    1,
+				EffectTimes:    1,
+				MaxEffectTimes: 1,
+				FromTactic:     c.Id(),
+			}).IsSuccess {
+				//效果消失注册
+				util.TacticsTriggerWrapRegister(params.AttackGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					revokeResp := &vo.TacticsTriggerResult{}
+					revokeGeneral := params.CurrentGeneral
+
+					util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    revokeGeneral,
+						EffectType: consts.DebuffEffectType_LaunchWeaponDamageDeduce,
+						TacticId:   c.Id(),
+					})
+
+					return revokeResp
+				})
+			}
+			if util.DebuffEffectWrapSet(ctx, params.AttackGeneral, consts.DebuffEffectType_LaunchStrategyDamageDeduce, &vo.EffectHolderParams{
+				EffectRate:     0.4,
+				EffectRound:    1,
+				EffectTimes:    1,
+				MaxEffectTimes: 1,
+				FromTactic:     c.Id(),
+			}).IsSuccess {
+				//效果消失注册
+				util.TacticsTriggerWrapRegister(params.AttackGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					revokeResp := &vo.TacticsTriggerResult{}
+					revokeGeneral := params.CurrentGeneral
+
+					util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    revokeGeneral,
+						EffectType: consts.DebuffEffectType_LaunchStrategyDamageDeduce,
+						TacticId:   c.Id(),
+					})
+
+					return revokeResp
+				})
+			}
+		}
+
+		return triggerResp
+	})
 }
 
 func (c CrowdMovesTenThousandCountsTactic) Id() consts.TacticId {

@@ -6,6 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+// 肉身铁壁
 type CorporealIronWallTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

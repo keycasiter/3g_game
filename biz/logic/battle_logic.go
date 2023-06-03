@@ -661,9 +661,6 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 		if general.TacticsTriggerMap == nil {
 			general.TacticsTriggerMap = map[consts.BattleAction][]func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult{}
 		}
-		if general.TacticsFrozenMap == nil {
-			general.TacticsFrozenMap = map[consts.TacticId]int64{}
-		}
 		if general.BuffEffectCountMap == nil {
 			general.BuffEffectCountMap = map[consts.BuffEffectType]int64{}
 		}

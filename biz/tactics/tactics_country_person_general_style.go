@@ -6,6 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+// 国士将风
 type CountryPersonGeneralStyleTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

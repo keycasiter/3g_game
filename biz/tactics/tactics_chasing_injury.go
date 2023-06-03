@@ -6,6 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+// 追伤
 type ChasingInjuryTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

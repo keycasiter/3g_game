@@ -323,8 +323,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "夺魂挟魄",
 		},
 		{
-			Id:   consts.BreakingThroughTheWaterAndCrushingTheCity,
-			Name: "决水溃城",
+			Id:   consts.CrowdMovesTenThousandCounts,
+			Name: "众动万计",
 		},
 	}
 	//庞统战法

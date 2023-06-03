@@ -100,7 +100,6 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 			return triggerResp
 		})
 	}
-	//TODO 自身为主将时，该次伤害会基于双方智力之差额外提高
 }
 
 func (c CleverStrategyAndShrewdTacticsTactic) Id() consts.TacticId {

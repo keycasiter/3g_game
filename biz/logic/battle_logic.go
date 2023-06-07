@@ -251,6 +251,9 @@ func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, g
 func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 	tacticsParams := runCtx.TacticsParams
 
+	//对战阶段
+	tacticsParams.CurrentPhase = consts.Battle_Phase_Prepare
+
 	/********************************************************/
 	/*** 以下不受武将速度影响来执行，根据我方先/敌方后的顺序执行即可 ***/
 	/********************************************************/
@@ -362,13 +365,21 @@ func (runCtx *BattleLogicContext) handleTeamAddition(team *vo.BattleTeam) {
 
 // 对战对阵阶段处理
 func (runCtx *BattleLogicContext) processBattleFightingPhase() {
+	//对战阶段
+	runCtx.TacticsParams.CurrentPhase = consts.Battle_Phase_Fighting
+
 	//最多8回合
 	currentRound := consts.Battle_Round_Unknow
 	for i := 0; i < int(consts.Battle_Round_Eighth); i++ {
 		if runCtx.BattleRoundEndFlag {
 			break
 		}
+		//对战回合增加
 		currentRound++
+		//对战回合设置
+		runCtx.TacticsParams.CurrentRound = currentRound
+
+		//对战回合处理
 		runCtx.processBattleFightingRound(currentRound)
 	}
 
@@ -399,7 +410,6 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 	for _, currentGeneral := range tacticsParams.AllGeneralArr {
 		//设置战法轮次属性
-		runCtx.TacticsParams.CurrentRound = currentRound
 		runCtx.TacticsParams.CurrentGeneral = currentGeneral
 		//普攻次数(默认一次)
 		attackCanCnt := 1
@@ -667,6 +677,11 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 		if general.DeBuffEffectCountMap == nil {
 			general.DeBuffEffectCountMap = map[consts.DebuffEffectType]int64{}
 		}
+	}
+
+	//战报对象初始化
+	if tacticsParams.BattleReports == nil {
+		tacticsParams.BattleReports = map[consts.BattlePhase]map[consts.BattleRound][]string{}
 	}
 
 	runCtx.TacticsParams = tacticsParams

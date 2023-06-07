@@ -17,6 +17,8 @@ type TacticsParams struct {
 	/******** 回合属性变量 *******/
 	// 当前对战ID
 	CurrentBattleId string
+	//当前对战阶段
+	CurrentPhase consts.BattlePhase
 	// 当前回合
 	CurrentRound consts.BattleRound
 	// 当前武将
@@ -35,4 +37,7 @@ type TacticsParams struct {
 	AllGeneralMap map[int64]*vo.BattleGeneral
 	// 全部武将信息Arr
 	AllGeneralArr []*vo.BattleGeneral
+
+	/******** 对战战报信息 *******/
+	BattleReports map[consts.BattlePhase]map[consts.BattleRound][]string
 }

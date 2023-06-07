@@ -1,9 +1,12 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // 驱散
@@ -57,6 +60,36 @@ func (d DisperseTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (d DisperseTactic) Execute() {
+	ctx := d.tacticsParams.Ctx
+	currentGeneral := d.tacticsParams.CurrentGeneral
+	//解除敌军全体身上的增益效果，并提高自己28点智力，持续3回合
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		d.Name(),
+	)
+
+	//找到敌军全体
+	enemyGenerals := util.GetEnemyGeneralArr(d.tacticsParams)
+	for _, general := range enemyGenerals {
+		util.BuffEffectClean(ctx, general)
+	}
+
+	//提高自己28点智力
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrIntelligence, &vo.EffectHolderParams{
+		EffectRound: 3,
+		EffectValue: 28,
+		FromTactic:  d.Id(),
+	}).IsSuccess {
+		//消失效果
+		util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+			Ctx:        ctx,
+			General:    currentGeneral,
+			EffectType: consts.BuffEffectType_IncrIntelligence,
+			TacticId:   d.Id(),
+		})
+	}
+
 }
 
 func (d DisperseTactic) IsTriggerPrepare() bool {

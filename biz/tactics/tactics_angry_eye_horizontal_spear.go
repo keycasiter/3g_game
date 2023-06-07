@@ -69,11 +69,26 @@ func (a AngryEyeHorizontalSpearTactic) Execute() {
 		a.Name(),
 	)
 	//武力提升
-	currentGeneral.BaseInfo.AbilityAttr.ForceBase += 50
-	hlog.CtxInfof(ctx, "[%s]的武力提高了%d",
-		currentGeneral.BaseInfo.Name,
-		50,
-	)
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
+		EffectValue: 50,
+		EffectRound: 2,
+		FromTactic:  a.Id(),
+	}).IsSuccess {
+		//注册消失效果
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			triggerResp := &vo.TacticsTriggerResult{}
+			triggerGeneral := params.CurrentGeneral
+
+			util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    triggerGeneral,
+				EffectType: consts.BuffEffectType_IncrForce,
+				TacticId:   a.Id(),
+			})
+
+			return triggerResp
+		})
+	}
 	//群攻效果
 	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_GroupAttack, &vo.EffectHolderParams{
 		TriggerRate: 1.0,
@@ -91,14 +106,6 @@ func (a AngryEyeHorizontalSpearTactic) Execute() {
 				General:    triggerGeneral,
 				EffectType: consts.BuffEffectType_GroupAttack,
 				TacticId:   a.Id(),
-				CostOverTriggerFunc: func() {
-					//武力增益消失
-					triggerGeneral.BaseInfo.AbilityAttr.ForceBase -= 50
-					hlog.CtxInfof(ctx, "[%s]的武力降低了%d",
-						currentGeneral.BaseInfo.Name,
-						50,
-					)
-				},
 			})
 
 			return triggerResp

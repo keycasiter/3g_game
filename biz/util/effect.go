@@ -5,6 +5,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/spf13/cast"
 )
 
 /*	属性状态：增加或降低武将各种属性；来自不同战法的同种属性状态可以叠加；来自同一战法的同种属性状态将会刷新持续回合；
@@ -235,6 +236,9 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 		effectType,
 	)
 
+	//增益属性处理
+	buffEffectIncr(ctx, general, effectType, effectParam.EffectValue)
+
 	return &EffectWrapSetResp{
 		IsSuccess: true,
 	}
@@ -263,6 +267,10 @@ func BuffEffectWrapRemove(ctx context.Context, general *vo.BattleGeneral, effect
 							effectType,
 						)
 					}
+
+					//增益属性移除处理
+					buffEffectDecr(ctx, general, effectType, effectParam.EffectValue)
+
 					return true
 				}
 				idx++
@@ -274,6 +282,7 @@ func BuffEffectWrapRemove(ctx context.Context, general *vo.BattleGeneral, effect
 				general.BaseInfo.Name,
 				effectType,
 			)
+
 			return true
 		}
 	}
@@ -380,6 +389,10 @@ func BuffEffectOfTacticCostRound(params *BuffEffectOfTacticCostRoundParams) bool
 						params.TacticId,
 						params.EffectType,
 					)
+
+					//属性加点清理
+					buffEffectDecr(params.Ctx, params.General, params.EffectType, effectParam.EffectValue)
+
 					//执行回调函数
 					if params.CostOverTriggerFunc != nil {
 						params.CostOverTriggerFunc()
@@ -503,6 +516,10 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 		effectParam.FromTactic,
 		effectType,
 	)
+
+	//属性加点效果设置
+	debuffEffectDecr(ctx, general, effectType, effectParam.EffectValue)
+
 	return &EffectWrapSetResp{
 		IsSuccess: true,
 	}
@@ -531,6 +548,10 @@ func DebuffEffectWrapRemove(ctx context.Context, general *vo.BattleGeneral, effe
 							effectType,
 						)
 					}
+
+					//减益效果恢复
+					debuffEffectIncr(ctx, general, effectType, effectParam.EffectValue)
+
 					return true
 				}
 				idx++
@@ -625,6 +646,10 @@ func DeBuffEffectOfTacticCostRound(params *DebuffEffectOfTacticCostRoundParams) 
 						params.TacticId,
 						params.EffectType,
 					)
+
+					//减益效果恢复
+					debuffEffectIncr(params.Ctx, params.General, params.EffectType, effectParam.EffectValue)
+
 					//执行回调函数
 					if params.CostOverTriggerFunc != nil {
 						params.CostOverTriggerFunc()
@@ -635,6 +660,110 @@ func DeBuffEffectOfTacticCostRound(params *DebuffEffectOfTacticCostRoundParams) 
 		}
 	}
 	return false
+}
+
+func buffEffectIncr(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, effectValue int64) {
+	//属性加点效果设置
+	switch effectType {
+	case consts.BuffEffectType_IncrForce:
+		general.BaseInfo.AbilityAttr.ForceBase += cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的武力提高了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.BuffEffectType_IncrIntelligence:
+		general.BaseInfo.AbilityAttr.IntelligenceBase += cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的智力提高了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.BuffEffectType_IncrCommand:
+		general.BaseInfo.AbilityAttr.CommandBase += cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的统率提高了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.BuffEffectType_IncrSpeed:
+		general.BaseInfo.AbilityAttr.SpeedBase += cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的速度提高了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	}
+}
+
+func buffEffectDecr(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, effectValue int64) {
+	//属性加点效果设置
+	switch effectType {
+	case consts.BuffEffectType_IncrForce:
+		general.BaseInfo.AbilityAttr.ForceBase -= cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的武力降低了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.BuffEffectType_IncrIntelligence:
+		general.BaseInfo.AbilityAttr.IntelligenceBase -= cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的智力降低了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.BuffEffectType_IncrCommand:
+		general.BaseInfo.AbilityAttr.CommandBase -= cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的统率降低了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.BuffEffectType_IncrSpeed:
+		general.BaseInfo.AbilityAttr.SpeedBase -= cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的速度降低了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	}
+}
+
+func debuffEffectIncr(ctx context.Context, general *vo.BattleGeneral, effectType consts.DebuffEffectType, effectValue int64) {
+	//属性加点效果设置
+	switch effectType {
+	case consts.DebuffEffectType_DecrForce:
+		general.BaseInfo.AbilityAttr.ForceBase += cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的武力提高了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.DebuffEffectType_DecrIntelligence:
+		general.BaseInfo.AbilityAttr.IntelligenceBase += cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的智力提高了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.DebuffEffectType_DecrCommand:
+		general.BaseInfo.AbilityAttr.CommandBase += cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的统率提高了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.DebuffEffectType_DecrSpeed:
+		general.BaseInfo.AbilityAttr.SpeedBase += cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的速度提高了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	}
+}
+
+func debuffEffectDecr(ctx context.Context, general *vo.BattleGeneral, effectType consts.DebuffEffectType, effectValue int64) {
+	//属性加点效果设置
+	switch effectType {
+	case consts.DebuffEffectType_DecrForce:
+		general.BaseInfo.AbilityAttr.ForceBase -= cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的武力降低了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.DebuffEffectType_DecrIntelligence:
+		general.BaseInfo.AbilityAttr.IntelligenceBase -= cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的智力降低了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.DebuffEffectType_DecrCommand:
+		general.BaseInfo.AbilityAttr.CommandBase -= cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的统率降低了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.DebuffEffectType_DecrSpeed:
+		general.BaseInfo.AbilityAttr.SpeedBase -= cast.ToFloat64(effectValue)
+		hlog.CtxInfof(ctx, "[%s]的速度降低了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	}
 }
 
 // 负面效果获取

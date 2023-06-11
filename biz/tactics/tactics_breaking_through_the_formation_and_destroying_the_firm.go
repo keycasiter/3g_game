@@ -99,26 +99,45 @@ func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Execute() {
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, b.tacticsParams)
 			for _, general := range enemyGenerals {
 				//降低属性
-				v := 80 + triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100
-				general.BaseInfo.AbilityAttr.CommandBase -= v
-				general.BaseInfo.AbilityAttr.IntelligenceBase -= v
-				hlog.CtxInfof(ctx, "[%]的统率降低了%.2f",
-					general.BaseInfo.Name, v)
+				v := cast.ToInt64(80 + triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100)
+				if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_DecrCommand, &vo.EffectHolderParams{
+					EffectValue: v,
+					EffectRound: 2,
+					FromTactic:  b.Id(),
+				}).IsSuccess {
+					//注册消失效果
+					util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeResp := &vo.TacticsTriggerResult{}
 
-				//注册消失效果
-				util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-					revokeResp := &vo.TacticsTriggerResult{}
-					revokeRound := params.CurrentRound
+						util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+							Ctx:        ctx,
+							General:    general,
+							EffectType: consts.DebuffEffectType_DecrCommand,
+							TacticId:   b.Id(),
+						})
 
-					if currentRound+2 == revokeRound {
-						general.BaseInfo.AbilityAttr.CommandBase -= v
-						general.BaseInfo.AbilityAttr.IntelligenceBase -= v
-						hlog.CtxInfof(ctx, "[%]的统率提高了%.2f",
-							general.BaseInfo.Name, v)
-					}
+						return revokeResp
+					})
+				}
+				if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_DecrIntelligence, &vo.EffectHolderParams{
+					EffectValue: v,
+					EffectRound: 2,
+					FromTactic:  b.Id(),
+				}).IsSuccess {
+					//注册消失效果
+					util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeResp := &vo.TacticsTriggerResult{}
 
-					return revokeResp
-				})
+						util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+							Ctx:        ctx,
+							General:    general,
+							EffectType: consts.DebuffEffectType_DecrIntelligence,
+							TacticId:   b.Id(),
+						})
+
+						return revokeResp
+					})
+				}
 
 				//攻击
 				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.58)

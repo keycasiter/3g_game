@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/cast"
 )
 
-//整装待发
-//战斗中，偶数回合，恢复我军群体（2人）兵力（治疗率88%，受智力影响）
+// 整装待发
+// 战斗中，偶数回合，恢复我军群体（2人）兵力（治疗率88%，受智力影响）
 type BeFullyEquippedForTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -50,13 +50,7 @@ func (b BeFullyEquippedForTactic) Prepare() {
 			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, b.tacticsParams)
 			for _, general := range pairGenerals {
 				resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.88)
-				finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(ctx, general, resumeNum)
-				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
-					general.BaseInfo.Name,
-					finalResumeNum,
-					holdNum,
-					finalNum,
-				)
+				util.ResumeSoldierNum(ctx, general, resumeNum)
 			}
 		}
 

@@ -128,14 +128,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 						consts.BuffEffectType_Rest,
 					)
 					resumeNum := cast.ToInt64(1.92 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-					finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(ctx, viceGeneral, resumeNum)
-
-					hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
-						triggerGeneral.BaseInfo.Name,
-						finalResumeNum,
-						holdNum,
-						finalNum,
-					)
+					util.ResumeSoldierNum(ctx, viceGeneral, resumeNum)
 				}
 				return triggerResp
 			})

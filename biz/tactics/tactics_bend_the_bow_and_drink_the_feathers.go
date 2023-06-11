@@ -93,7 +93,7 @@ func (b BendTheBowAndDrinkTheFeathersTactic) Execute() {
 				EffectType: consts.DebuffEffectType_NoStrategy,
 				TacticId:   b.Id(),
 				CostOverTriggerFunc: func() {
-					util.DeduceGeneralAttr(revokeGeneral, consts.AbilityAttr_Command, 150)
+					util.ImproveGeneralAttr(revokeGeneral, consts.AbilityAttr_Command, 150)
 					hlog.CtxInfof(ctx, "[%s]的统率提高了%.2f",
 						revokeGeneral.BaseInfo.Name,
 						150)

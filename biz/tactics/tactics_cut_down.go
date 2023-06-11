@@ -4,22 +4,26 @@ import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 手起刀落
+// 普通攻击之后，对攻击目标再次发起一次兵刃攻击（伤害率214%）
+// 突击 30%
 type CutDownTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
 }
 
 func (c CutDownTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	//TODO implement me
-	panic("implement me")
+	c.tacticsParams = tacticsParams
+	c.triggerRate = 0.3
+	return c
 }
 
 func (c CutDownTactic) Prepare() {
-	//TODO implement me
-	panic("implement me")
+
 }
 
 func (c CutDownTactic) Id() consts.TacticId {
@@ -31,36 +35,47 @@ func (c CutDownTactic) Name() string {
 }
 
 func (c CutDownTactic) TacticsSource() consts.TacticsSource {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsSource_Inherit
 }
 
 func (c CutDownTactic) GetTriggerRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return c.triggerRate
 }
 
 func (c CutDownTactic) SetTriggerRate(rate float64) {
-	//TODO implement me
-	panic("implement me")
+	c.triggerRate = rate
 }
 
 func (c CutDownTactic) TacticsType() consts.TacticsType {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsType_Assault
 }
 
 func (c CutDownTactic) SupportArmTypes() []consts.ArmType {
-	//TODO implement me
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (c CutDownTactic) Execute() {
-	//TODO implement me
-	panic("implement me")
+	//普通攻击之后，对攻击目标再次发起一次兵刃攻击（伤害率214%）
+	sufferGeneral := c.tacticsParams.CurrentSufferGeneral
+	currentGeneral := c.tacticsParams.CurrentGeneral
+
+	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.14)
+	util.TacticDamage(&util.TacticDamageParam{
+		TacticsParams: c.tacticsParams,
+		AttackGeneral: currentGeneral,
+		SufferGeneral: sufferGeneral,
+		DamageType:    consts.DamageType_Weapon,
+		Damage:        dmg,
+		TacticName:    c.Name(),
+	})
 }
 
 func (c CutDownTactic) IsTriggerPrepare() bool {
-	//TODO implement me
-	panic("implement me")
+	return false
 }

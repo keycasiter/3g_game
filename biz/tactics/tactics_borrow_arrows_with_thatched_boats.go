@@ -142,13 +142,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 						)
 						// TODO 受统率影响
 						resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentDamage) * 0.28)
-						finalResumeNum, holdNum, finalNum := util.ResumeSoldierNum(ctx, triggerGeneral, resumeNum)
-						hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
-							triggerGeneral.BaseInfo.Name,
-							finalResumeNum,
-							holdNum,
-							finalNum,
-						)
+						util.ResumeSoldierNum(ctx, triggerGeneral, resumeNum)
 					}
 				}
 

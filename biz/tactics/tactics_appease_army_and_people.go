@@ -143,13 +143,7 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 				//恢复兵力
 				//TODO（治疗率126%，受智力影响）
 				resumeNum := cast.ToInt64(general.BaseInfo.AbilityAttr.IntelligenceBase * 1.26)
-				resume, origin, final := util.ResumeSoldierNum(ctx, general, resumeNum)
-				hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
-					general.BaseInfo.Name,
-					resume,
-					origin,
-					final,
-				)
+				util.ResumeSoldierNum(ctx, general, resumeNum)
 			}
 		}
 		return &vo.TacticsTriggerResult{}

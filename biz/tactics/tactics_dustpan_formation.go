@@ -2,12 +2,14 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//箕形阵
-//战斗前3回合，使敌军主将造成伤害降低40%（受武力影响），并使我军随机副将受到兵刃伤害降低18%，另一名副将受到谋略伤害降低18%
+// 箕形阵
+// 战斗前3回合，使敌军主将造成伤害降低40%（受武力影响），并使我军随机副将受到兵刃伤害降低18%，另一名副将受到谋略伤害降低18%
 type DustpanFormationTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -20,6 +22,98 @@ func (d DustpanFormationTactic) Init(tacticsParams *model.TacticsParams) _interf
 }
 
 func (d DustpanFormationTactic) Prepare() {
+	ctx := d.tacticsParams.Ctx
+	currentGeneral := d.tacticsParams.CurrentGeneral
+	//战斗前3回合，使敌军主将造成伤害降低40%（受武力影响），并使我军随机副将受到兵刃伤害降低18%，另一名副将受到谋略伤害降低18%
+
+	//施加效果
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+
+		//找到敌军主将
+		masterEnemyGeneral := util.GetEnemyMasterGeneral(d.tacticsParams)
+		rate := 0.4 + (currentGeneral.BaseInfo.AbilityAttr.ForceBase / 100 / 100)
+		if util.DebuffEffectWrapSet(ctx, masterEnemyGeneral, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate:  rate,
+			EffectRound: 3,
+			FromTactic:  d.Id(),
+		}).IsSuccess {
+			//注册消失效果
+			util.TacticsTriggerWrapRegister(masterEnemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+
+				util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    revokeGeneral,
+					EffectType: consts.DebuffEffectType_LaunchWeaponDamageDeduce,
+					TacticId:   d.Id(),
+				})
+
+				return revokeResp
+			})
+		}
+		if util.DebuffEffectWrapSet(ctx, masterEnemyGeneral, consts.DebuffEffectType_LaunchStrategyDamageDeduce, &vo.EffectHolderParams{
+			EffectRate:  rate,
+			EffectRound: 3,
+			FromTactic:  d.Id(),
+		}).IsSuccess {
+			//注册消失效果
+			util.TacticsTriggerWrapRegister(masterEnemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+
+				util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    revokeGeneral,
+					EffectType: consts.DebuffEffectType_LaunchStrategyDamageDeduce,
+					TacticId:   d.Id(),
+				})
+
+				return revokeResp
+			})
+		}
+
+		//并使我军随机副将受到兵刃伤害降低18%，另一名副将受到谋略伤害降低18%
+		pairGenerals := util.GetPairViceGenerals(d.tacticsParams)
+
+		//效果二选一随机
+		buffEffects := []consts.BuffEffectType{
+			consts.BuffEffectType_SufferWeaponDamageDeduce,
+			consts.BuffEffectType_SufferStrategyDamageDeduce,
+		}
+
+		for _, general := range pairGenerals {
+			buffEffect := consts.BuffEffectType_Unknow
+			hitIdx := util.GenerateHitOneIdx(len(buffEffects))
+			buffEffect = buffEffects[hitIdx]
+			buffEffects = append(buffEffects[:hitIdx], buffEffects[hitIdx+1:]...)
+
+			//施加效果
+			if util.BuffEffectWrapSet(ctx, general, buffEffects[0], &vo.EffectHolderParams{
+				EffectRate:  0.18,
+				EffectRound: 3,
+				FromTactic:  d.Id(),
+			}).IsSuccess {
+				//注册消失效果
+				util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					revokeResp := &vo.TacticsTriggerResult{}
+					revokeGeneral := params.CurrentGeneral
+
+					util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    revokeGeneral,
+						EffectType: buffEffect,
+						TacticId:   d.Id(),
+					})
+
+					return revokeResp
+				})
+			}
+		}
+
+		return triggerResp
+	})
 }
 
 func (d DustpanFormationTactic) Id() consts.TacticId {

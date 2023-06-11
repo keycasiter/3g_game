@@ -145,6 +145,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.DecisionMakingThroughOperationsResearch] = &DecisionMakingThroughOperationsResearchTactic{}
 	//驱散
 	TacticsHandlerMap[consts.Disperse] = &DisperseTactic{}
+	//箕形阵
+	TacticsHandlerMap[consts.DustpanFormation] = &DustpanFormationTactic{}
 }
 
 func initTacticsMap() {
@@ -180,6 +182,7 @@ func initTacticsMap() {
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
+	TroopsTacticsMap[consts.DustpanFormation] = true
 	//兵种
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	//主动

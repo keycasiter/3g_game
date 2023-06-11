@@ -4,19 +4,26 @@ import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
+// 包扎
+// 治疗随机我军单体（治疗率160%，受智力影响）
+// 主动，30%
 type DressTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
 }
 
 func (d DressTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	panic("implement me")
+	d.tacticsParams = tacticsParams
+	d.triggerRate = 0.3
+	return d
 }
 
 func (d DressTactic) Prepare() {
-	panic("implement me")
+
 }
 
 func (d DressTactic) Id() consts.TacticId {
@@ -28,29 +35,40 @@ func (d DressTactic) Name() string {
 }
 
 func (d DressTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_Inherit
 }
 
 func (d DressTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return d.triggerRate
 }
 
 func (d DressTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	d.triggerRate = rate
 }
 
 func (d DressTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Active
 }
 
 func (d DressTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (d DressTactic) Execute() {
-	panic("implement me")
+	ctx := d.tacticsParams.Ctx
+	currentGeneral := d.tacticsParams.CurrentGeneral
+	//治疗随机我军单体（治疗率160%，受智力影响）
+	pairGeneral := util.GetPairOneGeneral(d.tacticsParams, currentGeneral)
+	resume := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.6)
+	util.ResumeSoldierNum(ctx, pairGeneral, resume)
 }
 
 func (d DressTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

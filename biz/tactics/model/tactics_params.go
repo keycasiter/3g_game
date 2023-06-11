@@ -29,6 +29,10 @@ type TacticsParams struct {
 	CurrentBattleAction consts.BattleAction
 
 	/******** 对战武将信息变量 *******/
+	// 出战队伍信息
+	FightingTeam *vo.BattleTeam
+	// 对战队伍信息
+	EnemyTeam *vo.BattleTeam
 	// 出战武将信息Map
 	FightingGeneralMap map[int64]*vo.BattleGeneral
 	// 对战武将信息Map

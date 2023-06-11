@@ -37,6 +37,10 @@ type EffectHolderParams struct {
 	FromTactic consts.TacticId
 	//是否可以刷新
 	IsSupportRefresh bool
+	//强制普通攻击目标/被谁嘲讽
+	TauntByTarget *BattleGeneral
+	//效果施加者
+	ProduceGeneral *BattleGeneral
 }
 
 // 对战武将信息

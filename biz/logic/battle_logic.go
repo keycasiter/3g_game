@@ -695,6 +695,10 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 	tacticsParams := &model.TacticsParams{}
 	tacticsParams.CurrentRound = consts.Battle_Round_Unknow
 
+	//对阵队伍信息
+	tacticsParams.FightingTeam = runCtx.ReqParam.FightingTeam
+	tacticsParams.EnemyTeam = runCtx.ReqParam.EnemyTeam
+
 	//武将信息转map/arr，方便后续直接调用
 	tacticsParams.FightingGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	tacticsParams.EnemyGeneralMap = make(map[int64]*vo.BattleGeneral, 0)

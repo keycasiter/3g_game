@@ -176,10 +176,15 @@ const (
 	BuffEffectType_AncientEvilComes_Prepare                 //古之恶来[预备]
 	BuffEffectType_CrowdMovesTenThousandCounts_Prepare      //众动万计[预备]
 	BuffEffectType_Intervene                                //援护
+	BuffEffectType_ActiveTactic_SkipPrepareRound            //主动战法[跳过准备回合]
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_ContinuousAttack:
+		return "连击"
+	case BuffEffectType_ActiveTactic_SkipPrepareRound:
+		return "主动战法[跳过准备回合]"
 	case BuffEffectType_CrowdMovesTenThousandCounts_Prepare:
 		return "众动万计[预备]"
 	case BuffEffectType_FightHard:

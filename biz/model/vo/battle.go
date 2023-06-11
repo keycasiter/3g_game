@@ -74,6 +74,9 @@ type BattleGeneral struct {
 	//减益效果次数
 	DeBuffEffectCountMap map[consts.DebuffEffectType]int64
 
+	//普通攻击次数
+	ExecuteGeneralAttckNum int64
+
 	//*****战法触发器都是按条件（非回合）会触发的******
 	//战法触发器 map<触发动作,func(触发函数参数)>
 	TacticsTriggerMap map[consts.BattleAction][]func(params *TacticsTriggerParams) *TacticsTriggerResult

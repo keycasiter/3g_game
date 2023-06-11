@@ -9,6 +9,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // req
@@ -483,7 +484,30 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				}
 
 				//发动率判断
-				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+				triggerRate := tacticHandler.GetTriggerRate()
+				//发动率提升
+				if effectParams, okk := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove); okk {
+					for _, param := range effectParams {
+						triggerRate += param.TriggerRate
+						hlog.CtxInfof(runCtx.Ctx, "[%s]由于【%s】的影响，主动战法发动率提升.2f%%",
+							currentGeneral.BaseInfo.Name,
+							param.FromTactic,
+							param.TriggerRate*100,
+						)
+					}
+				}
+				//发动率降低
+				if effectParams, okk := util.DeBuffEffectGet(currentGeneral, consts.DebuffEffectType_TacticsActiveTriggerDecr); okk {
+					for _, param := range effectParams {
+						triggerRate -= param.TriggerRate
+						hlog.CtxInfof(runCtx.Ctx, "[%s]由于【%s】主动战法发动率降低.2f%%",
+							currentGeneral.BaseInfo.Name,
+							param.FromTactic,
+							param.TriggerRate*100,
+						)
+					}
+				}
+				if !util.GenerateRate(triggerRate) {
 					continue
 				}
 
@@ -514,82 +538,108 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		}
 	activeTacticFlag:
 		//2.普攻
+		//连击效果设置
+		if util.BuffEffectContains(currentGeneral, consts.BuffEffectType_ContinuousAttack) {
+			attackCanCnt++
+		}
+
 		if attackCanCnt > 0 {
-			//2.1 普通攻击拦截
-			if !util.IsCanGeneralAttack(runCtx.Ctx, currentGeneral) {
-				goto AttactTacticFlag
-			}
-
-			//2.2 触发兵书效果
-			//TODO
-			//2.3 触发战法效果
-			//负面效果
-			//增益效果
-
-			//找到普攻目标
-			sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
-			tacticsParams.CurrentSufferGeneral = sufferGeneral
-			//发起攻击
-			util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
-			//普攻次数减一
-			attackCanCnt--
-
-			//普通攻击触发器
-			if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
-				for _, f := range funcs {
-					params := &vo.TacticsTriggerParams{
-						CurrentRound:   currentRound,
-						CurrentGeneral: currentGeneral,
-						AttackGeneral:  currentGeneral,
-					}
-					f(params)
+			for i := 0; i <= attackCanCnt; i++ {
+				//2.1 普通攻击拦截
+				if !util.IsCanGeneralAttack(runCtx.Ctx, currentGeneral) {
+					goto AttactTacticFlag
 				}
-			}
+				//普攻计数+
+				currentGeneral.ExecuteGeneralAttckNum++
 
-			//武将清理
-			util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
+				//2.2 触发兵书效果
+				//TODO
+				//2.3 触发战法效果
+				//负面效果
+				//增益效果
 
-			//战法后置处理器
-			if !runCtx.TacticPostProcessor(tacticsParams) {
-				runCtx.BattleRoundEndFlag = true
-				goto exitFlag
-			}
+				//找到普攻目标
+				sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
+				tacticsParams.CurrentSufferGeneral = sufferGeneral
 
-			//3.突击战法
-			for _, tactic := range currentGeneral.EquipTactics {
-				if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
-					//战法参数设置
-					runCtx.TacticsParams.TacticsType = consts.TacticsType_Assault
-
-					handler := tactics.TacticsHandlerMap[tactic.Id]
-					tacticHandler := handler.Init(tacticsParams)
-					//发动率判断
-					if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
-						continue
-					}
-					//战法执行
-					execute.TacticsExecute(runCtx.Ctx, tacticHandler)
-
-					//触发「发动主动战法后」触发器
-					if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_AssaultTacticEnd]; okk {
-						for _, f := range funcs {
-							params := &vo.TacticsTriggerParams{
-								CurrentRound:   currentRound,
-								CurrentGeneral: currentGeneral,
-								CurrentDamage:  0,
-								CurrentTactic:  tacticHandler,
-							}
-							f(params)
+				//普通攻击触发器
+				if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   currentRound,
+							CurrentGeneral: currentGeneral,
+							AttackGeneral:  currentGeneral,
 						}
+						f(params)
+					}
+				}
+
+				//发起攻击
+				util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
+
+				//群攻效果
+				effectParams, ok := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_GroupAttack)
+				if ok {
+					dmgRate := float64(0)
+					for _, effectParam := range effectParams {
+						dmgRate += effectParam.EffectRate
 					}
 
-					//武将清理
-					util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
+					//群攻效果攻击敌军其他武将
+					otherEnemyGenerals := util.GetEnemyGeneralsNotSelfByGeneral(sufferGeneral, tacticsParams)
+					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
+					for _, enemyGeneral := range otherEnemyGenerals {
+						util.AttackDamage(tacticsParams, currentGeneral, enemyGeneral, dmg)
+					}
+				}
+				//普攻次数减一
+				attackCanCnt--
 
-					//战法后置处理器
-					if !runCtx.TacticPostProcessor(tacticsParams) {
-						runCtx.BattleRoundEndFlag = true
-						goto exitFlag
+				//武将清理
+				util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
+
+				//战法后置处理器
+				if !runCtx.TacticPostProcessor(tacticsParams) {
+					runCtx.BattleRoundEndFlag = true
+					goto exitFlag
+				}
+
+				//3.突击战法
+				for _, tactic := range currentGeneral.EquipTactics {
+					if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
+						//战法参数设置
+						runCtx.TacticsParams.TacticsType = consts.TacticsType_Assault
+
+						handler := tactics.TacticsHandlerMap[tactic.Id]
+						tacticHandler := handler.Init(tacticsParams)
+						//发动率判断
+						if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+							continue
+						}
+						//战法执行
+						execute.TacticsExecute(runCtx.Ctx, tacticHandler)
+
+						//触发「发动主动战法后」触发器
+						if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_AssaultTacticEnd]; okk {
+							for _, f := range funcs {
+								params := &vo.TacticsTriggerParams{
+									CurrentRound:   currentRound,
+									CurrentGeneral: currentGeneral,
+									CurrentDamage:  0,
+									CurrentTactic:  tacticHandler,
+								}
+								f(params)
+							}
+						}
+
+						//武将清理
+						util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
+
+						//战法后置处理器
+						if !runCtx.TacticPostProcessor(tacticsParams) {
+							runCtx.BattleRoundEndFlag = true
+							goto exitFlag
+						}
 					}
 				}
 			}

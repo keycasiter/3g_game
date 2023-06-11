@@ -2,22 +2,34 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//才辩机捷
+// 才辩机捷
+// 使自身施加的灼烧、水攻、中毒、溃逃、沙暴、叛逃状态伤害提高90%，休整和急救的恢复量提升30%
 type BeQuickInDebatingOpportunitiesTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	panic("implement me")
+	b.tacticsParams = tacticsParams
+	b.triggerRate = 1.0
+	return b
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) Prepare() {
-	panic("implement me")
+	currentGeneral := b.tacticsParams.CurrentGeneral
+
+	//使自身施加的灼烧、水攻、中毒、溃逃、沙暴、叛逃状态伤害提高90%，休整和急救的恢复量提升30%
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_DebuffEffect, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+
+		return triggerResp
+	})
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) Id() consts.TacticId {
@@ -29,29 +41,34 @@ func (b BeQuickInDebatingOpportunitiesTactic) Name() string {
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return b.triggerRate
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	b.triggerRate = rate
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Passive
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) Execute() {
-	panic("implement me")
 }
 
 func (b BeQuickInDebatingOpportunitiesTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

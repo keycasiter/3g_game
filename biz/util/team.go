@@ -259,6 +259,23 @@ func GetEnemyGeneralsNotSelfByGeneral(general *vo.BattleGeneral, tacticsParams *
 	return enemyGenerals
 }
 
+func GetAllGeneralsNotSelfByGeneral(general *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+	allGenerals := make([]*vo.BattleGeneral, 0)
+	for _, each := range tacticsParams.FightingGeneralMap {
+		if each.BaseInfo.UniqueId == general.BaseInfo.UniqueId {
+			continue
+		}
+		allGenerals = append(allGenerals, each)
+	}
+	for _, each := range tacticsParams.EnemyGeneralMap {
+		if each.BaseInfo.UniqueId == general.BaseInfo.UniqueId {
+			continue
+		}
+		allGenerals = append(allGenerals, each)
+	}
+	return allGenerals
+}
+
 func GetEnemyOneGeneralByGeneral(general *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	enemyGenerals := make([]*vo.BattleGeneral, 0)
 	currentGeneralId := general.BaseInfo.UniqueId
@@ -497,6 +514,24 @@ func GetMostIntelligenceEnemyGeneral(tacticsParams *model.TacticsParams) *vo.Bat
 		}
 	}
 	return mostIntelligenceGeneral
+}
+
+// 是否使友军
+func IsPair(currentGeneral *vo.BattleGeneral, compareGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) bool {
+	currentFlag := false
+	compareFlag := false
+	for _, general := range tacticsParams.FightingGeneralMap {
+		if currentGeneral.BaseInfo.UniqueId == general.BaseInfo.UniqueId {
+			currentFlag = true
+		}
+		if compareGeneral.BaseInfo.UniqueId == compareGeneral.BaseInfo.UniqueId {
+			compareFlag = true
+		}
+	}
+	if currentFlag && compareFlag {
+		return true
+	}
+	return false
 }
 
 // 获取武将武力/智力最高一项

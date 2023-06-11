@@ -516,7 +516,7 @@ func GetMostIntelligenceEnemyGeneral(tacticsParams *model.TacticsParams) *vo.Bat
 	return mostIntelligenceGeneral
 }
 
-// 是否使友军
+// 是否为友军
 func IsPair(currentGeneral *vo.BattleGeneral, compareGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) bool {
 	currentFlag := false
 	compareFlag := false
@@ -532,6 +532,37 @@ func IsPair(currentGeneral *vo.BattleGeneral, compareGeneral *vo.BattleGeneral, 
 		return true
 	}
 	return false
+}
+
+// 获取我军兵种
+func GetPairArmType(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) consts.ArmType {
+	for _, general := range tacticsParams.FightingTeam.BattleGenerals {
+		if currentGeneral.BaseInfo.UniqueId == general.BaseInfo.UniqueId {
+			return tacticsParams.FightingTeam.ArmType
+		}
+	}
+	for _, general := range tacticsParams.EnemyTeam.BattleGenerals {
+		if currentGeneral.BaseInfo.UniqueId == general.BaseInfo.UniqueId {
+			return tacticsParams.EnemyTeam.ArmType
+		}
+	}
+	return consts.ArmType_Unknow
+}
+
+// 获取敌军兵种
+func GetEnemyArmType(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) consts.ArmType {
+	isFighting := false
+	for _, general := range tacticsParams.FightingTeam.BattleGenerals {
+		if currentGeneral.BaseInfo.UniqueId == general.BaseInfo.UniqueId {
+			isFighting = true
+			break
+		}
+	}
+	if isFighting {
+		return tacticsParams.EnemyTeam.ArmType
+	} else {
+		return tacticsParams.FightingTeam.ArmType
+	}
 }
 
 // 获取武将武力/智力最高一项

@@ -391,6 +391,19 @@ func GetEnemyGeneralsOneOrTwoMap(tacticsParams *model.TacticsParams) map[int64]*
 	return enemyGeneralMap
 }
 
+// 找到当前敌军1到2个敌人
+func GetEnemyGeneralsOneOrTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+	//找到敌人
+	enemyGeneralArr := make([]*vo.BattleGeneral, 0)
+
+	if GenerateRate(0.5) {
+		enemyGeneralArr = append(enemyGeneralArr, GetEnemyOneGeneral(tacticsParams))
+	} else {
+		enemyGeneralArr = append(enemyGeneralArr, GetEnemyGeneralsTwoArr(tacticsParams)...)
+	}
+	return enemyGeneralArr
+}
+
 // 找到我军损失兵力最多的武将
 func GetPairMaxLossSoldierNumGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	pairGenerals := GetPairGeneralArr(tacticsParams)

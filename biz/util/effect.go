@@ -126,6 +126,7 @@ var (
 //		功能性状态：通常不可叠加，不同来源时不可刷新
 //		控制状态：不可叠加，不可刷新，负面效果
 func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, effectParam *vo.EffectHolderParams) *EffectWrapSetResp {
+	/** 1.校验逻辑 **/
 	//次数逻辑
 	currentTimes := general.BuffEffectCountMap[effectType]
 	//超过最大次数限制
@@ -150,8 +151,41 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 	} else {
 		general.BuffEffectCountMap[effectType] = currentTimes + effectParam.EffectTimes
 	}
-	//属性
 
+	/** 触发器逻辑 begin**/
+	//施加正面效果开始
+	if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_BuffEffect]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{}
+			f(params)
+		}
+	}
+	//被施加正面效果开始
+	if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_BuffEffect]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{}
+			f(params)
+		}
+	}
+	defer func() {
+		//施加正面效果结束
+		if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_BuffEffectEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{}
+				f(params)
+			}
+		}
+		//被施加正面效果结束
+		if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_SufferBuffEffectEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{}
+				f(params)
+			}
+		}
+	}()
+	/** 触发器逻辑 end**/
+
+	/** 2.执行逻辑 **/
 	//是否包含正面效果判断
 	_, isContainBuffEffect := general.BuffEffectHolderMap[effectType]
 	//是否包含属性正面效果判断
@@ -423,6 +457,66 @@ type EffectWrapSetResp struct {
 //		功能性状态：通常不可叠加，不同来源时不可刷新
 //		控制状态：不可叠加，不可刷新，负面效果
 func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectType consts.DebuffEffectType, effectParam *vo.EffectHolderParams) *EffectWrapSetResp {
+	/** 1.校验逻辑 **/
+	//次数逻辑
+	currentTimes := general.DeBuffEffectCountMap[effectType]
+	//超过最大次数限制
+	if effectParam.EffectTimes > effectParam.MaxEffectTimes {
+		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
+			general.BaseInfo.Name,
+			effectType,
+		)
+		return &EffectWrapSetResp{
+			IsSuccess: false,
+		}
+	}
+	//叠加逻辑
+	if effectParam.EffectTimes+currentTimes > effectParam.MaxEffectTimes {
+		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
+			general.BaseInfo.Name,
+			effectType,
+		)
+		return &EffectWrapSetResp{
+			IsSuccess: false,
+		}
+	} else {
+		general.DeBuffEffectCountMap[effectType] = currentTimes + effectParam.EffectTimes
+	}
+
+	/** 触发器逻辑 begin**/
+	//施加负面效果开始
+	if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_DebuffEffect]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{}
+			f(params)
+		}
+	}
+	//被施加负面效果开始
+	if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_DebuffEffect]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{}
+			f(params)
+		}
+	}
+	defer func() {
+		//施加负面效果结束
+		if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_DebuffEffectEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{}
+				f(params)
+			}
+		}
+		//被施加负面效果结束
+		if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_SufferDebuffEffectEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{}
+				f(params)
+			}
+		}
+	}()
+	/** 触发器逻辑 end**/
+
+	/** 执行逻辑 **/
 	//是否包含负面效果判断
 	_, isContainDebuffEffect := general.DeBuffEffectHolderMap[effectType]
 	//是否包含属性负面效果判断

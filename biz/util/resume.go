@@ -2,13 +2,14 @@ package util
 
 import (
 	"context"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
 
-//恢复兵力结算
-//@general 当前武将
-//@resumeNum 恢复兵力
+// 恢复兵力结算
+// @general 当前武将
+// @resumeNum 恢复兵力
 func ResumeSoldierNum(ctx context.Context, general *vo.BattleGeneral, resumeNum int64) (finalResumeNum, originNum, finalSoldierNum int64) {
 	if !IsCanResume(ctx, general) {
 		return 0, general.SoldierNum, general.SoldierNum
@@ -34,6 +35,13 @@ func ResumeSoldierNum(ctx context.Context, general *vo.BattleGeneral, resumeNum 
 
 		general.SoldierNum += resumeNum
 	}
+
+	hlog.CtxInfof(ctx, "[%s]恢复了兵力%d(%d↗%d)",
+		general.BaseInfo.Name,
+		finalResumeNum,
+		originNum,
+		finalSoldierNum,
+	)
 
 	return
 }

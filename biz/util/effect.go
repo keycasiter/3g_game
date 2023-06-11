@@ -367,6 +367,11 @@ func BuffEffectContainsCheck(general *vo.BattleGeneral) bool {
 	return len(general.BuffEffectHolderMap) > 0
 }
 
+// 增益效果数量
+func BuffEffectContainsNum(general *vo.BattleGeneral) int {
+	return len(general.BuffEffectHolderMap)
+}
+
 // 正面效果次数是否已消耗完毕
 func BuffEffectOfTacticIsDeplete(general *vo.BattleGeneral, effectType consts.BuffEffectType, tacticId consts.TacticId) bool {
 	if tacticId <= 0 {

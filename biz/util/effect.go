@@ -161,7 +161,7 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 		}
 	}
 	//被施加正面效果开始
-	if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_BuffEffect]; okk {
+	if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_SufferBuffEffect]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{}
 			f(params)
@@ -492,7 +492,7 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 		}
 	}
 	//被施加负面效果开始
-	if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_DebuffEffect]; okk {
+	if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_SufferDebuffEffect]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{}
 			f(params)

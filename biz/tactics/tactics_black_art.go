@@ -140,6 +140,7 @@ func (b BlackArtTactic) Execute() {
 				EffectTimes:    1,
 				MaxEffectTimes: cast.ToInt64(consts.INT_MAX),
 				FromTactic:     b.Id(),
+				ProduceGeneral: currentGeneral,
 			})
 		}
 

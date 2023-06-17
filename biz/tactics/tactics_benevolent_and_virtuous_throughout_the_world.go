@@ -42,9 +42,10 @@ func (b BenevolentAndVirtuousThroughoutTheWorldTactic) Prepare() {
 
 			//兵刃伤害
 			if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
-				EffectRate:  rate,
-				EffectRound: 1,
-				FromTactic:  b.Id(),
+				EffectRate:     rate,
+				EffectRound:    1,
+				FromTactic:     b.Id(),
+				ProduceGeneral: currentGeneral,
 			}).IsSuccess {
 				//注册消失效果
 				util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
@@ -64,9 +65,10 @@ func (b BenevolentAndVirtuousThroughoutTheWorldTactic) Prepare() {
 
 			//谋略伤害
 			if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
-				EffectRate:  rate,
-				EffectRound: 1,
-				FromTactic:  b.Id(),
+				EffectRate:     rate,
+				EffectRound:    1,
+				FromTactic:     b.Id(),
+				ProduceGeneral: currentGeneral,
 			}).IsSuccess {
 				//注册消失效果
 				util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {

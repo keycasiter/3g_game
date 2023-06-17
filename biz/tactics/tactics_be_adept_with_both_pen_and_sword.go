@@ -41,6 +41,7 @@ func (b BeAdeptWithBothPenAndSwordTactic) Prepare() {
 			EffectTimes:    1,
 			MaxEffectTimes: 5,
 			FromTactic:     b.Id(),
+			ProduceGeneral: currentGeneral,
 		}).IsSuccess {
 			triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase += 30
 			hlog.CtxInfof(ctx, "[%s]的智力提高了%.2d",
@@ -59,6 +60,7 @@ func (b BeAdeptWithBothPenAndSwordTactic) Prepare() {
 			EffectTimes:    1,
 			MaxEffectTimes: 5,
 			FromTactic:     b.Id(),
+			ProduceGeneral: currentGeneral,
 		}).IsSuccess {
 			triggerGeneral.BaseInfo.AbilityAttr.ForceBase += 30
 			hlog.CtxInfof(ctx, "[%s]的武力提高了%.2d",

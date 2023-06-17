@@ -147,6 +147,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.Disperse] = &DisperseTactic{}
 	//箕形阵
 	TacticsHandlerMap[consts.DustpanFormation] = &DustpanFormationTactic{}
+	//绝其汲道
+	TacticsHandlerMap[consts.EliminateItAndDrawFromIt] = &EliminateItAndDrawFromItTactic{}
 }
 
 func initTacticsMap() {
@@ -210,6 +212,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.BrokenBridgeByWater] = true
 	ActiveTacticsMap[consts.DecisionMakingThroughOperationsResearch] = true
 	ActiveTacticsMap[consts.Disperse] = true
+	ActiveTacticsMap[consts.EliminateItAndDrawFromIt] = true
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true

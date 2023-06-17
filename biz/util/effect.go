@@ -154,10 +154,12 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 
 	/** 触发器逻辑 begin**/
 	//施加正面效果开始
-	if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_BuffEffect]; okk {
-		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{}
-			f(params)
+	if effectParam.ProduceGeneral != nil {
+		if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_BuffEffect]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{}
+				f(params)
+			}
 		}
 	}
 	//被施加正面效果开始
@@ -169,10 +171,12 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 	}
 	defer func() {
 		//施加正面效果结束
-		if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_BuffEffectEnd]; okk {
-			for _, f := range funcs {
-				params := &vo.TacticsTriggerParams{}
-				f(params)
+		if effectParam.ProduceGeneral != nil {
+			if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_BuffEffectEnd]; okk {
+				for _, f := range funcs {
+					params := &vo.TacticsTriggerParams{}
+					f(params)
+				}
 			}
 		}
 		//被施加正面效果结束
@@ -490,10 +494,12 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 
 	/** 触发器逻辑 begin**/
 	//施加负面效果开始
-	if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_DebuffEffect]; okk {
-		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{}
-			f(params)
+	if effectParam.ProduceGeneral != nil {
+		if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_DebuffEffect]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{}
+				f(params)
+			}
 		}
 	}
 	//被施加负面效果开始
@@ -505,10 +511,12 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 	}
 	defer func() {
 		//施加负面效果结束
-		if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_DebuffEffectEnd]; okk {
-			for _, f := range funcs {
-				params := &vo.TacticsTriggerParams{}
-				f(params)
+		if effectParam.ProduceGeneral != nil {
+			if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_DebuffEffectEnd]; okk {
+				for _, f := range funcs {
+					params := &vo.TacticsTriggerParams{}
+					f(params)
+				}
 			}
 		}
 		//被施加负面效果结束

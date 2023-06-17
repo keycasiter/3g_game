@@ -90,16 +90,18 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 	for _, general := range pairGeneralArr {
 		//受到谋略伤害降低
 		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
-			EffectRate: sufferDamageDeduceRate,
-			FromTactic: a.Id(),
+			EffectRate:     sufferDamageDeduceRate,
+			FromTactic:     a.Id(),
+			ProduceGeneral: currentGeneral,
 		}).IsSuccess {
 			hlog.CtxInfof(ctx, "[%s]受到的谋略伤害降低了%.2f%%", general.BaseInfo.Name,
 				sufferDamageDeduceRate*100)
 		}
 		//受到兵刃伤害降低
 		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
-			EffectRate: sufferDamageDeduceRate,
-			FromTactic: a.Id(),
+			EffectRate:     sufferDamageDeduceRate,
+			FromTactic:     a.Id(),
+			ProduceGeneral: currentGeneral,
 		}).IsSuccess {
 			hlog.CtxInfof(ctx, "[%s]受到的兵刃伤害降低了%.2f%%", general.BaseInfo.Name,
 				sufferDamageDeduceRate*100)

@@ -39,8 +39,9 @@ func (a AncientEvilComesTactic) Prepare() {
 	//找到我军主将
 	masterGeneral := util.GetPairMasterGeneral(a.tacticsParams)
 	util.BuffEffectWrapSet(ctx, masterGeneral, consts.BuffEffectType_AncientEvilComes_Prepare, &vo.EffectHolderParams{
-		EffectRate: 1.0,
-		FromTactic: a.Id(),
+		EffectRate:     1.0,
+		FromTactic:     a.Id(),
+		ProduceGeneral: currentGeneral,
 	})
 
 	util.TacticsTriggerWrapRegister(masterGeneral, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {

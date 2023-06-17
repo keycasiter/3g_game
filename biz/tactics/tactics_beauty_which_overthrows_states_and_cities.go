@@ -117,9 +117,10 @@ func (b BeautyWhichOverthrowsStatesAndCitiesTactic) Execute() {
 				pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, b.tacticsParams)
 				for _, general := range pairGenerals {
 					if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
-						EffectRate:  0.16,
-						EffectRound: 2,
-						FromTactic:  b.Id(),
+						EffectRate:     0.16,
+						EffectRound:    2,
+						FromTactic:     b.Id(),
+						ProduceGeneral: currentGeneral,
 					}).IsSuccess {
 						//注册消失效果
 						util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
@@ -130,9 +131,10 @@ func (b BeautyWhichOverthrowsStatesAndCitiesTactic) Execute() {
 						})
 					}
 					if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
-						EffectRate:  0.16,
-						EffectRound: 2,
-						FromTactic:  b.Id(),
+						EffectRate:     0.16,
+						EffectRound:    2,
+						FromTactic:     b.Id(),
+						ProduceGeneral: currentGeneral,
 					}).IsSuccess {
 						//注册消失效果
 						util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{

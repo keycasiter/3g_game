@@ -131,9 +131,10 @@ func (b BecomeFamousAndFearInspiringThroughoutChinaTactic) Execute() {
 			}
 			//并使自己造成的兵刃伤害提升36%，持续2回合
 			util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{
-				EffectRate:  0.36,
-				EffectRound: 2,
-				FromTactic:  b.Id(),
+				EffectRate:     0.36,
+				EffectRound:    2,
+				FromTactic:     b.Id(),
+				ProduceGeneral: currentGeneral,
 			})
 		}
 

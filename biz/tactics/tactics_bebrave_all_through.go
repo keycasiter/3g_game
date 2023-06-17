@@ -27,8 +27,9 @@ func (b BebraveAllThroughTactic) Prepare() {
 
 	//洞察效果
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_Insight, &vo.EffectHolderParams{
-		EffectRate: 1.0,
-		FromTactic: b.Id(),
+		EffectRate:     1.0,
+		FromTactic:     b.Id(),
+		ProduceGeneral: currentGeneral,
 	})
 
 	val := int64(40)
@@ -39,23 +40,27 @@ func (b BebraveAllThroughTactic) Prepare() {
 
 	//武力
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
-		EffectValue: val,
-		FromTactic:  b.Id(),
+		EffectValue:    val,
+		FromTactic:     b.Id(),
+		ProduceGeneral: currentGeneral,
 	})
 	//智力
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrIntelligence, &vo.EffectHolderParams{
-		EffectValue: val,
-		FromTactic:  b.Id(),
+		EffectValue:    val,
+		FromTactic:     b.Id(),
+		ProduceGeneral: currentGeneral,
 	})
 	//速度
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrSpeed, &vo.EffectHolderParams{
-		EffectValue: val,
-		FromTactic:  b.Id(),
+		EffectValue:    val,
+		FromTactic:     b.Id(),
+		ProduceGeneral: currentGeneral,
 	})
 	//统率
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{
-		EffectValue: val,
-		FromTactic:  b.Id(),
+		EffectValue:    val,
+		FromTactic:     b.Id(),
+		ProduceGeneral: currentGeneral,
 	})
 }
 

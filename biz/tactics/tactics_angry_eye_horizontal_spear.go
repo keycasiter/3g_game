@@ -70,9 +70,10 @@ func (a AngryEyeHorizontalSpearTactic) Execute() {
 	)
 	//武力提升
 	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
-		EffectValue: 50,
-		EffectRound: 2,
-		FromTactic:  a.Id(),
+		EffectValue:    50,
+		EffectRound:    2,
+		FromTactic:     a.Id(),
+		ProduceGeneral: currentGeneral,
 	}).IsSuccess {
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
@@ -91,10 +92,11 @@ func (a AngryEyeHorizontalSpearTactic) Execute() {
 	}
 	//群攻效果
 	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_GroupAttack, &vo.EffectHolderParams{
-		TriggerRate: 1.0,
-		EffectRate:  0.7,
-		EffectRound: 2,
-		FromTactic:  a.Id(),
+		TriggerRate:    1.0,
+		EffectRate:     0.7,
+		EffectRound:    2,
+		FromTactic:     a.Id(),
+		ProduceGeneral: currentGeneral,
 	}).IsSuccess {
 		//注册消失效果
 		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {

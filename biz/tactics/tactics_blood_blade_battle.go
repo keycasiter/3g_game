@@ -34,8 +34,9 @@ func (b BloodBladeBattle) Prepare() {
 	)
 	//提高75%普通攻击伤害，
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_GeneralAttackDamageImprove, &vo.EffectHolderParams{
-		EffectRate: 0.75,
-		FromTactic: b.Id(),
+		EffectRate:     0.75,
+		FromTactic:     b.Id(),
+		ProduceGeneral: currentGeneral,
 	})
 	//普通攻击之后对目标造成酣斗效果
 	guardRound := consts.Battle_Round_Unknow
@@ -50,6 +51,7 @@ func (b BloodBladeBattle) Prepare() {
 				EffectTimes:    1,
 				MaxEffectTimes: cast.ToInt64(consts.INT_MAX),
 				FromTactic:     b.Id(),
+				ProduceGeneral: currentGeneral,
 			})
 			//更新回合统计
 			guardRound = params.CurrentRound

@@ -28,8 +28,9 @@ func (b BloodyAndUnrestrainedTactic) Prepare() {
 
 	//使自己获得34点武力
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
-		EffectValue: 34,
-		FromTactic:  b.Id(),
+		EffectValue:    34,
+		FromTactic:     b.Id(),
+		ProduceGeneral: currentGeneral,
 	})
 	//54%群攻效果,自身为主将时，群攻值为60%
 	rate := 0.54

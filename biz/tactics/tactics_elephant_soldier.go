@@ -6,11 +6,11 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//象兵
-//将骑兵进阶为横行无忌的象兵：
-//部队基础攻城值提高25%但行军速度降低50%，将受到伤害的25%延后于3回合内逐步结算
-//且结算伤害降低10%，自身灼烧时，获得50%群攻及混乱；
-//若蛮族统领
+// 象兵
+// 将骑兵进阶为横行无忌的象兵：
+// 部队基础攻城值提高25%但行军速度降低50%，将受到伤害的25%延后于3回合内逐步结算
+// 且结算伤害降低10%，自身灼烧时，获得50%群攻及混乱；
+// 若蛮族统领
 type ElephantSoldierTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

@@ -323,7 +323,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "夺魂挟魄",
 		},
 		{
-			Id:   consts.DustpanFormation,
+			Id:   consts.EliminateItAndDrawFromIt,
 			Name: "箕形阵",
 		},
 	}

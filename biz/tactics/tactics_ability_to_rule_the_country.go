@@ -39,8 +39,9 @@ func (a AbilityToRuleTheCountryTactic) Prepare() {
 	for _, pairGeneral := range pairGeneralArr {
 		//施加效果
 		util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_AbilityToRuleTheCountry_Prepare, &vo.EffectHolderParams{
-			EffectRate: 1.0,
-			FromTactic: a.Id(),
+			EffectRate:     1.0,
+			FromTactic:     a.Id(),
+			ProduceGeneral: currentGeneral,
 		})
 
 		registerFunc := func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
@@ -88,6 +89,7 @@ func (a AbilityToRuleTheCountryTactic) Prepare() {
 						EffectTimes:    1,
 						EffectRound:    2,
 						MaxEffectTimes: 3,
+						ProduceGeneral: currentGeneral,
 					}).IsSuccess {
 						//攻心效果失效
 						util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {

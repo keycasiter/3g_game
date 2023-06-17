@@ -32,7 +32,8 @@ func (b BeFullyEquippedForTactic) Prepare() {
 		b.Name(),
 	)
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_BeFullyEquippedFor_Prepare, &vo.EffectHolderParams{
-		FromTactic: b.Id(),
+		FromTactic:     b.Id(),
+		ProduceGeneral: currentGeneral,
 	})
 
 	//战斗中，偶数回合，恢复我军群体（2人）兵力（治疗率88%，受智力影响）

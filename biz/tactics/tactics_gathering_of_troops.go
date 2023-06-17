@@ -1,13 +1,17 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
-//合军聚众
-//战斗中，使自己获得休整状态，每回合恢复一定兵力（回复率124%）
+// 合军聚众
+// 战斗中，使自己获得休整状态，每回合恢复一定兵力（回复率124%）
 type GatheringOfTroopsTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -20,6 +24,29 @@ func (g GatheringOfTroopsTactic) Init(tacticsParams *model.TacticsParams) _inter
 }
 
 func (g GatheringOfTroopsTactic) Prepare() {
+	ctx := g.tacticsParams.Ctx
+	currentGeneral := g.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		g.Name(),
+	)
+
+	//战斗中，使自己获得休整状态，每回合恢复一定兵力（回复率124%）
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_Rest, &vo.EffectHolderParams{
+		FromTactic:     g.Id(),
+		ProduceGeneral: currentGeneral,
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			triggerResp := &vo.TacticsTriggerResult{}
+			triggerGeneral := params.CurrentGeneral
+
+			resumeNum := cast.ToInt64(cast.ToFloat64(triggerGeneral.SoldierNum) * 1.24)
+			util.ResumeSoldierNum(ctx, triggerGeneral, resumeNum)
+
+			return triggerResp
+		})
+	}
 }
 
 func (g GatheringOfTroopsTactic) Id() consts.TacticId {

@@ -142,7 +142,7 @@ func (b BreakingThroughTheWaterAndCrushingTheCityTactic) tacticTrigger(currentGe
 		}
 		//施加水攻效果
 		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_WaterAttack, &vo.EffectHolderParams{
-			EffectRate:  1.0,
+			EffectRate:  1.12,
 			EffectRound: 2,
 			FromTactic:  b.Id(),
 		}).IsSuccess {

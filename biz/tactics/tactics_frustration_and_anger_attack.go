@@ -1,9 +1,13 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 挫志怒袭
@@ -13,6 +17,7 @@ type FrustrationAndAngerAttackTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
 	isTriggerPrepare bool
+	isTriggered      bool
 }
 
 func (f FrustrationAndAngerAttackTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
@@ -59,6 +64,81 @@ func (f FrustrationAndAngerAttackTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (f FrustrationAndAngerAttackTactic) Execute() {
+	ctx := f.tacticsParams.Ctx
+	currentGeneral := f.tacticsParams.CurrentGeneral
+	currentRound := f.tacticsParams.CurrentRound
+
+	// 准备1回合，对敌军群体（2人）施加虚弱（无法造成伤害）状态，持续1回合；
+	// 如果目标已处于虚弱状态则改为造成一次猛击（伤害率188%）
+
+	f.isTriggerPrepare = true
+	hlog.CtxInfof(ctx, "[%s]准备发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		f.Name(),
+	)
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerRound := params.CurrentRound
+		triggerGeneral := params.CurrentGeneral
+
+		//准备回合释放
+		if currentRound+2 == triggerRound {
+			f.isTriggerPrepare = false
+		}
+		if currentRound+1 == triggerRound {
+			if f.isTriggered {
+				return triggerResp
+			} else {
+				f.isTriggered = true
+			}
+
+			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+				triggerGeneral.BaseInfo.Name,
+				f.Name(),
+			)
+
+			//找到群体2人
+			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, f.tacticsParams)
+			for _, general := range pairGenerals {
+				//如果目标已处于虚弱状态则改为造成一次猛击（伤害率188%）
+				if util.DeBuffEffectContains(general, consts.DebuffEffectType_PoorHealth) {
+					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.88)
+					util.TacticDamage(&util.TacticDamageParam{
+						TacticsParams: f.tacticsParams,
+						AttackGeneral: currentGeneral,
+						SufferGeneral: general,
+						DamageType:    consts.DamageType_Weapon,
+						Damage:        dmg,
+						TacticName:    f.Name(),
+					})
+				} else {
+					//施加效果
+					if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_PoorHealth, &vo.EffectHolderParams{
+						EffectRound:    1,
+						FromTactic:     f.Id(),
+						ProduceGeneral: general,
+					}).IsSuccess {
+						//消失效果
+						util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+							revokeResp := &vo.TacticsTriggerResult{}
+							revokeGeneral := params.CurrentGeneral
+
+							util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+								Ctx:        ctx,
+								General:    revokeGeneral,
+								EffectType: consts.DebuffEffectType_PoorHealth,
+								TacticId:   f.Id(),
+							})
+
+							return revokeResp
+						})
+					}
+				}
+			}
+		}
+
+		return triggerResp
+	})
 }
 
 func (f FrustrationAndAngerAttackTactic) IsTriggerPrepare() bool {

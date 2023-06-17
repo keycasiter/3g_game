@@ -24,6 +24,9 @@ var TroopsTacticsMap = make(map[consts.TacticId]bool, 0)
 // 兵种
 var ArmTacticsMap = make(map[consts.TacticId]bool, 0)
 
+// 准备回合的战法
+var ActivePrepareTacticsMap = make(map[consts.TacticId]bool, 0)
+
 // ** 战法处理器 **
 var TacticsHandlerMap = make(map[consts.TacticId]_interface.Tactics, 0)
 
@@ -161,9 +164,33 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.FallingPhoenix] = &FallingPhoenixTactic{}
 	//陷阵营
 	TacticsHandlerMap[consts.FallIntoCamp] = &FallIntoCampTactic{}
+	//火神英风
+	TacticsHandlerMap[consts.FireGodHeroStyle] = &FireGodHeroStyleTactic{}
+	//火烧连营
+	TacticsHandlerMap[consts.FireJointVenture] = &FireJointVentureTactic{}
+	//焰逐风飞
+	TacticsHandlerMap[consts.FlamesFlyingInTheWind] = &FlamesFlyingInTheWindTactic{}
+	//水淹七军
+	TacticsHandlerMap[consts.FloodedSeventhArmy] = &FloodedSeventhArmyTactic{}
+	//垂心万物
+	TacticsHandlerMap[consts.FocusingOnAllThings] = &FocusingOnAllThingsTactic{}
+	//料事如神
+	TacticsHandlerMap[consts.ForetellLikeProphet] = &ForetellLikeProphetTactic{}
+	//挫志怒袭
+	TacticsHandlerMap[consts.FrustrationAndAngerAttack] = &FrustrationAndAngerAttackTactic{}
+	//符命自立
+	TacticsHandlerMap[consts.FumingSelfReliance] = &FumingSelfRelianceTactic{}
+	//后发制人
+	TacticsHandlerMap[consts.GainMasteryByStrikingOnlyAfterTheEnemyHasStruck] = &GainMasteryByStrikingOnlyAfterTheEnemyHasStruckTactic{}
+	//敛众而击
+	TacticsHandlerMap[consts.GatherTheCrowdAndStrike] = &GatherTheCrowdAndStrikeTactic{}
+	//合军聚众
+	TacticsHandlerMap[consts.GatheringOfTroops] = &GatheringOfTroopsTactic{}
 }
 
 func initTacticsMap() {
+	//需要准备回合的战法
+	ActivePrepareTacticsMap[consts.AdvancingSecretlyByUnknownPath] = true
 	//被动战法
 	PassiveTacticsMap[consts.ThreeDaysOfSeparation] = true
 	PassiveTacticsMap[consts.Charming] = true
@@ -173,8 +200,12 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.BeAdeptWithBothPenAndSword] = true
 	PassiveTacticsMap[consts.CrowdMovesTenThousandCounts] = true
 	PassiveTacticsMap[consts.ExtravagantOrgy] = true
+	PassiveTacticsMap[consts.FumingSelfReliance] = true
+	PassiveTacticsMap[consts.GainMasteryByStrikingOnlyAfterTheEnemyHasStruck] = true
+	PassiveTacticsMap[consts.GatheringOfTroops] = true
 	//指挥战法
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
+	CommandTacticsMap[consts.FocusingOnAllThings] = true
 	CommandTacticsMap[consts.Demoralize] = true
 	CommandTacticsMap[consts.ToKeepAndBeFirm] = true
 	CommandTacticsMap[consts.Gallant] = true
@@ -194,6 +225,7 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.RideTigerHardToGetOff] = true
 	CommandTacticsMap[consts.AbilityToRuleTheCountry] = true
 	CommandTacticsMap[consts.AncientEvilComes] = true
+	CommandTacticsMap[consts.FireGodHeroStyle] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -203,6 +235,9 @@ func initTacticsMap() {
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	//主动
 	ActiveTacticsMap[consts.Curettage] = true
+	ActiveTacticsMap[consts.GatherTheCrowdAndStrike] = true
+	ActiveTacticsMap[consts.FlamesFlyingInTheWind] = true
+	ActiveTacticsMap[consts.FloodedSeventhArmy] = true
 	ActiveTacticsMap[consts.TheSkyIsBlazing] = true
 	ActiveTacticsMap[consts.SeizeTheSoul] = true
 	ActiveTacticsMap[consts.BlazingWildfire] = true
@@ -231,6 +266,10 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.ExcitingArmyAttackCamp] = true
 	ActiveTacticsMap[consts.FakeBooksAlternateWithEachOther] = true
 	ActiveTacticsMap[consts.FallingPhoenix] = true
+	ActiveTacticsMap[consts.FireJointVenture] = true
+	ActiveTacticsMap[consts.ForetellLikeProphet] = true
+	ActiveTacticsMap[consts.FrustrationAndAngerAttack] = true
+
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true

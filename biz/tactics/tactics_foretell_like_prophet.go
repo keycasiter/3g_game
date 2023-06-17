@@ -1,9 +1,13 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 料事如神
@@ -57,7 +61,71 @@ func (f ForetellLikeProphetTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (f ForetellLikeProphetTactic) Execute() {
+	ctx := f.tacticsParams.Ctx
+	currentGeneral := f.tacticsParams.CurrentGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		f.Name(),
+	)
+
+	//对敌军群体（2人）造成谋略伤害（伤害率106%，受智力影响），并使其造成伤害降低16%，持续2回合
+	//找到敌军群体2人
+	enemyGenerals := util.GetEnemyTwoGeneralByGeneral(currentGeneral, f.tacticsParams)
+	for _, general := range enemyGenerals {
+		//谋略伤害
+		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.06)
+		util.TacticDamage(&util.TacticDamageParam{
+			TacticsParams: f.tacticsParams,
+			AttackGeneral: currentGeneral,
+			SufferGeneral: general,
+			DamageType:    consts.DamageType_Strategy,
+			Damage:        dmg,
+			TacticName:    f.Name(),
+		})
+		//施加效果
+		if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate:     0.16,
+			EffectRound:    2,
+			FromTactic:     f.Id(),
+			ProduceGeneral: currentGeneral,
+		}).IsSuccess {
+			//消失效果
+			util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+
+				util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    revokeGeneral,
+					EffectType: consts.DebuffEffectType_LaunchWeaponDamageDeduce,
+					TacticId:   f.Id(),
+				})
+				return revokeResp
+			})
+		}
+
+		if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_LaunchStrategyDamageDeduce, &vo.EffectHolderParams{
+			EffectRate:     0.16,
+			EffectRound:    2,
+			FromTactic:     f.Id(),
+			ProduceGeneral: currentGeneral,
+		}).IsSuccess {
+			//消失效果
+			util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+
+				util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    revokeGeneral,
+					EffectType: consts.DebuffEffectType_LaunchStrategyDamageDeduce,
+					TacticId:   f.Id(),
+				})
+				return revokeResp
+			})
+		}
+	}
 }
 
 func (f ForetellLikeProphetTactic) IsTriggerPrepare() bool {

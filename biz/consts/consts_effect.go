@@ -59,13 +59,19 @@ const (
 
 	DebuffEffectType_CleverStrategyAndShrewdTactic //神机妙算
 	DebuffEffectType_InterlockedStratagems         //铁索连环
-	DebuffEffectType_SeizeTheSoul                  //夺魂挟魄
+	DebuffEffectType_FireJointVenture_BurningCamp  //火烧连营[焚营]
 
 	DebuffEffectType_LectureField //舌战群儒
 )
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_SufferWeaponDamageImprove:
+		return "受到兵刃伤害增加"
+	case DebuffEffectType_SufferStrategyDamageImprove:
+		return "受到谋略伤害增加"
+	case DebuffEffectType_FireJointVenture_BurningCamp:
+		return "火烧连营[焚营]"
 	case DebuffEffectType_WaterAttack:
 		return "水攻"
 	case DebuffEffectType_Break:
@@ -127,25 +133,26 @@ type BuffEffectType int
 
 const (
 	//效果施加
-	BuffEffectType_Unknow                       BuffEffectType = iota
-	BuffEffectType_Evade                                       //规避
-	BuffEffectType_EnhanceWeapon                               //会心
-	BuffEffectType_AttackHeart                                 //攻心
-	BuffEffectType_EnhanceStrategy                             //奇谋
-	BuffEffectType_GroupAttack                                 //群攻
-	BuffEffectType_FirstAttack                                 //先攻
-	BuffEffectType_Rest                                        //休整
-	BuffEffectType_Defend                                      //抵御
-	BuffEffectType_ContinuousAttack                            //连击
-	BuffEffectType_StrikeBack                                  //反击
-	BuffEffectType_Defection                                   //倒戈
-	BuffEffectType_ShareResponsibilityFor                      //分担
-	BuffEffectType_Insight                                     //洞察
-	BuffEffectType_FightHard                                   //酣斗
-	BuffEffectType_TacticsActiveTriggerImprove                 //主动战法发动率提升
-	BuffEffectType_TacticsPassiveTriggerImprove                //被动战法发动率提升
-	BuffEffectType_LaunchWeaponDamageImprove                   //造成兵刃伤害增加
-	BuffEffectType_LaunchStrategyDamageImprove                 //造成谋略伤害增加
+	BuffEffectType_Unknow                             BuffEffectType = iota
+	BuffEffectType_Evade                                             //规避
+	BuffEffectType_EnhanceWeapon                                     //会心
+	BuffEffectType_AttackHeart                                       //攻心
+	BuffEffectType_EnhanceStrategy                                   //奇谋
+	BuffEffectType_GroupAttack                                       //群攻
+	BuffEffectType_FirstAttack                                       //先攻
+	BuffEffectType_Rest                                              //休整
+	BuffEffectType_Defend                                            //抵御
+	BuffEffectType_ContinuousAttack                                  //连击
+	BuffEffectType_StrikeBack                                        //反击
+	BuffEffectType_Defection                                         //倒戈
+	BuffEffectType_ShareResponsibilityFor                            //分担
+	BuffEffectType_Insight                                           //洞察
+	BuffEffectType_FightHard                                         //酣斗
+	BuffEffectType_TacticsActiveTriggerImprove                       //主动战法发动率提升
+	BuffEffectType_TacticsActiveTriggerPrepareImprove                //主动战法[准备战法]发动率提升
+	BuffEffectType_TacticsPassiveTriggerImprove                      //被动战法发动率提升
+	BuffEffectType_LaunchWeaponDamageImprove                         //造成兵刃伤害增加
+	BuffEffectType_LaunchStrategyDamageImprove                       //造成谋略伤害增加
 
 	BuffEffectType_GeneralAttackDamageImprove               //普通攻击伤害提升
 	BuffEffectType_SufferWeaponDamageDeduce                 //受到兵刃伤害减少
@@ -175,12 +182,17 @@ const (
 	BuffEffectType_AbilityToRuleTheCountry_Prepare          //经天纬地[预备]
 	BuffEffectType_AncientEvilComes_Prepare                 //古之恶来[预备]
 	BuffEffectType_CrowdMovesTenThousandCounts_Prepare      //众动万计[预备]
+	BuffEffectType_FireGodHeroStyle_Prepare                 //火神英风[预备]
 	BuffEffectType_Intervene                                //援护
 	BuffEffectType_ActiveTactic_SkipPrepareRound            //主动战法[跳过准备回合]
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_TacticsActiveTriggerPrepareImprove:
+		return "主动战法[准备战法]发动率提升"
+	case BuffEffectType_FireGodHeroStyle_Prepare:
+		return "火神英风[预备]"
 	case BuffEffectType_ContinuousAttack:
 		return "连击"
 	case BuffEffectType_ActiveTactic_SkipPrepareRound:

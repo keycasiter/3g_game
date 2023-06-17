@@ -489,7 +489,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				if effectParams, okk := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove); okk {
 					for _, param := range effectParams {
 						triggerRate += param.TriggerRate
-						hlog.CtxInfof(runCtx.Ctx, "[%s]由于【%s】的影响，主动战法发动率提升.2f%%",
+						hlog.CtxInfof(runCtx.Ctx, "[%s]由于【%s】的影响，主动战法发动率提升%.2f%%",
 							currentGeneral.BaseInfo.Name,
 							param.FromTactic,
 							param.TriggerRate*100,
@@ -500,7 +500,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				if effectParams, okk := util.DeBuffEffectGet(currentGeneral, consts.DebuffEffectType_TacticsActiveTriggerDecr); okk {
 					for _, param := range effectParams {
 						triggerRate -= param.TriggerRate
-						hlog.CtxInfof(runCtx.Ctx, "[%s]由于【%s】主动战法发动率降低.2f%%",
+						hlog.CtxInfof(runCtx.Ctx, "[%s]由于【%s】主动战法发动率降低%.2f%%",
 							currentGeneral.BaseInfo.Name,
 							param.FromTactic,
 							param.TriggerRate*100,

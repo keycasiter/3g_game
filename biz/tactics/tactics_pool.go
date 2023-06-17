@@ -149,6 +149,18 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.DustpanFormation] = &DustpanFormationTactic{}
 	//绝其汲道
 	TacticsHandlerMap[consts.EliminateItAndDrawFromIt] = &EliminateItAndDrawFromItTactic{}
+	//累世立名
+	TacticsHandlerMap[consts.EstablishingNameThroughGenerations] = &EstablishingNameThroughGenerationsTactic{}
+	//振军击营
+	TacticsHandlerMap[consts.ExcitingArmyAttackCamp] = &ExcitingArmyAttackCampTactic{}
+	//酒池肉林
+	TacticsHandlerMap[consts.ExtravagantOrgy] = &ExtravagantOrgyTactic{}
+	//伪书相间
+	TacticsHandlerMap[consts.FakeBooksAlternateWithEachOther] = &FakeBooksAlternateWithEachOtherTactic{}
+	//落凤
+	TacticsHandlerMap[consts.FallingPhoenix] = &FallingPhoenixTactic{}
+	//陷阵营
+	TacticsHandlerMap[consts.FallIntoCamp] = &FallIntoCampTactic{}
 }
 
 func initTacticsMap() {
@@ -160,6 +172,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.OnesResolveIsUnshaken] = true
 	PassiveTacticsMap[consts.BeAdeptWithBothPenAndSword] = true
 	PassiveTacticsMap[consts.CrowdMovesTenThousandCounts] = true
+	PassiveTacticsMap[consts.ExtravagantOrgy] = true
 	//指挥战法
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[consts.Demoralize] = true
@@ -185,6 +198,7 @@ func initTacticsMap() {
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
 	TroopsTacticsMap[consts.DustpanFormation] = true
+	TroopsTacticsMap[consts.FallIntoCamp] = true
 	//兵种
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	//主动
@@ -213,6 +227,10 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.DecisionMakingThroughOperationsResearch] = true
 	ActiveTacticsMap[consts.Disperse] = true
 	ActiveTacticsMap[consts.EliminateItAndDrawFromIt] = true
+	ActiveTacticsMap[consts.EstablishingNameThroughGenerations] = true
+	ActiveTacticsMap[consts.ExcitingArmyAttackCamp] = true
+	ActiveTacticsMap[consts.FakeBooksAlternateWithEachOther] = true
+	ActiveTacticsMap[consts.FallingPhoenix] = true
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true

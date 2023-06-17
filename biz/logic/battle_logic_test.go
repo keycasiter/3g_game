@@ -323,8 +323,8 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			Name: "夺魂挟魄",
 		},
 		{
-			Id:   consts.EliminateItAndDrawFromIt,
-			Name: "箕形阵",
+			Id:   consts.FallIntoCamp,
+			Name: "",
 		},
 	}
 	//庞统战法

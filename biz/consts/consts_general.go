@@ -17,4 +17,6 @@ const (
 	PangTong
 	//诸葛亮
 	ZhuGeLiang
+	//高顺
+	GaoShun
 )

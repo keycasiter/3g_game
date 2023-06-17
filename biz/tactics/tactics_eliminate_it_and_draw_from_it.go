@@ -115,6 +115,20 @@ func (e EliminateItAndDrawFromItTactic) Execute() {
 					EffectRound: 1,
 					FromTactic:  e.Id(),
 				})
+				//注册消失效果
+				util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					revokeResp := &vo.TacticsTriggerResult{}
+					revoekGeneral := params.CurrentGeneral
+
+					util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    revoekGeneral,
+						EffectType: consts.DebuffEffectType_ProhibitionTreatment,
+						TacticId:   e.Id(),
+					})
+
+					return revokeResp
+				})
 			}
 		}
 

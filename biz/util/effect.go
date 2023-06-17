@@ -448,6 +448,83 @@ func BuffEffectOfTacticCostRound(params *BuffEffectOfTacticCostRoundParams) bool
 	return false
 }
 
+type BuffEffectOfTacticDeduceParams struct {
+	//上下文
+	Ctx context.Context
+	//操作武将
+	General *vo.BattleGeneral
+	//正面效果
+	EffectType consts.BuffEffectType
+	//关联战法
+	TacticId consts.TacticId
+	//消耗概率
+	EffectRate float64
+	//消耗值
+	EffectValue int64
+	//触发率
+	TriggerRate float64
+}
+
+// 正面效果降低
+func BuffEffectOfTacticDeduce(params *BuffEffectOfTacticDeduceParams) bool {
+	//必须指定战法
+	if params.TacticId <= 0 {
+		return false
+	}
+
+	if effectParams, ok := params.General.BuffEffectHolderMap[params.EffectType]; ok {
+		for idx, effectParam := range effectParams {
+			//找到指定战法
+			if effectParam.FromTactic == params.TacticId {
+				switch params.EffectType {
+				case consts.BuffEffectType_TacticsActiveTriggerImprove:
+					//触发率处理
+					if params.TriggerRate > 0 {
+						effectParam.TriggerRate -= params.TriggerRate
+						if effectParam.TriggerRate < 0 {
+							effectParam.TriggerRate = 0
+						}
+						hlog.CtxInfof(params.Ctx, "[%s]的【%v】降低了%.2f",
+							params.General.BaseInfo.Name,
+							params.EffectType,
+							params.TriggerRate*100)
+					}
+
+					if effectParam.TriggerRate == 0 {
+						params.General.BuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+						hlog.CtxInfof(params.Ctx, "[%s]的【%v】「%v」效果已消失",
+							params.General.BaseInfo.Name,
+							params.TacticId,
+							params.EffectType,
+						)
+					}
+				case consts.BuffEffectType_TacticsActiveTriggerPrepareImprove:
+					//触发率处理
+					if params.TriggerRate > 0 {
+						effectParam.TriggerRate -= params.TriggerRate
+						if effectParam.TriggerRate < 0 {
+							effectParam.TriggerRate = 0
+						}
+						hlog.CtxInfof(params.Ctx, "[%s]的【%v】降低了%.2f",
+							params.General.BaseInfo.Name,
+							params.EffectType,
+							params.TriggerRate*100)
+					}
+					if effectParam.TriggerRate == 0 {
+						params.General.BuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+						hlog.CtxInfof(params.Ctx, "[%s]的【%v】「%v」效果已消失",
+							params.General.BaseInfo.Name,
+							params.TacticId,
+							params.EffectType,
+						)
+					}
+				}
+			}
+		}
+	}
+	return false
+}
+
 type EffectWrapSetResp struct {
 	//是否设置成功
 	IsSuccess bool

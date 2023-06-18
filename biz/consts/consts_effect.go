@@ -61,11 +61,17 @@ const (
 	DebuffEffectType_InterlockedStratagems         //铁索连环
 	DebuffEffectType_FireJointVenture_BurningCamp  //火烧连营[焚营]
 
-	DebuffEffectType_LectureField //舌战群儒
+	DebuffEffectType_LectureField       //舌战群儒
+	DebuffEffectType_TigerAnger         //虎嗔
+	DebuffEffectType_TigerAnger_Prepare //虎嗔[预备]
 )
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_TigerAnger:
+		return "虎嗔"
+	case DebuffEffectType_TigerAnger_Prepare:
+		return "虎嗔[预备]"
 	case DebuffEffectType_SufferWeaponDamageImprove:
 		return "受到兵刃伤害增加"
 	case DebuffEffectType_SufferStrategyDamageImprove:

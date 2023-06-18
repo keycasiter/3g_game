@@ -186,6 +186,8 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.GatherTheCrowdAndStrike] = &GatherTheCrowdAndStrikeTactic{}
 	//合军聚众
 	TacticsHandlerMap[consts.GatheringOfTroops] = &GatheringOfTroopsTactic{}
+	//将门虎女
+	TacticsHandlerMap[consts.GeneralBraveGirl] = &GeneralBraveGirlTactic{}
 }
 
 func initTacticsMap() {
@@ -234,6 +236,7 @@ func initTacticsMap() {
 	//兵种
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	//主动
+	ActiveTacticsMap[consts.GeneralBraveGirl] = true
 	ActiveTacticsMap[consts.Curettage] = true
 	ActiveTacticsMap[consts.GatherTheCrowdAndStrike] = true
 	ActiveTacticsMap[consts.FlamesFlyingInTheWind] = true

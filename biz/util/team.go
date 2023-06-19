@@ -186,6 +186,22 @@ func GetPairOneGeneralNotSelf(tacticsParams *model.TacticsParams, general *vo.Ba
 	return nil
 }
 
+// 找到兵力最低友军
+func GetPairLowestSoldierNumGeneral(tacticsParams *model.TacticsParams, general *vo.BattleGeneral) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralsNotSelf(tacticsParams, general)
+	if len(pairGenerals) == 0 {
+		return nil
+	}
+	lowestSoliderGeneral := pairGenerals[0]
+	for _, pairGeneral := range pairGenerals {
+		//找到兵力最低的友军单体
+		if pairGeneral.SoldierNum < lowestSoliderGeneral.SoldierNum {
+			lowestSoliderGeneral = pairGeneral
+		}
+	}
+	return lowestSoliderGeneral
+}
+
 // 找到武将除自己之外的队友们
 func GetPairGeneralsNotSelf(tacticsParams *model.TacticsParams, general *vo.BattleGeneral) []*vo.BattleGeneral {
 	//找到我军

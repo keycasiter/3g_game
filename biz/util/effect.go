@@ -129,6 +129,12 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 	/** 1.校验逻辑 **/
 	//次数逻辑
 	currentTimes := general.BuffEffectCountMap[effectType]
+
+	//处理最大次数默认值为无限大
+	if effectParam.MaxEffectTimes <= 0 {
+		effectParam.MaxEffectTimes = consts.INT64_MAX
+	}
+
 	//超过最大次数限制
 	if effectParam.EffectTimes > effectParam.MaxEffectTimes {
 		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
@@ -343,6 +349,23 @@ func BuffEffectGet(general *vo.BattleGeneral, effectType consts.BuffEffectType) 
 	return nil, false
 }
 
+// 正面效果获取
+func BuffEffectOfTacticGet(general *vo.BattleGeneral, effectType consts.BuffEffectType, tacticId consts.TacticId) ([]*vo.EffectHolderParams, bool) {
+	res := make([]*vo.EffectHolderParams, 0)
+	if effectParams, ok := general.BuffEffectHolderMap[effectType]; ok {
+		//按战法Id获取效果
+		if tacticId > 0 {
+			for _, effectParam := range effectParams {
+				if effectParam.FromTactic == tacticId {
+					res = append(res, effectParam)
+				}
+			}
+			return res, true
+		}
+	}
+	return nil, false
+}
+
 // 获取增益效果总次数
 func BuffEffectGetCount(general *vo.BattleGeneral, effectType consts.BuffEffectType) int64 {
 	times := int64(0)
@@ -426,6 +449,60 @@ func BuffEffectOfTacticCostRound(params *BuffEffectOfTacticCostRoundParams) bool
 				}
 				//清除
 				if effectParam.EffectRound == 0 {
+					params.General.BuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+					hlog.CtxInfof(params.Ctx, "[%s]的【%v】「%v」效果已消失",
+						params.General.BaseInfo.Name,
+						params.TacticId,
+						params.EffectType,
+					)
+
+					//属性加点清理
+					buffEffectDecr(params.Ctx, params.General, params.EffectType, effectParam.EffectValue)
+
+					//执行回调函数
+					if params.CostOverTriggerFunc != nil {
+						params.CostOverTriggerFunc()
+					}
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
+type BuffEffectOfTacticCostTimeParams struct {
+	//上下文
+	Ctx context.Context
+	//操作武将
+	General *vo.BattleGeneral
+	//正面效果
+	EffectType consts.BuffEffectType
+	//关联战法
+	TacticId consts.TacticId
+	//消耗次数
+	CostTimes int64
+	//效果消耗完成回调函数
+	CostOverTriggerFunc func()
+}
+
+// 正面效果消耗
+func BuffEffectOfTacticCostTime(params *BuffEffectOfTacticCostTimeParams) bool {
+	if params.TacticId <= 0 {
+		return false
+	}
+
+	if effectParams, ok := params.General.BuffEffectHolderMap[params.EffectType]; ok {
+		for idx, effectParam := range effectParams {
+			//找到指定战法
+			if effectParam.FromTactic == params.TacticId {
+				//消耗
+				if effectParam.EffectTimes > params.CostTimes && params.CostTimes > 0 {
+					effectParam.EffectTimes -= params.CostTimes
+					return true
+				}
+				//清除
+				if effectParam.EffectTimes == 0 {
 					params.General.BuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
 					hlog.CtxInfof(params.Ctx, "[%s]的【%v】「%v」效果已消失",
 						params.General.BaseInfo.Name,
@@ -546,6 +623,11 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 	/** 1.校验逻辑 **/
 	//次数逻辑
 	currentTimes := general.DeBuffEffectCountMap[effectType]
+
+	//处理最大次数默认值为无限大
+	if effectParam.MaxEffectTimes <= 0 {
+		effectParam.MaxEffectTimes = consts.INT64_MAX
+	}
 	//超过最大次数限制
 	if effectParam.EffectTimes > effectParam.MaxEffectTimes {
 		hlog.CtxDebugf(ctx, "[%s]的「%v」效果达到最大叠加次数",
@@ -761,6 +843,16 @@ func DeBuffEffectContains(general *vo.BattleGeneral, effectType consts.DebuffEff
 	return false
 }
 
+// 控制效果判断
+func DeBuffEffectContainsControl(general *vo.BattleGeneral) bool {
+	for effectType, _ := range general.DeBuffEffectHolderMap {
+		if _, ok := controlDebuffEffectMap[effectType]; ok {
+			return true
+		}
+	}
+	return false
+}
+
 // 负面效果判断
 func DeBuffEffectOfTacticContains(general *vo.BattleGeneral, effectType consts.DebuffEffectType, tacticId consts.TacticId) bool {
 	if effectParams, ok := general.DeBuffEffectHolderMap[effectType]; ok {
@@ -951,16 +1043,17 @@ func debuffEffectDecr(ctx context.Context, general *vo.BattleGeneral, effectType
 }
 
 // 负面效果获取
-func DeBuffEffectOfTacticGet(general *vo.BattleGeneral, effectType consts.DebuffEffectType, tacticId consts.TacticId) (*vo.EffectHolderParams, bool) {
+func DeBuffEffectOfTacticGet(general *vo.BattleGeneral, effectType consts.DebuffEffectType, tacticId consts.TacticId) ([]*vo.EffectHolderParams, bool) {
+	res := make([]*vo.EffectHolderParams, 0)
 	if effectParams, ok := general.DeBuffEffectHolderMap[effectType]; ok {
 		//按战法Id获取效果
 		if tacticId > 0 {
 			for _, effectParam := range effectParams {
 				if effectParam.FromTactic == tacticId {
-					return effectParam, true
+					res = append(res, effectParam)
 				}
 			}
-			return nil, false
+			return res, true
 		}
 	}
 	return nil, false

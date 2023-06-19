@@ -21,4 +21,6 @@ const (
 	GaoShun
 	//张合
 	ZhangHe
+	//关兴
+	GuanXing
 )

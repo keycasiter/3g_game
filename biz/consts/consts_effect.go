@@ -160,42 +160,45 @@ const (
 	BuffEffectType_LaunchWeaponDamageImprove                         //造成兵刃伤害增加
 	BuffEffectType_LaunchStrategyDamageImprove                       //造成谋略伤害增加
 
-	BuffEffectType_GeneralAttackDamageImprove               //普通攻击伤害提升
-	BuffEffectType_SufferWeaponDamageDeduce                 //受到兵刃伤害减少
-	BuffEffectType_SufferStrategyDamageDeduce               //受到谋略伤害减少
-	BuffEffectType_IncrForce                                //增加武力
-	BuffEffectType_IncrIntelligence                         //增加智力
-	BuffEffectType_IncrCommand                              //增加统率
-	BuffEffectType_IncrSpeed                                //增加速度
-	BuffEffectType_EmergencyTreatment                       //急救
-	BuffEffectType_Charming                                 //魅惑
-	BuffEffectType_AppeaseArmyAndPeople_Prepare             //抚辑军民「预备」
-	BuffEffectType_ThreeDaysOfSeparation_Prepare            //士别三日「预备」
-	BuffEffectType_SeizeTheSoul                             //夺魂挟魄
-	BuffEffectType_BraveAmbition_Prepare                    //义胆雄心「预备」
-	BuffEffectType_HuangTianDangLi                          //黄天当立
-	BuffEffectType_SuppressChokesAndPreventRefusals_Prepare //镇扼防拒「预备」
-	BuffEffectType_ClearEyedAndMalicious_Prepare            //鹰视狼顾「预备」
-	BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare  //鹰视狼顾-鹰视「预备」
-	BuffEffectType_UseMartialArtsToConnectWithGods_Prepare  //用武通神[预备]
-	BuffEffectType_KillingMinisterInDream_Prepare           //梦中弑臣[预备]
-	BuffEffectType_BeFullyEquippedFor_Prepare               //整装待发[预备]
-	BuffEffectType_RideTigerHardToGetOff_Prepare            //骑虎难下[预备]
-	BuffEffectType_OutstandingTalent_Prepare                //才器过人[预备]
-	BuffEffectType_LowerBannersAndMuffleDrums_Prepare       //偃旗息鼓[预备]
-	BuffEffectType_Humility_Prepare                         //谦让[预备]
-	BuffEffectType_OnesResolveIsUnshaken_Prepare            //矢志不移[预备]
-	BuffEffectType_AbilityToRuleTheCountry_Prepare          //经天纬地[预备]
-	BuffEffectType_AncientEvilComes_Prepare                 //古之恶来[预备]
-	BuffEffectType_CrowdMovesTenThousandCounts_Prepare      //众动万计[预备]
-	BuffEffectType_FireGodHeroStyle_Prepare                 //火神英风[预备]
-	BuffEffectType_Intervene                                //援护
-	BuffEffectType_ActiveTactic_SkipPrepareRound            //主动战法[跳过准备回合]
-	BuffEffectType_GrazingArray                             //掠阵
+	BuffEffectType_GeneralAttackDamageImprove                  //普通攻击伤害提升
+	BuffEffectType_SufferWeaponDamageDeduce                    //受到兵刃伤害减少
+	BuffEffectType_SufferStrategyDamageDeduce                  //受到谋略伤害减少
+	BuffEffectType_IncrForce                                   //增加武力
+	BuffEffectType_IncrIntelligence                            //增加智力
+	BuffEffectType_IncrCommand                                 //增加统率
+	BuffEffectType_IncrSpeed                                   //增加速度
+	BuffEffectType_EmergencyTreatment                          //急救
+	BuffEffectType_Charming                                    //魅惑
+	BuffEffectType_AppeaseArmyAndPeople_Prepare                //抚辑军民「预备」
+	BuffEffectType_ThreeDaysOfSeparation_Prepare               //士别三日「预备」
+	BuffEffectType_SeizeTheSoul                                //夺魂挟魄
+	BuffEffectType_BraveAmbition_Prepare                       //义胆雄心「预备」
+	BuffEffectType_HuangTianDangLi                             //黄天当立
+	BuffEffectType_SuppressChokesAndPreventRefusals_Prepare    //镇扼防拒「预备」
+	BuffEffectType_ClearEyedAndMalicious_Prepare               //鹰视狼顾「预备」
+	BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare     //鹰视狼顾-鹰视「预备」
+	BuffEffectType_UseMartialArtsToConnectWithGods_Prepare     //用武通神[预备]
+	BuffEffectType_KillingMinisterInDream_Prepare              //梦中弑臣[预备]
+	BuffEffectType_BeFullyEquippedFor_Prepare                  //整装待发[预备]
+	BuffEffectType_RideTigerHardToGetOff_Prepare               //骑虎难下[预备]
+	BuffEffectType_OutstandingTalent_Prepare                   //才器过人[预备]
+	BuffEffectType_LowerBannersAndMuffleDrums_Prepare          //偃旗息鼓[预备]
+	BuffEffectType_Humility_Prepare                            //谦让[预备]
+	BuffEffectType_OnesResolveIsUnshaken_Prepare               //矢志不移[预备]
+	BuffEffectType_AbilityToRuleTheCountry_Prepare             //经天纬地[预备]
+	BuffEffectType_AncientEvilComes_Prepare                    //古之恶来[预备]
+	BuffEffectType_CrowdMovesTenThousandCounts_Prepare         //众动万计[预备]
+	BuffEffectType_FireGodHeroStyle_Prepare                    //火神英风[预备]
+	BuffEffectType_Intervene                                   //援护
+	BuffEffectType_ActiveTactic_SkipPrepareRound               //主动战法[跳过准备回合]
+	BuffEffectType_GrazingArray                                //掠阵
+	BuffEffectType_HighWoodenPaddlesConnectedToTheCamp_Prepare //高橹连营[预备]
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_HighWoodenPaddlesConnectedToTheCamp_Prepare:
+		return "高橹连营[预备]"
 	case BuffEffectType_GrazingArray:
 		return "掠阵"
 	case BuffEffectType_TacticsActiveTriggerPrepareImprove:

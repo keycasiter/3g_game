@@ -9,8 +9,9 @@ const (
 
 // 最小值/最大值
 const (
-	INT_MIN = ^INT_MAX
-	INT_MAX = int(^uint(0) >> 1)
+	INT_MIN   = ^INT_MAX
+	INT_MAX   = int(^uint(0) >> 1)
+	INT64_MAX = int64(^uint(0) >> 1)
 )
 
 // 兵力范围

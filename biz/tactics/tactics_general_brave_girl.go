@@ -105,16 +105,20 @@ func (g GeneralBraveGirlTactic) Execute() {
 			})
 
 			//伤害结算
-			if effectParam, ok := util.DeBuffEffectOfTacticGet(triggerGeneral, consts.DebuffEffectType_TigerAnger_Prepare, g.Id()); ok {
+			if effectParams, ok := util.DeBuffEffectOfTacticGet(triggerGeneral, consts.DebuffEffectType_TigerAnger_Prepare, g.Id()); ok {
 				//下1回合受到额外兵刃伤害（伤害率20%，目标每次受到伤害时，伤害率提高30%，最多叠加3次）
 				//若目标在虎嗔效果期间受到3次伤害时，立即结算虎嗔效果并额外造成1回合震慑，并使自己造成的兵刃伤害提升8%（兵刃伤害提升效果可叠加）
-				hlog.CtxInfof(ctx, "伤害次数：%d", effectParam.EffectTimes)
-				if effectParam.EffectTimes == 3 {
+				effectTimes := int64(0)
+				for _, param := range effectParams {
+					effectTimes += param.EffectTimes
+				}
+
+				if effectTimes == 3 {
 					//立即结算
 					//伤害提升计算
 					dmgRate := 0.2
-					if effectParam.EffectTimes > 0 {
-						dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectParam.EffectTimes))
+					if effectTimes > 0 {
+						dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectTimes))
 					}
 					settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 					util.TacticDamage(&util.TacticDamageParam{
@@ -163,8 +167,8 @@ func (g GeneralBraveGirlTactic) Execute() {
 						if settleRound == currentRound+1 {
 							//伤害提升计算
 							dmgRate := 0.2
-							if effectParam.EffectTimes > 0 {
-								dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectParam.EffectTimes))
+							if effectTimes > 0 {
+								dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectTimes))
 							}
 
 							settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)

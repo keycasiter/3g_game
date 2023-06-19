@@ -194,6 +194,24 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.GoldenPillSecretTechnique] = &GoldenPillSecretTechniqueTactic{}
 	//大戟士
 	TacticsHandlerMap[consts.GreatHalberdWarrior] = &GreatHalberdWarriorTactic{}
+	//枪舞如风
+	TacticsHandlerMap[consts.GunDanceLikeTheWind] = &GunDanceLikeTheWindTactic{}
+	//唇枪舌战
+	TacticsHandlerMap[consts.HaveVerbalBattleWithSomebody] = &HaveVerbalBattleWithSomebodyTactic{}
+	//济贫好施
+	TacticsHandlerMap[consts.HelpingThePoorAndGivingGenerously] = &HelpingThePoorAndGivingGenerouslyTactic{}
+	//暗箭难防
+	TacticsHandlerMap[consts.HiddenArrowsAreDifficultToGuardAgainst] = &HiddenArrowsAreDifficultToGuardAgainstTactic{}
+	//潜龙阵
+	TacticsHandlerMap[consts.HiddenDragonArray] = &HiddenDragonArrayTactic{}
+	//暗藏玄机
+	TacticsHandlerMap[consts.HiddenMystery] = &HiddenMysteryTactic{}
+	//诈降
+	TacticsHandlerMap[consts.PretendToSurrender] = &PretendToSurrenderTactic{}
+	//高橹连营
+	TacticsHandlerMap[consts.HighWoodenPaddlesConnectedToTheCamp] = &HighWoodenPaddlesConnectedToTheCampTactic{}
+	//百步穿杨
+	TacticsHandlerMap[consts.HitTheTargetAtEveryShot] = &HitTheTargetAtEveryShotTactic{}
 }
 
 func initTacticsMap() {
@@ -212,6 +230,8 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.FumingSelfReliance] = true
 	PassiveTacticsMap[consts.GainMasteryByStrikingOnlyAfterTheEnemyHasStruck] = true
 	PassiveTacticsMap[consts.GatheringOfTroops] = true
+	PassiveTacticsMap[consts.HelpingThePoorAndGivingGenerously] = true
+	PassiveTacticsMap[consts.HighWoodenPaddlesConnectedToTheCamp] = true
 	//指挥战法
 	CommandTacticsMap[consts.GoldenPillSecretTechnique] = true
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
@@ -236,16 +256,22 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.AbilityToRuleTheCountry] = true
 	CommandTacticsMap[consts.AncientEvilComes] = true
 	CommandTacticsMap[consts.FireGodHeroStyle] = true
+	CommandTacticsMap[consts.PretendToSurrender] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
 	TroopsTacticsMap[consts.DustpanFormation] = true
 	TroopsTacticsMap[consts.FallIntoCamp] = true
+	TroopsTacticsMap[consts.HiddenDragonArray] = true
 	//兵种
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	//主动
+	ActiveTacticsMap[consts.HitTheTargetAtEveryShot] = true
+	ActiveTacticsMap[consts.HiddenArrowsAreDifficultToGuardAgainst] = true
 	ActiveTacticsMap[consts.GeneralBraveGirl] = true
+	ActiveTacticsMap[consts.GunDanceLikeTheWind] = true
+	ActiveTacticsMap[consts.HaveVerbalBattleWithSomebody] = true
 	ActiveTacticsMap[consts.Curettage] = true
 	ActiveTacticsMap[consts.GatherTheCrowdAndStrike] = true
 	ActiveTacticsMap[consts.FlamesFlyingInTheWind] = true
@@ -286,4 +312,5 @@ func initTacticsMap() {
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true
 	AssaultTacticsMap[consts.GhostGodThunderForce] = true
+	AssaultTacticsMap[consts.HiddenMystery] = true
 }

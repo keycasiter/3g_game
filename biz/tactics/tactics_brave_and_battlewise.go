@@ -1,4 +1,4 @@
-package router
+package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"

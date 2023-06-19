@@ -191,10 +191,13 @@ const (
 	BuffEffectType_FireGodHeroStyle_Prepare                 //火神英风[预备]
 	BuffEffectType_Intervene                                //援护
 	BuffEffectType_ActiveTactic_SkipPrepareRound            //主动战法[跳过准备回合]
+	BuffEffectType_GrazingArray                             //掠阵
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_GrazingArray:
+		return "掠阵"
 	case BuffEffectType_TacticsActiveTriggerPrepareImprove:
 		return "主动战法[准备战法]发动率提升"
 	case BuffEffectType_FireGodHeroStyle_Prepare:

@@ -19,4 +19,6 @@ const (
 	ZhuGeLiang
 	//高顺
 	GaoShun
+	//张合
+	ZhangHe
 )

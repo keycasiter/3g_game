@@ -188,11 +188,18 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.GatheringOfTroops] = &GatheringOfTroopsTactic{}
 	//将门虎女
 	TacticsHandlerMap[consts.GeneralBraveGirl] = &GeneralBraveGirlTactic{}
+	//鬼神霆威
+	TacticsHandlerMap[consts.GhostGodThunderForce] = &GhostGodThunderForceTactic{}
+	//金丹秘术
+	TacticsHandlerMap[consts.GoldenPillSecretTechnique] = &GoldenPillSecretTechniqueTactic{}
+	//大戟士
+	TacticsHandlerMap[consts.GreatHalberdWarrior] = &GreatHalberdWarriorTactic{}
 }
 
 func initTacticsMap() {
 	//需要准备回合的战法
 	ActivePrepareTacticsMap[consts.AdvancingSecretlyByUnknownPath] = true
+
 	//被动战法
 	PassiveTacticsMap[consts.ThreeDaysOfSeparation] = true
 	PassiveTacticsMap[consts.Charming] = true
@@ -206,6 +213,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.GainMasteryByStrikingOnlyAfterTheEnemyHasStruck] = true
 	PassiveTacticsMap[consts.GatheringOfTroops] = true
 	//指挥战法
+	CommandTacticsMap[consts.GoldenPillSecretTechnique] = true
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[consts.FocusingOnAllThings] = true
 	CommandTacticsMap[consts.Demoralize] = true
@@ -235,6 +243,7 @@ func initTacticsMap() {
 	TroopsTacticsMap[consts.FallIntoCamp] = true
 	//兵种
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
+	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	//主动
 	ActiveTacticsMap[consts.GeneralBraveGirl] = true
 	ActiveTacticsMap[consts.Curettage] = true
@@ -276,4 +285,5 @@ func initTacticsMap() {
 	//突击
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true
+	AssaultTacticsMap[consts.GhostGodThunderForce] = true
 }

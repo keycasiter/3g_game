@@ -19,50 +19,51 @@
 - 其他
 
 # 🔰 对战生命周期定义
-  BattleAction_Unknow            BattleAction = iota //未知动作
-	BattleAction_BeginAction                           //开始行动
-	BattleAction_EndAction                             //结束行动
-	BattleAction_Attack                                //普通攻击开始
-	BattleAction_AttackEnd                             //普通攻击结束
-	BattleAction_ActiveTactic                          //发动主动战法开始
-	BattleAction_ActiveTacticEnd                       //发动主动战法结束
-	BattleAction_AssaultTactic                         //发动突击战法开始
-	BattleAction_AssaultTacticEnd                      //发动突击战法结束
-	BattleAction_CommandTactic                         //指挥战法攻击开始
-	BattleAction_CommandTacticEnd                      //指挥战法攻击结束
-	BattleAction_PassiveTactic                         //被动战法攻击开始
-	BattleAction_PassiveTacticEnd                      //被动战法攻击结束
-	BattleAction_TroopsTactic                          //阵法战法攻击开始
-	BattleAction_TroopsTacticEnd                       //阵法战法攻击结束
-	BattleAction_ArmTactic                             //兵种战法攻击开始
-	BattleAction_ArmTacticEnd                          //兵种战法攻击借宿
-	BattleAction_WeaponDamage                          //发动兵刃伤害开始
-	BattleAction_WeaponDamageEnd                       //发动兵刃伤害结束
-	BattleAction_StrategyDamage                        //发动谋略伤害开始
-	BattleAction_StrategyDamageEnd                     //发动谋略伤害结束
-	BattleAction_DebuffEffect                          //施加负面效果开始
-	BattleAction_DebuffEffectEnd                       //施加负面效果结束
-	BattleAction_BuffEffect                            //施加正面效果开始
-	BattleAction_BuffEffectEnd                         //施加正面效果结束
 
-	//遭受伤害
-	BattleAction_SufferDamage           //遭受伤害开始
-	BattleAction_SufferDamageEnd        //遭受伤害结束
-	BattleAction_SufferGeneralAttack    //被普通攻击开始
-	BattleAction_SufferGeneralAttackEnd //被普通攻击结束
-	BattleAction_SufferActiveTactic     //被主动战法攻击开始
-	BattleAction_SufferActiveTacticEnd  //被主动战法攻击结束
-	BattleAction_SufferAssaultTactic    //被突击战法攻击开始
-	BattleAction_SufferAssaultTacticEnd //被突击战法攻击结束
-	BattleAction_SufferCommandTactic    //被指挥战法攻击开始
-	BattleAction_SufferCommandTacticEnd //被指挥战法攻击结束
-	BattleAction_SufferArmTactic        //被兵种战法攻击开始
-	BattleAction_SufferArmTacticEnd     //被兵种战法攻击结束
-	BattleAction_SufferTroopsTactic     //被阵法战法攻击开始
-	BattleAction_SufferTroopsTacticEnd  //被阵法战法攻击结束
-	BattleAction_SufferPassiveTactic    //被被动战法攻击开始
-	BattleAction_SufferPassiveTacticEnd //被被动战法攻击结束
-	BattleAction_SufferDebuffEffect     //被施加负面效果开始
-	BattleAction_SufferDebuffEffectEnd  //被施加负面效果结束
-	BattleAction_SufferBuffEffect       //被施加正面效果开始
-	BattleAction_SufferBuffEffectEnd    //被施加正面效果结束
+BattleAction_Unknow            BattleAction = iota //未知动作
+BattleAction_BeginAction                           //开始行动
+BattleAction_EndAction                             //结束行动
+BattleAction_Attack                                //普通攻击开始
+BattleAction_AttackEnd                             //普通攻击结束
+BattleAction_ActiveTactic                          //发动主动战法开始
+BattleAction_ActiveTacticEnd                       //发动主动战法结束
+BattleAction_AssaultTactic                         //发动突击战法开始
+BattleAction_AssaultTacticEnd                      //发动突击战法结束
+BattleAction_CommandTactic                         //指挥战法攻击开始
+BattleAction_CommandTacticEnd                      //指挥战法攻击结束
+BattleAction_PassiveTactic                         //被动战法攻击开始
+BattleAction_PassiveTacticEnd                      //被动战法攻击结束
+BattleAction_TroopsTactic                          //阵法战法攻击开始
+BattleAction_TroopsTacticEnd                       //阵法战法攻击结束
+BattleAction_ArmTactic                             //兵种战法攻击开始
+BattleAction_ArmTacticEnd                          //兵种战法攻击借宿
+BattleAction_WeaponDamage                          //发动兵刃伤害开始
+BattleAction_WeaponDamageEnd                       //发动兵刃伤害结束
+BattleAction_StrategyDamage                        //发动谋略伤害开始
+BattleAction_StrategyDamageEnd                     //发动谋略伤害结束
+BattleAction_DebuffEffect                          //施加负面效果开始
+BattleAction_DebuffEffectEnd                       //施加负面效果结束
+BattleAction_BuffEffect                            //施加正面效果开始
+BattleAction_BuffEffectEnd                         //施加正面效果结束
+
+//遭受伤害
+BattleAction_SufferDamage           //遭受伤害开始
+BattleAction_SufferDamageEnd        //遭受伤害结束
+BattleAction_SufferGeneralAttack    //被普通攻击开始
+BattleAction_SufferGeneralAttackEnd //被普通攻击结束
+BattleAction_SufferActiveTactic     //被主动战法攻击开始
+BattleAction_SufferActiveTacticEnd  //被主动战法攻击结束
+BattleAction_SufferAssaultTactic    //被突击战法攻击开始
+BattleAction_SufferAssaultTacticEnd //被突击战法攻击结束
+BattleAction_SufferCommandTactic    //被指挥战法攻击开始
+BattleAction_SufferCommandTacticEnd //被指挥战法攻击结束
+BattleAction_SufferArmTactic        //被兵种战法攻击开始
+BattleAction_SufferArmTacticEnd     //被兵种战法攻击结束
+BattleAction_SufferTroopsTactic     //被阵法战法攻击开始
+BattleAction_SufferTroopsTacticEnd  //被阵法战法攻击结束
+BattleAction_SufferPassiveTactic    //被被动战法攻击开始
+BattleAction_SufferPassiveTacticEnd //被被动战法攻击结束
+BattleAction_SufferDebuffEffect     //被施加负面效果开始
+BattleAction_SufferDebuffEffectEnd  //被施加负面效果结束
+BattleAction_SufferBuffEffect       //被施加正面效果开始
+BattleAction_SufferBuffEffectEnd    //被施加正面效果结束

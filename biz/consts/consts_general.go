@@ -23,4 +23,6 @@ const (
 	ZhangHe
 	//关兴
 	GuanXing
+	//甘宁
+	GanNing
 )

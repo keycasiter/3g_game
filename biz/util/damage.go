@@ -134,6 +134,17 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 				f(params)
 			}
 		}
+		//遭受兵刃伤害触发器
+		if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferWeaponDamageEnd]; ok {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: sufferGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
 	}()
 
 	ctx := tacticsParams.Ctx
@@ -147,6 +158,17 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 
 	//被伤害效果开始触发器
 	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferGeneralAttack]; ok {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: sufferGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	//兵刃伤害开始触发器
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferWeaponDamage]; ok {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
 				CurrentRound:   tacticsParams.CurrentRound,
@@ -417,8 +439,22 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 				f(params)
 			}
 		}
+		sufferBattleAction := consts.BattleAction_SufferStrategyDamageEnd
+		if damageType == consts.DamageType_Weapon {
+			sufferBattleAction = consts.BattleAction_SufferWeaponDamageEnd
+		}
+		if funcs, okk := sufferGeneral.TacticsTriggerMap[sufferBattleAction]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: attackGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
 		//被伤害效果后触发器
-		//映射转换
+		//战法伤害触发器
 		sufferEffectTriggerMapping := map[consts.TacticsType]consts.BattleAction{
 			consts.TacticsType_Active:        consts.BattleAction_SufferActiveTacticEnd,
 			consts.TacticsType_Passive:       consts.BattleAction_SufferPassiveTacticEnd,
@@ -445,6 +481,11 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		panic("params err")
 	}
 
+	//触发器禁用开关
+	if tacticName == "连环计" && param.IsBanInterLockedEffect {
+		return
+	}
+
 	// 「遭受伤害开始」触发器
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; okk {
 		for _, f := range funcs {
@@ -456,10 +497,33 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 			f(params)
 		}
 	}
-
-	//触发器禁用开关
-	if tacticName == "连环计" && param.IsBanInterLockedEffect {
-		return
+	battleAction := consts.BattleAction_StrategyDamage
+	if damageType == consts.DamageType_Weapon {
+		battleAction = consts.BattleAction_WeaponDamage
+	}
+	if funcs, okk := attackGeneral.TacticsTriggerMap[battleAction]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	sufferBattleAction := consts.BattleAction_SufferStrategyDamage
+	if damageType == consts.DamageType_Weapon {
+		sufferBattleAction = consts.BattleAction_SufferWeaponDamage
+	}
+	if funcs, okk := sufferGeneral.TacticsTriggerMap[sufferBattleAction]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
 	}
 
 	//被伤害效果触发器

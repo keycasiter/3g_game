@@ -48,6 +48,7 @@ const (
 	DebuffEffectType_Capture                                             //捕获（无法行动和造成伤害、禁用指挥和被动战法，进入禁疗状态、无法被友方武将选中，且无法被净化）
 	DebuffEffectType_Break                                               //破坏（携带的装备失效）
 	DebuffEffectType_Provoking                                           //挑拨（强迫目标释放的战法选择自己）
+	DebuffEffectType_BeAttacked                                          //遇袭（行动滞后）
 
 	DebuffEffectType_DecrForce        //降低武力
 	DebuffEffectType_DecrIntelligence //降低智力
@@ -68,6 +69,8 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_BeAttacked:
+		return "遇袭"
 	case DebuffEffectType_TigerAnger:
 		return "虎嗔"
 	case DebuffEffectType_TigerAnger_Prepare:

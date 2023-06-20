@@ -1,13 +1,17 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
-//绝地反击
-//战斗中，自己每次受到兵刃伤害后，武力提升6点，最大叠加10次；第5回合时，根据叠加次数对敌军全体造成兵刃伤害（伤害率120%，每次提高14%伤害率）
+// 绝地反击
+// 战斗中，自己每次受到兵刃伤害后，武力提升6点，最大叠加10次；第5回合时，根据叠加次数对敌军全体造成兵刃伤害（伤害率120%，每次提高14%伤害率）
 type JediCounterattackTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -20,6 +24,50 @@ func (j JediCounterattackTactic) Init(tacticsParams *model.TacticsParams) _inter
 }
 
 func (j JediCounterattackTactic) Prepare() {
+	ctx := j.tacticsParams.Ctx
+	currentGeneral := j.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		j.Name(),
+	)
+	//战斗中，自己每次受到兵刃伤害后，武力提升6点，最大叠加10次；第5回合时，根据叠加次数对敌军全体造成兵刃伤害（伤害率120%，每次提高14%伤害率）
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerGeneral := params.CurrentGeneral
+		triggerRound := params.CurrentRound
+		triggerResp := &vo.TacticsTriggerResult{}
+
+		util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
+			EffectValue:    6,
+			EffectTimes:    1,
+			MaxEffectTimes: 10,
+			FromTactic:     j.Id(),
+			ProduceGeneral: currentGeneral,
+		})
+		if triggerRound == consts.Battle_Round_Fifth {
+			times := int64(0)
+			if effectParams, ok := util.BuffEffectOfTacticGet(triggerGeneral, consts.BuffEffectType_IncrForce, j.Id()); ok {
+				for _, effectParam := range effectParams {
+					times += effectParam.EffectTimes
+				}
+			}
+			dmgRate := 1.2 + (0.14 * cast.ToFloat64(times))
+			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
+			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, j.tacticsParams)
+			for _, enemyGeneral := range enemyGenerals {
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: j.tacticsParams,
+					AttackGeneral: triggerGeneral,
+					SufferGeneral: enemyGeneral,
+					DamageType:    consts.DamageType_Weapon,
+					Damage:        dmg,
+					TacticName:    j.Name(),
+				})
+			}
+		}
+
+		return triggerResp
+	})
 }
 
 func (j JediCounterattackTactic) Id() consts.TacticId {

@@ -348,26 +348,30 @@ const (
 	BattleAction_BuffEffectEnd                         //施加正面效果结束
 
 	//遭受伤害
-	BattleAction_SufferDamage           //遭受伤害开始
-	BattleAction_SufferDamageEnd        //遭受伤害结束
-	BattleAction_SufferGeneralAttack    //被普通攻击开始
-	BattleAction_SufferGeneralAttackEnd //被普通攻击结束
-	BattleAction_SufferActiveTactic     //被主动战法攻击开始
-	BattleAction_SufferActiveTacticEnd  //被主动战法攻击结束
-	BattleAction_SufferAssaultTactic    //被突击战法攻击开始
-	BattleAction_SufferAssaultTacticEnd //被突击战法攻击结束
-	BattleAction_SufferCommandTactic    //被指挥战法攻击开始
-	BattleAction_SufferCommandTacticEnd //被指挥战法攻击结束
-	BattleAction_SufferArmTactic        //被兵种战法攻击开始
-	BattleAction_SufferArmTacticEnd     //被兵种战法攻击结束
-	BattleAction_SufferTroopsTactic     //被阵法战法攻击开始
-	BattleAction_SufferTroopsTacticEnd  //被阵法战法攻击结束
-	BattleAction_SufferPassiveTactic    //被被动战法攻击开始
-	BattleAction_SufferPassiveTacticEnd //被被动战法攻击结束
-	BattleAction_SufferDebuffEffect     //被施加负面效果开始
-	BattleAction_SufferDebuffEffectEnd  //被施加负面效果结束
-	BattleAction_SufferBuffEffect       //被施加正面效果开始
-	BattleAction_SufferBuffEffectEnd    //被施加正面效果结束
+	BattleAction_SufferDamage            //遭受伤害开始
+	BattleAction_SufferDamageEnd         //遭受伤害结束
+	BattleAction_SufferWeaponDamage      //遭受兵刃伤害
+	BattleAction_SufferWeaponDamageEnd   //遭受兵刃伤害结束
+	BattleAction_SufferStrategyDamage    //遭受谋略伤害
+	BattleAction_SufferStrategyDamageEnd //遭受谋略伤害结束
+	BattleAction_SufferGeneralAttack     //被普通攻击开始
+	BattleAction_SufferGeneralAttackEnd  //被普通攻击结束
+	BattleAction_SufferActiveTactic      //被主动战法攻击开始
+	BattleAction_SufferActiveTacticEnd   //被主动战法攻击结束
+	BattleAction_SufferAssaultTactic     //被突击战法攻击开始
+	BattleAction_SufferAssaultTacticEnd  //被突击战法攻击结束
+	BattleAction_SufferCommandTactic     //被指挥战法攻击开始
+	BattleAction_SufferCommandTacticEnd  //被指挥战法攻击结束
+	BattleAction_SufferArmTactic         //被兵种战法攻击开始
+	BattleAction_SufferArmTacticEnd      //被兵种战法攻击结束
+	BattleAction_SufferTroopsTactic      //被阵法战法攻击开始
+	BattleAction_SufferTroopsTacticEnd   //被阵法战法攻击结束
+	BattleAction_SufferPassiveTactic     //被被动战法攻击开始
+	BattleAction_SufferPassiveTacticEnd  //被被动战法攻击结束
+	BattleAction_SufferDebuffEffect      //被施加负面效果开始
+	BattleAction_SufferDebuffEffectEnd   //被施加负面效果结束
+	BattleAction_SufferBuffEffect        //被施加正面效果开始
+	BattleAction_SufferBuffEffectEnd     //被施加正面效果结束
 )
 
 func (action BattleAction) String() string {

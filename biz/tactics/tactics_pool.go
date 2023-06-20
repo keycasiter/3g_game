@@ -222,8 +222,20 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.HundredStrategiesAndManyStrategies] = &HundredStrategiesAndManyStrategiesTactic{}
 	//一骑当千
 	TacticsHandlerMap[consts.IkkiTousen] = &IkkiTousenTactic{}
-	//Impregnable
+	//固若金汤
 	TacticsHandlerMap[consts.Impregnable] = &ImpregnableTactic{}
+	//婴城自守
+	TacticsHandlerMap[consts.InfantryCitySelfDefense] = &InfantryCitySelfDefenseTactic{}
+	//智计
+	TacticsHandlerMap[consts.IntelligentStrategy] = &IntelligentStrategyTactic{}
+	//威谋靡亢
+	TacticsHandlerMap[consts.IntenseAndPowerful] = &IntenseAndPowerfulTactic{}
+	//铁骑驱驰
+	TacticsHandlerMap[consts.IronHorseDrive] = &IronHorseDriveTactic{}
+	//绝地反击
+	TacticsHandlerMap[consts.JediCounterattack] = &JediCounterattackTactic{}
+	//锦帆军
+	TacticsHandlerMap[consts.JinFanArmy] = &JinFanArmyTactic{}
 }
 
 func initTacticsMap() {
@@ -244,7 +256,9 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.GatheringOfTroops] = true
 	PassiveTacticsMap[consts.HelpingThePoorAndGivingGenerously] = true
 	PassiveTacticsMap[consts.HighWoodenPaddlesConnectedToTheCamp] = true
+	PassiveTacticsMap[consts.JediCounterattack] = true
 	//指挥战法
+	CommandTacticsMap[consts.IronHorseDrive] = true
 	CommandTacticsMap[consts.GoldenPillSecretTechnique] = true
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[consts.FocusingOnAllThings] = true
@@ -279,7 +293,11 @@ func initTacticsMap() {
 	//兵种
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
+	ArmTacticsMap[consts.JinFanArmy] = true
 	//主动
+	ActiveTacticsMap[consts.IntenseAndPowerful] = true
+	ActiveTacticsMap[consts.IntelligentStrategy] = true
+	ActiveTacticsMap[consts.InfantryCitySelfDefense] = true
 	ActiveTacticsMap[consts.Impregnable] = true
 	ActiveTacticsMap[consts.HitTheTargetAtEveryShot] = true
 	ActiveTacticsMap[consts.HuJiaLingeringSound] = true

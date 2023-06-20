@@ -236,6 +236,12 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.JediCounterattack] = &JediCounterattackTactic{}
 	//锦帆军
 	TacticsHandlerMap[consts.JinFanArmy] = &JinFanArmyTactic{}
+	//引弦力战
+	TacticsHandlerMap[consts.LeadStringBattle] = &LeadStringBattleTactic{}
+	//纵兵劫掠
+	TacticsHandlerMap[consts.LeavingSoldiersToPlunder] = &LeavingSoldiersToPlunderTactic{}
+	//顾盼生姿
+	TacticsHandlerMap[consts.LookAroundCharmingly] = &LookAroundCharminglyTactic{}
 }
 
 func initTacticsMap() {
@@ -243,6 +249,7 @@ func initTacticsMap() {
 	ActivePrepareTacticsMap[consts.AdvancingSecretlyByUnknownPath] = true
 
 	//被动战法
+	PassiveTacticsMap[consts.LeadStringBattle] = true
 	PassiveTacticsMap[consts.ThreeDaysOfSeparation] = true
 	PassiveTacticsMap[consts.Charming] = true
 	PassiveTacticsMap[consts.TaipingLaw] = true
@@ -295,7 +302,9 @@ func initTacticsMap() {
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	ArmTacticsMap[consts.JinFanArmy] = true
 	//主动
+	ActiveTacticsMap[consts.LookAroundCharmingly] = true
 	ActiveTacticsMap[consts.IntenseAndPowerful] = true
+	ActiveTacticsMap[consts.LeavingSoldiersToPlunder] = true
 	ActiveTacticsMap[consts.IntelligentStrategy] = true
 	ActiveTacticsMap[consts.InfantryCitySelfDefense] = true
 	ActiveTacticsMap[consts.Impregnable] = true

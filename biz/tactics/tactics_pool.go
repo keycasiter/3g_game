@@ -212,6 +212,18 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.HighWoodenPaddlesConnectedToTheCamp] = &HighWoodenPaddlesConnectedToTheCampTactic{}
 	//百步穿杨
 	TacticsHandlerMap[consts.HitTheTargetAtEveryShot] = &HitTheTargetAtEveryShotTactic{}
+	//持军毅重
+	TacticsHandlerMap[consts.HoldTheArmyWithDeterminationAndDetermination] = &HoldTheArmyWithDeterminationAndDeterminationTactic{}
+	//胡笳余音
+	TacticsHandlerMap[consts.HuJiaLingeringSound] = &HuJiaLingeringSoundTactic{}
+	//百骑劫营
+	TacticsHandlerMap[consts.HundredCavalryRobberyBattalions] = &HundredCavalryRobberyBattalionsTactic{}
+	//百计多谋
+	TacticsHandlerMap[consts.HundredStrategiesAndManyStrategies] = &HundredStrategiesAndManyStrategiesTactic{}
+	//一骑当千
+	TacticsHandlerMap[consts.IkkiTousen] = &IkkiTousenTactic{}
+	//Impregnable
+	TacticsHandlerMap[consts.Impregnable] = &ImpregnableTactic{}
 }
 
 func initTacticsMap() {
@@ -257,6 +269,7 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.AncientEvilComes] = true
 	CommandTacticsMap[consts.FireGodHeroStyle] = true
 	CommandTacticsMap[consts.PretendToSurrender] = true
+	CommandTacticsMap[consts.HundredStrategiesAndManyStrategies] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -267,7 +280,10 @@ func initTacticsMap() {
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	//主动
+	ActiveTacticsMap[consts.Impregnable] = true
 	ActiveTacticsMap[consts.HitTheTargetAtEveryShot] = true
+	ActiveTacticsMap[consts.HuJiaLingeringSound] = true
+	ActiveTacticsMap[consts.HoldTheArmyWithDeterminationAndDetermination] = true
 	ActiveTacticsMap[consts.HiddenArrowsAreDifficultToGuardAgainst] = true
 	ActiveTacticsMap[consts.GeneralBraveGirl] = true
 	ActiveTacticsMap[consts.GunDanceLikeTheWind] = true
@@ -313,4 +329,5 @@ func initTacticsMap() {
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true
 	AssaultTacticsMap[consts.GhostGodThunderForce] = true
 	AssaultTacticsMap[consts.HiddenMystery] = true
+	AssaultTacticsMap[consts.HundredCavalryRobberyBattalions] = true
 }

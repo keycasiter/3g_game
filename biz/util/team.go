@@ -67,6 +67,23 @@ func GetEnemyGeneralArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral 
 	return enemyGeneralArr
 }
 
+// 找到敌军一名男性武将
+func GetEnemyOneMaleGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(tacticsParams)
+
+	maleGenerals := make([]*vo.BattleGeneral, 0)
+	for _, enemyGeneral := range enemyGenerals {
+		if enemyGeneral.BaseInfo.Gender == consts.Gender_Male {
+			maleGenerals = append(maleGenerals, enemyGeneral)
+		}
+	}
+	if len(maleGenerals) == 0 {
+		return nil
+	}
+	hitIdx := GenerateHitOneIdx(len(maleGenerals))
+	return maleGenerals[hitIdx]
+}
+
 // 找到当前执行战法武将的队伍主将
 func GetPairMasterGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	pairGeneralArr := GetPairGeneralArr(tacticsParams)

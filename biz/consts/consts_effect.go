@@ -41,6 +41,7 @@ const (
 	DebuffEffectType_LaunchWeaponDamageDeduce                            //造成兵刃伤害减少
 	DebuffEffectType_LaunchStrategyDamageDeduce                          //造成谋略伤害减少
 	DebuffEffectType_CanNotGeneralAttack                                 //无法普通攻击
+	DebuffEffectType_CanNotActiveTactic                                  //无法发动主动战法
 	DebuffEffectType_CancelWeapon                                        //缴械（无法普通攻击）
 	DebuffEffectType_Taunt                                               //嘲讽（强制攻击目标）
 	DebuffEffectType_ProhibitionTreatment                                //禁疗（无法恢复兵力）
@@ -69,6 +70,8 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_CanNotActiveTactic:
+		return "无法发动主动战法"
 	case DebuffEffectType_BeAttacked:
 		return "遇袭"
 	case DebuffEffectType_TigerAnger:
@@ -159,6 +162,7 @@ const (
 	BuffEffectType_FightHard                                         //酣斗
 	BuffEffectType_TacticsActiveTriggerImprove                       //主动战法发动率提升
 	BuffEffectType_TacticsActiveTriggerPrepareImprove                //主动战法[准备战法]发动率提升
+	BuffEffectType_TacticsActiveTriggerNoSelfImprove                 //主动战法[非自带]发动率提升
 	BuffEffectType_TacticsPassiveTriggerImprove                      //被动战法发动率提升
 	BuffEffectType_LaunchWeaponDamageImprove                         //造成兵刃伤害增加
 	BuffEffectType_LaunchStrategyDamageImprove                       //造成谋略伤害增加
@@ -200,6 +204,8 @@ const (
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_TacticsActiveTriggerNoSelfImprove:
+		return "主动战法[非自带]发动率提升"
 	case BuffEffectType_HighWoodenPaddlesConnectedToTheCamp_Prepare:
 		return "高橹连营[预备]"
 	case BuffEffectType_GrazingArray:

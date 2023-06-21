@@ -1133,6 +1133,16 @@ func IsCanBeginAction(ctx context.Context, general *vo.BattleGeneral) bool {
 
 // 是否可以发动主动战法
 func IsCanActiveTactic(ctx context.Context, general *vo.BattleGeneral) bool {
+	//无法发动主动战法
+	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_CanNotActiveTactic]; ok {
+		if len(effectParams) > 0 && GenerateRate(effectParams[0].EffectRate) {
+			hlog.CtxInfof(ctx, "武将[%s]处于「%v」状态，无法发动主动战法",
+				general.BaseInfo.Name,
+				consts.DebuffEffectType_CanNotActiveTactic,
+			)
+			return false
+		}
+	}
 	//计穷
 	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_NoStrategy]; ok {
 		if len(effectParams) > 0 && GenerateRate(effectParams[0].EffectRate) {

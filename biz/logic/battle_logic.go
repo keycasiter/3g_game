@@ -485,7 +485,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 				//发动率判断
 				triggerRate := tacticHandler.GetTriggerRate()
-				//发动率提升
+				//发动率提升[主动战法]
 				if effectParams, okk := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove); okk {
 					for _, param := range effectParams {
 						triggerRate += param.TriggerRate
@@ -496,7 +496,18 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 						)
 					}
 				}
-				//准备战法发动率提升
+				//发动率提升[非自带]
+				if effectParams, okk := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_TacticsActiveTriggerNoSelfImprove); okk {
+					for _, param := range effectParams {
+						triggerRate += param.TriggerRate
+						hlog.CtxInfof(runCtx.Ctx, "[%s]由于【%s】的影响，主动战法[非自带]发动率提升%.2f%%",
+							currentGeneral.BaseInfo.Name,
+							param.FromTactic,
+							param.TriggerRate*100,
+						)
+					}
+				}
+				//发动率提升[准备战法]
 				if tactics.ActivePrepareTacticsMap[tactic.Id] {
 					if effectParams, okk := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_TacticsActiveTriggerPrepareImprove); okk {
 						for _, param := range effectParams {

@@ -57,6 +57,10 @@ type BattleGeneral struct {
 	SoldierNum int64
 	//已损失兵力
 	LossSoldierNum int64
+	//已普通攻击次数
+	GeneralAttackNum int64
+	//受到普攻次数
+	SufferGeneralAttackNum int64
 	//被谁援护
 	HelpByGeneral *BattleGeneral
 	//被谁嘲讽

@@ -628,6 +628,18 @@ func GetGeneralHighestBetweenForceOrIntelligence(general *vo.BattleGeneral) (con
 	return consts.AbilityAttr_Intelligence, general.BaseInfo.AbilityAttr.IntelligenceBase
 }
 
+// 获取敌军智力最高的武将
+func GetEnemyGeneralWhoIsHighestIntelligence(params *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(params)
+	highestGeneral := enemyGenerals[0]
+	for _, general := range enemyGenerals {
+		if general.BaseInfo.AbilityAttr.IntelligenceBase > highestGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
+			highestGeneral = general
+		}
+	}
+	return highestGeneral
+}
+
 // 获取我军武力最高的武将
 func GetPairGeneralWhoIsHighestForce(params *model.TacticsParams) *vo.BattleGeneral {
 	pairGenerals := GetPairGeneralArr(params)
@@ -722,4 +734,14 @@ func CalculateAttrDiff(a float64, b float64) float64 {
 		return a
 	}
 	return 0
+}
+
+// 是否包含武将标签
+func IsContainsGeneralTag(generalTags []consts.GeneralTag, generalTag consts.GeneralTag) bool {
+	for _, tag := range generalTags {
+		if tag == generalTag {
+			return true
+		}
+	}
+	return false
 }

@@ -5,16 +5,16 @@ import "github.com/keycasiter/3g_game/biz/consts"
 // 武将资料
 type MetadataGeneral struct {
 	//mongodb 持久化字段
-	Id          int64         `bson:"_id"`
-	Name        string        `bson:"name"`
-	Gender      consts.Gender `bson:"gender"`
-	Group       consts.Group  `bson:"group"`
-	GeneralTag  []int         `bson:"general_tag"`
-	AvatarUri   string        `bson:"avatar_uri"`
-	AbilityAttr *AbilityAttr  `bson:"ability_attr"`
-	ArmsAttr    *ArmsAttr     `bson:"arms_attr"`
-	Tactics     *Tactics      `bson:"tactics"`
-	Biographies *Biographies  `bson:"biographies"`
+	Id          int64               `bson:"_id"`
+	Name        string              `bson:"name"`
+	Gender      consts.Gender       `bson:"gender"`
+	Group       consts.Group        `bson:"group"`
+	GeneralTag  []consts.GeneralTag `bson:"general_tag"`
+	AvatarUri   string              `bson:"avatar_uri"`
+	AbilityAttr *AbilityAttr        `bson:"ability_attr"`
+	ArmsAttr    *ArmsAttr           `bson:"arms_attr"`
+	Tactics     *Tactics            `bson:"tactics"`
+	Biographies *Biographies        `bson:"biographies"`
 
 	//业务字段
 	GeneralBattleType consts.GeneralBattleType

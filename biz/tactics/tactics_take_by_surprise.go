@@ -17,6 +17,7 @@ type TakeBySurpriseTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
 	isTriggerPrepare bool
+	isTriggered      bool
 }
 
 func (t TakeBySurpriseTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
@@ -78,11 +79,20 @@ func (t TakeBySurpriseTactic) Execute() {
 		triggerRound := params.CurrentRound
 		triggerGeneral := params.CurrentGeneral
 
-		if currentRound+1 == triggerRound {
-			//准备回合释放
+		//准备回合释放
+		if currentRound+2 == triggerRound {
 			t.isTriggerPrepare = false
+		}
+
+		if currentRound+1 == triggerRound {
+			if t.isTriggered {
+				return triggerResp
+			} else {
+				t.isTriggered = true
+			}
+
 			hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
-				triggerGeneral.BaseInfo.Name,
+				currentGeneral.BaseInfo.Name,
 				t.Name(),
 			)
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, t.tacticsParams)

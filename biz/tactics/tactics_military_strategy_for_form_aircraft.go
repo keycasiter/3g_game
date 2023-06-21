@@ -1,13 +1,16 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
-//形机军略
-//对敌军单体造成一次兵刃攻击（伤害率210%）及谋略攻击（伤害率180%，受智力影响）
+// 形机军略
+// 对敌军单体造成一次兵刃攻击（伤害率210%）及谋略攻击（伤害率180%，受智力影响）
 type MilitaryStrategyForFormAircraftTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -57,6 +60,34 @@ func (m MilitaryStrategyForFormAircraftTactic) SupportArmTypes() []consts.ArmTyp
 }
 
 func (m MilitaryStrategyForFormAircraftTactic) Execute() {
+	ctx := m.tacticsParams.Ctx
+	currentGeneral := m.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		m.Name(),
+	)
+
+	//对敌军单体造成一次兵刃攻击（伤害率210%）及谋略攻击（伤害率180%，受智力影响）
+	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, m.tacticsParams)
+	weaponDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.1)
+	util.TacticDamage(&util.TacticDamageParam{
+		TacticsParams: m.tacticsParams,
+		AttackGeneral: currentGeneral,
+		SufferGeneral: enemyGeneral,
+		DamageType:    consts.DamageType_Weapon,
+		Damage:        weaponDmg,
+		TacticName:    m.Name(),
+	})
+	strategyDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
+	util.TacticDamage(&util.TacticDamageParam{
+		TacticsParams: m.tacticsParams,
+		AttackGeneral: currentGeneral,
+		SufferGeneral: enemyGeneral,
+		DamageType:    consts.DamageType_Strategy,
+		Damage:        strategyDmg,
+		TacticName:    m.Name(),
+	})
 }
 
 func (m MilitaryStrategyForFormAircraftTactic) IsTriggerPrepare() bool {

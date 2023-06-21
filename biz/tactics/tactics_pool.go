@@ -242,6 +242,24 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.LeavingSoldiersToPlunder] = &LeavingSoldiersToPlunderTactic{}
 	//顾盼生姿
 	TacticsHandlerMap[consts.LookAroundCharmingly] = &LookAroundCharminglyTactic{}
+	//忠勇义烈
+	TacticsHandlerMap[consts.LoyalAndBraveMartyrs] = &LoyalAndBraveMartyrsTactic{}
+	//诱敌深入
+	TacticsHandlerMap[consts.LureTheEnemyInDeep] = &LureTheEnemyInDeepTactic{}
+	//竭力佐谋
+	TacticsHandlerMap[consts.MakeEveryEffortToAssistInPlanning] = &MakeEveryEffortToAssistInPlanningTactic{}
+	//声东击西
+	TacticsHandlerMap[consts.MakeFeintToTheEastButAttackInTheWest] = &MakeFeintToTheEastButAttackInTheWestTactic{}
+	//形机军略
+	TacticsHandlerMap[consts.MilitaryStrategyForFormAircraft] = &MilitaryStrategyForFormAircraftTactic{}
+	//裸衣血战
+	TacticsHandlerMap[consts.NakedBloodBattle] = &NakedBloodBattleTactic{}
+	//机略纵横
+	TacticsHandlerMap[consts.MachineStrategyVerticalAndHorizontal] = &MachineStrategyVerticalAndHorizontalTactic{}
+	//长驱直入
+	TacticsHandlerMap[consts.MarchInto] = &MarchIntoTactic{}
+	//南蛮渠魁
+	TacticsHandlerMap[consts.NanManQuKui] = &NanManQuKuiTactic{}
 }
 
 func initTacticsMap() {
@@ -264,6 +282,9 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.HelpingThePoorAndGivingGenerously] = true
 	PassiveTacticsMap[consts.HighWoodenPaddlesConnectedToTheCamp] = true
 	PassiveTacticsMap[consts.JediCounterattack] = true
+	PassiveTacticsMap[consts.LoyalAndBraveMartyrs] = true
+	PassiveTacticsMap[consts.NakedBloodBattle] = true
+	PassiveTacticsMap[consts.MarchInto] = true
 	//指挥战法
 	CommandTacticsMap[consts.IronHorseDrive] = true
 	CommandTacticsMap[consts.GoldenPillSecretTechnique] = true
@@ -291,6 +312,7 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.FireGodHeroStyle] = true
 	CommandTacticsMap[consts.PretendToSurrender] = true
 	CommandTacticsMap[consts.HundredStrategiesAndManyStrategies] = true
+	CommandTacticsMap[consts.NanManQuKui] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -302,6 +324,11 @@ func initTacticsMap() {
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	ArmTacticsMap[consts.JinFanArmy] = true
 	//主动
+	ActiveTacticsMap[consts.MachineStrategyVerticalAndHorizontal] = true
+	ActiveTacticsMap[consts.MilitaryStrategyForFormAircraft] = true
+	ActiveTacticsMap[consts.MakeEveryEffortToAssistInPlanning] = true
+	ActiveTacticsMap[consts.MakeFeintToTheEastButAttackInTheWest] = true
+	ActiveTacticsMap[consts.LureTheEnemyInDeep] = true
 	ActiveTacticsMap[consts.LookAroundCharmingly] = true
 	ActiveTacticsMap[consts.IntenseAndPowerful] = true
 	ActiveTacticsMap[consts.LeavingSoldiersToPlunder] = true

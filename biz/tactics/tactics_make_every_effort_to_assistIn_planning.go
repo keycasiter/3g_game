@@ -1,13 +1,17 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
-//竭力佐谋
-//使敌军智力最高单体智力降低20%，并有70%概率使自身本回合非自带主动战法发动率提高100%，持续1回合
+// 竭力佐谋
+// 使敌军智力最高单体智力降低20%，并有70%概率使自身本回合非自带主动战法发动率提高100%，持续1回合
 type MakeEveryEffortToAssistInPlanningTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -58,7 +62,58 @@ func (m MakeEveryEffortToAssistInPlanningTactic) SupportArmTypes() []consts.ArmT
 }
 
 func (m MakeEveryEffortToAssistInPlanningTactic) Execute() {
+	ctx := m.tacticsParams.Ctx
+	currentGeneral := m.tacticsParams.CurrentGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		m.Name(),
+	)
+	//使敌军智力最高单体智力降低20%，并有70%概率使自身本回合非自带主动战法发动率提高100%，持续1回合
+	enemyGeneral := util.GetEnemyGeneralWhoIsHighestIntelligence(m.tacticsParams)
+	//降低智力
+	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrIntelligence, &vo.EffectHolderParams{
+		EffectValue:    cast.ToInt64(enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.2),
+		EffectRound:    1,
+		FromTactic:     m.Id(),
+		ProduceGeneral: currentGeneral,
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.DebuffEffectType_DecrIntelligence,
+				TacticId:   m.Id(),
+			})
+			return revokeResp
+		})
+	}
+	//并有70%概率使自身本回合非自带主动战法发动率提高100%，持续1回合
+	if util.GenerateRate(0.7) {
+		if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_TacticsActiveTriggerNoSelfImprove, &vo.EffectHolderParams{
+			TriggerRate:    1.0,
+			EffectRound:    1,
+			FromTactic:     m.Id(),
+			ProduceGeneral: currentGeneral,
+		}).IsSuccess {
+			util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+
+				util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    revokeGeneral,
+					EffectType: consts.BuffEffectType_TacticsActiveTriggerNoSelfImprove,
+					TacticId:   m.Id(),
+				})
+
+				return revokeResp
+			})
+		}
+	}
 }
 
 func (m MakeEveryEffortToAssistInPlanningTactic) IsTriggerPrepare() bool {

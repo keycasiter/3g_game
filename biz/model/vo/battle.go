@@ -98,6 +98,12 @@ type TacticsTriggerParams struct {
 	CurrentDamage int64
 	//当前执行战法
 	CurrentTactic interface{}
+	//施加的负面效果
+	DebuffEffect consts.DebuffEffectType
+	//施加的正面效果
+	BuffEffect consts.BuffEffectType
+	//影响回合
+	EffectRound consts.BattleRound
 }
 
 // 战法触发结果

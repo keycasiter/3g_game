@@ -200,10 +200,19 @@ const (
 	BuffEffectType_ActiveTactic_SkipPrepareRound               //主动战法[跳过准备回合]
 	BuffEffectType_GrazingArray                                //掠阵
 	BuffEffectType_HighWoodenPaddlesConnectedToTheCamp_Prepare //高橹连营[预备]
+	BuffEffectType_ImmunityChaos                               //免疫混乱
+	BuffEffectType_AccumulatePower                             //蓄威
+	BuffEffectType_Alert                                       //警戒
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_Alert:
+		return "警戒"
+	case BuffEffectType_AccumulatePower:
+		return "蓄威"
+	case BuffEffectType_ImmunityChaos:
+		return "免疫混乱"
 	case BuffEffectType_TacticsActiveTriggerNoSelfImprove:
 		return "主动战法[非自带]发动率提升"
 	case BuffEffectType_HighWoodenPaddlesConnectedToTheCamp_Prepare:

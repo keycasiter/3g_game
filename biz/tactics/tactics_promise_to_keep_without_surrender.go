@@ -6,6 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+// 誓守无降
 type PromiseToKeepWithoutSurrenderTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

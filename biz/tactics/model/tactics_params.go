@@ -25,6 +25,8 @@ type TacticsParams struct {
 	CurrentGeneral *vo.BattleGeneral
 	// 当前被攻击武将
 	CurrentSufferGeneral *vo.BattleGeneral
+	// 当前伤害量
+	CurrentDamageNum int64
 	// 当前对战执行动作
 	CurrentBattleAction consts.BattleAction
 

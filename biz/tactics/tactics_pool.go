@@ -260,6 +260,22 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.MarchInto] = &MarchIntoTactic{}
 	//南蛮渠魁
 	TacticsHandlerMap[consts.NanManQuKui] = &NanManQuKuiTactic{}
+	//兴云布雨
+	TacticsHandlerMap[consts.MakeCloudAndRain] = &MakeCloudAndRainTactic{}
+	//青囊
+	TacticsHandlerMap[consts.MedicalPractice] = &MedicalPracticeTactic{}
+	//死战不退
+	TacticsHandlerMap[consts.NeverRetreatFromDeadBattle] = &NeverRetreatFromDeadBattleTactic{}
+	//机鉴先识
+	TacticsHandlerMap[consts.OpportunityIdentificationFirst] = &OpportunityIdentificationFirstTactic{}
+	//暴敛四方
+	TacticsHandlerMap[consts.OverwhelmingAllDirections] = &OverwhelmingAllDirectionsTactic{}
+	//勇冠三军
+	TacticsHandlerMap[consts.PeerlessOrMatchlessBraveryOrValour] = &PeerlessOrMatchlessBraveryOrValourTactic{}
+	//计定谋决
+	TacticsHandlerMap[consts.PlanAndDecide] = &PlanAndDecideTactic{}
+	//鸩毒
+	TacticsHandlerMap[consts.PoisonedWine] = &PoisonedWineTactic{}
 }
 
 func initTacticsMap() {
@@ -268,6 +284,8 @@ func initTacticsMap() {
 
 	//被动战法
 	PassiveTacticsMap[consts.LeadStringBattle] = true
+	PassiveTacticsMap[consts.PlanAndDecide] = true
+	PassiveTacticsMap[consts.NeverRetreatFromDeadBattle] = true
 	PassiveTacticsMap[consts.ThreeDaysOfSeparation] = true
 	PassiveTacticsMap[consts.Charming] = true
 	PassiveTacticsMap[consts.TaipingLaw] = true
@@ -287,6 +305,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.MarchInto] = true
 	//指挥战法
 	CommandTacticsMap[consts.IronHorseDrive] = true
+	CommandTacticsMap[consts.OpportunityIdentificationFirst] = true
 	CommandTacticsMap[consts.GoldenPillSecretTechnique] = true
 	CommandTacticsMap[consts.OverwhelmingTheEnemyWithVigour] = true
 	CommandTacticsMap[consts.FocusingOnAllThings] = true
@@ -313,6 +332,8 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.PretendToSurrender] = true
 	CommandTacticsMap[consts.HundredStrategiesAndManyStrategies] = true
 	CommandTacticsMap[consts.NanManQuKui] = true
+	CommandTacticsMap[consts.MakeCloudAndRain] = true
+	CommandTacticsMap[consts.MedicalPractice] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -324,6 +345,8 @@ func initTacticsMap() {
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	ArmTacticsMap[consts.JinFanArmy] = true
 	//主动
+	ActiveTacticsMap[consts.PoisonedWine] = true
+	ActiveTacticsMap[consts.OverwhelmingAllDirections] = true
 	ActiveTacticsMap[consts.MachineStrategyVerticalAndHorizontal] = true
 	ActiveTacticsMap[consts.MilitaryStrategyForFormAircraft] = true
 	ActiveTacticsMap[consts.MakeEveryEffortToAssistInPlanning] = true
@@ -379,6 +402,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.FrustrationAndAngerAttack] = true
 
 	//突击
+	AssaultTacticsMap[consts.PeerlessOrMatchlessBraveryOrValour] = true
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
 	AssaultTacticsMap[consts.BendTheBowAndDrinkTheFeathers] = true
 	AssaultTacticsMap[consts.GhostGodThunderForce] = true

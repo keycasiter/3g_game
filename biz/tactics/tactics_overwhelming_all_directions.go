@@ -1,25 +1,30 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 暴敛四方
+// 对敌军单体发动2次兵刃伤害（伤害率102%），如果目标处于震慑状态，对其造成禁疗效果，持续2回合，2次攻击目标独立判定
+// 主动 45%
 type OverwhelmingAllDirectionsTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
 }
 
 func (o OverwhelmingAllDirectionsTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	//TODO implement me
-	panic("implement me")
+	o.tacticsParams = tacticsParams
+	o.triggerRate = 0.45
+	return o
 }
 
 func (o OverwhelmingAllDirectionsTactic) Prepare() {
-	//TODO implement me
-	panic("implement me")
 }
 
 func (o OverwhelmingAllDirectionsTactic) Id() consts.TacticId {
@@ -31,36 +36,61 @@ func (o OverwhelmingAllDirectionsTactic) Name() string {
 }
 
 func (o OverwhelmingAllDirectionsTactic) TacticsSource() consts.TacticsSource {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsSource_Inherit
 }
 
 func (o OverwhelmingAllDirectionsTactic) GetTriggerRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return o.triggerRate
 }
 
 func (o OverwhelmingAllDirectionsTactic) SetTriggerRate(rate float64) {
-	//TODO implement me
-	panic("implement me")
+	o.triggerRate = rate
 }
 
 func (o OverwhelmingAllDirectionsTactic) TacticsType() consts.TacticsType {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsType_Active
 }
 
 func (o OverwhelmingAllDirectionsTactic) SupportArmTypes() []consts.ArmType {
-	//TODO implement me
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (o OverwhelmingAllDirectionsTactic) Execute() {
-	//TODO implement me
-	panic("implement me")
+	ctx := o.tacticsParams.Ctx
+	currentGeneral := o.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		o.Name(),
+	)
+	// 对敌军单体发动2次兵刃伤害（伤害率102%），如果目标处于震慑状态，对其造成禁疗效果，持续2回合，2次攻击目标独立判定
+	for i := 0; i < 2; i++ {
+		enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, o.tacticsParams)
+		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.02)
+		util.TacticDamage(&util.TacticDamageParam{
+			TacticsParams: o.tacticsParams,
+			AttackGeneral: currentGeneral,
+			SufferGeneral: enemyGeneral,
+			DamageType:    consts.DamageType_Weapon,
+			Damage:        dmg,
+			TacticName:    o.Name(),
+		})
+		if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Awe) {
+			util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_ProhibitionTreatment, &vo.EffectHolderParams{
+				EffectRound:    2,
+				FromTactic:     o.Id(),
+				ProduceGeneral: currentGeneral,
+			})
+		}
+	}
 }
 
 func (o OverwhelmingAllDirectionsTactic) IsTriggerPrepare() bool {
-	//TODO implement me
-	panic("implement me")
+	return false
 }

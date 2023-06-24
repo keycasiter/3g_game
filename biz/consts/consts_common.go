@@ -348,6 +348,7 @@ const (
 	BattleAction_DebuffEffectEnd                       //施加负面效果结束
 	BattleAction_BuffEffect                            //施加正面效果开始
 	BattleAction_BuffEffectEnd                         //施加正面效果结束
+	BattleAction_Resume                                //恢复兵力
 
 	//遭受伤害
 	BattleAction_SufferTactic            //遭受战法攻击开始
@@ -376,10 +377,15 @@ const (
 	BattleAction_SufferDebuffEffectEnd   //被施加负面效果结束
 	BattleAction_SufferBuffEffect        //被施加正面效果开始
 	BattleAction_SufferBuffEffectEnd     //被施加正面效果结束
+	BattleAction_SufferResume            //被恢复兵力
 )
 
 func (action BattleAction) String() string {
 	switch action {
+	case BattleAction_SufferResume:
+		return "被恢复兵力"
+	case BattleAction_Resume:
+		return "恢复兵力"
 	case BattleAction_SufferTactic:
 		return "遭受战法攻击开始"
 	case BattleAction_SufferTacticEnd:

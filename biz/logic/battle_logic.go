@@ -597,8 +597,6 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 				//发起攻击
 				util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
-				//普攻计数+
-				currentGeneral.ExecuteGeneralAttckNum++
 
 				//群攻效果
 				effectParams, ok := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_GroupAttack)

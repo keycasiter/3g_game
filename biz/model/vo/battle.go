@@ -57,10 +57,6 @@ type BattleGeneral struct {
 	SoldierNum int64
 	//已损失兵力
 	LossSoldierNum int64
-	//已普通攻击次数
-	GeneralAttackNum int64
-	//受到普攻次数
-	SufferGeneralAttackNum int64
 	//被谁援护
 	HelpByGeneral *BattleGeneral
 	//被谁嘲讽
@@ -82,7 +78,17 @@ type BattleGeneral struct {
 	TacticFrozenMap map[consts.TacticId]bool
 
 	//普通攻击次数
-	ExecuteGeneralAttckNum int64
+	ExecuteGeneralAttackNum int64
+	//被普通攻击次数
+	SufferExecuteGeneralAttackNum int64
+	//兵刃攻击次数
+	ExecuteWeaponAttackNum int64
+	//谋略攻击次数
+	ExecuteStrategyAttackNum int64
+	//被兵刃攻击次数
+	SufferExecuteWeaponAttackNum int64
+	//被谋略攻击次数
+	SufferExecuteStrategyAttackNum int64
 
 	//*****战法触发器都是按条件（非回合）会触发的******
 	//战法触发器 map<触发动作,func(触发函数参数)>
@@ -97,6 +103,8 @@ type TacticsTriggerParams struct {
 	CurrentGeneral *BattleGeneral
 	//当前发起攻击的武将
 	AttackGeneral *BattleGeneral
+	//当前发起恢复的武将
+	ResumeGeneral *BattleGeneral
 	//当前造成伤害
 	CurrentDamage int64
 	//当前执行战法

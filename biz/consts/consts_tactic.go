@@ -276,7 +276,7 @@ const (
 	//声东击西
 	MakeFeintToTheEastButAttackInTheWest
 	//风声鹤唳
-	TheSoundOfTheWindAndTheCryOfTheStork
+	SoundOfTheWindAndTheCryOfTheStork
 	//天降火雨
 	RainOfFireFromTheSky
 	//手起刀落
@@ -911,7 +911,7 @@ func (b TacticId) String() string {
 	case MakeFeintToTheEastButAttackInTheWest:
 		return "声东击西"
 		//风声鹤唳
-	case TheSoundOfTheWindAndTheCryOfTheStork:
+	case SoundOfTheWindAndTheCryOfTheStork:
 		return "风声鹤唳"
 	//天降火雨
 	case RainOfFireFromTheSky:

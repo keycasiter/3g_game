@@ -6,20 +6,21 @@ type DebuffEffectType int
 var (
 	//可以被清除的负面效果
 	SupprtCleanDebuffEffectMap = map[DebuffEffectType]bool{
-		DebuffEffectType_Methysis:     true,
-		DebuffEffectType_Firing:       true,
-		DebuffEffectType_Defect:       true,
-		DebuffEffectType_Sandstorm:    true,
-		DebuffEffectType_Chaos:        true,
-		DebuffEffectType_NoStrategy:   true,
-		DebuffEffectType_PoorHealth:   true,
-		DebuffEffectType_WaterAttack:  true,
-		DebuffEffectType_CancelWeapon: true,
+		DebuffEffectType_Methysis:            true,
+		DebuffEffectType_Firing:              true,
+		DebuffEffectType_Defect:              true,
+		DebuffEffectType_Sandstorm:           true,
+		DebuffEffectType_Chaos:               true,
+		DebuffEffectType_NoStrategy:          true,
+		DebuffEffectType_PoorHealth:          true,
+		DebuffEffectType_WaterAttack:         true,
+		DebuffEffectType_CancelWeapon:        true,
+		DebuffEffectType_CanNotGeneralAttack: true,
+		DebuffEffectType_CanNotActiveTactic:  true,
 	}
 	//可以被清除的正面效果
 	SupprtCleanBuffEffectMap = map[BuffEffectType]bool{
 		BuffEffectType_SuppressChokesAndPreventRefusals_Prepare: true,
-		BuffEffectType_SeizeTheSoul:                             true,
 	}
 )
 
@@ -52,6 +53,7 @@ const (
 	DebuffEffectType_Provoking                                           //挑拨（强迫目标释放的战法选择自己）
 	DebuffEffectType_BeAttacked                                          //遇袭（行动滞后）
 	DebuffEffectType_Flaw                                                //破绽
+	DebuffEffectType_ShockingFourRealms_Prepare                          //震骇四境[准备]
 
 	DebuffEffectType_DecrForce        //降低武力
 	DebuffEffectType_DecrIntelligence //降低智力
@@ -65,13 +67,18 @@ const (
 	DebuffEffectType_InterlockedStratagems         //铁索连环
 	DebuffEffectType_FireJointVenture_BurningCamp  //火烧连营[焚营]
 
-	DebuffEffectType_LectureField       //舌战群儒
-	DebuffEffectType_TigerAnger         //虎嗔
-	DebuffEffectType_TigerAnger_Prepare //虎嗔[预备]
+	DebuffEffectType_LectureField                                                 //舌战群儒
+	DebuffEffectType_TigerAnger                                                   //虎嗔
+	DebuffEffectType_TigerAnger_Prepare                                           //虎嗔[预备]
+	DebuffEffectType_RampartsOfMetalsAndAMoatOfHotWaterTactic_CanNotGeneralAttack //金城汤池[无法普通攻击]
 )
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_ShockingFourRealms_Prepare:
+		return "震骇四境[准备]"
+	case DebuffEffectType_RampartsOfMetalsAndAMoatOfHotWaterTactic_CanNotGeneralAttack:
+		return "金城汤池[无法普通攻击]"
 	case DebuffEffectType_Flaw:
 		return "破绽"
 	case DebuffEffectType_StrongMethysis:
@@ -166,9 +173,12 @@ const (
 	BuffEffectType_ShareResponsibilityFor                            //分担
 	BuffEffectType_Insight                                           //洞察
 	BuffEffectType_FightHard                                         //酣斗
+	BuffEffectType_MustHit                                           //必中
+	BuffEffectType_BreakFormation                                    //破阵
 	BuffEffectType_TacticsActiveTriggerImprove                       //主动战法发动率提升
 	BuffEffectType_TacticsActiveTriggerPrepareImprove                //主动战法[准备战法]发动率提升
 	BuffEffectType_TacticsActiveTriggerNoSelfImprove                 //主动战法[非自带]发动率提升
+	BuffEffectType_TacticsActiveWithSelfDamageImprove                //主动战法[自带]伤害提升
 	BuffEffectType_TacticsPassiveTriggerImprove                      //被动战法发动率提升
 	BuffEffectType_TacticsAssaultTriggerImprove                      //突击战法发动率提升
 	BuffEffectType_LaunchWeaponDamageImprove                         //造成兵刃伤害增加
@@ -185,7 +195,6 @@ const (
 	BuffEffectType_Charming                                    //魅惑
 	BuffEffectType_AppeaseArmyAndPeople_Prepare                //抚辑军民「预备」
 	BuffEffectType_ThreeDaysOfSeparation_Prepare               //士别三日「预备」
-	BuffEffectType_SeizeTheSoul                                //夺魂挟魄
 	BuffEffectType_BraveAmbition_Prepare                       //义胆雄心「预备」
 	BuffEffectType_HuangTianDangLi                             //黄天当立
 	BuffEffectType_SuppressChokesAndPreventRefusals_Prepare    //镇扼防拒「预备」
@@ -214,6 +223,12 @@ const (
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_BreakFormation:
+		return "破阵"
+	case BuffEffectType_MustHit:
+		return "必中"
+	case BuffEffectType_TacticsActiveWithSelfDamageImprove:
+		return "主动战法[自带]伤害提升"
 	case BuffEffectType_TacticsAssaultTriggerImprove:
 		return "被动战法发动率提升"
 	case BuffEffectType_Alert:
@@ -246,8 +261,6 @@ func (b BuffEffectType) String() string {
 		return "抵御"
 	case BuffEffectType_AncientEvilComes_Prepare:
 		return "古之恶来[预备]"
-	case BuffEffectType_SeizeTheSoul:
-		return "夺魂挟魄"
 	case BuffEffectType_AttackHeart:
 		return "攻心"
 	case BuffEffectType_AbilityToRuleTheCountry_Prepare:

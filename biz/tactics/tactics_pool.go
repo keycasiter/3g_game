@@ -276,6 +276,24 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.PlanAndDecide] = &PlanAndDecideTactic{}
 	//鸩毒
 	TacticsHandlerMap[consts.PoisonedWine] = &PoisonedWineTactic{}
+	//毒泉拒蜀
+	TacticsHandlerMap[consts.PoisonousSpringRefusesShu] = &PoisonousSpringRefusesShuTactic{}
+	//誓守无降
+	TacticsHandlerMap[consts.PromiseToKeepWithoutSurrender] = &PromiseToKeepWithoutSurrenderTactic{}
+	//傲睨王侯
+	TacticsHandlerMap[consts.ProudPrince] = &ProudPrinceTactic{}
+	//挑衅
+	TacticsHandlerMap[consts.Provoke] = &ProvokeTactic{}
+	//掣刀斫敌
+	TacticsHandlerMap[consts.PullingSwordsAndChoppingEnemies] = &PullingSwordsAndChoppingEnemiesTactic{}
+	//净化
+	TacticsHandlerMap[consts.Purify] = &PurifyTactic{}
+	//青州兵
+	TacticsHandlerMap[consts.QingZhouSoldier] = &QingZhouSoldierTactic{}
+	//陷阵突袭
+	TacticsHandlerMap[consts.RaidInFormation] = &RaidInFormationTactic{}
+	//天降火雨
+	TacticsHandlerMap[consts.RainOfFireFromTheSky] = &RainOfFireFromTheSkyTactic{}
 }
 
 func initTacticsMap() {
@@ -303,6 +321,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.LoyalAndBraveMartyrs] = true
 	PassiveTacticsMap[consts.NakedBloodBattle] = true
 	PassiveTacticsMap[consts.MarchInto] = true
+	PassiveTacticsMap[consts.RaidInFormation] = true
 	//指挥战法
 	CommandTacticsMap[consts.IronHorseDrive] = true
 	CommandTacticsMap[consts.OpportunityIdentificationFirst] = true
@@ -334,6 +353,7 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.NanManQuKui] = true
 	CommandTacticsMap[consts.MakeCloudAndRain] = true
 	CommandTacticsMap[consts.MedicalPractice] = true
+	CommandTacticsMap[consts.ProudPrince] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -344,7 +364,14 @@ func initTacticsMap() {
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	ArmTacticsMap[consts.JinFanArmy] = true
+	ArmTacticsMap[consts.QingZhouSoldier] = true
 	//主动
+	ActiveTacticsMap[consts.RainOfFireFromTheSky] = true
+	ActiveTacticsMap[consts.Purify] = true
+	ActiveTacticsMap[consts.PullingSwordsAndChoppingEnemies] = true
+	ActiveTacticsMap[consts.Provoke] = true
+	ActiveTacticsMap[consts.PromiseToKeepWithoutSurrender] = true
+	ActiveTacticsMap[consts.PoisonousSpringRefusesShu] = true
 	ActiveTacticsMap[consts.PoisonedWine] = true
 	ActiveTacticsMap[consts.OverwhelmingAllDirections] = true
 	ActiveTacticsMap[consts.MachineStrategyVerticalAndHorizontal] = true

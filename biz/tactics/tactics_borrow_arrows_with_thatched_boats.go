@@ -15,9 +15,8 @@ import (
 // 移除我军群体(2-3人)负面效果，并使我军群体(2人)获得急救状态，每次受到伤害时有70%几率回复一定兵力（伤害量的28%，受统率影响）
 // 持续2回合，该战法发动后会进入1回合冷却
 type BorrowArrowsWithThatchedBoatsTactic struct {
-	tacticsParams  *model.TacticsParams
-	triggerRate    float64
-	isTacticFrozen bool
+	tacticsParams *model.TacticsParams
+	triggerRate   float64
 }
 
 func (b BorrowArrowsWithThatchedBoatsTactic) IsTriggerPrepare() bool {
@@ -74,7 +73,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 	currentRound := b.tacticsParams.CurrentRound
 
 	//判断是否冷却
-	if b.isTacticFrozen {
+	if ok := currentGeneral.TacticFrozenMap[b.Id()]; ok {
 		hlog.CtxInfof(ctx, "[%s]的「%s[冷却]」效果生效，无法发动",
 			currentGeneral.BaseInfo.Name,
 			b.Name(),
@@ -82,7 +81,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		return
 	}
 
-	b.isTacticFrozen = true
+	currentGeneral.TacticFrozenMap[b.Id()] = true
 	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 		currentGeneral.BaseInfo.Name,
 		b.Name(),
@@ -95,7 +94,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 
 		//1回合冷却，下下回合冷却结束
 		if currentRound+2 == revokeRound {
-			b.isTacticFrozen = false
+			currentGeneral.TacticFrozenMap[b.Id()] = false
 
 			hlog.CtxInfof(ctx, "[%s]的「%s[冷却]」效果已消失",
 				currentGeneral.BaseInfo.Name,

@@ -751,6 +751,27 @@ func DeduceGeneralAttr(general *vo.BattleGeneral, attr consts.AbilityAttr, attrV
 	}
 }
 
+// 找到武将最高属性
+func GetGeneralHighestAttr(general *vo.BattleGeneral) (attr consts.AbilityAttr, attrValue float64) {
+	highAttr := general.BaseInfo.AbilityAttr.ForceBase
+	att := consts.AbilityAttr_Force
+
+	if general.BaseInfo.AbilityAttr.IntelligenceBase > highAttr {
+		highAttr = general.BaseInfo.AbilityAttr.IntelligenceBase
+		att = consts.AbilityAttr_Intelligence
+	}
+	if general.BaseInfo.AbilityAttr.CommandBase > highAttr {
+		highAttr = general.BaseInfo.AbilityAttr.CommandBase
+		att = consts.AbilityAttr_Command
+	}
+	if general.BaseInfo.AbilityAttr.SpeedBase > highAttr {
+		highAttr = general.BaseInfo.AbilityAttr.SpeedBase
+		att = consts.AbilityAttr_Speed
+	}
+
+	return att, highAttr
+}
+
 // 计算属性之差
 func CalculateAttrDiff(a float64, b float64) float64 {
 	if a > b {

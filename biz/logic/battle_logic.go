@@ -573,8 +573,6 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				if !util.IsCanGeneralAttack(runCtx.Ctx, currentGeneral) {
 					goto AttactTacticFlag
 				}
-				//普攻计数+
-				currentGeneral.ExecuteGeneralAttckNum++
 
 				//2.2 触发兵书效果
 				//TODO
@@ -585,7 +583,6 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				//找到普攻目标
 				sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
 				tacticsParams.CurrentSufferGeneral = sufferGeneral
-
 				//普通攻击触发器
 				if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
 					for _, f := range funcs {
@@ -600,6 +597,8 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 				//发起攻击
 				util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
+				//普攻计数+
+				currentGeneral.ExecuteGeneralAttckNum++
 
 				//群攻效果
 				effectParams, ok := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_GroupAttack)
@@ -754,6 +753,10 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 		}
 		if general.DeBuffEffectCountMap == nil {
 			general.DeBuffEffectCountMap = map[consts.DebuffEffectType]int64{}
+		}
+
+		if general.TacticFrozenMap == nil {
+			general.TacticFrozenMap = map[consts.TacticId]bool{}
 		}
 	}
 

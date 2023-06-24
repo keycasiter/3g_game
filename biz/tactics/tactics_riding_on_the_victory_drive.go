@@ -1,13 +1,17 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//乘胜长驱
-//战斗中，每回合使自己造成伤害提高11%，可叠加，直到战斗结束
+// 乘胜长驱
+// 战斗中，每回合使自己造成伤害提高11%，可叠加，直到战斗结束
+// 被动，100%
 type RidingOnTheVictoryDriveTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -57,6 +61,34 @@ func (r RidingOnTheVictoryDriveTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (r RidingOnTheVictoryDriveTactic) Execute() {
+	ctx := r.tacticsParams.Ctx
+	currentGeneral := r.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		r.Name(),
+	)
+
+	//战斗中，每回合使自己造成伤害提高11%，可叠加，直到战斗结束
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerGeneral := params.CurrentGeneral
+
+		//兵刃伤害
+		util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{
+			EffectRate:     0.11,
+			FromTactic:     r.Id(),
+			ProduceGeneral: triggerGeneral,
+		})
+		//谋略伤害
+		util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove, &vo.EffectHolderParams{
+			EffectRate:     0.11,
+			FromTactic:     r.Id(),
+			ProduceGeneral: triggerGeneral,
+		})
+
+		return triggerResp
+	})
 }
 
 func (r RidingOnTheVictoryDriveTactic) IsTriggerPrepare() bool {

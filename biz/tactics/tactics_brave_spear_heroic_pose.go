@@ -49,7 +49,7 @@ func (b BraveSpearHeroicPoseTactic) Prepare() {
 		triggerResp := &vo.TacticsTriggerResult{}
 		triggerGeneral := params.CurrentGeneral
 
-		if triggerGeneral.ExecuteGeneralAttckNum != 0 && triggerGeneral.ExecuteGeneralAttckNum%4 == 0 {
+		if triggerGeneral.ExecuteGeneralAttackNum != 0 && triggerGeneral.ExecuteGeneralAttackNum%4 == 0 {
 			//普通攻击伤害提高
 			if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove, &vo.EffectHolderParams{
 				EffectRate:  1.0,

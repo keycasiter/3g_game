@@ -7,6 +7,7 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 夺魂挟魄
@@ -69,7 +70,6 @@ func (s SeizeTheSoulTactic) SupportArmTypes() []consts.ArmType {
 func (s SeizeTheSoulTactic) Execute() {
 	ctx := s.tacticsParams.Ctx
 	currentGeneral := s.tacticsParams.CurrentGeneral
-	currentRound := s.tacticsParams.CurrentRound
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
 
 	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
@@ -77,142 +77,186 @@ func (s SeizeTheSoulTactic) Execute() {
 		s.Name(),
 	)
 
-	//最多叠加两次
-	if !util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_SeizeTheSoul, &vo.EffectHolderParams{
+	// 偷取敌军单体38点武力、智力、速度、统率（受智力影响），
+	// 持续2回合，可叠加2次
+
+	effectValue := cast.ToInt64(38 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100)
+	//降低武力
+	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrForce, &vo.EffectHolderParams{
+		EffectValue:    effectValue,
+		EffectRound:    2,
 		EffectTimes:    1,
 		MaxEffectTimes: 2,
 		FromTactic:     s.Id(),
 	}).IsSuccess {
-		//偷取敌军单体38点武力、智力、速度、统率（受智力影响）
-		v := 38 + (currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100)
-		//提高我军武将
-		hlog.CtxInfof(ctx, "[%s]的武力提高了%.2f(%.2f↗%.2f)",
-			currentGeneral.BaseInfo.Name,
-			v,
-			currentGeneral.BaseInfo.AbilityAttr.ForceBase,
-			currentGeneral.BaseInfo.AbilityAttr.ForceBase+v,
-		)
-		hlog.CtxInfof(ctx, "[%s]的智力提高了%.2f(%.2f↗%.2f)",
-			currentGeneral.BaseInfo.Name,
-			v,
-			currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase,
-			currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase+v,
-		)
-		hlog.CtxInfof(ctx, "[%s]的速度提高了%.2f(%.2f↗%.2f)",
-			currentGeneral.BaseInfo.Name,
-			v,
-			currentGeneral.BaseInfo.AbilityAttr.SpeedBase,
-			currentGeneral.BaseInfo.AbilityAttr.SpeedBase+v,
-		)
-		hlog.CtxInfof(ctx, "[%s]的统率提高了%.2f(%.2f↗%.2f)",
-			currentGeneral.BaseInfo.Name,
-			v,
-			currentGeneral.BaseInfo.AbilityAttr.CommandBase,
-			currentGeneral.BaseInfo.AbilityAttr.CommandBase+v,
-		)
-		currentGeneral.BaseInfo.AbilityAttr.ForceBase += v
-		currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase += v
-		currentGeneral.BaseInfo.AbilityAttr.SpeedBase += v
-		currentGeneral.BaseInfo.AbilityAttr.CommandBase += v
-
-		//注册撤销效果
-		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			revokeResp := &vo.TacticsTriggerResult{}
-			revokeGeneral := params.CurrentGeneral
-			revokeRound := params.CurrentRound
-
-			if currentRound+2 == revokeRound {
-				util.BuffEffectWrapRemove(ctx, revokeGeneral, consts.BuffEffectType_SeizeTheSoul, s.Id())
-
-				revokeGeneral.BaseInfo.AbilityAttr.ForceBase -= v
-				revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
-				revokeGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
-				revokeGeneral.BaseInfo.AbilityAttr.CommandBase -= v
-
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					revokeGeneral.BaseInfo.Name,
-					consts.BuffEffectType_IncrForce)
-				hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
-					revokeGeneral.BaseInfo.Name,
-					v)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					revokeGeneral.BaseInfo.Name,
-					consts.BuffEffectType_IncrIntelligence)
-				hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
-					revokeGeneral.BaseInfo.Name,
-					v)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					revokeGeneral.BaseInfo.Name,
-					consts.BuffEffectType_IncrSpeed)
-				hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
-					revokeGeneral.BaseInfo.Name,
-					v)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					revokeGeneral.BaseInfo.Name,
-					consts.BuffEffectType_IncrCommand)
-				hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
-					revokeGeneral.BaseInfo.Name,
-					v)
-				return revokeResp
-			}
-
-			return revokeResp
-		})
-
-		//降低敌军武将
-		enemyGeneral.BaseInfo.AbilityAttr.ForceBase -= v
-		enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase -= v
-		enemyGeneral.BaseInfo.AbilityAttr.SpeedBase -= v
-		enemyGeneral.BaseInfo.AbilityAttr.CommandBase -= v
-		hlog.CtxInfof(ctx, "[%s]的武力降低了%.2f",
-			enemyGeneral.BaseInfo.Name,
-			v)
-		hlog.CtxInfof(ctx, "[%s]的智力降低了%.2f",
-			enemyGeneral.BaseInfo.Name,
-			v)
-		hlog.CtxInfof(ctx, "[%s]的速度降低了%.2f",
-			enemyGeneral.BaseInfo.Name,
-			v)
-		hlog.CtxInfof(ctx, "[%s]的统率降低了%.2f",
-			enemyGeneral.BaseInfo.Name,
-			v)
-
-		//注册撤销效果
 		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeResp := &vo.TacticsTriggerResult{}
 			revokeGeneral := params.CurrentGeneral
-			revokeRound := params.CurrentRound
 
-			if currentRound+2 == revokeRound {
-				revokeGeneral.BaseInfo.AbilityAttr.ForceBase += v
-				revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase += v
-				revokeGeneral.BaseInfo.AbilityAttr.SpeedBase += v
-				revokeGeneral.BaseInfo.AbilityAttr.CommandBase += v
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					revokeGeneral.BaseInfo.Name,
-					consts.DebuffEffectType_DecrForce)
-				hlog.CtxInfof(ctx, "[%s]的武力提升了%.2f",
-					revokeGeneral.BaseInfo.Name,
-					v)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					revokeGeneral.BaseInfo.Name,
-					consts.DebuffEffectType_DecrIntelligence)
-				hlog.CtxInfof(ctx, "[%s]的智力提升了%.2f",
-					revokeGeneral.BaseInfo.Name,
-					v)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					revokeGeneral.BaseInfo.Name,
-					consts.DebuffEffectType_DecrSpeed)
-				hlog.CtxInfof(ctx, "[%s]的速度提升了%.2f",
-					revokeGeneral.BaseInfo.Name,
-					v)
-				hlog.CtxInfof(ctx, "[%s]的「%v」效果已消失",
-					revokeGeneral.BaseInfo.Name,
-					consts.DebuffEffectType_DecrCommand)
-				hlog.CtxInfof(ctx, "[%s]的统率提升了%.2f",
-					revokeGeneral.BaseInfo.Name,
-					v)
-			}
+			util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.DebuffEffectType_DecrForce,
+				TacticId:   s.Id(),
+			})
+
+			return revokeResp
+		})
+	}
+
+	//降低智力
+	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrIntelligence, &vo.EffectHolderParams{
+		EffectValue:    effectValue,
+		EffectRound:    2,
+		EffectTimes:    1,
+		MaxEffectTimes: 2,
+		FromTactic:     s.Id(),
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.DebuffEffectType_DecrIntelligence,
+				TacticId:   s.Id(),
+			})
+
+			return revokeResp
+		})
+	}
+	//降低统率
+	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrCommand, &vo.EffectHolderParams{
+		EffectValue:    effectValue,
+		EffectRound:    2,
+		EffectTimes:    1,
+		MaxEffectTimes: 2,
+		FromTactic:     s.Id(),
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.DebuffEffectType_DecrCommand,
+				TacticId:   s.Id(),
+			})
+
+			return revokeResp
+		})
+	}
+	//降低速度
+	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrSpeed, &vo.EffectHolderParams{
+		EffectValue:    effectValue,
+		EffectRound:    2,
+		EffectTimes:    1,
+		MaxEffectTimes: 2,
+		FromTactic:     s.Id(),
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.DebuffEffectType_DecrSpeed,
+				TacticId:   s.Id(),
+			})
+
+			return revokeResp
+		})
+	}
+
+	//提升武力
+	if util.BuffEffectWrapSet(ctx, enemyGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
+		EffectValue:    effectValue,
+		EffectRound:    2,
+		EffectTimes:    1,
+		MaxEffectTimes: 2,
+		FromTactic:     s.Id(),
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.BuffEffectType_IncrForce,
+				TacticId:   s.Id(),
+			})
+
+			return revokeResp
+		})
+	}
+
+	//提升智力
+	if util.BuffEffectWrapSet(ctx, enemyGeneral, consts.BuffEffectType_IncrIntelligence, &vo.EffectHolderParams{
+		EffectValue:    effectValue,
+		EffectRound:    2,
+		EffectTimes:    1,
+		MaxEffectTimes: 2,
+		FromTactic:     s.Id(),
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.BuffEffectType_IncrIntelligence,
+				TacticId:   s.Id(),
+			})
+
+			return revokeResp
+		})
+	}
+	//提升统率
+	if util.BuffEffectWrapSet(ctx, enemyGeneral, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{
+		EffectValue:    effectValue,
+		EffectRound:    2,
+		EffectTimes:    1,
+		MaxEffectTimes: 2,
+		FromTactic:     s.Id(),
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.BuffEffectType_IncrCommand,
+				TacticId:   s.Id(),
+			})
+
+			return revokeResp
+		})
+	}
+	//提升速度
+	if util.BuffEffectWrapSet(ctx, enemyGeneral, consts.BuffEffectType_IncrSpeed, &vo.EffectHolderParams{
+		EffectValue:    effectValue,
+		EffectRound:    2,
+		EffectTimes:    1,
+		MaxEffectTimes: 2,
+		FromTactic:     s.Id(),
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.BuffEffectType_IncrSpeed,
+				TacticId:   s.Id(),
+			})
+
 			return revokeResp
 		})
 	}

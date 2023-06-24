@@ -1,24 +1,29 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
+// 坐守孤城
+// 恢复我军群体（2人）兵力（治疗率116%，受智力影响）
+// 主动，45%
 type SittingInAnIsolatedCityTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
 }
 
 func (s SittingInAnIsolatedCityTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	//TODO implement me
-	panic("implement me")
+	s.tacticsParams = tacticsParams
+	s.triggerRate = 0.45
+	return s
 }
 
 func (s SittingInAnIsolatedCityTactic) Prepare() {
-	//TODO implement me
-	panic("implement me")
 }
 
 func (s SittingInAnIsolatedCityTactic) Id() consts.TacticId {
@@ -30,36 +35,47 @@ func (s SittingInAnIsolatedCityTactic) Name() string {
 }
 
 func (s SittingInAnIsolatedCityTactic) TacticsSource() consts.TacticsSource {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsSource_Inherit
 }
 
 func (s SittingInAnIsolatedCityTactic) GetTriggerRate() float64 {
-	//TODO implement me
-	panic("implement me")
+	return s.triggerRate
 }
 
 func (s SittingInAnIsolatedCityTactic) SetTriggerRate(rate float64) {
-	//TODO implement me
-	panic("implement me")
+	s.triggerRate = rate
 }
 
 func (s SittingInAnIsolatedCityTactic) TacticsType() consts.TacticsType {
-	//TODO implement me
-	panic("implement me")
+	return consts.TacticsType_Active
 }
 
 func (s SittingInAnIsolatedCityTactic) SupportArmTypes() []consts.ArmType {
-	//TODO implement me
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (s SittingInAnIsolatedCityTactic) Execute() {
-	//TODO implement me
-	panic("implement me")
+	ctx := s.tacticsParams.Ctx
+	currentGeneral := s.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		s.Name(),
+	)
+	// 恢复我军群体（2人）兵力（治疗率116%，受智力影响）
+	pairGenerals := util.GetEnemyTwoGeneralByGeneral(currentGeneral, s.tacticsParams)
+	resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.16)
+	for _, general := range pairGenerals {
+		util.ResumeSoldierNum(ctx, general, resumeNum)
+	}
 }
 
 func (s SittingInAnIsolatedCityTactic) IsTriggerPrepare() bool {
-	//TODO implement me
-	panic("implement me")
+	return false
 }

@@ -1,9 +1,12 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 屠几上肉
@@ -57,6 +60,36 @@ func (s SlaughterMeatOnTableTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (s SlaughterMeatOnTableTactic) Execute() {
+	ctx := s.tacticsParams.Ctx
+	currentGeneral := s.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		s.Name(),
+	)
+
+	// 对敌军单体造成一次兵刃攻击（伤害率150%），及谋略攻击（伤害率150%，受智力影响）
+	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
+	weaponDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.5)
+	util.TacticDamage(&util.TacticDamageParam{
+		TacticsParams: s.tacticsParams,
+		AttackGeneral: currentGeneral,
+		SufferGeneral: enemyGeneral,
+		DamageType:    consts.DamageType_Weapon,
+		Damage:        weaponDmg,
+		TacticId:      s.Id(),
+		TacticName:    s.Name(),
+	})
+	strategyDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.5)
+	util.TacticDamage(&util.TacticDamageParam{
+		TacticsParams: s.tacticsParams,
+		AttackGeneral: currentGeneral,
+		SufferGeneral: enemyGeneral,
+		DamageType:    consts.DamageType_Strategy,
+		Damage:        strategyDmg,
+		TacticId:      s.Id(),
+		TacticName:    s.Name(),
+	})
 }
 
 func (s SlaughterMeatOnTableTactic) IsTriggerPrepare() bool {

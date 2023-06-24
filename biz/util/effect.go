@@ -944,6 +944,116 @@ func DeBuffEffectOfTacticCostRound(params *DebuffEffectOfTacticCostRoundParams) 
 	return false
 }
 
+type DebuffEffectOfTacticCostRateParams struct {
+	//上下文
+	Ctx context.Context
+	//操作武将
+	General *vo.BattleGeneral
+	//负面效果
+	EffectType consts.DebuffEffectType
+	//关联战法
+	TacticId consts.TacticId
+	//影响率
+	EffectRate float64
+	//效果消耗完成回调函数
+	CostOverTriggerFunc func()
+}
+
+// 负面效果消耗
+func DeBuffEffectOfTacticCostRate(params *DebuffEffectOfTacticCostRateParams) bool {
+	if params.TacticId <= 0 {
+		return false
+	}
+
+	if effectParams, ok := params.General.DeBuffEffectHolderMap[params.EffectType]; ok {
+		for idx, effectParam := range effectParams {
+			//找到指定战法
+			if effectParam.FromTactic == params.TacticId {
+				//消耗
+				if effectParam.EffectRate > 0 {
+					effectParam.EffectRate -= params.EffectRate
+					return true
+				}
+
+				//清除
+				if effectParam.EffectRate == 0 {
+					params.General.DeBuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+					hlog.CtxInfof(params.Ctx, "[%s]来自【%v】「%v」效果已消失",
+						params.General.BaseInfo.Name,
+						params.TacticId,
+						params.EffectType,
+					)
+
+					//减益效果恢复
+					debuffEffectIncr(params.Ctx, params.General, params.EffectType, effectParam.EffectValue)
+
+					//执行回调函数
+					if params.CostOverTriggerFunc != nil {
+						params.CostOverTriggerFunc()
+					}
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
+type BuffEffectOfTacticCostRateParams struct {
+	//上下文
+	Ctx context.Context
+	//操作武将
+	General *vo.BattleGeneral
+	//正面效果
+	EffectType consts.BuffEffectType
+	//关联战法
+	TacticId consts.TacticId
+	//影响率
+	EffectRate float64
+	//效果消耗完成回调函数
+	CostOverTriggerFunc func()
+}
+
+// 正面效果消耗
+func BuffEffectOfTacticCostRate(params *BuffEffectOfTacticCostRateParams) bool {
+	if params.TacticId <= 0 {
+		return false
+	}
+
+	if effectParams, ok := params.General.BuffEffectHolderMap[params.EffectType]; ok {
+		for idx, effectParam := range effectParams {
+			//找到指定战法
+			if effectParam.FromTactic == params.TacticId {
+				//消耗
+				if effectParam.EffectRate > 0 {
+					effectParam.EffectRate -= params.EffectRate
+					return true
+				}
+
+				//清除
+				if effectParam.EffectRate == 0 {
+					params.General.BuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+					hlog.CtxInfof(params.Ctx, "[%s]来自【%v】「%v」效果已消失",
+						params.General.BaseInfo.Name,
+						params.TacticId,
+						params.EffectType,
+					)
+
+					//减益效果恢复
+					buffEffectIncr(params.Ctx, params.General, params.EffectType, effectParam.EffectValue)
+
+					//执行回调函数
+					if params.CostOverTriggerFunc != nil {
+						params.CostOverTriggerFunc()
+					}
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
 func buffEffectIncr(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, effectValue int64) {
 	//属性加点效果设置
 	switch effectType {
@@ -1205,6 +1315,16 @@ func IsCanGeneralAttack(ctx context.Context, general *vo.BattleGeneral) bool {
 			hlog.CtxInfof(ctx, "武将[%s]处于「%v」状态，无法普通攻击",
 				general.BaseInfo.Name,
 				consts.DebuffEffectType_CanNotGeneralAttack,
+			)
+			return false
+		}
+	}
+	//金城汤池[无法普通攻击]
+	if effectParams, ok := general.DeBuffEffectHolderMap[consts.DebuffEffectType_RampartsOfMetalsAndAMoatOfHotWaterTactic_CanNotGeneralAttack]; ok {
+		if len(effectParams) > 0 && GenerateRate(effectParams[0].EffectRate) {
+			hlog.CtxInfof(ctx, "武将[%s]处于「%v」状态，无法普通攻击",
+				general.BaseInfo.Name,
+				consts.DebuffEffectType_RampartsOfMetalsAndAMoatOfHotWaterTactic_CanNotGeneralAttack,
 			)
 			return false
 		}

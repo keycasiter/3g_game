@@ -78,6 +78,9 @@ type BattleGeneral struct {
 	//减益效果次数
 	DeBuffEffectCountMap map[consts.DebuffEffectType]int64
 
+	//战法冷却容器
+	TacticFrozenMap map[consts.TacticId]bool
+
 	//普通攻击次数
 	ExecuteGeneralAttckNum int64
 

@@ -326,6 +326,8 @@ const (
 	BattleAction_EndAction                             //结束行动
 	BattleAction_Attack                                //普通攻击开始
 	BattleAction_AttackEnd                             //普通攻击结束
+	BattleAction_Tactic                                //战法攻击开始
+	BattleAction_TacticEnd                             //战法攻击结束
 	BattleAction_ActiveTactic                          //发动主动战法开始
 	BattleAction_ActiveTacticEnd                       //发动主动战法结束
 	BattleAction_AssaultTactic                         //发动突击战法开始
@@ -348,6 +350,8 @@ const (
 	BattleAction_BuffEffectEnd                         //施加正面效果结束
 
 	//遭受伤害
+	BattleAction_SufferTactic            //遭受战法攻击开始
+	BattleAction_SufferTacticEnd         //遭受战法攻击结束
 	BattleAction_SufferDamage            //遭受伤害开始
 	BattleAction_SufferDamageEnd         //遭受伤害结束
 	BattleAction_SufferWeaponDamage      //遭受兵刃伤害
@@ -376,6 +380,14 @@ const (
 
 func (action BattleAction) String() string {
 	switch action {
+	case BattleAction_SufferTactic:
+		return "遭受战法攻击开始"
+	case BattleAction_SufferTacticEnd:
+		return "遭受战法攻击结束"
+	case BattleAction_Tactic:
+		return "战法攻击开始"
+	case BattleAction_TacticEnd:
+		return "战法攻击结束"
 	case BattleAction_BeginAction: //开始行动
 		return "开始行动"
 	case BattleAction_EndAction: //结束行动

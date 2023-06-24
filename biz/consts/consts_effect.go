@@ -27,6 +27,7 @@ const (
 	//效果施加
 	DebuffEffectType_Unknow                      DebuffEffectType = iota //未知
 	DebuffEffectType_Methysis                                            //中毒
+	DebuffEffectType_StrongMethysis                                      //猛毒
 	DebuffEffectType_Firing                                              //灼烧
 	DebuffEffectType_Defect                                              //叛逃（受武力或智力最高一项影响，无视防御）
 	DebuffEffectType_Escape                                              //溃逃（受武力影响，无视防御）
@@ -50,6 +51,7 @@ const (
 	DebuffEffectType_Break                                               //破坏（携带的装备失效）
 	DebuffEffectType_Provoking                                           //挑拨（强迫目标释放的战法选择自己）
 	DebuffEffectType_BeAttacked                                          //遇袭（行动滞后）
+	DebuffEffectType_Flaw                                                //破绽
 
 	DebuffEffectType_DecrForce        //降低武力
 	DebuffEffectType_DecrIntelligence //降低智力
@@ -70,6 +72,10 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_Flaw:
+		return "破绽"
+	case DebuffEffectType_StrongMethysis:
+		return "猛毒"
 	case DebuffEffectType_CanNotActiveTactic:
 		return "无法发动主动战法"
 	case DebuffEffectType_BeAttacked:
@@ -164,6 +170,7 @@ const (
 	BuffEffectType_TacticsActiveTriggerPrepareImprove                //主动战法[准备战法]发动率提升
 	BuffEffectType_TacticsActiveTriggerNoSelfImprove                 //主动战法[非自带]发动率提升
 	BuffEffectType_TacticsPassiveTriggerImprove                      //被动战法发动率提升
+	BuffEffectType_TacticsAssaultTriggerImprove                      //突击战法发动率提升
 	BuffEffectType_LaunchWeaponDamageImprove                         //造成兵刃伤害增加
 	BuffEffectType_LaunchStrategyDamageImprove                       //造成谋略伤害增加
 
@@ -207,6 +214,8 @@ const (
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_TacticsAssaultTriggerImprove:
+		return "被动战法发动率提升"
 	case BuffEffectType_Alert:
 		return "警戒"
 	case BuffEffectType_AccumulatePower:

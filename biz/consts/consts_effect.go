@@ -30,6 +30,7 @@ const (
 	DebuffEffectType_Methysis                                            //中毒
 	DebuffEffectType_StrongMethysis                                      //猛毒
 	DebuffEffectType_Firing                                              //灼烧
+	DebuffEffectType_Firing_TengJia                                      //灼烧[藤甲额外伤害]
 	DebuffEffectType_Defect                                              //叛逃（受武力或智力最高一项影响，无视防御）
 	DebuffEffectType_Escape                                              //溃逃（受武力影响，无视防御）
 	DebuffEffectType_Sandstorm                                           //沙暴（每回合持续造成伤害）
@@ -42,6 +43,7 @@ const (
 	DebuffEffectType_SufferStrategyDamageImprove                         //受到谋略伤害增加
 	DebuffEffectType_LaunchWeaponDamageDeduce                            //造成兵刃伤害减少
 	DebuffEffectType_LaunchStrategyDamageDeduce                          //造成谋略伤害减少
+	DebuffEffectType_SufferResumeDeduce                                  //受到治疗降低
 	DebuffEffectType_CanNotGeneralAttack                                 //无法普通攻击
 	DebuffEffectType_CanNotActiveTactic                                  //无法发动主动战法
 	DebuffEffectType_CancelWeapon                                        //缴械（无法普通攻击）
@@ -75,6 +77,10 @@ const (
 
 func (b DebuffEffectType) String() string {
 	switch b {
+	case DebuffEffectType_Firing_TengJia:
+		return "灼烧[藤甲额外伤害]"
+	case DebuffEffectType_SufferResumeDeduce:
+		return "受到治疗降低"
 	case DebuffEffectType_ShockingFourRealms_Prepare:
 		return "震骇四境[准备]"
 	case DebuffEffectType_RampartsOfMetalsAndAMoatOfHotWaterTactic_CanNotGeneralAttack:
@@ -158,31 +164,33 @@ type BuffEffectType int
 
 const (
 	//效果施加
-	BuffEffectType_Unknow                             BuffEffectType = iota
-	BuffEffectType_Evade                                             //规避
-	BuffEffectType_EnhanceWeapon                                     //会心
-	BuffEffectType_AttackHeart                                       //攻心
-	BuffEffectType_EnhanceStrategy                                   //奇谋
-	BuffEffectType_GroupAttack                                       //群攻
-	BuffEffectType_FirstAttack                                       //先攻
-	BuffEffectType_Rest                                              //休整
-	BuffEffectType_Defend                                            //抵御
-	BuffEffectType_ContinuousAttack                                  //连击
-	BuffEffectType_StrikeBack                                        //反击
-	BuffEffectType_Defection                                         //倒戈
-	BuffEffectType_ShareResponsibilityFor                            //分担
-	BuffEffectType_Insight                                           //洞察
-	BuffEffectType_FightHard                                         //酣斗
-	BuffEffectType_MustHit                                           //必中
-	BuffEffectType_BreakFormation                                    //破阵
-	BuffEffectType_TacticsActiveTriggerImprove                       //主动战法发动率提升
-	BuffEffectType_TacticsActiveTriggerPrepareImprove                //主动战法[准备战法]发动率提升
-	BuffEffectType_TacticsActiveTriggerNoSelfImprove                 //主动战法[非自带]发动率提升
-	BuffEffectType_TacticsActiveWithSelfDamageImprove                //主动战法[自带]伤害提升
-	BuffEffectType_TacticsPassiveTriggerImprove                      //被动战法发动率提升
-	BuffEffectType_TacticsAssaultTriggerImprove                      //突击战法发动率提升
-	BuffEffectType_LaunchWeaponDamageImprove                         //造成兵刃伤害增加
-	BuffEffectType_LaunchStrategyDamageImprove                       //造成谋略伤害增加
+	BuffEffectType_Unknow                              BuffEffectType = iota
+	BuffEffectType_Evade                                              //规避
+	BuffEffectType_EnhanceWeapon                                      //会心
+	BuffEffectType_AttackHeart                                        //攻心
+	BuffEffectType_EnhanceStrategy                                    //奇谋
+	BuffEffectType_GroupAttack                                        //群攻
+	BuffEffectType_FirstAttack                                        //先攻
+	BuffEffectType_Rest                                               //休整
+	BuffEffectType_Defend                                             //抵御
+	BuffEffectType_ContinuousAttack                                   //连击
+	BuffEffectType_StrikeBack                                         //反击
+	BuffEffectType_Defection                                          //倒戈
+	BuffEffectType_ShareResponsibilityFor                             //分担
+	BuffEffectType_Insight                                            //洞察
+	BuffEffectType_FightHard                                          //酣斗
+	BuffEffectType_MustHit                                            //必中
+	BuffEffectType_BreakFormation                                     //破阵
+	BuffEffectType_TacticsActiveTriggerImprove                        //主动战法发动率提升
+	BuffEffectType_TacticsActiveTriggerWithSelfImprove                //主动战法[自带]发动率提升
+	BuffEffectType_TacticsActiveTriggerPrepareImprove                 //主动战法[准备战法]发动率提升
+	BuffEffectType_TacticsActiveTriggerNoSelfImprove                  //主动战法[非自带]发动率提升
+	BuffEffectType_TacticsActiveWithSelfDamageImprove                 //主动战法[自带]伤害提升
+	BuffEffectType_TacticsActiveDamageImprove                         //主动战法伤害提升
+	BuffEffectType_TacticsPassiveTriggerImprove                       //被动战法发动率提升
+	BuffEffectType_TacticsAssaultTriggerImprove                       //突击战法发动率提升
+	BuffEffectType_LaunchWeaponDamageImprove                          //造成兵刃伤害增加
+	BuffEffectType_LaunchStrategyDamageImprove                        //造成谋略伤害增加
 
 	BuffEffectType_GeneralAttackDamageImprove                  //普通攻击伤害提升
 	BuffEffectType_SufferWeaponDamageDeduce                    //受到兵刃伤害减少
@@ -219,10 +227,17 @@ const (
 	BuffEffectType_ImmunityChaos                               //免疫混乱
 	BuffEffectType_AccumulatePower                             //蓄威
 	BuffEffectType_Alert                                       //警戒
+	BuffEffectType_ImmunitySandstorm                           //免疫沙暴
 )
 
 func (b BuffEffectType) String() string {
 	switch b {
+	case BuffEffectType_TacticsActiveDamageImprove:
+		return "主动战法伤害提升"
+	case BuffEffectType_TacticsActiveTriggerWithSelfImprove:
+		return "主动战法[自带]发动率提升"
+	case BuffEffectType_ImmunitySandstorm:
+		return "免疫沙暴"
 	case BuffEffectType_BreakFormation:
 		return "破阵"
 	case BuffEffectType_MustHit:

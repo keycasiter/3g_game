@@ -25,4 +25,6 @@ const (
 	GuanXing
 	//甘宁
 	GanNing
+	//兀突骨
+	WuTuGu
 )

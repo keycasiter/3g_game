@@ -1,9 +1,12 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // 强攻
@@ -57,6 +60,34 @@ func (t TakeByStormTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (t TakeByStormTactic) Execute() {
+	ctx := t.tacticsParams.Ctx
+	currentGeneral := t.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		t.Name(),
+	)
+
+	// 使自己进入连击（每回合可以普通攻击2次）状态，持续1回合
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_ContinuousAttack, &vo.EffectHolderParams{
+		EffectRound:    1,
+		FromTactic:     t.Id(),
+		ProduceGeneral: currentGeneral,
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.BuffEffectType_ContinuousAttack,
+				TacticId:   t.Id(),
+			})
+
+			return revokeResp
+		})
+	}
 }
 
 func (t TakeByStormTactic) IsTriggerPrepare() bool {

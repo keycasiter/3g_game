@@ -6,7 +6,11 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//竭忠尽智
+// 竭忠尽智
+// 准备1回合，使敌军群体（1～2人）速度降低15%（受智力影响）
+// 并进入混乱状态，持续2回合
+// 并使友军单体获得1次抵御，持续1回合
+// 主动，50%
 type WithAllTheHeartTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

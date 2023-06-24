@@ -6,7 +6,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//临战先登
+// 临战先登
+// 对敌军群体（2人）造成兵刃攻击（伤害率150%），之后自己进入虚弱状态，持续1回合
+// 主动，100%
 type ToAscendBeforeBattleTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

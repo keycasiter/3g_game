@@ -7,6 +7,8 @@ import (
 )
 
 // 千里驰援
+// 援护全体友军，同时提高自身40统率，持续1回合
+// 主动，40%
 type ThousandsOfMilesOfSupportTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

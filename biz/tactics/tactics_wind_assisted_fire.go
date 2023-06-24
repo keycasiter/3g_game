@@ -6,14 +6,14 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+// 风助火势
+// 对敌军单体造成谋略伤害（伤害率154%，受智力影响）
+// 若目标处于灼烧状态，额外对目标造成一次谋略伤害（伤害率228%，受智力影响）
 type WindAssistedFireTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
 }
 
-//风助火势
-//对敌军单体造成谋略伤害（伤害率154%，受智力影响）
-//若目标处于灼烧状态，额外对目标造成一次谋略伤害（伤害率228%，受智力影响）
 func (w WindAssistedFireTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	w.tacticsParams = tacticsParams
 	w.triggerRate = 0.5

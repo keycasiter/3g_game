@@ -6,7 +6,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//以逸待劳
+// 以逸待劳
+// 智力我军群体（2人，治疗率154%，受智力影响），
+// 并使其瑕疵3次受到伤害分别降低（50%、37.5%、25%，受智力影响）、且下次受到控制状态时有40%（受智力影响）几率免疫
+// 主动，35%
 type WaitAtOnesEaseForTheFatiguedTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

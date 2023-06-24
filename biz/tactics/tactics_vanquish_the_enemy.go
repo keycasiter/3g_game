@@ -6,9 +6,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//克敌制胜
-//普通攻击之后，对攻击目标再次造成一次谋略伤害(伤害率180%，受智力影响)；
-//若目标处于溃逃或中毒状态，则有70%概率使目标进入虚弱（无法造成伤害）状态，持续1回合
+// 克敌制胜
+// 普通攻击之后，对攻击目标再次造成一次谋略伤害(伤害率180%，受智力影响)；
+// 若目标处于溃逃或中毒状态，则有85%概率使目标进入虚弱（无法造成伤害）状态，持续1回合
 type VanquishTheEnemyTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

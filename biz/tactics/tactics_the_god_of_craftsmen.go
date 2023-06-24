@@ -6,7 +6,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//工神
+// 工神
+// 战斗前3回合，使我军全体获得先攻状态，我军主将造成的兵刃伤害和谋略伤害提高30%，我军副将造成伤害提升15%；
+// 第4回合开始，我军全体造成伤害降低15%，持续2回合
+// 指挥，100%
 type TheGodOfCraftsmenTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

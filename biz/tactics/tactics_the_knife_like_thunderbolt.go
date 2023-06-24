@@ -6,7 +6,11 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//刀出如霆
+// 刀出如霆
+// 准备1回合。自身及友军单体获得30%倒戈，持续2回合，并对敌军造成兵刃伤害（伤害率300%，由敌军全部武将评分，敌军每有1名副将总伤害率提高120%）及掠阵状态：
+// 掠阵状态叠加两次时，移除掠阵状态并使目标受到兵刃伤害提高30%，可叠加；
+// 若与张苞同时出战，则友军单体必定选择张苞
+// 主动，40%
 type TheKnifeLikeThunderboltTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

@@ -6,6 +6,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+// 狮子奋迅
+// 对敌军单体及额外1～2名敌人造成兵刃攻击（伤害率118%），并使自身主动战法发动几率提高10%，
+// 自身为主将时，发动几率提高至15%，持续2回合，如果单体目标为敌军主将则使其陷入叛逃状态，每回合持续造成伤害（伤害率102%），持续2回合
+// 主动，35%
 type TheLionFliesFastTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

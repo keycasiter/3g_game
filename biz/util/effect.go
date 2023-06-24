@@ -377,6 +377,16 @@ func BuffEffectGetCount(general *vo.BattleGeneral, effectType consts.BuffEffectT
 	return times
 }
 
+// 获取正面效果种类数量
+func BuffEffectHolderCount(general *vo.BattleGeneral) int {
+	return len(general.BuffEffectHolderMap)
+}
+
+// 获取负面效果种类数量
+func DeBuffEffectHolderCount(general *vo.BattleGeneral) int {
+	return len(general.DeBuffEffectHolderMap)
+}
+
 // 获取增益效果(汇总)
 func BuffEffectGetAggrEffectRate(general *vo.BattleGeneral, effectType consts.BuffEffectType) (float64, bool) {
 	effectRate := float64(0)
@@ -656,7 +666,9 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 	if effectParam.ProduceGeneral != nil {
 		if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_DebuffEffect]; okk {
 			for _, f := range funcs {
-				params := &vo.TacticsTriggerParams{}
+				params := &vo.TacticsTriggerParams{
+					EffectHolderParams: effectParam,
+				}
 				f(params)
 			}
 		}
@@ -673,7 +685,11 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 		if effectParam.ProduceGeneral != nil {
 			if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_DebuffEffectEnd]; okk {
 				for _, f := range funcs {
-					params := &vo.TacticsTriggerParams{}
+					params := &vo.TacticsTriggerParams{
+						DebuffEffect:              effectType,
+						DebuffEffectOfTactic:      effectParam.FromTactic,
+						SufferDebuffEffectGeneral: general,
+					}
 					f(params)
 				}
 			}

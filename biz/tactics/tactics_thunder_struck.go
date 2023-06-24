@@ -6,7 +6,11 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//五雷轰顶
+// 五雷轰顶
+// 准备1回合，对敌军随机单体造成谋略攻击（伤害率136%，受智力影响），
+// 并有30%概率使其进入震慑状态，持续1回合
+// 共触发5次，每次独立选择目标
+// 自身为主将时，若目标处于水攻状态、沙暴状态时，每多一种提高20%震慑概率
 type ThunderStruckTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

@@ -6,7 +6,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//将行其疾
+// 将行其疾
+// 普通攻击之后，对随机敌军单体发动一次兵刃攻击（伤害率158%）；
+// 若命中敌军主将，则使其进入计穷状态，持续2回合
+// 突击 60%
 type ToCureOnesSpeedTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

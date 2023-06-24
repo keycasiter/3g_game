@@ -6,8 +6,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//焚辎营垒
-//对敌军群体（2人）造成谋略伤害（伤害率146%，受智力影响）
+// 焚辎营垒
+// 对敌军群体（2人）造成谋略伤害（伤害率146%，受智力影响）并使其进入禁疗状态，持续1回合
 type ToBurnBarracks struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

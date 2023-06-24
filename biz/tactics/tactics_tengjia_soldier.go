@@ -1,15 +1,18 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//藤甲兵
-//将盾兵进阶为刀枪不如的藤甲兵：
-//我军全体受到兵刃伤害降低24%（受统率影响），但处于灼烧状态时每回合额外损失兵力（伤害率300%）；
-//若兀突骨统领，则处于灼烧状态时的损失兵力降低（伤害率250%）
+// 藤甲兵
+// 将盾兵进阶为刀枪不如的藤甲兵：
+// 我军全体受到兵刃伤害降低24%（受统率影响），但处于灼烧状态时每回合额外损失兵力（伤害率300%）；
+// 若兀突骨统领，则处于灼烧状态时的损失兵力降低（伤害率250%）
 type TengjiaSoldierTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -22,6 +25,37 @@ func (t TengjiaSoldierTactic) Init(tacticsParams *model.TacticsParams) _interfac
 }
 
 func (t TengjiaSoldierTactic) Prepare() {
+	ctx := t.tacticsParams.Ctx
+	currentGeneral := t.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		t.Name(),
+	)
+
+	//将盾兵进阶为刀枪不如的藤甲兵：
+	//我军全体受到兵刃伤害降低24%（受统率影响）
+	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
+	for _, pairGeneral := range pairGenerals {
+		effectRate := 0.24 + currentGeneral.BaseInfo.AbilityAttr.CommandBase/100/100
+		util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
+			EffectRate:     effectRate,
+			FromTactic:     t.Id(),
+			ProduceGeneral: currentGeneral,
+		})
+		dmgRate := 3.0
+		if consts.General_Id(currentGeneral.BaseInfo.Id) == consts.WuTuGu {
+			dmgRate = 2.5
+		}
+		//但处于灼烧状态时每回合额外损失兵力（伤害率300%）；
+		//若兀突骨统领，则处于灼烧状态时的损失兵力降低（伤害率250%）
+		util.DebuffEffectWrapSet(ctx, pairGeneral, consts.DebuffEffectType_Firing_TengJia, &vo.EffectHolderParams{
+			EffectRate:     dmgRate,
+			FromTactic:     t.Id(),
+			ProduceGeneral: currentGeneral,
+		})
+	}
+
 }
 
 func (t TengjiaSoldierTactic) Id() consts.TacticId {

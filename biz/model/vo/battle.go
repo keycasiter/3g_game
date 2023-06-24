@@ -105,16 +105,31 @@ type TacticsTriggerParams struct {
 	AttackGeneral *BattleGeneral
 	//当前发起恢复的武将
 	ResumeGeneral *BattleGeneral
+	//当前被恢复的武将
+	SufferResumeGeneral *BattleGeneral
 	//当前造成伤害
 	CurrentDamage int64
+	//当前恢复量
+	CurrentResume int64
 	//当前执行战法
 	CurrentTactic interface{}
 	//施加的负面效果
 	DebuffEffect consts.DebuffEffectType
+	//施加负面效果的战法
+	DebuffEffectOfTactic consts.TacticId
+	//当前被施加负面战法的武将
+	SufferDebuffEffectGeneral *BattleGeneral
 	//施加的正面效果
 	BuffEffect consts.BuffEffectType
+	//施加正面效果的战法
+	BuffEffectOfTactic consts.TacticId
+	//当前被施加正面战法的武将
+	SufferBuffEffectGeneral *BattleGeneral
 	//影响回合
 	EffectRound consts.BattleRound
+
+	//施加参数
+	EffectHolderParams *EffectHolderParams
 }
 
 // 战法触发结果

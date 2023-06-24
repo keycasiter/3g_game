@@ -6,6 +6,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+// 暗潮涌动
+// 准备1回合，对敌军主将造成一次兵刃攻击（伤害率272%）
+// 主动，35%
 type UndercurrentSurgeTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

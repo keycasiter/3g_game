@@ -6,7 +6,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//骁健神行
+// 骁健神行
+// 对敌军单体造成缴械状态，持续1回合，且使自身获得必中状态，持续2回合，
+// 如果目标已经被缴械则造成兵刃攻击（伤害率156%，受速度影响）
+// 主动，45%
 type VigorousAndWalkTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

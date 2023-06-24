@@ -336,6 +336,42 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.SoundOfTheWindAndTheCryOfTheStork] = &SoundOfTheWindAndTheCryOfTheStorkTactic{}
 	//奇兵间道
 	TacticsHandlerMap[consts.SpecialSoldierPassRoad] = &SpecialSoldierPassRoadTactic{}
+	//窃幸乘宠
+	TacticsHandlerMap[consts.StealingLuckAndRidingPets] = &StealingLuckAndRidingPetsTactic{}
+	//击其惰归
+	TacticsHandlerMap[consts.StrikeItsLazyReturn] = &StrikeItsLazyReturnTactic{}
+	//刚勇无前
+	TacticsHandlerMap[consts.StrongAndBraveWithoutAdvance] = &StrongAndBraveWithoutAdvanceTactic{}
+	//刚烈不屈
+	TacticsHandlerMap[consts.StrongAndUnyielding] = &StrongAndUnyieldingTactic{}
+	//监统震军
+	TacticsHandlerMap[consts.SuperviseLeadAndSeizureArmy] = &SuperviseLeadAndSeizureArmyTactic{}
+	//镇压黄巾
+	TacticsHandlerMap[consts.SuppressYellowScarves] = &SuppressYellowScarvesTactic{}
+	//围师必阙
+	TacticsHandlerMap[consts.SurroundingTheTeacherMustBePalace] = &SurroundingTheTeacherMustBePalaceTactic{}
+	//群攻
+	TacticsHandlerMap[consts.SweepAway] = &SweepAwayTactic{}
+	//速乘其利
+	TacticsHandlerMap[consts.TakeAdvantageOfQuickly] = &TakeAdvantageOfQuicklyTactic{}
+	//强攻
+	TacticsHandlerMap[consts.TakeByStorm] = &TakeByStormTactic{}
+	//先成其虑
+	TacticsHandlerMap[consts.TakeCareOfYourselfFirst] = &TakeCareOfYourselfFirstTactic{}
+	//挟势弄权
+	TacticsHandlerMap[consts.TakingAdvantageOfTheSituationToGainPower] = &TakingAdvantageOfTheSituationToGainPowerTactic{}
+	//气凌三军
+	TacticsHandlerMap[consts.TemperamentSurpassesTheThreeArmies] = &TemperamentSurpassesTheThreeArmiesTactic{}
+	//万箭齐发
+	TacticsHandlerMap[consts.TenThousandArrowsShotAtOnce] = &TenThousandArrowsShotAtOnceTactic{}
+	//十胜十败
+	TacticsHandlerMap[consts.TenWinsAndTenLosses] = &TenWinsAndTenLossesTactic{}
+	//藤甲兵
+	TacticsHandlerMap[consts.TengjiaSoldier] = &TengjiaSoldierTactic{}
+	//抬棺决战
+	TacticsHandlerMap[consts.TheBattleOfCarryingCoffin] = &TheBattleOfCarryingCoffinTactic{}
+	//勇者得前
+	TacticsHandlerMap[consts.TheBraveLeadTheWay] = &TheBraveLeadTheWayTactic{}
 }
 
 func initTacticsMap() {
@@ -343,6 +379,7 @@ func initTacticsMap() {
 	ActivePrepareTacticsMap[consts.AdvancingSecretlyByUnknownPath] = true
 
 	//被动战法
+	PassiveTacticsMap[consts.StrongAndUnyielding] = true
 	PassiveTacticsMap[consts.SelfHealing] = true
 	PassiveTacticsMap[consts.ScholarsStriveToGoFirst] = true
 	PassiveTacticsMap[consts.RiseUpBravely] = true
@@ -369,7 +406,12 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.MarchInto] = true
 	PassiveTacticsMap[consts.RaidInFormation] = true
 	PassiveTacticsMap[consts.SpecialSoldierPassRoad] = true
+	PassiveTacticsMap[consts.StrongAndBraveWithoutAdvance] = true
+	PassiveTacticsMap[consts.TemperamentSurpassesTheThreeArmies] = true
 	//指挥战法
+	CommandTacticsMap[consts.TenWinsAndTenLosses] = true
+	CommandTacticsMap[consts.SurroundingTheTeacherMustBePalace] = true
+	CommandTacticsMap[consts.StealingLuckAndRidingPets] = true
 	CommandTacticsMap[consts.SittingIntheSoutheast] = true
 	CommandTacticsMap[consts.IronHorseDrive] = true
 	CommandTacticsMap[consts.OpportunityIdentificationFirst] = true
@@ -404,6 +446,8 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.ProudPrince] = true
 	CommandTacticsMap[consts.RampartsOfMetalsAndAMoatOfHotWater] = true
 	CommandTacticsMap[consts.RiverFireFlame] = true
+	CommandTacticsMap[consts.SuperviseLeadAndSeizureArmy] = true
+	CommandTacticsMap[consts.SuppressYellowScarves] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -416,7 +460,13 @@ func initTacticsMap() {
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	ArmTacticsMap[consts.JinFanArmy] = true
 	ArmTacticsMap[consts.QingZhouSoldier] = true
+	ArmTacticsMap[consts.TengjiaSoldier] = true
 	//主动
+	ActiveTacticsMap[consts.TheBattleOfCarryingCoffin] = true
+	ActiveTacticsMap[consts.TenThousandArrowsShotAtOnce] = true
+	ActiveTacticsMap[consts.TakeByStorm] = true
+	ActiveTacticsMap[consts.SweepAway] = true
+	ActiveTacticsMap[consts.StrikeItsLazyReturn] = true
 	ActiveTacticsMap[consts.SoundOfTheWindAndTheCryOfTheStork] = true
 	ActiveTacticsMap[consts.SleepOnTheBrushwoodAndTasteTheGall] = true
 	ActiveTacticsMap[consts.SlaughterMeatOnTable] = true
@@ -489,8 +539,10 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.FireJointVenture] = true
 	ActiveTacticsMap[consts.ForetellLikeProphet] = true
 	ActiveTacticsMap[consts.FrustrationAndAngerAttack] = true
+	ActiveTacticsMap[consts.TakingAdvantageOfTheSituationToGainPower] = true
 
 	//突击
+	AssaultTacticsMap[consts.TheBraveLeadTheWay] = true
 	AssaultTacticsMap[consts.RepelForeignAggression] = true
 	AssaultTacticsMap[consts.PeerlessOrMatchlessBraveryOrValour] = true
 	AssaultTacticsMap[consts.ViolentAndHeartless] = true
@@ -498,4 +550,6 @@ func initTacticsMap() {
 	AssaultTacticsMap[consts.GhostGodThunderForce] = true
 	AssaultTacticsMap[consts.HiddenMystery] = true
 	AssaultTacticsMap[consts.HundredCavalryRobberyBattalions] = true
+	AssaultTacticsMap[consts.TakeAdvantageOfQuickly] = true
+	AssaultTacticsMap[consts.TakeCareOfYourselfFirst] = true
 }

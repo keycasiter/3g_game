@@ -1,9 +1,13 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 击其惰归
@@ -58,6 +62,58 @@ func (s StrikeItsLazyReturnTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (s StrikeItsLazyReturnTactic) Execute() {
+	ctx := s.tacticsParams.Ctx
+	currentGeneral := s.tacticsParams.CurrentGeneral
+	currentRound := s.tacticsParams.CurrentRound
+	lastLostSoliderNum := currentGeneral.LossSoldierNum
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		s.Name(),
+	)
+
+	// 自身在下回合行动前，若受到超过最大兵力20%的伤害，则恢复自身兵力（治疗率296%，受统率影响）并降低25%受到谋略伤害（受统率影响），持续1回合
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerGeneral := params.CurrentGeneral
+		triggerRound := params.CurrentRound
+		triggerLostSoliderNum := triggerGeneral.LossSoldierNum
+
+		if currentRound+1 == triggerRound {
+			diffLostSoliderNum := triggerLostSoliderNum - lastLostSoliderNum
+			if cast.ToFloat64(diffLostSoliderNum/triggerGeneral.SoldierNum) > 0.2 {
+				//恢复
+				resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.CommandBase * 2.96)
+				util.ResumeSoldierNum(ctx, currentGeneral, resumeNum)
+
+				//效果
+				if util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
+					EffectRate:     0.25,
+					EffectRound:    1,
+					FromTactic:     s.Id(),
+					ProduceGeneral: triggerGeneral,
+				}).IsSuccess {
+					util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeResp := &vo.TacticsTriggerResult{}
+						revokeGeneral := params.CurrentGeneral
+
+						util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+							Ctx:        ctx,
+							General:    revokeGeneral,
+							EffectType: consts.BuffEffectType_SufferStrategyDamageDeduce,
+							TacticId:   s.Id(),
+						})
+
+						return revokeResp
+					})
+				}
+			}
+		}
+
+		return triggerResp
+	})
+
+	// 否则对敌军全体造成兵刃伤害（伤害率154%）
 
 }
 

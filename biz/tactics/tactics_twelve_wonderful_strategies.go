@@ -6,7 +6,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//十二奇策
+// 十二奇策
+// 移除敌军群体（1～2人）增益状态，提高我军全体1回合6%主动战法发动率（受智力影响）并使其瑕疵发动主动战法后，对敌军单体造成谋略攻击（伤害率102%，受智力影响）
+// 主动，45%
 type TwelveWonderfulStrategiesTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

@@ -6,6 +6,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+// 白马义从
+// 我军全体战斗前2回合获得先攻，并提高10%主动战法发动率
+// 若公孙瓒统领，提高发动率受速度影响
+// 兵种，100%
 type WhiteHorseFollowsWithLoyaltyTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

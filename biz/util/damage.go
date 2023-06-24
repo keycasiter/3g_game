@@ -4,6 +4,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/spf13/cast"
 )
@@ -666,8 +667,18 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 
 	//伤害提升效果
 	//自带主动战法伤害提升
-	if attackGeneral.EquipTactics[0].Id == param.TacticId {
+	if attackGeneral.EquipTactics[0].Id == param.TacticId && tactics.ActiveTacticsMap[attackGeneral.EquipTactics[0].Id] {
 		if effectParams, ok := BuffEffectGet(attackGeneral, consts.BuffEffectType_TacticsActiveWithSelfDamageImprove); ok {
+			effectRate := float64(0)
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
+		}
+	}
+	//主动战法伤害提升
+	if tactics.ActiveTacticsMap[attackGeneral.EquipTactics[0].Id] {
+		if effectParams, ok := BuffEffectGet(attackGeneral, consts.BuffEffectType_TacticsActiveDamageImprove); ok {
 			effectRate := float64(0)
 			for _, effectParam := range effectParams {
 				effectRate += effectParam.EffectRate

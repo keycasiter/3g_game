@@ -3,8 +3,11 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 窃幸乘宠
@@ -32,7 +35,63 @@ func (s StealingLuckAndRidingPetsTactic) Prepare() {
 	)
 	// 我方主将恢复兵力且自身不为主将时，降低其20%治疗量，自身会恢复降低的治疗量，奇数回合对敌军群体（2人）造成谋略伤害（伤害率90%，受智力影响），
 	// 额外对其中智力低于自身的单位造成谋略伤害（伤害率120%，受智力影响）
+	pairMasterGeneral := util.GetPairMasterGeneral(s.tacticsParams)
+	if pairMasterGeneral.BaseInfo.Id != currentGeneral.BaseInfo.Id {
+		util.DebuffEffectWrapSet(ctx, pairMasterGeneral, consts.DebuffEffectType_SufferResumeDeduce, &vo.EffectHolderParams{
+			EffectRate:     0.2,
+			FromTactic:     s.Id(),
+			ProduceGeneral: currentGeneral,
+		})
+	}
+	//注册效果器
+	util.TacticsTriggerWrapRegister(pairMasterGeneral, consts.BattleAction_SufferResume, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentResume) * 0.2)
 
+		util.ResumeSoldierNum(ctx, currentGeneral, resumeNum)
+
+		return triggerResp
+	})
+
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerGeneral := params.CurrentGeneral
+		triggerRound := params.CurrentRound
+
+		//奇数回合
+		if triggerRound%2 != 0 {
+			//敌军2人
+			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.9)
+			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, s.tacticsParams)
+			for _, enemyGeneral := range enemyGenerals {
+				//伤害
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: nil,
+					AttackGeneral: triggerGeneral,
+					SufferGeneral: enemyGeneral,
+					DamageType:    consts.DamageType_Strategy,
+					Damage:        dmg,
+					TacticId:      s.Id(),
+					TacticName:    s.Name(),
+				})
+				//额外对其中智力低于自身的单位造成谋略伤害（伤害率120%，受智力影响）
+				if enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase < triggerGeneral.BaseInfo.AbilityAttr.IntelligenceRate {
+					strategyDmg := cast.ToInt64(enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
+					util.TacticDamage(&util.TacticDamageParam{
+						TacticsParams: s.tacticsParams,
+						AttackGeneral: triggerGeneral,
+						SufferGeneral: enemyGeneral,
+						DamageType:    consts.DamageType_Strategy,
+						Damage:        strategyDmg,
+						TacticId:      s.Id(),
+						TacticName:    s.Name(),
+					})
+				}
+			}
+		}
+
+		return triggerResp
+	})
 }
 
 func (s StealingLuckAndRidingPetsTactic) Id() consts.TacticId {

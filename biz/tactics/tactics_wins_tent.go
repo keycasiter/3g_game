@@ -6,7 +6,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//校胜帷幄
+// 校胜帷幄
+// 战斗中，提高己方主将14%奇谋几率，及20%奇谋伤害，同时为己方主将分担30%的伤害（自身为主将时无效）
+// 指挥，100%
 type WinsTentTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

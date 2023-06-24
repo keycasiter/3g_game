@@ -6,7 +6,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//鸱苕凤姿
+// 鸱苕凤姿
+// 普通攻击伤害提高60%（受目标损失兵力影响），
+// 战斗第5回合时，锁定敌方兵力最低单体直到战斗结束，并且普通攻击时有70%概率使目标进入禁疗状态，持续1回合
+// 被动 ，100%
 type ThePostureOfAPhoenixWithAChickAndASweetPotatoTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

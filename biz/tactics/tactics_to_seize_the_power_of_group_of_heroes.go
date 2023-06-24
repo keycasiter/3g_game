@@ -6,7 +6,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//搦战群雄
+// 搦战群雄
+// 准备1回合，对敌军群体（2人）造成一次兵刃攻击（伤害率200%），随后使自己造成兵刃伤害提高25%，受到兵刃伤害降低25%，（受武力影响），持续2回合
+// 主动，35%
 type ToSeizeThePowerOfGroupOfHeroesTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

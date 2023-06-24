@@ -1,23 +1,67 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
-//刚烈不屈
+// 刚烈不屈
+// 战斗中，使自己统率提高38点，受到兵刃伤害时有40%几率对敌军群体（2人）造成兵刃伤害（伤害率84%）
+// 被动，100%
 type StrongAndUnyieldingTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
 }
 
 func (s StrongAndUnyieldingTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	panic("implement me")
+	s.tacticsParams = tacticsParams
+	s.triggerRate = 1.0
+	return s
 }
 
 func (s StrongAndUnyieldingTactic) Prepare() {
-	panic("implement me")
+	ctx := s.tacticsParams.Ctx
+	currentGeneral := s.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		s.Name(),
+	)
+
+	// 战斗中，使自己统率提高38点，受到兵刃伤害时有40%几率对敌军群体（2人）造成兵刃伤害（伤害率84%）
+	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{
+		EffectValue:    38,
+		FromTactic:     s.Id(),
+		ProduceGeneral: currentGeneral,
+	})
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferWeaponDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerGeneral := params.CurrentGeneral
+
+		if util.GenerateRate(0.4) {
+			//找到敌军2人
+			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, s.tacticsParams)
+			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.84)
+			for _, enemyGeneral := range enemyGenerals {
+				util.TacticDamage(&util.TacticDamageParam{
+					TacticsParams: s.tacticsParams,
+					AttackGeneral: triggerGeneral,
+					SufferGeneral: enemyGeneral,
+					DamageType:    consts.DamageType_Weapon,
+					Damage:        dmg,
+					TacticId:      s.Id(),
+					TacticName:    s.Name(),
+				})
+			}
+		}
+
+		return triggerResp
+	})
 }
 
 func (s StrongAndUnyieldingTactic) Id() consts.TacticId {
@@ -29,29 +73,34 @@ func (s StrongAndUnyieldingTactic) Name() string {
 }
 
 func (s StrongAndUnyieldingTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (s StrongAndUnyieldingTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return s.triggerRate
 }
 
 func (s StrongAndUnyieldingTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	s.triggerRate = rate
 }
 
 func (s StrongAndUnyieldingTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Passive
 }
 
 func (s StrongAndUnyieldingTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (s StrongAndUnyieldingTactic) Execute() {
-	panic("implement me")
 }
 
 func (s StrongAndUnyieldingTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

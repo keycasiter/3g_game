@@ -6,7 +6,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//虎痴
+// 虎痴
+// 战斗中，每回合选择一名敌军单体，自身发动的所有攻击都会锁定该目标且对其造成伤害提高33%（受武力影响）
+// 如果击败目标会使自身获得破阵状态，直到战斗结束
+// 被动，100%
 type TigerIdiotTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64

@@ -49,10 +49,11 @@ type ArmsAttr struct {
 
 // 战法资料
 type Tactics struct {
-	Id            consts.TacticId `bson:"id"`
-	Name          string          `bson:"name"`
-	SelfContained string          `bson:"self_contained"`
-	Inherit       string          `bson:"inherit"`
+	Id            consts.TacticId    `bson:"id"`
+	Name          string             `bson:"name"`
+	SelfContained string             `bson:"self_contained"`
+	Inherit       string             `bson:"inherit"`
+	Type          consts.TacticsType `bson:"type"`
 }
 
 // 列传资料

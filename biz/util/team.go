@@ -37,6 +37,17 @@ func GetPairGeneralArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	return pairGeneralArr
 }
 
+// 找到兵力最低武将
+func GetLowestSoliderNumGeneral(generals []*vo.BattleGeneral) *vo.BattleGeneral {
+	lowestGeneral := generals[0]
+	for _, general := range generals {
+		if general.SoldierNum < lowestGeneral.SoldierNum {
+			lowestGeneral = general
+		}
+	}
+	return lowestGeneral
+}
+
 // 找到当前执行战法武将的敌军Map
 func GetEnemyGeneralMap(tacticsParams *model.TacticsParams) map[int64]*vo.BattleGeneral {
 	enemyGeneralMap := make(map[int64]*vo.BattleGeneral, 0)
@@ -634,6 +645,18 @@ func GetEnemyGeneralWhoIsHighestIntelligence(params *model.TacticsParams) *vo.Ba
 	highestGeneral := enemyGenerals[0]
 	for _, general := range enemyGenerals {
 		if general.BaseInfo.AbilityAttr.IntelligenceBase > highestGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
+			highestGeneral = general
+		}
+	}
+	return highestGeneral
+}
+
+// 获取敌军武力最高的武将
+func GetEnemyGeneralWhoIsHighestForce(params *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(params)
+	highestGeneral := enemyGenerals[0]
+	for _, general := range enemyGenerals {
+		if general.BaseInfo.AbilityAttr.ForceBase > highestGeneral.BaseInfo.AbilityAttr.ForceBase {
 			highestGeneral = general
 		}
 	}

@@ -290,6 +290,17 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		AttackDamage(tacticsParams, attackGeneral, sufferGeneral.ShareResponsibilityForByGeneral, shareDmg)
 	}
 
+	//首次受攻击触发效果
+	if sufferGeneral.SufferExecuteWeaponAttackNum == 0 {
+		if effectParams, ok := DeBuffEffectGet(sufferGeneral, consts.DebuffEffectType_ShockingFourRealms_Prepare); ok {
+			effectRate := float64(0)
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+			attackDmg = cast.ToInt64(cast.ToFloat64(attackDmg) * (1 + effectRate))
+		}
+	}
+
 	//伤害计算
 	finalDmg := int64(0)
 	remainSoldierNum := int64(0)
@@ -306,8 +317,10 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	//记录伤兵
 	sufferGeneral.LossSoldierNum += attackDmg
 	//记录普通次数
-	attackGeneral.GeneralAttackNum++
-	sufferGeneral.SufferGeneralAttackNum++
+	attackGeneral.ExecuteGeneralAttackNum++
+	attackGeneral.ExecuteWeaponAttackNum++
+	sufferGeneral.SufferExecuteGeneralAttackNum++
+	sufferGeneral.SufferExecuteWeaponAttackNum++
 
 	hlog.CtxInfof(ctx, "[%s]损失了兵力%d(%d↘%d)", sufferGeneral.BaseInfo.Name, finalDmg, defSoldierNum, remainSoldierNum)
 
@@ -399,6 +412,8 @@ type TacticDamageParam struct {
 	DamageType consts.DamageType
 	//伤害
 	Damage int64
+	//战法ID
+	TacticId consts.TacticId
 	//战法名
 	TacticName string
 	//效果名
@@ -647,6 +662,43 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 				return
 			}
 		}
+	}
+
+	//伤害提升效果
+	//自带主动战法伤害提升
+	if attackGeneral.EquipTactics[0].Id == param.TacticId {
+		if effectParams, ok := BuffEffectGet(attackGeneral, consts.BuffEffectType_TacticsActiveWithSelfDamageImprove); ok {
+			effectRate := float64(0)
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
+		}
+	}
+	//伤害提升：兵刃/谋略
+	switch param.DamageType {
+	case consts.DamageType_Weapon:
+		if effectParams, ok := BuffEffectGet(attackGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove); ok {
+			effectRate := float64(0)
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
+		}
+		//计数
+		attackGeneral.ExecuteWeaponAttackNum++
+		sufferGeneral.SufferExecuteWeaponAttackNum++
+	case consts.DamageType_Strategy:
+		if effectParams, ok := BuffEffectGet(attackGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove); ok {
+			effectRate := float64(0)
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
+		}
+		//计数
+		attackGeneral.ExecuteStrategyAttackNum++
+		sufferGeneral.SufferExecuteStrategyAttackNum++
 	}
 
 	//伤害分担

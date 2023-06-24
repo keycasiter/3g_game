@@ -770,6 +770,8 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 				consts.DebuffEffectType_Taunt,
 			)
 			return &EffectWrapSetResp{}
+		} else {
+			general.TauntByGeneral = effectParam.ProduceGeneral
 		}
 	}
 
@@ -1106,6 +1108,16 @@ func DebuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 		)
 	}
 	general.DeBuffEffectHolderMap = map[consts.DebuffEffectType][]*vo.EffectHolderParams{}
+}
+
+// 清除准备战法冷却
+func TacticFrozenClean(ctx context.Context, general *vo.BattleGeneral) {
+	general.TacticFrozenMap = map[consts.TacticId]bool{}
+}
+
+// 清除准备战法冷却
+func TacticFrozenOfTacticClean(ctx context.Context, general *vo.BattleGeneral, tacticId consts.TacticId) {
+	general.TacticFrozenMap[tacticId] = false
 }
 
 // 战法触发器注册

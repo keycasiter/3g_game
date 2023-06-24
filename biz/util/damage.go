@@ -190,8 +190,18 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		}
 	}
 
+	//嘲讽效果判断
+	if DeBuffEffectContains(attackGeneral, consts.DebuffEffectType_Taunt) && attackGeneral.TauntByGeneral != nil {
+		hlog.CtxInfof(ctx, "[%s]执行来自[%s]的「%v」效果",
+			sufferGeneral.BaseInfo.Name,
+			sufferGeneral.HelpByGeneral.BaseInfo.Name,
+			consts.DebuffEffectType_Taunt,
+		)
+		AttackDamage(tacticsParams, attackGeneral, attackGeneral.TauntByGeneral, 0)
+		return
+	}
 	//援护效果判断
-	if sufferGeneral.HelpByGeneral != nil {
+	if BuffEffectContains(attackGeneral, consts.BuffEffectType_Intervene) && sufferGeneral.HelpByGeneral != nil {
 		hlog.CtxInfof(ctx, "[%s]执行来自[%s]的「%v」效果",
 			sufferGeneral.BaseInfo.Name,
 			sufferGeneral.HelpByGeneral.BaseInfo.Name,
@@ -428,6 +438,27 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 				f(params)
 			}
 		}
+		if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_TacticEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: attackGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
+		//「战法攻击后」触发器
+		if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferTacticEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: attackGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
 		//「发动兵刃/谋略伤害结束」触发器
 		battleAction := consts.BattleAction_StrategyDamageEnd
 		if damageType == consts.DamageType_Weapon {
@@ -520,6 +551,26 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		sufferBattleAction = consts.BattleAction_SufferWeaponDamage
 	}
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[sufferBattleAction]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_Tactic]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferTactic]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
 				CurrentRound:   tacticsParams.CurrentRound,

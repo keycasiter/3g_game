@@ -23,6 +23,8 @@ const (
 	ZhangHe
 	//关兴
 	GuanXing
+	//张苞
+	ZhangBao
 	//甘宁
 	GanNing
 	//兀突骨
@@ -33,4 +35,12 @@ const (
 	XuChu
 	//典韦
 	DianWei
+	//陈到
+	ChenDao
+	//公孙瓒
+	GongSunZan
+	//马腾
+	MaTeng
+	//孙权
+	SunQuan
 )

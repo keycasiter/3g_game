@@ -152,6 +152,14 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	soldierNum := attackGeneral.SoldierNum
 	defSoldierNum := sufferGeneral.SoldierNum
 
+	//虎痴效果
+	if effectParams, ok := BuffEffectGet(attackGeneral, consts.BuffEffectType_TigerIdiot_Locked); ok {
+		if len(effectParams) > 0 {
+			effectParam := effectParams[0]
+			sufferGeneral = effectParam.LockingTarget
+		}
+	}
+
 	hlog.CtxInfof(ctx, "[%s]对[%s]发动普通攻击",
 		attackGeneral.BaseInfo.Name,
 		sufferGeneral.BaseInfo.Name,
@@ -535,6 +543,14 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	//触发器禁用开关
 	if tacticName == "连环计" && param.IsBanInterLockedEffect {
 		return
+	}
+
+	//虎痴效果
+	if effectParams, ok := BuffEffectGet(attackGeneral, consts.BuffEffectType_TigerIdiot_Locked); ok {
+		if len(effectParams) > 0 {
+			effectParam := effectParams[0]
+			sufferGeneral = effectParam.LockingTarget
+		}
 	}
 
 	// 「遭受伤害开始」触发器

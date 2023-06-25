@@ -751,6 +751,66 @@ func DeduceGeneralAttr(general *vo.BattleGeneral, attr consts.AbilityAttr, attrV
 	}
 }
 
+// 获取兵种适性较高武将
+func GetHighestArmAbilityGeneral(generals []*vo.BattleGeneral, armType consts.ArmType) *vo.BattleGeneral {
+	highestGeneral := generals[0]
+	for _, general := range generals {
+		switch armType {
+		case consts.ArmType_Apparatus:
+			if general.BaseInfo.ArmsAttr.Apparatus < highestGeneral.BaseInfo.ArmsAttr.Apparatus {
+				highestGeneral = general
+			}
+		case consts.ArmType_Mauler:
+			if general.BaseInfo.ArmsAttr.Mauler < highestGeneral.BaseInfo.ArmsAttr.Mauler {
+				highestGeneral = general
+			}
+		case consts.ArmType_Cavalry:
+			if general.BaseInfo.ArmsAttr.Cavalry < highestGeneral.BaseInfo.ArmsAttr.Cavalry {
+				highestGeneral = general
+			}
+		case consts.ArmType_Spearman:
+			if general.BaseInfo.ArmsAttr.Spearman < highestGeneral.BaseInfo.ArmsAttr.Spearman {
+				highestGeneral = general
+			}
+		case consts.ArmType_Archers:
+			if general.BaseInfo.ArmsAttr.Archers < highestGeneral.BaseInfo.ArmsAttr.Archers {
+				highestGeneral = general
+			}
+		}
+	}
+	return highestGeneral
+}
+
+// 获取兵种适性较低武将
+func GetLowestArmAbilityGeneral(generals []*vo.BattleGeneral, armType consts.ArmType) *vo.BattleGeneral {
+	lowestGeneral := generals[0]
+	for _, general := range generals {
+		switch armType {
+		case consts.ArmType_Apparatus:
+			if general.BaseInfo.ArmsAttr.Apparatus > lowestGeneral.BaseInfo.ArmsAttr.Apparatus {
+				lowestGeneral = general
+			}
+		case consts.ArmType_Mauler:
+			if general.BaseInfo.ArmsAttr.Mauler > lowestGeneral.BaseInfo.ArmsAttr.Mauler {
+				lowestGeneral = general
+			}
+		case consts.ArmType_Cavalry:
+			if general.BaseInfo.ArmsAttr.Cavalry > lowestGeneral.BaseInfo.ArmsAttr.Cavalry {
+				lowestGeneral = general
+			}
+		case consts.ArmType_Spearman:
+			if general.BaseInfo.ArmsAttr.Spearman > lowestGeneral.BaseInfo.ArmsAttr.Spearman {
+				lowestGeneral = general
+			}
+		case consts.ArmType_Archers:
+			if general.BaseInfo.ArmsAttr.Archers > lowestGeneral.BaseInfo.ArmsAttr.Archers {
+				lowestGeneral = general
+			}
+		}
+	}
+	return lowestGeneral
+}
+
 // 找到武将最高属性
 func GetGeneralHighestAttr(general *vo.BattleGeneral) (attr consts.AbilityAttr, attrValue float64) {
 	highAttr := general.BaseInfo.AbilityAttr.ForceBase

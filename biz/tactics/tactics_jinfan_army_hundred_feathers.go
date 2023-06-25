@@ -1,23 +1,56 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//锦帆百翎
+// 锦帆百翎
+// 战斗中，提高自身50%会心几率及20%会心伤害；
+// 自身为主将时，提高友军群体（2人）5%会心几率及10%会心伤害
+// 被动，100%
 type JinfanArmyHundredFeathersTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
 }
 
 func (j JinfanArmyHundredFeathersTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	panic("implement me")
+	j.tacticsParams = tacticsParams
+	j.triggerRate = 1.0
+	return j
 }
 
 func (j JinfanArmyHundredFeathersTactic) Prepare() {
-	panic("implement me")
+	ctx := j.tacticsParams.Ctx
+	currentGeneral := j.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		j.Name(),
+	)
+	// 战斗中，提高自身50%会心几率及20%会心伤害；
+	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_EnhanceWeapon, &vo.EffectHolderParams{
+		TriggerRate:    0.5,
+		EffectRate:     0.2,
+		FromTactic:     j.Id(),
+		ProduceGeneral: currentGeneral,
+	})
+	// 自身为主将时，提高友军群体（2人）5%会心几率及10%会心伤害
+	if currentGeneral.IsMaster {
+		pairGenerals := util.GetPairGeneralsTwoArr(j.tacticsParams)
+		for _, pairGeneral := range pairGenerals {
+			util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_EnhanceWeapon, &vo.EffectHolderParams{
+				TriggerRate:    0.05,
+				EffectRate:     0.1,
+				FromTactic:     j.Id(),
+				ProduceGeneral: currentGeneral,
+			})
+		}
+	}
 }
 
 func (j JinfanArmyHundredFeathersTactic) Id() consts.TacticId {
@@ -29,29 +62,35 @@ func (j JinfanArmyHundredFeathersTactic) Name() string {
 }
 
 func (j JinfanArmyHundredFeathersTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (j JinfanArmyHundredFeathersTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return j.triggerRate
 }
 
 func (j JinfanArmyHundredFeathersTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	j.triggerRate = rate
 }
 
 func (j JinfanArmyHundredFeathersTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Passive
 }
 
 func (j JinfanArmyHundredFeathersTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (j JinfanArmyHundredFeathersTactic) Execute() {
-	panic("implement me")
+
 }
 
 func (j JinfanArmyHundredFeathersTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

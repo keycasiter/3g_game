@@ -55,7 +55,13 @@ func (h HiddenArrowsAreDifficultToGuardAgainstTactic) TacticsType() consts.Tacti
 }
 
 func (h HiddenArrowsAreDifficultToGuardAgainstTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (h HiddenArrowsAreDifficultToGuardAgainstTactic) Execute() {

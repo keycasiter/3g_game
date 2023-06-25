@@ -9,9 +9,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//暂避其锋
-//战斗开始后前3回合，使我军智力最高的武将受到兵刃伤害降低40%（受智力影响）
-//使我军武力最高的武将受到的谋略伤害降低40%（受智力影响）
+// 暂避其锋
+// 战斗开始后前3回合，使我军智力最高的武将受到兵刃伤害降低40%（受智力影响）
+// 使我军武力最高的武将受到的谋略伤害降低40%（受智力影响）
 type TakeRefugeFromEnemiesTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -102,7 +102,7 @@ func (t TakeRefugeFromEnemiesTactic) Name() string {
 }
 
 func (t TakeRefugeFromEnemiesTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_Inherit
 }
 
 func (t TakeRefugeFromEnemiesTactic) GetTriggerRate() float64 {

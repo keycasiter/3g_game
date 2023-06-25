@@ -414,6 +414,40 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.WaitAtOnesEaseForTheFatigued] = &WaitAtOnesEaseForTheFatiguedTactic{}
 	//当锋摧决
 	TacticsHandlerMap[consts.WhenTheFrontIsDestroyed] = &WhenTheFrontIsDestroyedTactic{}
+	//白毦兵
+	TacticsHandlerMap[consts.WhiteArmy] = &WhiteArmyTactic{}
+	//白马义从
+	TacticsHandlerMap[consts.WhiteHorseFollowsWithLoyalty] = &WhiteHorseFollowsWithLoyaltyTactic{}
+	//风助火势
+	TacticsHandlerMap[consts.WindAssistedFire] = &WindAssistedFireTactic{}
+	//校胜帷幄
+	TacticsHandlerMap[consts.WinsTent] = &WinsTentTactic{}
+	//竭忠尽智
+	TacticsHandlerMap[consts.WithAllTheHeart] = &WithAllTheHeartTactic{}
+	//兵无常势
+	TacticsHandlerMap[consts.WorkOutMeasuresToSuitLocalConditions] = &WorkOutMeasuresToSuitLocalConditionsTactic{}
+	//武锋阵
+	TacticsHandlerMap[consts.WuFengArray] = &WuFengArrayTactic{}
+	//西凉铁骑
+	TacticsHandlerMap[consts.XiLiangIronCavalry] = &XiLiangIronCavalryTactic{}
+	//燕人咆哮
+	TacticsHandlerMap[consts.YanPeopleRoar] = &YanPeopleRoarTactic{}
+	//云聚影从
+	TacticsHandlerMap[consts.CloudGatheringShadowFrom] = &CloudGatheringShadowFromTactic{}
+	//处兹不惑
+	TacticsHandlerMap[consts.InChaosNotConfused] = &InChaosNotConfusedTactic{}
+	//鸱苕凤姿
+	TacticsHandlerMap[consts.ThePostureOfAPhoenixWithAChickAndASweetPotato] = &ThePostureOfAPhoenixWithAChickAndASweetPotatoTactic{}
+	//狮子奋迅
+	TacticsHandlerMap[consts.TheLionFliesFast] = &TheLionFliesFastTactic{}
+	//工神
+	TacticsHandlerMap[consts.TheGodOfCraftsmen] = &TheGodOfCraftsmenTactic{}
+	//锦帆百翎
+	TacticsHandlerMap[consts.JinfanArmyHundredFeathers] = &JinfanArmyHundredFeathersTactic{}
+	//肉身铁壁
+	TacticsHandlerMap[consts.CorporealIronWall] = &CorporealIronWallTactic{}
+	//刀出如霆
+	TacticsHandlerMap[consts.TheKnifeLikeThunderbolt] = &TheKnifeLikeThunderboltTactic{}
 }
 
 func initTacticsMap() {
@@ -422,6 +456,8 @@ func initTacticsMap() {
 	ActivePrepareTacticsMap[consts.ThunderStruck] = true
 
 	//被动战法
+	PassiveTacticsMap[consts.CorporealIronWall] = true
+	PassiveTacticsMap[consts.YanPeopleRoar] = true
 	PassiveTacticsMap[consts.ThousandMileWalkingSingleRider] = true
 	PassiveTacticsMap[consts.StrongAndUnyielding] = true
 	PassiveTacticsMap[consts.SelfHealing] = true
@@ -454,7 +490,12 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.TemperamentSurpassesTheThreeArmies] = true
 	PassiveTacticsMap[consts.TigerCrouchingAndEagleSoaring] = true
 	PassiveTacticsMap[consts.TigerIdiot] = true
+	PassiveTacticsMap[consts.WorkOutMeasuresToSuitLocalConditions] = true
+	PassiveTacticsMap[consts.ThePostureOfAPhoenixWithAChickAndASweetPotato] = true
+	PassiveTacticsMap[consts.JinfanArmyHundredFeathers] = true
 	//指挥战法
+	CommandTacticsMap[consts.CloudGatheringShadowFrom] = true
+	CommandTacticsMap[consts.WinsTent] = true
 	CommandTacticsMap[consts.TenWinsAndTenLosses] = true
 	CommandTacticsMap[consts.SurroundingTheTeacherMustBePalace] = true
 	CommandTacticsMap[consts.StealingLuckAndRidingPets] = true
@@ -494,6 +535,7 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.RiverFireFlame] = true
 	CommandTacticsMap[consts.SuperviseLeadAndSeizureArmy] = true
 	CommandTacticsMap[consts.SuppressYellowScarves] = true
+	CommandTacticsMap[consts.TheGodOfCraftsmen] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -502,14 +544,23 @@ func initTacticsMap() {
 	TroopsTacticsMap[consts.HiddenDragonArray] = true
 	TroopsTacticsMap[consts.ShapelyArray] = true
 	TroopsTacticsMap[consts.ThreePotentialArray] = true
+	TroopsTacticsMap[consts.WuFengArray] = true
 	//兵种
+	ArmTacticsMap[consts.XiLiangIronCavalry] = true
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	ArmTacticsMap[consts.JinFanArmy] = true
 	ArmTacticsMap[consts.QingZhouSoldier] = true
 	ArmTacticsMap[consts.TengjiaSoldier] = true
 	ArmTacticsMap[consts.TigerGuardArmy] = true
+	ArmTacticsMap[consts.WhiteArmy] = true
+	ArmTacticsMap[consts.WhiteHorseFollowsWithLoyalty] = true
 	//主动
+	ActiveTacticsMap[consts.TheKnifeLikeThunderbolt] = true
+	ActiveTacticsMap[consts.TheLionFliesFast] = true
+	ActiveTacticsMap[consts.InChaosNotConfused] = true
+	ActiveTacticsMap[consts.WithAllTheHeart] = true
+	ActiveTacticsMap[consts.WindAssistedFire] = true
 	ActiveTacticsMap[consts.WaitAtOnesEaseForTheFatigued] = true
 	ActiveTacticsMap[consts.VigorousAndWalk] = true
 	ActiveTacticsMap[consts.VanquishTheEnemy] = true

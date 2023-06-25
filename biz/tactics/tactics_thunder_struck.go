@@ -23,11 +23,12 @@ type ThunderStruckTactic struct {
 }
 
 func (t ThunderStruckTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	panic("implement me")
+	t.tacticsParams = tacticsParams
+	t.triggerRate = 0.45
+	return t
 }
 
 func (t ThunderStruckTactic) Prepare() {
-	panic("implement me")
 }
 
 func (t ThunderStruckTactic) Id() consts.TacticId {

@@ -52,29 +52,35 @@ func (b BloodyAndUnrestrainedTactic) Name() string {
 }
 
 func (b BloodyAndUnrestrainedTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (b BloodyAndUnrestrainedTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return b.triggerRate
 }
 
 func (b BloodyAndUnrestrainedTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	b.triggerRate = rate
 }
 
 func (b BloodyAndUnrestrainedTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Passive
 }
 
 func (b BloodyAndUnrestrainedTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (b BloodyAndUnrestrainedTactic) Execute() {
-	panic("implement me")
+
 }
 
 func (b BloodyAndUnrestrainedTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

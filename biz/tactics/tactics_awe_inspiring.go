@@ -34,7 +34,7 @@ func (a AweInspiringTactic) Name() string {
 }
 
 func (a AweInspiringTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (a AweInspiringTactic) GetTriggerRate() float64 {
@@ -123,5 +123,5 @@ func (a AweInspiringTactic) executeTactic(ctx context.Context, enemyGeneral *vo.
 }
 
 func (a AweInspiringTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

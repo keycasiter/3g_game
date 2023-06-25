@@ -1,6 +1,7 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -18,11 +19,23 @@ type WieldTroopsToSeekVictoryTactic struct {
 }
 
 func (w WieldTroopsToSeekVictoryTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	panic("implement me")
+	w.tacticsParams = tacticsParams
+	w.triggerRate = 1.0
+	return w
 }
 
 func (w WieldTroopsToSeekVictoryTactic) Prepare() {
-	panic("implement me")
+	ctx := w.tacticsParams.Ctx
+	currentGeneral := w.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		w.Name(),
+	)
+	// 战斗中，每当我军抵御被消耗时，使我军单体恢复一定兵力（治疗率94%，受智力影响），
+	// 抵御持续时间结束但未消耗时，使我军武力最高武将对敌军随机武将发动一次兵刃攻击（伤害率94%）
+	// 战斗前3回合，每回合有60%概率（受智力影响），自身为主将时，基础概率提升至70%，
+	// 使我军群体（2～3人）获得1次抵御，持续1回合
 }
 
 func (w WieldTroopsToSeekVictoryTactic) Id() consts.TacticId {
@@ -34,29 +47,35 @@ func (w WieldTroopsToSeekVictoryTactic) Name() string {
 }
 
 func (w WieldTroopsToSeekVictoryTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (w WieldTroopsToSeekVictoryTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return w.triggerRate
 }
 
 func (w WieldTroopsToSeekVictoryTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	w.triggerRate = rate
 }
 
 func (w WieldTroopsToSeekVictoryTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Command
 }
 
 func (w WieldTroopsToSeekVictoryTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (w WieldTroopsToSeekVictoryTactic) Execute() {
-	panic("implement me")
+
 }
 
 func (w WieldTroopsToSeekVictoryTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

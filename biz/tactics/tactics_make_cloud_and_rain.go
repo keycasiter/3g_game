@@ -131,29 +131,35 @@ func (m MakeCloudAndRainTactic) Name() string {
 }
 
 func (m MakeCloudAndRainTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (m MakeCloudAndRainTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return m.triggerRate
 }
 
 func (m MakeCloudAndRainTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	m.triggerRate = rate
 }
 
 func (m MakeCloudAndRainTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Command
 }
 
 func (m MakeCloudAndRainTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (m MakeCloudAndRainTactic) Execute() {
-	panic("implement me")
+
 }
 
 func (m MakeCloudAndRainTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

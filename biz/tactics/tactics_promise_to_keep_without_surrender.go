@@ -154,5 +154,5 @@ func (p PromiseToKeepWithoutSurrenderTactic) Execute() {
 }
 
 func (p PromiseToKeepWithoutSurrenderTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return p.isTriggerPrepare
 }

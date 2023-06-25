@@ -114,7 +114,7 @@ func (a AncientEvilComesTactic) SetTriggerRate(rate float64) {
 }
 
 func (a AncientEvilComesTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Command
 }
 
 func (a AncientEvilComesTactic) SupportArmTypes() []consts.ArmType {

@@ -9,8 +9,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//横戈跃马
-//战斗前3回合，使双方全体造成的谋略伤害降低30%，第三回合起，使我军全体造成的兵刃伤害提升20%（受速度影响），持续到战斗结束
+// 横戈跃马
+// 战斗前3回合，使双方全体造成的谋略伤害降低30%，第三回合起，使我军全体造成的兵刃伤害提升20%（受速度影响），持续到战斗结束
 type GallantTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -109,7 +109,7 @@ func (g GallantTactic) SetTriggerRate(rate float64) {
 }
 
 func (g GallantTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Command
 }
 
 func (g GallantTactic) SupportArmTypes() []consts.ArmType {

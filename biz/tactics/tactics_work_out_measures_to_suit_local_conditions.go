@@ -1,14 +1,18 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
-//兵无常势
-//战斗中，自己累积进行第3次普通攻击时，对攻击目标造成谋略伤害（伤害率240%，受智力影响），
-//并治疗自己（治疗率180%，受智力影响）
+// 兵无常势
+// 战斗中，自己累积进行第3次普通攻击时，对攻击目标造成谋略伤害（伤害率240%，受智力影响），
+// 并治疗自己（治疗率180%，受智力影响）
 type WorkOutMeasuresToSuitLocalConditionsTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -21,7 +25,40 @@ func (w WorkOutMeasuresToSuitLocalConditionsTactic) Init(tacticsParams *model.Ta
 }
 
 func (w WorkOutMeasuresToSuitLocalConditionsTactic) Prepare() {
-	panic("implement me")
+	ctx := w.tacticsParams.Ctx
+	currentGeneral := w.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		w.Name(),
+	)
+
+	//战斗中，自己累积进行第3次普通攻击时，对攻击目标造成谋略伤害（伤害率240%，受智力影响），并治疗自己（治疗率180%，受智力影响）
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_AttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerGeneral := params.CurrentGeneral
+		sufferGeneral := w.tacticsParams.CurrentSufferGeneral
+
+		if triggerGeneral.ExecuteGeneralAttackNum > 0 &&
+			triggerGeneral.ExecuteGeneralAttackNum%3 == 0 {
+			//攻击
+			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.4)
+			util.TacticDamage(&util.TacticDamageParam{
+				TacticsParams: w.tacticsParams,
+				AttackGeneral: triggerGeneral,
+				SufferGeneral: sufferGeneral,
+				DamageType:    consts.DamageType_Strategy,
+				Damage:        dmg,
+				TacticId:      w.Id(),
+				TacticName:    w.Name(),
+			})
+			//治疗
+			resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
+			util.ResumeSoldierNum(ctx, triggerGeneral, resumeNum)
+		}
+
+		return triggerResp
+	})
 }
 
 func (w WorkOutMeasuresToSuitLocalConditionsTactic) Id() consts.TacticId {

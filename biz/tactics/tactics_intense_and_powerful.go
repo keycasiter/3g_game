@@ -28,7 +28,6 @@ func (i IntenseAndPowerfulTactic) Init(tacticsParams *model.TacticsParams) _inte
 }
 
 func (i IntenseAndPowerfulTactic) Prepare() {
-	panic("implement me")
 }
 
 func (i IntenseAndPowerfulTactic) Id() consts.TacticId {

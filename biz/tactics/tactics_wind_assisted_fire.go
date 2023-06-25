@@ -1,9 +1,12 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 风助火势
@@ -58,6 +61,39 @@ func (w WindAssistedFireTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (w WindAssistedFireTactic) Execute() {
+	ctx := w.tacticsParams.Ctx
+	currentGeneral := w.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		w.Name(),
+	)
+
+	// 对敌军单体造成谋略伤害（伤害率154%，受智力影响）
+	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, w.tacticsParams)
+	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.54)
+	util.TacticDamage(&util.TacticDamageParam{
+		TacticsParams: w.tacticsParams,
+		AttackGeneral: currentGeneral,
+		SufferGeneral: enemyGeneral,
+		DamageType:    consts.DamageType_Strategy,
+		Damage:        dmg,
+		TacticId:      w.Id(),
+		TacticName:    w.Name(),
+	})
+	// 若目标处于灼烧状态，额外对目标造成一次谋略伤害（伤害率228%，受智力影响）
+	if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Firing) {
+		fireDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.28)
+		util.TacticDamage(&util.TacticDamageParam{
+			TacticsParams: w.tacticsParams,
+			AttackGeneral: currentGeneral,
+			SufferGeneral: enemyGeneral,
+			DamageType:    consts.DamageType_Strategy,
+			Damage:        fireDmg,
+			TacticId:      w.Id(),
+			TacticName:    w.Name(),
+		})
+	}
 }
 
 func (w WindAssistedFireTactic) IsTriggerPrepare() bool {

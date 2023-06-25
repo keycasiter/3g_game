@@ -1,9 +1,14 @@
 package tactics
 
 import (
+	"fmt"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 千里走单骑
@@ -21,6 +26,118 @@ func (t ThousandMileWalkingSingleRiderTactic) Init(tacticsParams *model.TacticsP
 }
 
 func (t ThousandMileWalkingSingleRiderTactic) Prepare() {
+	ctx := t.tacticsParams.Ctx
+	currentGeneral := t.tacticsParams.CurrentGeneral
+	StrikeTriggerRoundHolder := map[consts.BattleRound]bool{}
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		t.Name(),
+	)
+
+	// 战斗中，自身准备发动自带准备战法时，有70%几率（受武力影响）获得洞察状态（免疫所有控制效果）并提高50武力，持续2回合，
+	// 在此期间，自身受到普通攻击时，对攻击者进行一次反击（伤害率238%），每回合最多触发1次
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTacticEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerGeneral := params.CurrentGeneral
+		tactic := params.CurrentTactic.(_interface.Tactics)
+
+		if currentGeneral.EquipTactics[0].Id == tactic.Id() &&
+			ActivePrepareTacticsMap[tactic.Id()] {
+			triggerRate := 0.7 + triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100/100
+			if util.GenerateRate(triggerRate) {
+				//效果
+				if util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_Insight, &vo.EffectHolderParams{
+					EffectRound:    2,
+					ProduceGeneral: triggerGeneral,
+				}).IsSuccess {
+					util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeResp := &vo.TacticsTriggerResult{}
+						revokeGeneral := params.CurrentGeneral
+
+						util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+							Ctx:        ctx,
+							General:    revokeGeneral,
+							EffectType: consts.BuffEffectType_Insight,
+							TacticId:   t.Id(),
+						})
+
+						return revokeResp
+					})
+				}
+				//属性
+				if util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
+					EffectRound:    2,
+					EffectValue:    50,
+					ProduceGeneral: triggerGeneral,
+				}).IsSuccess {
+					util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeResp := &vo.TacticsTriggerResult{}
+						revokeGeneral := params.CurrentGeneral
+
+						util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+							Ctx:        ctx,
+							General:    revokeGeneral,
+							EffectType: consts.BuffEffectType_IncrForce,
+							TacticId:   t.Id(),
+						})
+
+						return revokeResp
+					})
+				}
+				//施加预备效果
+				if util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_ThousandMileWalkingSingleRider_Prepare, &vo.EffectHolderParams{
+					EffectRound:    2,
+					ProduceGeneral: triggerGeneral,
+				}).IsSuccess {
+					//消耗注册
+					util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						revokeResp := &vo.TacticsTriggerResult{}
+						revokeGeneral := params.CurrentGeneral
+
+						util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+							Ctx:        ctx,
+							General:    revokeGeneral,
+							EffectType: consts.BuffEffectType_ThousandMileWalkingSingleRider_Prepare,
+							TacticId:   t.Id(),
+						})
+
+						return revokeResp
+					})
+					//在此期间，自身受到普通攻击时，对攻击者进行一次反击（伤害率238%），每回合最多触发1次
+					util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+						tResp := &vo.TacticsTriggerResult{}
+						tGeneral := params.CurrentGeneral
+						tRound := params.CurrentRound
+						attackGeneral := params.AttackGeneral
+
+						if util.BuffEffectContains(tGeneral, consts.BuffEffectType_ThousandMileWalkingSingleRider_Prepare) &&
+							!StrikeTriggerRoundHolder[tRound] {
+
+							dmg := cast.ToInt64(tGeneral.BaseInfo.AbilityAttr.ForceBase * 2.38)
+							util.TacticDamage(&util.TacticDamageParam{
+								TacticsParams: t.tacticsParams,
+								AttackGeneral: tGeneral,
+								SufferGeneral: attackGeneral,
+								DamageType:    consts.DamageType_Weapon,
+								Damage:        dmg,
+								TacticId:      t.Id(),
+								TacticName:    t.Name(),
+								EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
+							})
+
+							//每回合触发一次
+							StrikeTriggerRoundHolder[tRound] = true
+						}
+
+						return tResp
+					})
+				}
+			}
+		}
+
+		return triggerResp
+	})
 }
 
 func (t ThousandMileWalkingSingleRiderTactic) Id() consts.TacticId {
@@ -58,11 +175,9 @@ func (t ThousandMileWalkingSingleRiderTactic) SupportArmTypes() []consts.ArmType
 }
 
 func (t ThousandMileWalkingSingleRiderTactic) Execute() {
-	//TODO implement me
-	panic("implement me")
+
 }
 
 func (t ThousandMileWalkingSingleRiderTactic) IsTriggerPrepare() bool {
-	//TODO implement me
-	panic("implement me")
+	return false
 }

@@ -1,15 +1,16 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//白毦兵
-//将枪兵进阶为攻无不破的白毦兵：
-//我军全体战斗重普通攻击后有45%概率对攻击目标再次发起一次谋略攻击（伤害率110%，受智力影响）
-//若陈到统领，则谋略攻击更为强力（伤害率130%，受智力影响）
+// 白毦兵
+// 将枪兵进阶为攻无不破的白毦兵：
+// 我军全体战斗重普通攻击后有45%概率对攻击目标再次发起一次谋略攻击（伤害率110%，受智力影响）
+// 若陈到统领，则谋略攻击更为强力（伤害率130%，受智力影响）
 type WhiteArmyTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -22,7 +23,15 @@ func (w WhiteArmyTactic) Init(tacticsParams *model.TacticsParams) _interface.Tac
 }
 
 func (w WhiteArmyTactic) Prepare() {
+	ctx := w.tacticsParams.Ctx
+	currentGeneral := w.tacticsParams.CurrentGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		w.Name(),
+	)
+	//我军全体战斗重普通攻击后有45%概率对攻击目标再次发起一次谋略攻击（伤害率110%，受智力影响）
+	//若陈到统领，则谋略攻击更为强力（伤害率130%，受智力影响）
 }
 
 func (w WhiteArmyTactic) Id() consts.TacticId {

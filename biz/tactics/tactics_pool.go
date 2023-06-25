@@ -372,13 +372,57 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.TheBattleOfCarryingCoffin] = &TheBattleOfCarryingCoffinTactic{}
 	//勇者得前
 	TacticsHandlerMap[consts.TheBraveLeadTheWay] = &TheBraveLeadTheWayTactic{}
+	//千里走单骑
+	TacticsHandlerMap[consts.ThousandMileWalkingSingleRider] = &ThousandMileWalkingSingleRiderTactic{}
+	//千里驰援
+	TacticsHandlerMap[consts.ThousandsOfMilesOfSupport] = &ThousandsOfMilesOfSupportTactic{}
+	//三势阵
+	TacticsHandlerMap[consts.ThreePotentialArray] = &ThreePotentialArrayTactic{}
+	//五雷轰顶
+	TacticsHandlerMap[consts.ThunderStruck] = &ThunderStruckTactic{}
+	//落雷
+	TacticsHandlerMap[consts.Thunderbolt] = &ThunderboltTactic{}
+	//虎豹骑
+	TacticsHandlerMap[consts.TigerAndLeopardCavalry] = &TigerAndLeopardCavalryTactic{}
+	//虎踞鹰扬
+	TacticsHandlerMap[consts.TigerCrouchingAndEagleSoaring] = &TigerCrouchingAndEagleSoaringTactic{}
+	//虎卫军
+	TacticsHandlerMap[consts.TigerGuardArmy] = &TigerGuardArmyTactic{}
+	//虎痴
+	TacticsHandlerMap[consts.TigerIdiot] = &TigerIdiotTactic{}
+	//临战先登
+	TacticsHandlerMap[consts.ToAscendBeforeBattle] = &ToAscendBeforeBattleTactic{}
+	//焚辎营垒
+	TacticsHandlerMap[consts.ToBurnBarracks] = &ToBurnBarracksTactic{}
+	//将行其疾
+	TacticsHandlerMap[consts.ToCureOnesSpeed] = &ToCureOnesSpeedTactic{}
+	//搦战群雄
+	TacticsHandlerMap[consts.ToSeizeThePowerOfGroupOfHeroes] = &ToSeizeThePowerOfGroupOfHeroesTactic{}
+	//传檄宣威
+	TacticsHandlerMap[consts.ToSpreadRumorsAndProclaimPower] = &ToSpreadRumorsAndProclaimPowerTactic{}
+	//独行赴斗
+	TacticsHandlerMap[consts.TravelingAloneToFight] = &TravelingAloneToFightTactic{}
+	//十二奇策
+	TacticsHandlerMap[consts.TwelveWonderfulStrategies] = &TwelveWonderfulStrategiesTactic{}
+	//暗潮涌动
+	TacticsHandlerMap[consts.UndercurrentSurge] = &UndercurrentSurgeTactic{}
+	//克敌制胜
+	TacticsHandlerMap[consts.VanquishTheEnemy] = &VanquishTheEnemyTactic{}
+	//骁健神行
+	TacticsHandlerMap[consts.VigorousAndWalk] = &VigorousAndWalkTactic{}
+	//以逸待劳
+	TacticsHandlerMap[consts.WaitAtOnesEaseForTheFatigued] = &WaitAtOnesEaseForTheFatiguedTactic{}
+	//当锋摧决
+	TacticsHandlerMap[consts.WhenTheFrontIsDestroyed] = &WhenTheFrontIsDestroyedTactic{}
 }
 
 func initTacticsMap() {
 	//需要准备回合的战法
 	ActivePrepareTacticsMap[consts.AdvancingSecretlyByUnknownPath] = true
+	ActivePrepareTacticsMap[consts.ThunderStruck] = true
 
 	//被动战法
+	PassiveTacticsMap[consts.ThousandMileWalkingSingleRider] = true
 	PassiveTacticsMap[consts.StrongAndUnyielding] = true
 	PassiveTacticsMap[consts.SelfHealing] = true
 	PassiveTacticsMap[consts.ScholarsStriveToGoFirst] = true
@@ -408,6 +452,8 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.SpecialSoldierPassRoad] = true
 	PassiveTacticsMap[consts.StrongAndBraveWithoutAdvance] = true
 	PassiveTacticsMap[consts.TemperamentSurpassesTheThreeArmies] = true
+	PassiveTacticsMap[consts.TigerCrouchingAndEagleSoaring] = true
+	PassiveTacticsMap[consts.TigerIdiot] = true
 	//指挥战法
 	CommandTacticsMap[consts.TenWinsAndTenLosses] = true
 	CommandTacticsMap[consts.SurroundingTheTeacherMustBePalace] = true
@@ -455,13 +501,28 @@ func initTacticsMap() {
 	TroopsTacticsMap[consts.FallIntoCamp] = true
 	TroopsTacticsMap[consts.HiddenDragonArray] = true
 	TroopsTacticsMap[consts.ShapelyArray] = true
+	TroopsTacticsMap[consts.ThreePotentialArray] = true
 	//兵种
 	ArmTacticsMap[consts.WuDangFlyArmy] = true
 	ArmTacticsMap[consts.GreatHalberdWarrior] = true
 	ArmTacticsMap[consts.JinFanArmy] = true
 	ArmTacticsMap[consts.QingZhouSoldier] = true
 	ArmTacticsMap[consts.TengjiaSoldier] = true
+	ArmTacticsMap[consts.TigerGuardArmy] = true
 	//主动
+	ActiveTacticsMap[consts.WaitAtOnesEaseForTheFatigued] = true
+	ActiveTacticsMap[consts.VigorousAndWalk] = true
+	ActiveTacticsMap[consts.VanquishTheEnemy] = true
+	ActiveTacticsMap[consts.UndercurrentSurge] = true
+	ActiveTacticsMap[consts.TwelveWonderfulStrategies] = true
+	ActiveTacticsMap[consts.TravelingAloneToFight] = true
+	ActiveTacticsMap[consts.ToSeizeThePowerOfGroupOfHeroes] = true
+	ActiveTacticsMap[consts.ToSpreadRumorsAndProclaimPower] = true
+	ActiveTacticsMap[consts.ToBurnBarracks] = true
+	ActiveTacticsMap[consts.ToAscendBeforeBattle] = true
+	ActiveTacticsMap[consts.Thunderbolt] = true
+	ActiveTacticsMap[consts.ThunderStruck] = true
+	ActiveTacticsMap[consts.ThousandsOfMilesOfSupport] = true
 	ActiveTacticsMap[consts.TheBattleOfCarryingCoffin] = true
 	ActiveTacticsMap[consts.TenThousandArrowsShotAtOnce] = true
 	ActiveTacticsMap[consts.TakeByStorm] = true
@@ -542,6 +603,8 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.TakingAdvantageOfTheSituationToGainPower] = true
 
 	//突击
+	AssaultTacticsMap[consts.WhenTheFrontIsDestroyed] = true
+	AssaultTacticsMap[consts.ToCureOnesSpeed] = true
 	AssaultTacticsMap[consts.TheBraveLeadTheWay] = true
 	AssaultTacticsMap[consts.RepelForeignAggression] = true
 	AssaultTacticsMap[consts.PeerlessOrMatchlessBraveryOrValour] = true
@@ -552,4 +615,5 @@ func initTacticsMap() {
 	AssaultTacticsMap[consts.HundredCavalryRobberyBattalions] = true
 	AssaultTacticsMap[consts.TakeAdvantageOfQuickly] = true
 	AssaultTacticsMap[consts.TakeCareOfYourselfFirst] = true
+	AssaultTacticsMap[consts.TigerAndLeopardCavalry] = true
 }

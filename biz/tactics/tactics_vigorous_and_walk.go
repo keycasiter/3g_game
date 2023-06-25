@@ -1,9 +1,13 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 骁健神行
@@ -16,11 +20,13 @@ type VigorousAndWalkTactic struct {
 }
 
 func (v VigorousAndWalkTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
-	panic("implement me")
+	v.tacticsParams = tacticsParams
+	v.triggerRate = 0.45
+	return v
 }
 
 func (v VigorousAndWalkTactic) Prepare() {
-	panic("implement me")
+
 }
 
 func (v VigorousAndWalkTactic) Id() consts.TacticId {
@@ -32,29 +38,96 @@ func (v VigorousAndWalkTactic) Name() string {
 }
 
 func (v VigorousAndWalkTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_Inherit
 }
 
 func (v VigorousAndWalkTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return v.triggerRate
 }
 
 func (v VigorousAndWalkTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	v.triggerRate = rate
 }
 
 func (v VigorousAndWalkTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Active
 }
 
 func (v VigorousAndWalkTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (v VigorousAndWalkTactic) Execute() {
-	panic("implement me")
+	ctx := v.tacticsParams.Ctx
+	currentGeneral := v.tacticsParams.CurrentGeneral
+
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		v.Name(),
+	)
+	// 如果目标已经被缴械则造成兵刃攻击（伤害率156%，受速度影响）
+	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, v.tacticsParams)
+	if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_CancelWeapon) {
+		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.56)
+		util.TacticDamage(&util.TacticDamageParam{
+			TacticsParams: v.tacticsParams,
+			AttackGeneral: currentGeneral,
+			SufferGeneral: enemyGeneral,
+			DamageType:    consts.DamageType_Weapon,
+			Damage:        dmg,
+			TacticId:      v.Id(),
+			TacticName:    v.Name(),
+		})
+	} else {
+		// 对敌军单体造成缴械状态，持续1回合，
+		if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_CancelWeapon, &vo.EffectHolderParams{
+			EffectRound:    1,
+			FromTactic:     v.Id(),
+			ProduceGeneral: currentGeneral,
+		}).IsSuccess {
+			util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				revokeResp := &vo.TacticsTriggerResult{}
+				revokeGeneral := params.CurrentGeneral
+
+				util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    revokeGeneral,
+					EffectType: consts.DebuffEffectType_CancelWeapon,
+					TacticId:   v.Id(),
+				})
+
+				return revokeResp
+			})
+		}
+	}
+	//且使自身获得必中状态，持续2回合
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_MustHit, &vo.EffectHolderParams{
+		EffectRound:    2,
+		FromTactic:     v.Id(),
+		ProduceGeneral: currentGeneral,
+	}).IsSuccess {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			revokeResp := &vo.TacticsTriggerResult{}
+			revokeGeneral := params.CurrentGeneral
+
+			util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+				Ctx:        ctx,
+				General:    revokeGeneral,
+				EffectType: consts.BuffEffectType_MustHit,
+				TacticId:   v.Id(),
+			})
+
+			return revokeResp
+		})
+	}
 }
 
 func (v VigorousAndWalkTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

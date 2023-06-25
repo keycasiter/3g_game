@@ -1,9 +1,13 @@
 package tactics
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 克敌制胜
@@ -58,7 +62,50 @@ func (v VanquishTheEnemyTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (v VanquishTheEnemyTactic) Execute() {
+	ctx := v.tacticsParams.Ctx
+	currentGeneral := v.tacticsParams.CurrentGeneral
+	sufferGeneral := v.tacticsParams.CurrentSufferGeneral
 
+	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
+		currentGeneral.BaseInfo.Name,
+		v.Name(),
+	)
+	// 普通攻击之后，对攻击目标再次造成一次谋略伤害(伤害率180%，受智力影响)；
+	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
+	util.TacticDamage(&util.TacticDamageParam{
+		TacticsParams: v.tacticsParams,
+		AttackGeneral: currentGeneral,
+		SufferGeneral: sufferGeneral,
+		DamageType:    consts.DamageType_Strategy,
+		Damage:        dmg,
+		TacticId:      v.Id(),
+		TacticName:    v.Name(),
+	})
+	// 若目标处于溃逃或中毒状态，则有85%概率使目标进入虚弱（无法造成伤害）状态，持续1回合
+	if util.DeBuffEffectContains(sufferGeneral, consts.DebuffEffectType_Methysis) ||
+		util.DeBuffEffectContains(sufferGeneral, consts.DebuffEffectType_Escape) {
+		if util.GenerateRate(0.85) {
+			if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_PoorHealth, &vo.EffectHolderParams{
+				EffectRound:    1,
+				FromTactic:     v.Id(),
+				ProduceGeneral: currentGeneral,
+			}).IsSuccess {
+				util.TacticsTriggerWrapRegister(sufferGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					revokeResp := &vo.TacticsTriggerResult{}
+					revokeGeneral := params.CurrentGeneral
+
+					util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    revokeGeneral,
+						EffectType: consts.DebuffEffectType_PoorHealth,
+						TacticId:   v.Id(),
+					})
+
+					return revokeResp
+				})
+			}
+		}
+	}
 }
 
 func (v VanquishTheEnemyTactic) IsTriggerPrepare() bool {

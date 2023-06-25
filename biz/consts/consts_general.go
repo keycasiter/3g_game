@@ -27,4 +27,10 @@ const (
 	GanNing
 	//兀突骨
 	WuTuGu
+	//曹豹
+	CaoChun
+	//许褚
+	XuChu
+	//典韦
+	DianWei
 )

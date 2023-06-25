@@ -681,6 +681,18 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 			}
 		}
 	AttactTacticFlag:
+
+		//触发「结束行动」触发器
+		if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_EndAction]; ok {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   currentRound,
+					CurrentGeneral: currentGeneral,
+				}
+				f(params)
+			}
+		}
+
 		//武将回合结束处理器
 		runCtx.GeneralRoundPostProcessor(tacticsParams)
 	}

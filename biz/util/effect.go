@@ -677,7 +677,12 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 	if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_SufferDebuffEffect]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{}
-			f(params)
+			resp := f(params)
+			if resp.IsTerminate {
+				return &EffectWrapSetResp{
+					IsSuccess: false,
+				}
+			}
 		}
 	}
 	defer func() {
@@ -871,6 +876,14 @@ func DeBuffEffectContainsControl(general *vo.BattleGeneral) bool {
 		if _, ok := controlDebuffEffectMap[effectType]; ok {
 			return true
 		}
+	}
+	return false
+}
+
+// 控制效果判断
+func IsControlDeBuffEffect(effectType consts.DebuffEffectType) bool {
+	if _, ok := controlDebuffEffectMap[effectType]; ok {
+		return true
 	}
 	return false
 }

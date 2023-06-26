@@ -1,5 +1,6 @@
 package consts
 
+// 战法枚举
 type TacticId int64
 
 const (
@@ -1251,4 +1252,294 @@ func (b TacticId) String() string {
 		return "镇压黄巾"
 	}
 	return "未知战法"
+}
+
+// ** 战法池，按类型划分 **
+// 主动
+var ActiveTacticsMap = make(map[TacticId]bool, 0)
+
+// 被动
+var PassiveTacticsMap = make(map[TacticId]bool, 0)
+
+// 指挥
+var CommandTacticsMap = make(map[TacticId]bool, 0)
+
+// 突击
+var AssaultTacticsMap = make(map[TacticId]bool, 0)
+
+// 阵法
+var TroopsTacticsMap = make(map[TacticId]bool, 0)
+
+// 兵种
+var ArmTacticsMap = make(map[TacticId]bool, 0)
+
+// 准备回合的战法
+var ActivePrepareTacticsMap = make(map[TacticId]bool, 0)
+
+func init() {
+	initTacticsMap()
+}
+
+func initTacticsMap() {
+	//需要准备回合的战法
+	ActivePrepareTacticsMap[AdvancingSecretlyByUnknownPath] = true
+	ActivePrepareTacticsMap[ThunderStruck] = true
+
+	//被动战法
+	PassiveTacticsMap[PretendToSurrender] = true
+	PassiveTacticsMap[EyebrowedThrush] = true
+	PassiveTacticsMap[BraveSpearHeroicPose] = true
+	PassiveTacticsMap[BraveAndResolute] = true
+	PassiveTacticsMap[BloodBladeBattle] = true
+	PassiveTacticsMap[BebraveAllThrough] = true
+	PassiveTacticsMap[CorporealIronWall] = true
+	PassiveTacticsMap[YanPeopleRoar] = true
+	PassiveTacticsMap[ThousandMileWalkingSingleRider] = true
+	PassiveTacticsMap[StrongAndUnyielding] = true
+	PassiveTacticsMap[SelfHealing] = true
+	PassiveTacticsMap[ScholarsStriveToGoFirst] = true
+	PassiveTacticsMap[RiseUpBravely] = true
+	PassiveTacticsMap[RidingOnTheVictoryDrive] = true
+	PassiveTacticsMap[LeadStringBattle] = true
+	PassiveTacticsMap[PlanAndDecide] = true
+	PassiveTacticsMap[NeverRetreatFromDeadBattle] = true
+	PassiveTacticsMap[ThreeDaysOfSeparation] = true
+	PassiveTacticsMap[Charming] = true
+	PassiveTacticsMap[TaipingLaw] = true
+	PassiveTacticsMap[BraveAmbition] = true
+	PassiveTacticsMap[OnesResolveIsUnshaken] = true
+	PassiveTacticsMap[BeAdeptWithBothPenAndSword] = true
+	PassiveTacticsMap[CrowdMovesTenThousandCounts] = true
+	PassiveTacticsMap[ExtravagantOrgy] = true
+	PassiveTacticsMap[FumingSelfReliance] = true
+	PassiveTacticsMap[GainMasteryByStrikingOnlyAfterTheEnemyHasStruck] = true
+	PassiveTacticsMap[GatheringOfTroops] = true
+	PassiveTacticsMap[HelpingThePoorAndGivingGenerously] = true
+	PassiveTacticsMap[HighWoodenPaddlesConnectedToTheCamp] = true
+	PassiveTacticsMap[JediCounterattack] = true
+	PassiveTacticsMap[LoyalAndBraveMartyrs] = true
+	PassiveTacticsMap[NakedBloodBattle] = true
+	PassiveTacticsMap[MarchInto] = true
+	PassiveTacticsMap[RaidInFormation] = true
+	PassiveTacticsMap[SpecialSoldierPassRoad] = true
+	PassiveTacticsMap[StrongAndBraveWithoutAdvance] = true
+	PassiveTacticsMap[TemperamentSurpassesTheThreeArmies] = true
+	PassiveTacticsMap[TigerCrouchingAndEagleSoaring] = true
+	PassiveTacticsMap[TigerIdiot] = true
+	PassiveTacticsMap[WorkOutMeasuresToSuitLocalConditions] = true
+	PassiveTacticsMap[ThePostureOfAPhoenixWithAChickAndASweetPotato] = true
+	PassiveTacticsMap[JinfanArmyHundredFeathers] = true
+	PassiveTacticsMap[BeQuickInDebatingOpportunities] = true
+	PassiveTacticsMap[BloodyAndUnrestrained] = true
+	PassiveTacticsMap[DivineEjaculation] = true
+	PassiveTacticsMap[DivineFireMeter] = true
+	PassiveTacticsMap[ChasingTheRiverAndRidingRows] = true
+	PassiveTacticsMap[JiangdongLittleOverlord] = true
+	//指挥战法
+	CommandTacticsMap[CountryPersonGeneralStyle] = true
+	CommandTacticsMap[CrossingTheRiverInWhiteClothes] = true
+	CommandTacticsMap[TheHeartOfRighteousnessShines] = true
+	CommandTacticsMap[BrocadeBagAndCleverPlan] = true
+	CommandTacticsMap[ProudPrince] = true
+	CommandTacticsMap[BowWaistConcubine] = true
+	CommandTacticsMap[CloudGatheringShadowFrom] = true
+	CommandTacticsMap[WinsTent] = true
+	CommandTacticsMap[TenWinsAndTenLosses] = true
+	CommandTacticsMap[SurroundingTheTeacherMustBePalace] = true
+	CommandTacticsMap[StealingLuckAndRidingPets] = true
+	CommandTacticsMap[SittingIntheSoutheast] = true
+	CommandTacticsMap[IronHorseDrive] = true
+	CommandTacticsMap[OpportunityIdentificationFirst] = true
+	CommandTacticsMap[GoldenPillSecretTechnique] = true
+	CommandTacticsMap[OverwhelmingTheEnemyWithVigour] = true
+	CommandTacticsMap[FocusingOnAllThings] = true
+	CommandTacticsMap[Demoralize] = true
+	CommandTacticsMap[ToKeepAndBeFirm] = true
+	CommandTacticsMap[Gallant] = true
+	CommandTacticsMap[TakeRefugeFromEnemies] = true
+	CommandTacticsMap[SuppressChokesAndPreventRefusals] = true
+	CommandTacticsMap[AppeaseArmyAndPeople] = true
+	CommandTacticsMap[TraitorInTroubledTimes] = true
+	CommandTacticsMap[ClearEyedAndMalicious] = true
+	CommandTacticsMap[CleverStrategyAndShrewdTactics] = true
+	CommandTacticsMap[TheWindOfTheElderly] = true
+	CommandTacticsMap[UseMartialArtsToConnectWithGods] = true
+	CommandTacticsMap[KillingMinisterInDream] = true
+	CommandTacticsMap[CleverPlanAndCleverPlan] = true
+	CommandTacticsMap[LectureField] = true
+	CommandTacticsMap[BeFullyEquippedFor] = true
+	CommandTacticsMap[DefensiveBarrier] = true
+	CommandTacticsMap[RideTigerHardToGetOff] = true
+	CommandTacticsMap[AbilityToRuleTheCountry] = true
+	CommandTacticsMap[AncientEvilComes] = true
+	CommandTacticsMap[FireGodHeroStyle] = true
+	CommandTacticsMap[PretendToSurrender] = true
+	CommandTacticsMap[HundredStrategiesAndManyStrategies] = true
+	CommandTacticsMap[NanManQuKui] = true
+	CommandTacticsMap[MakeCloudAndRain] = true
+	CommandTacticsMap[MedicalPractice] = true
+	CommandTacticsMap[ProudPrince] = true
+	CommandTacticsMap[RampartsOfMetalsAndAMoatOfHotWater] = true
+	CommandTacticsMap[RiverFireFlame] = true
+	CommandTacticsMap[SuperviseLeadAndSeizureArmy] = true
+	CommandTacticsMap[SuppressYellowScarves] = true
+	CommandTacticsMap[TheGodOfCraftsmen] = true
+	CommandTacticsMap[BenevolentAndVirtuousThroughoutTheWorld] = true
+	CommandTacticsMap[WieldTroopsToSeekVictory] = true
+	//阵法
+	TroopsTacticsMap[FrontalVectorArray] = true
+	TroopsTacticsMap[EightGateGoldenLockArray] = true
+	TroopsTacticsMap[DustpanFormation] = true
+	TroopsTacticsMap[FallIntoCamp] = true
+	TroopsTacticsMap[HiddenDragonArray] = true
+	TroopsTacticsMap[ShapelyArray] = true
+	TroopsTacticsMap[ThreePotentialArray] = true
+	TroopsTacticsMap[WuFengArray] = true
+	//兵种
+	ArmTacticsMap[XiLiangIronCavalry] = true
+	ArmTacticsMap[WuDangFlyArmy] = true
+	ArmTacticsMap[GreatHalberdWarrior] = true
+	ArmTacticsMap[JinFanArmy] = true
+	ArmTacticsMap[QingZhouSoldier] = true
+	ArmTacticsMap[TengjiaSoldier] = true
+	ArmTacticsMap[TigerGuardArmy] = true
+	ArmTacticsMap[WhiteArmy] = true
+	ArmTacticsMap[WhiteHorseFollowsWithLoyalty] = true
+	ArmTacticsMap[ElephantSoldier] = true
+	//主动
+	ActiveTacticsMap[TheSharpnessOfMilitaryStrength] = true
+	ActiveTacticsMap[ClosedMoon] = true
+	ActiveTacticsMap[PullingSwordsAndChoppingEnemies] = true
+	ActiveTacticsMap[SweepAwayTheMillionsOfEnemyTroops] = true
+	ActiveTacticsMap[ShockingFourRealms] = true
+	ActiveTacticsMap[Purify] = true
+	ActiveTacticsMap[Provoke] = true
+	ActiveTacticsMap[PromiseToKeepWithoutSurrender] = true
+	ActiveTacticsMap[FearlessAndBraveFlyingSwallow] = true
+	ActiveTacticsMap[HaveSucceededInCarryingOutAnAssignment] = true
+	ActiveTacticsMap[DecisiveStrategy] = true
+	ActiveTacticsMap[Dress] = true
+	ActiveTacticsMap[DrawTheBowBothOnTheLeftAndRight] = true
+	ActiveTacticsMap[DivinelyInspiredStratagem] = true
+	ActiveTacticsMap[ChargeIntoTheEnemyRanks] = true
+	ActiveTacticsMap[BraveAndBattleWise] = true
+	ActiveTacticsMap[BecomeFamousAndFearInspiringThroughoutChina] = true
+	ActiveTacticsMap[BeautyWhichOverthrowsStatesAndCities] = true
+	ActiveTacticsMap[BattleOfWits] = true
+	ActiveTacticsMap[AvoidTheSolidAndStrikeTheWeak] = true
+	ActiveTacticsMap[AweInspiring] = true
+	ActiveTacticsMap[AnnihilateInOneFellSwoop] = true
+	ActiveTacticsMap[TheKnifeLikeThunderbolt] = true
+	ActiveTacticsMap[TheLionFliesFast] = true
+	ActiveTacticsMap[InChaosNotConfused] = true
+	ActiveTacticsMap[WithAllTheHeart] = true
+	ActiveTacticsMap[WindAssistedFire] = true
+	ActiveTacticsMap[WaitAtOnesEaseForTheFatigued] = true
+	ActiveTacticsMap[VigorousAndWalk] = true
+	ActiveTacticsMap[VanquishTheEnemy] = true
+	ActiveTacticsMap[UndercurrentSurge] = true
+	ActiveTacticsMap[TwelveWonderfulStrategies] = true
+	ActiveTacticsMap[TravelingAloneToFight] = true
+	ActiveTacticsMap[ToSeizeThePowerOfGroupOfHeroes] = true
+	ActiveTacticsMap[ToSpreadRumorsAndProclaimPower] = true
+	ActiveTacticsMap[ToBurnBarracks] = true
+	ActiveTacticsMap[ToAscendBeforeBattle] = true
+	ActiveTacticsMap[Thunderbolt] = true
+	ActiveTacticsMap[ThunderStruck] = true
+	ActiveTacticsMap[ThousandsOfMilesOfSupport] = true
+	ActiveTacticsMap[TheBattleOfCarryingCoffin] = true
+	ActiveTacticsMap[TenThousandArrowsShotAtOnce] = true
+	ActiveTacticsMap[TakeByStorm] = true
+	ActiveTacticsMap[SweepAway] = true
+	ActiveTacticsMap[StrikeItsLazyReturn] = true
+	ActiveTacticsMap[SoundOfTheWindAndTheCryOfTheStork] = true
+	ActiveTacticsMap[SleepOnTheBrushwoodAndTasteTheGall] = true
+	ActiveTacticsMap[SlaughterMeatOnTable] = true
+	ActiveTacticsMap[SittingInAnIsolatedCity] = true
+	ActiveTacticsMap[SinkingSandAndBreakingWater] = true
+	ActiveTacticsMap[SeizeTheOpportunityToWin] = true
+	ActiveTacticsMap[ScyllaAndCharybdis] = true
+	ActiveTacticsMap[RidingTheEnemyWithoutFear] = true
+	ActiveTacticsMap[RefuseToDefendWithOneForce] = true
+	ActiveTacticsMap[RefinedStrategies] = true
+	ActiveTacticsMap[Reckless] = true
+	ActiveTacticsMap[RainOfFireFromTheSky] = true
+	ActiveTacticsMap[Purify] = true
+	ActiveTacticsMap[PullingSwordsAndChoppingEnemies] = true
+	ActiveTacticsMap[Provoke] = true
+	ActiveTacticsMap[PromiseToKeepWithoutSurrender] = true
+	ActiveTacticsMap[PoisonousSpringRefusesShu] = true
+	ActiveTacticsMap[PoisonedWine] = true
+	ActiveTacticsMap[OverwhelmingAllDirections] = true
+	ActiveTacticsMap[MachineStrategyVerticalAndHorizontal] = true
+	ActiveTacticsMap[MilitaryStrategyForFormAircraft] = true
+	ActiveTacticsMap[MakeEveryEffortToAssistInPlanning] = true
+	ActiveTacticsMap[MakeFeintToTheEastButAttackInTheWest] = true
+	ActiveTacticsMap[LureTheEnemyInDeep] = true
+	ActiveTacticsMap[LookAroundCharmingly] = true
+	ActiveTacticsMap[IntenseAndPowerful] = true
+	ActiveTacticsMap[LeavingSoldiersToPlunder] = true
+	ActiveTacticsMap[IntelligentStrategy] = true
+	ActiveTacticsMap[InfantryCitySelfDefense] = true
+	ActiveTacticsMap[Impregnable] = true
+	ActiveTacticsMap[HitTheTargetAtEveryShot] = true
+	ActiveTacticsMap[HuJiaLingeringSound] = true
+	ActiveTacticsMap[HoldTheArmyWithDeterminationAndDetermination] = true
+	ActiveTacticsMap[HiddenArrowsAreDifficultToGuardAgainst] = true
+	ActiveTacticsMap[GeneralBraveGirl] = true
+	ActiveTacticsMap[GunDanceLikeTheWind] = true
+	ActiveTacticsMap[HaveVerbalBattleWithSomebody] = true
+	ActiveTacticsMap[Curettage] = true
+	ActiveTacticsMap[GatherTheCrowdAndStrike] = true
+	ActiveTacticsMap[FlamesFlyingInTheWind] = true
+	ActiveTacticsMap[FloodedSeventhArmy] = true
+	ActiveTacticsMap[TheSkyIsBlazing] = true
+	ActiveTacticsMap[SeizeTheSoul] = true
+	ActiveTacticsMap[BlazingWildfire] = true
+	ActiveTacticsMap[InterlockedStratagems] = true
+	ActiveTacticsMap[BorrowArrowsWithThatchedBoats] = true
+	ActiveTacticsMap[OutstandingTalent] = true
+	ActiveTacticsMap[LowerBannersAndMuffleDrums] = true
+	ActiveTacticsMap[TakeBySurprise] = true
+	ActiveTacticsMap[LuJiangRiverOverArmoured] = true
+	ActiveTacticsMap[Humility] = true
+	ActiveTacticsMap[EverTriumphant] = true
+	ActiveTacticsMap[BreakingThroughTheFormationAndDestroyingTheFirm] = true
+	ActiveTacticsMap[CupSnakeGhostCar] = true
+	ActiveTacticsMap[AngryEyeHorizontalSpear] = true
+	ActiveTacticsMap[AdvancingSecretlyByUnknownPath] = true
+	ActiveTacticsMap[BeBesiegedOnAllSides] = true
+	ActiveTacticsMap[AmbushOnAllSides] = true
+	ActiveTacticsMap[BlackArt] = true
+	ActiveTacticsMap[BreakingThroughTheArmyAndWinningVictories] = true
+	ActiveTacticsMap[BreakingThroughTheWaterAndCrushingTheCity] = true
+	ActiveTacticsMap[BrokenBridgeByWater] = true
+	ActiveTacticsMap[DecisionMakingThroughOperationsResearch] = true
+	ActiveTacticsMap[Disperse] = true
+	ActiveTacticsMap[EliminateItAndDrawFromIt] = true
+	ActiveTacticsMap[EstablishingNameThroughGenerations] = true
+	ActiveTacticsMap[ExcitingArmyAttackCamp] = true
+	ActiveTacticsMap[FakeBooksAlternateWithEachOther] = true
+	ActiveTacticsMap[FallingPhoenix] = true
+	ActiveTacticsMap[FireJointVenture] = true
+	ActiveTacticsMap[ForetellLikeProphet] = true
+	ActiveTacticsMap[FrustrationAndAngerAttack] = true
+	ActiveTacticsMap[TakingAdvantageOfTheSituationToGainPower] = true
+
+	//突击
+	AssaultTacticsMap[ChasingInjury] = true
+	AssaultTacticsMap[CutDown] = true
+	AssaultTacticsMap[WhenTheFrontIsDestroyed] = true
+	AssaultTacticsMap[ToCureOnesSpeed] = true
+	AssaultTacticsMap[TheBraveLeadTheWay] = true
+	AssaultTacticsMap[RepelForeignAggression] = true
+	AssaultTacticsMap[PeerlessOrMatchlessBraveryOrValour] = true
+	AssaultTacticsMap[ViolentAndHeartless] = true
+	AssaultTacticsMap[BendTheBowAndDrinkTheFeathers] = true
+	AssaultTacticsMap[GhostGodThunderForce] = true
+	AssaultTacticsMap[HiddenMystery] = true
+	AssaultTacticsMap[HundredCavalryRobberyBattalions] = true
+	AssaultTacticsMap[TakeAdvantageOfQuickly] = true
+	AssaultTacticsMap[TakeCareOfYourselfFirst] = true
+	AssaultTacticsMap[TigerAndLeopardCavalry] = true
 }

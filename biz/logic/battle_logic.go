@@ -288,7 +288,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 		for _, tactic := range currentGeneral.EquipTactics {
 			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.普攻 > 7.突击
 			//1.被动
-			if _, ok := tactics.PassiveTacticsMap[tactic.Id]; ok {
+			if _, ok := consts.PassiveTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
@@ -299,7 +299,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
 			//2.阵法
-			if _, ok := tactics.TroopsTacticsMap[tactic.Id]; ok {
+			if _, ok := consts.TroopsTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
@@ -310,7 +310,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
 			//3.兵种
-			if _, ok := tactics.ArmTacticsMap[tactic.Id]; ok {
+			if _, ok := consts.ArmTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
@@ -321,7 +321,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
 			//4.指挥
-			if _, ok := tactics.CommandTacticsMap[tactic.Id]; ok {
+			if _, ok := consts.CommandTacticsMap[tactic.Id]; ok {
 				handler := tactics.TacticsHandlerMap[tactic.Id]
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
@@ -447,7 +447,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 		//按装配顺序执行主动战法
 		for tacticSeq, tactic := range currentGeneral.EquipTactics {
 			//1.主动
-			if _, ok := tactics.ActiveTacticsMap[tactic.Id]; ok {
+			if _, ok := consts.ActiveTacticsMap[tactic.Id]; ok {
 				//战法参数设置
 				runCtx.TacticsParams.TacticsType = consts.TacticsType_Active
 				handler := tactics.TacticsHandlerMap[tactic.Id]
@@ -523,7 +523,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 					}
 				}
 				//发动率提升[准备战法]
-				if tactics.ActivePrepareTacticsMap[tactic.Id] {
+				if consts.ActivePrepareTacticsMap[tactic.Id] {
 					if effectParams, okk := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_TacticsActiveTriggerPrepareImprove); okk {
 						for _, param := range effectParams {
 							triggerRate += param.TriggerRate
@@ -642,7 +642,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 
 				//3.突击战法
 				for _, tactic := range currentGeneral.EquipTactics {
-					if _, ok := tactics.AssaultTacticsMap[tactic.Id]; ok {
+					if _, ok := consts.AssaultTacticsMap[tactic.Id]; ok {
 						//战法参数设置
 						runCtx.TacticsParams.TacticsType = consts.TacticsType_Assault
 

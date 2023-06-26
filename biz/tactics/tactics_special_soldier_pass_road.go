@@ -38,7 +38,7 @@ func (s SpecialSoldierPassRoadTactic) Prepare() {
 		triggerResp := &vo.TacticsTriggerResult{}
 		triggerTactic := params.CurrentTactic.(_interface.Tactics)
 
-		if ActivePrepareTacticsMap[triggerTactic.Id()] {
+		if consts.ActivePrepareTacticsMap[triggerTactic.Id()] {
 
 		}
 

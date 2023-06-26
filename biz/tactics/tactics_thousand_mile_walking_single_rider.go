@@ -43,7 +43,7 @@ func (t ThousandMileWalkingSingleRiderTactic) Prepare() {
 		tactic := params.CurrentTactic.(_interface.Tactics)
 
 		if currentGeneral.EquipTactics[0].Id == tactic.Id() &&
-			ActivePrepareTacticsMap[tactic.Id()] {
+			consts.ActivePrepareTacticsMap[tactic.Id()] {
 			triggerRate := 0.7 + triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100/100
 			if util.GenerateRate(triggerRate) {
 				//效果

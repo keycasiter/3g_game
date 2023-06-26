@@ -44,8 +44,8 @@ func (t ThreePotentialArrayTactic) Prepare() {
 	}
 	//且我方主将自带战法为主动战法或突击战法时
 	pairMasterGeneral := util.GetPairMasterGeneral(t.tacticsParams)
-	if !ActiveTacticsMap[pairMasterGeneral.EquipTactics[0].Id] &&
-		!AssaultTacticsMap[pairMasterGeneral.EquipTactics[0].Id] {
+	if !consts.ActiveTacticsMap[pairMasterGeneral.EquipTactics[0].Id] &&
+		!consts.AssaultTacticsMap[pairMasterGeneral.EquipTactics[0].Id] {
 		hlog.CtxInfof(ctx, "主将自带战法不为主动战法或突击战法，无法发动")
 		return
 	}

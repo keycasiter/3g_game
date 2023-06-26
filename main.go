@@ -4,23 +4,11 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
-	hertzlogrus "github.com/hertz-contrib/logger/logrus"
-	"github.com/keycasiter/3g_game/biz/conf"
-	"github.com/keycasiter/3g_game/biz/dal/mongodb"
 )
 
 func main() {
 	h := server.Default()
+
 	register(h)
 	h.Spin()
-
-	//日志
-	logger := hertzlogrus.NewLogger()
-	logger.SetLevel(hlog.LevelDebug)
-	hlog.SetLogger(logger)
-	//配置文件
-	conf.InitConfig()
-	//mongodb
-	mongodb.InitMongodb()
 }

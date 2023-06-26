@@ -4,35 +4,261 @@ package api
 
 import (
 	"context"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/keycasiter/3g_game/biz/logic"
-	"github.com/keycasiter/3g_game/biz/util"
-
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/jinzhu/copier"
+	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
+	"github.com/keycasiter/3g_game/biz/model/common"
+	"github.com/keycasiter/3g_game/biz/model/enum"
+	"github.com/keycasiter/3g_game/biz/model/po"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 )
 
-// MetadataGeneralPageableList .
-// @router /v1/resource/general/pageable_list [GET]
-func MetadataGeneralPageableList(ctx context.Context, c *app.RequestContext) {
+// BattleExecute .模拟对战
+// @router /v1/battle/execute [POST]
+func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req api.MetadataGeneralPageableListRequest
+	var req api.BattleExecuteRequest
+	resp := new(api.BattleExecuteResponse)
+
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(400, err.Error())
+		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
+		resp.Meta = &common.Meta{
+			StatusCode: enum.ResponseCode_UnknownError,
+			StatusMsg:  "未知错误",
+		}
+
+		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
-	list, err := logic.NewMetadataGeneralLogic(ctx, req).MetadataGeneralPageableList()
+
+	//参数校验
+	if req.FightingTeam == nil || req.EnemyTeam == nil {
+		hlog.CtxWarnf(ctx, "BattleLogicContext Param Err:%v", err)
+		resp.Meta = &common.Meta{
+			StatusCode: enum.ResponseCode_ParamInvalid,
+			StatusMsg:  "参数错误",
+		}
+
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
+
+	//逻辑执行
+	serviceResp, err := logic.NewBattleLogicContext(ctx, buildServiceReq(req)).Run()
 	if err != nil {
-		hlog.CtxErrorf(ctx, "MetadataGeneralPageableList err:%v", err)
-		c.String(400, err.Error())
+		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
+		resp.Meta = &common.Meta{
+			StatusCode: enum.ResponseCode_UnknownError,
+			StatusMsg:  "未知错误",
+		}
+
+		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
 
-	resp := &api.MetadataGeneralPageableListResponse{
-		Meta: util.BuildSuccMeta(),
-		Data: list,
+	//组合resp
+	copier.Copy(resp, serviceResp)
+	resp.Meta = &common.Meta{
+		StatusCode: enum.ResponseCode_Success,
+		StatusMsg:  "成功",
+	}
+	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+func buildServiceReq(req api.BattleExecuteRequest) *logic.BattleLogicContextRequest {
+	//我方信息
+	fightingTeamGenerals := make([]*vo.BattleGeneral, 0)
+	for _, general := range req.FightingTeam.BattleGenerals {
+		//标签
+		generalTags := make([]consts.GeneralTag, 0)
+		for _, tag := range general.BaseInfo.GeneralTag {
+			generalTags = append(generalTags, consts.GeneralTag(tag))
+		}
+		//佩戴战法
+		equipTactics := make([]*po.Tactics, 0)
+		for _, tactic := range general.EquipTactics {
+			equipTactics = append(equipTactics, &po.Tactics{
+				Id:            consts.TacticId(tactic.Id),
+				Name:          tactic.Name,
+				TacticsSource: consts.TacticsSource(tactic.TacticsSource),
+				Type:          consts.TacticsType(tactic.Type),
+			})
+		}
+
+		fightingTeamGenerals = append(fightingTeamGenerals, &vo.BattleGeneral{
+			BaseInfo: &po.MetadataGeneral{
+				Id:         general.BaseInfo.Id,
+				Name:       general.BaseInfo.Name,
+				Gender:     consts.Gender(general.BaseInfo.Gender),
+				Group:      consts.Group(general.BaseInfo.Group),
+				GeneralTag: generalTags,
+				AvatarUri:  general.BaseInfo.AvatarUri,
+				AbilityAttr: &po.AbilityAttr{
+					ForceBase:        general.BaseInfo.AbilityAttr.ForceBase,
+					ForceRate:        general.BaseInfo.AbilityAttr.ForceRate,
+					IntelligenceBase: general.BaseInfo.AbilityAttr.IntelligenceBase,
+					IntelligenceRate: general.BaseInfo.AbilityAttr.IntelligenceRate,
+					CharmBase:        general.BaseInfo.AbilityAttr.CharmBase,
+					CharmRate:        general.BaseInfo.AbilityAttr.CharmRate,
+					CommandBase:      general.BaseInfo.AbilityAttr.CommandBase,
+					CommandRate:      general.BaseInfo.AbilityAttr.CommandRate,
+					PoliticsBase:     general.BaseInfo.AbilityAttr.PoliticsBase,
+					PoliticsRate:     general.BaseInfo.AbilityAttr.PoliticsRate,
+					SpeedBase:        general.BaseInfo.AbilityAttr.SpeedBase,
+					SpeedRate:        general.BaseInfo.AbilityAttr.SpeedRate,
+				},
+				ArmsAttr: &po.ArmsAttr{
+					Cavalry:   consts.ArmsAbility(general.BaseInfo.ArmsAttr.Cavalry),
+					Mauler:    consts.ArmsAbility(general.BaseInfo.ArmsAttr.Mauler),
+					Archers:   consts.ArmsAbility(general.BaseInfo.ArmsAttr.Archers),
+					Spearman:  consts.ArmsAbility(general.BaseInfo.ArmsAttr.Spearman),
+					Apparatus: consts.ArmsAbility(general.BaseInfo.ArmsAttr.Apparatus),
+				},
+				GeneralBattleType: consts.GeneralBattleType(general.BaseInfo.GeneralBattleType),
+				UniqueId:          general.BaseInfo.UniqueId,
+			},
+			EquipTactics: equipTactics,
+			Addition: &vo.BattleGeneralAddition{
+				AbilityAttr: po.AbilityAttr{
+					ForceBase:        general.Addition.AbilityAttr.ForceBase,
+					ForceRate:        general.Addition.AbilityAttr.ForceRate,
+					IntelligenceBase: general.Addition.AbilityAttr.IntelligenceBase,
+					IntelligenceRate: general.Addition.AbilityAttr.IntelligenceRate,
+					CharmBase:        general.Addition.AbilityAttr.CharmBase,
+					CharmRate:        general.Addition.AbilityAttr.CharmRate,
+					CommandBase:      general.Addition.AbilityAttr.CommandBase,
+					CommandRate:      general.Addition.AbilityAttr.CommandRate,
+					PoliticsBase:     general.Addition.AbilityAttr.PoliticsBase,
+					PoliticsRate:     general.Addition.AbilityAttr.PoliticsRate,
+					SpeedBase:        general.Addition.AbilityAttr.SpeedBase,
+					SpeedRate:        general.Addition.AbilityAttr.SpeedRate,
+				},
+				GeneralLevel:     consts.GeneralLevel(general.Addition.GeneralLevel),
+				GeneralStarLevel: consts.GeneralStarLevel(general.Addition.GeneralStarLevel),
+			},
+			IsMaster:   general.IsMaster,
+			SoldierNum: general.SoldierNum,
+		})
 	}
 
-	c.JSON(200, resp)
+	//敌方信息
+	enemyTeamGenerals := make([]*vo.BattleGeneral, 0)
+	for _, general := range req.EnemyTeam.BattleGenerals {
+		//标签
+		generalTags := make([]consts.GeneralTag, 0)
+		for _, tag := range general.BaseInfo.GeneralTag {
+			generalTags = append(generalTags, consts.GeneralTag(tag))
+		}
+		//佩戴战法
+		equipTactics := make([]*po.Tactics, 0)
+		for _, tactic := range general.EquipTactics {
+			equipTactics = append(equipTactics, &po.Tactics{
+				Id:            consts.TacticId(tactic.Id),
+				Name:          tactic.Name,
+				TacticsSource: consts.TacticsSource(tactic.TacticsSource),
+				Type:          consts.TacticsType(tactic.Type),
+			})
+		}
+
+		enemyTeamGenerals = append(enemyTeamGenerals, &vo.BattleGeneral{
+			BaseInfo: &po.MetadataGeneral{
+				Id:         general.BaseInfo.Id,
+				Name:       general.BaseInfo.Name,
+				Gender:     consts.Gender(general.BaseInfo.Gender),
+				Group:      consts.Group(general.BaseInfo.Group),
+				GeneralTag: generalTags,
+				AvatarUri:  general.BaseInfo.AvatarUri,
+				AbilityAttr: &po.AbilityAttr{
+					ForceBase:        general.BaseInfo.AbilityAttr.ForceBase,
+					ForceRate:        general.BaseInfo.AbilityAttr.ForceRate,
+					IntelligenceBase: general.BaseInfo.AbilityAttr.IntelligenceBase,
+					IntelligenceRate: general.BaseInfo.AbilityAttr.IntelligenceRate,
+					CharmBase:        general.BaseInfo.AbilityAttr.CharmBase,
+					CharmRate:        general.BaseInfo.AbilityAttr.CharmRate,
+					CommandBase:      general.BaseInfo.AbilityAttr.CommandBase,
+					CommandRate:      general.BaseInfo.AbilityAttr.CommandRate,
+					PoliticsBase:     general.BaseInfo.AbilityAttr.PoliticsBase,
+					PoliticsRate:     general.BaseInfo.AbilityAttr.PoliticsRate,
+					SpeedBase:        general.BaseInfo.AbilityAttr.SpeedBase,
+					SpeedRate:        general.BaseInfo.AbilityAttr.SpeedRate,
+				},
+				ArmsAttr: &po.ArmsAttr{
+					Cavalry:   consts.ArmsAbility(general.BaseInfo.ArmsAttr.Cavalry),
+					Mauler:    consts.ArmsAbility(general.BaseInfo.ArmsAttr.Mauler),
+					Archers:   consts.ArmsAbility(general.BaseInfo.ArmsAttr.Archers),
+					Spearman:  consts.ArmsAbility(general.BaseInfo.ArmsAttr.Spearman),
+					Apparatus: consts.ArmsAbility(general.BaseInfo.ArmsAttr.Apparatus),
+				},
+				GeneralBattleType: consts.GeneralBattleType(general.BaseInfo.GeneralBattleType),
+				UniqueId:          general.BaseInfo.UniqueId,
+			},
+			Addition: &vo.BattleGeneralAddition{
+				AbilityAttr: po.AbilityAttr{
+					ForceBase:        general.Addition.AbilityAttr.ForceBase,
+					ForceRate:        general.Addition.AbilityAttr.ForceRate,
+					IntelligenceBase: general.Addition.AbilityAttr.IntelligenceBase,
+					IntelligenceRate: general.Addition.AbilityAttr.IntelligenceRate,
+					CharmBase:        general.Addition.AbilityAttr.CharmBase,
+					CharmRate:        general.Addition.AbilityAttr.CharmRate,
+					CommandBase:      general.Addition.AbilityAttr.CommandBase,
+					CommandRate:      general.Addition.AbilityAttr.CommandRate,
+					PoliticsBase:     general.Addition.AbilityAttr.PoliticsBase,
+					PoliticsRate:     general.Addition.AbilityAttr.PoliticsRate,
+					SpeedBase:        general.Addition.AbilityAttr.SpeedBase,
+					SpeedRate:        general.Addition.AbilityAttr.SpeedRate,
+				},
+				GeneralLevel:     consts.GeneralLevel(general.Addition.GeneralLevel),
+				GeneralStarLevel: consts.GeneralStarLevel(general.Addition.GeneralStarLevel),
+			},
+			EquipTactics: equipTactics,
+			IsMaster:     general.IsMaster,
+			SoldierNum:   general.SoldierNum,
+		})
+	}
+
+	//组装
+	serviceReq := &logic.BattleLogicContextRequest{
+		//我方
+		FightingTeam: &vo.BattleTeam{
+			TeamType:       consts.TeamType(req.FightingTeam.TeamType),
+			ArmType:        consts.ArmType(req.FightingTeam.ArmType),
+			BattleGenerals: fightingTeamGenerals,
+			BuildingTechAttrAddition: vo.BuildingTechAttrAddition{
+				ForceAddition:        req.FightingTeam.BuildingTechAttrAddition.ForceAddition,
+				IntelligenceAddition: req.FightingTeam.BuildingTechAttrAddition.IntelligenceAddition,
+				CommandAddition:      req.FightingTeam.BuildingTechAttrAddition.CommandAddition,
+				SpeedAddition:        req.FightingTeam.BuildingTechAttrAddition.SpeedAddition,
+			},
+			BuildingTechGroupAddition: vo.BuildingTechGroupAddition{
+				GroupWeiGuoRate:   req.FightingTeam.BuildingTechGroupAddition.GroupWuGuoRate,
+				GroupShuGuoRate:   req.FightingTeam.BuildingTechGroupAddition.GroupShuGuoRate,
+				GroupWuGuoRate:    req.FightingTeam.BuildingTechGroupAddition.GroupWuGuoRate,
+				GroupQunXiongRate: req.FightingTeam.BuildingTechGroupAddition.GroupQunXiongRate,
+			},
+		},
+		//敌方
+		EnemyTeam: &vo.BattleTeam{
+			TeamType:       consts.TeamType(req.EnemyTeam.TeamType),
+			ArmType:        consts.ArmType(req.EnemyTeam.ArmType),
+			BattleGenerals: enemyTeamGenerals,
+			BuildingTechAttrAddition: vo.BuildingTechAttrAddition{
+				ForceAddition:        req.EnemyTeam.BuildingTechAttrAddition.ForceAddition,
+				IntelligenceAddition: req.EnemyTeam.BuildingTechAttrAddition.IntelligenceAddition,
+				CommandAddition:      req.EnemyTeam.BuildingTechAttrAddition.CommandAddition,
+				SpeedAddition:        req.EnemyTeam.BuildingTechAttrAddition.SpeedAddition,
+			},
+			BuildingTechGroupAddition: vo.BuildingTechGroupAddition{
+				GroupWeiGuoRate:   req.EnemyTeam.BuildingTechGroupAddition.GroupWuGuoRate,
+				GroupShuGuoRate:   req.EnemyTeam.BuildingTechGroupAddition.GroupShuGuoRate,
+				GroupWuGuoRate:    req.EnemyTeam.BuildingTechGroupAddition.GroupWuGuoRate,
+				GroupQunXiongRate: req.EnemyTeam.BuildingTechGroupAddition.GroupQunXiongRate,
+			},
+		},
+	}
+	return serviceReq
 }

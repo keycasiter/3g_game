@@ -51,7 +51,13 @@ func (b BeFullyEquippedForTactic) Prepare() {
 			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, b.tacticsParams)
 			for _, general := range pairGenerals {
 				resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.88)
-				util.ResumeSoldierNum(ctx, general, resumeNum)
+				util.ResumeSoldierNum(&util.ResumeParams{
+					Ctx:            ctx,
+					TacticsParams:  b.tacticsParams,
+					ProduceGeneral: triggerGeneral,
+					SufferGeneral:  general,
+					ResumeNum:      resumeNum,
+				})
 			}
 		}
 

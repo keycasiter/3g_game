@@ -141,7 +141,13 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 						)
 						// TODO 受统率影响
 						resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentDamage) * 0.28)
-						util.ResumeSoldierNum(ctx, triggerGeneral, resumeNum)
+						util.ResumeSoldierNum(&util.ResumeParams{
+							Ctx:            ctx,
+							TacticsParams:  b.tacticsParams,
+							ProduceGeneral: currentGeneral,
+							SufferGeneral:  triggerGeneral,
+							ResumeNum:      resumeNum,
+						})
 					}
 				}
 

@@ -97,7 +97,13 @@ func (c CloudGatheringShadowFromTactic) Prepare() {
 					}) {
 						if util.GenerateRate(0.3) {
 							resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.0)
-							util.ResumeSoldierNum(ctx, revokeGeneral, resumeNum)
+							util.ResumeSoldierNum(&util.ResumeParams{
+								Ctx:            ctx,
+								TacticsParams:  c.tacticsParams,
+								ProduceGeneral: triggerGeneral,
+								SufferGeneral:  revokeGeneral,
+								ResumeNum:      resumeNum,
+							})
 						}
 					}
 

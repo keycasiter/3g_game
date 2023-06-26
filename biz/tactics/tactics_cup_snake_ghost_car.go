@@ -116,7 +116,13 @@ func (c CupSnakeGhostCarTactic) Execute() {
 			pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, c.tacticsParams)
 			for _, pairGeneral := range pairGenerals {
 				resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.02)
-				util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
+				util.ResumeSoldierNum(&util.ResumeParams{
+					Ctx:            ctx,
+					TacticsParams:  c.tacticsParams,
+					ProduceGeneral: triggerGeneral,
+					SufferGeneral:  pairGeneral,
+					ResumeNum:      resumeNum,
+				})
 			}
 		}
 

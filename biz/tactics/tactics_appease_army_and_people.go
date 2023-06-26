@@ -143,9 +143,14 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 			pairArr := util.GetPairGeneralsTwoArr(a.tacticsParams)
 			for _, general := range pairArr {
 				//恢复兵力
-				//TODO（治疗率126%，受智力影响）
-				resumeNum := cast.ToInt64(general.BaseInfo.AbilityAttr.IntelligenceBase * 1.26)
-				util.ResumeSoldierNum(ctx, general, resumeNum)
+				resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.26)
+				util.ResumeSoldierNum(&util.ResumeParams{
+					Ctx:            ctx,
+					TacticsParams:  a.tacticsParams,
+					ProduceGeneral: triggerGeneral,
+					SufferGeneral:  general,
+					ResumeNum:      resumeNum,
+				})
 			}
 		}
 		return &vo.TacticsTriggerResult{}

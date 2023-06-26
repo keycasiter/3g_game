@@ -356,13 +356,15 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		remainSoldierNum = sufferGeneral.SoldierNum
 	}
 
-	//记录伤兵
-	sufferGeneral.LossSoldierNum += attackDmg
-	//记录普通次数
+	//统计数据
 	attackGeneral.ExecuteGeneralAttackNum++
 	attackGeneral.ExecuteWeaponAttackNum++
+	attackGeneral.AccumulateTotalDamageNum += finalDmg
+	attackGeneral.AccumulateAttackDamageNum += finalDmg
+
 	sufferGeneral.SufferExecuteGeneralAttackNum++
 	sufferGeneral.SufferExecuteWeaponAttackNum++
+	sufferGeneral.LossSoldierNum += finalDmg
 
 	hlog.CtxInfof(ctx, "[%s]损失了兵力%d(%d↘%d)", sufferGeneral.BaseInfo.Name, finalDmg, defSoldierNum, remainSoldierNum)
 
@@ -830,11 +832,16 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	if damageNum >= soldierNum {
 		damageNum = soldierNum
 	}
-	//记录伤兵
-	sufferGeneral.LossSoldierNum += damageNum
+
 	//伤害结算
 	sufferGeneral.SoldierNum -= damageNum
 	remainSoldierNum = sufferGeneral.SoldierNum
+
+	//统计数据
+	attackGeneral.AccumulateTotalDamageNum += damageNum
+	attackGeneral.TacticAccumulateDamageMap[param.TacticId] = damageNum
+	attackGeneral.TacticAccumulateTriggerMap[param.TacticId] = damageNum
+	sufferGeneral.LossSoldierNum += damageNum
 
 	if effectName == "" {
 		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",

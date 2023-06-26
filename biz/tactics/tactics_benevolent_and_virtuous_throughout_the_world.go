@@ -36,7 +36,13 @@ func (b BenevolentAndVirtuousThroughoutTheWorldTactic) Prepare() {
 		pairGenerals := util.GetPairGeneralsTwoArrByGeneral(triggerGeneral, b.tacticsParams)
 		for _, general := range pairGenerals {
 			resume := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.68)
-			util.ResumeSoldierNum(ctx, general, resume)
+			util.ResumeSoldierNum(&util.ResumeParams{
+				Ctx:            ctx,
+				TacticsParams:  b.tacticsParams,
+				ProduceGeneral: triggerGeneral,
+				SufferGeneral:  general,
+				ResumeNum:      resume,
+			})
 			//并使其受到伤害降低4%，受智力影响，持续1回合
 			rate := 0.04 + (general.BaseInfo.AbilityAttr.IntelligenceRate / 100 / 100)
 

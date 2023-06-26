@@ -66,7 +66,13 @@ func (d DressTactic) Execute() {
 	//治疗随机我军单体（治疗率160%，受智力影响）
 	pairGeneral := util.GetPairOneGeneral(d.tacticsParams, currentGeneral)
 	resume := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.6)
-	util.ResumeSoldierNum(ctx, pairGeneral, resume)
+	util.ResumeSoldierNum(&util.ResumeParams{
+		Ctx:            ctx,
+		TacticsParams:  d.tacticsParams,
+		ProduceGeneral: currentGeneral,
+		SufferGeneral:  pairGeneral,
+		ResumeNum:      resume,
+	})
 }
 
 func (d DressTactic) IsTriggerPrepare() bool {

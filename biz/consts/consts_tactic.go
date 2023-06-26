@@ -250,7 +250,7 @@ const (
 	//左右开弓
 	DrawTheBowBothOnTheLeftAndRight
 	//骁勇善战
-	BraveAndBattlewise
+	BraveAndBattleWise
 	//御敌屏障
 	DefensiveBarrier
 	//料事如神
@@ -869,7 +869,7 @@ func (b TacticId) String() string {
 	case DrawTheBowBothOnTheLeftAndRight:
 		return "左右开弓"
 		//骁勇善战
-	case BraveAndBattlewise:
+	case BraveAndBattleWise:
 		return "骁勇善战"
 		//御敌屏障
 	case DefensiveBarrier:

@@ -8,47 +8,47 @@ import (
 
 // 骁勇善战
 // 准备1回合，对敌军单体造成一次兵刃攻击（伤害率300%）并提高自己40点速度，持续2回合
-type BraveAndBattlewise struct {
+type BraveAndBattleWiseTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
 	isTriggerPrepare bool
 }
 
-func (b BraveAndBattlewise) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
+func (b BraveAndBattleWiseTactic) Init(tacticsParams *model.TacticsParams) _interface.Tactics {
 	b.tacticsParams = tacticsParams
 	b.triggerRate = 0.35
 	return b
 }
 
-func (b BraveAndBattlewise) Prepare() {
+func (b BraveAndBattleWiseTactic) Prepare() {
 
 }
 
-func (b BraveAndBattlewise) Id() consts.TacticId {
-	return consts.BraveAndBattlewise
+func (b BraveAndBattleWiseTactic) Id() consts.TacticId {
+	return consts.BraveAndBattleWise
 }
 
-func (b BraveAndBattlewise) Name() string {
+func (b BraveAndBattleWiseTactic) Name() string {
 	return "骁勇善战"
 }
 
-func (b BraveAndBattlewise) TacticsSource() consts.TacticsSource {
+func (b BraveAndBattleWiseTactic) TacticsSource() consts.TacticsSource {
 	return consts.TacticsSource_Inherit
 }
 
-func (b BraveAndBattlewise) GetTriggerRate() float64 {
+func (b BraveAndBattleWiseTactic) GetTriggerRate() float64 {
 	return b.triggerRate
 }
 
-func (b BraveAndBattlewise) SetTriggerRate(rate float64) {
+func (b BraveAndBattleWiseTactic) SetTriggerRate(rate float64) {
 	b.triggerRate = rate
 }
 
-func (b BraveAndBattlewise) TacticsType() consts.TacticsType {
+func (b BraveAndBattleWiseTactic) TacticsType() consts.TacticsType {
 	return consts.TacticsType_Active
 }
 
-func (b BraveAndBattlewise) SupportArmTypes() []consts.ArmType {
+func (b BraveAndBattleWiseTactic) SupportArmTypes() []consts.ArmType {
 	return []consts.ArmType{
 		consts.ArmType_Cavalry,
 		consts.ArmType_Mauler,
@@ -58,9 +58,9 @@ func (b BraveAndBattlewise) SupportArmTypes() []consts.ArmType {
 	}
 }
 
-func (b BraveAndBattlewise) Execute() {
+func (b BraveAndBattleWiseTactic) Execute() {
 }
 
-func (b BraveAndBattlewise) IsTriggerPrepare() bool {
+func (b BraveAndBattleWiseTactic) IsTriggerPrepare() bool {
 	return b.isTriggerPrepare
 }

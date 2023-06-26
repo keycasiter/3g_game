@@ -278,18 +278,6 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.PoisonedWine] = &PoisonedWineTactic{}
 	//毒泉拒蜀
 	TacticsHandlerMap[consts.PoisonousSpringRefusesShu] = &PoisonousSpringRefusesShuTactic{}
-	//誓守无降
-	TacticsHandlerMap[consts.PromiseToKeepWithoutSurrender] = &PromiseToKeepWithoutSurrenderTactic{}
-	//傲睨王侯
-	TacticsHandlerMap[consts.ProudPrince] = &ProudPrinceTactic{}
-	//挑衅
-	TacticsHandlerMap[consts.Provoke] = &ProvokeTactic{}
-	//掣刀斫敌
-	TacticsHandlerMap[consts.PullingSwordsAndChoppingEnemies] = &PullingSwordsAndChoppingEnemiesTactic{}
-	//净化
-	TacticsHandlerMap[consts.Purify] = &PurifyTactic{}
-	//青州兵
-	TacticsHandlerMap[consts.QingZhouSoldier] = &QingZhouSoldierTactic{}
 	//陷阵突袭
 	TacticsHandlerMap[consts.RaidInFormation] = &RaidInFormationTactic{}
 	//天降火雨
@@ -448,6 +436,88 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.CorporealIronWall] = &CorporealIronWallTactic{}
 	//刀出如霆
 	TacticsHandlerMap[consts.TheKnifeLikeThunderbolt] = &TheKnifeLikeThunderboltTactic{}
+	//一举歼灭
+	TacticsHandlerMap[consts.AnnihilateInOneFellSwoop] = &AnnihilateInOneFellSwoopTactic{}
+	//避实击虚
+	TacticsHandlerMap[consts.AvoidTheSolidAndStrikeTheWeak] = &AvoidTheSolidAndStrikeTheWeakTactic{}
+	//威风凛凛
+	TacticsHandlerMap[consts.AweInspiring] = &AweInspiringTactic{}
+	//斗智
+	TacticsHandlerMap[consts.BattleOfWits] = &BattleOfWitsTactic{}
+	//才辩机捷
+	TacticsHandlerMap[consts.BeQuickInDebatingOpportunities] = &BeQuickInDebatingOpportunitiesTactic{}
+	//倾国倾城
+	TacticsHandlerMap[consts.BeautyWhichOverthrowsStatesAndCities] = &BeautyWhichOverthrowsStatesAndCitiesTactic{}
+	//一身是胆
+	TacticsHandlerMap[consts.BebraveAllThrough] = &BebraveAllThroughTactic{}
+	//威震华夏
+	TacticsHandlerMap[consts.BecomeFamousAndFearInspiringThroughoutChina] = &BecomeFamousAndFearInspiringThroughoutChinaTactic{}
+	//仁德载世
+	TacticsHandlerMap[consts.BenevolentAndVirtuousThroughoutTheWorld] = &BenevolentAndVirtuousThroughoutTheWorldTactic{}
+	//血刃争锋
+	TacticsHandlerMap[consts.BloodBladeBattle] = &BloodBladeBattleTactic{}
+	//槊血纵横
+	TacticsHandlerMap[consts.BloodyAndUnrestrained] = &BloodyAndUnrestrainedTactic{}
+	//弓腰姬
+	TacticsHandlerMap[consts.BowWaistConcubine] = &BowWaistConcubineTactic{}
+	//骁勇善战
+	TacticsHandlerMap[consts.BraveAndBattleWise] = &BraveAndBattleWiseTactic{}
+	//勇烈持重
+	TacticsHandlerMap[consts.BraveAndResolute] = &BraveAndResoluteTactic{}
+	//奋矛英姿
+	TacticsHandlerMap[consts.BraveSpearHeroicPose] = &BraveSpearHeroicPoseTactic{}
+	//破军威胜
+	TacticsHandlerMap[consts.BreakingThroughTheArmyAndWinningVictories] = &BreakingThroughTheArmyAndWinningVictoriesTactic{}
+	//锦囊妙计
+	TacticsHandlerMap[consts.BrocadeBagAndCleverPlan] = &BrocadeBagAndCleverPlanTactic{}
+	//登锋陷阵
+	TacticsHandlerMap[consts.ChargeIntoTheEnemyRanks] = &ChargeIntoTheEnemyRanksTactic{}
+	//手起刀落
+	TacticsHandlerMap[consts.CutDown] = &CutDownTactic{}
+	//沉断机谋
+	TacticsHandlerMap[consts.DecisiveStrategy] = &DecisiveStrategyTactic{}
+	//神射
+	TacticsHandlerMap[consts.DivineEjaculation] = &DivineEjaculationTactic{}
+	//神火计
+	TacticsHandlerMap[consts.DivineFireMeter] = &DivineFireMeterTactic{}
+	//神机莫测
+	TacticsHandlerMap[consts.DivinelyInspiredStratagem] = &DivinelyInspiredStratagemTactic{}
+	//左右开弓
+	TacticsHandlerMap[consts.DrawTheBowBothOnTheLeftAndRight] = &DrawTheBowBothOnTheLeftAndRightTactic{}
+	//包扎
+	TacticsHandlerMap[consts.Dress] = &DressTactic{}
+	//象兵
+	TacticsHandlerMap[consts.ElephantSoldier] = &ElephantSoldierTactic{}
+	//白眉
+	TacticsHandlerMap[consts.EyebrowedThrush] = &EyebrowedThrushTactic{}
+	//轻勇飞燕
+	TacticsHandlerMap[consts.FearlessAndBraveFlyingSwallow] = &FearlessAndBraveFlyingSwallowTactic{}
+	//不辱使命
+	TacticsHandlerMap[consts.HaveSucceededInCarryingOutAnAssignment] = &HaveSucceededInCarryingOutAnAssignmentTactic{}
+	//诈降
+	TacticsHandlerMap[consts.PretendToSurrender] = &PretendToSurrenderTactic{}
+	//誓守无降
+	TacticsHandlerMap[consts.PromiseToKeepWithoutSurrender] = &PromiseToKeepWithoutSurrenderTactic{}
+	//傲睨王侯
+	TacticsHandlerMap[consts.ProudPrince] = &ProudPrinceTactic{}
+	//挑衅
+	TacticsHandlerMap[consts.Provoke] = &ProvokeTactic{}
+	//掣刀斫敌
+	TacticsHandlerMap[consts.PullingSwordsAndChoppingEnemies] = &PullingSwordsAndChoppingEnemiesTactic{}
+	//净化
+	TacticsHandlerMap[consts.Purify] = &PurifyTactic{}
+	//青州兵
+	TacticsHandlerMap[consts.QingZhouSoldier] = &QingZhouSoldierTactic{}
+	//震骇四境
+	TacticsHandlerMap[consts.ShockingFourRealms] = &ShockingFourRealmsTactic{}
+	//横扫千军
+	TacticsHandlerMap[consts.SweepAwayTheMillionsOfEnemyTroops] = &SweepAwayTheMillionsOfEnemyTroopsTactic{}
+	//义心昭烈
+	TacticsHandlerMap[consts.TheHeartOfRighteousnessShines] = &TheHeartOfRighteousnessShinesTactic{}
+	//兵锋
+	TacticsHandlerMap[consts.TheSharpnessOfMilitaryStrength] = &TheSharpnessOfMilitaryStrengthTactic{}
+	//挥兵谋胜
+	TacticsHandlerMap[consts.WieldTroopsToSeekVictory] = &WieldTroopsToSeekVictoryTactic{}
 }
 
 func initTacticsMap() {
@@ -456,6 +526,12 @@ func initTacticsMap() {
 	ActivePrepareTacticsMap[consts.ThunderStruck] = true
 
 	//被动战法
+	PassiveTacticsMap[consts.PretendToSurrender] = true
+	PassiveTacticsMap[consts.EyebrowedThrush] = true
+	PassiveTacticsMap[consts.BraveSpearHeroicPose] = true
+	PassiveTacticsMap[consts.BraveAndResolute] = true
+	PassiveTacticsMap[consts.BloodBladeBattle] = true
+	PassiveTacticsMap[consts.BebraveAllThrough] = true
 	PassiveTacticsMap[consts.CorporealIronWall] = true
 	PassiveTacticsMap[consts.YanPeopleRoar] = true
 	PassiveTacticsMap[consts.ThousandMileWalkingSingleRider] = true
@@ -493,7 +569,15 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.WorkOutMeasuresToSuitLocalConditions] = true
 	PassiveTacticsMap[consts.ThePostureOfAPhoenixWithAChickAndASweetPotato] = true
 	PassiveTacticsMap[consts.JinfanArmyHundredFeathers] = true
+	PassiveTacticsMap[consts.BeQuickInDebatingOpportunities] = true
+	PassiveTacticsMap[consts.BloodyAndUnrestrained] = true
+	PassiveTacticsMap[consts.DivineEjaculation] = true
+	PassiveTacticsMap[consts.DivineFireMeter] = true
 	//指挥战法
+	CommandTacticsMap[consts.TheHeartOfRighteousnessShines] = true
+	CommandTacticsMap[consts.BrocadeBagAndCleverPlan] = true
+	CommandTacticsMap[consts.ProudPrince] = true
+	CommandTacticsMap[consts.BowWaistConcubine] = true
 	CommandTacticsMap[consts.CloudGatheringShadowFrom] = true
 	CommandTacticsMap[consts.WinsTent] = true
 	CommandTacticsMap[consts.TenWinsAndTenLosses] = true
@@ -536,6 +620,8 @@ func initTacticsMap() {
 	CommandTacticsMap[consts.SuperviseLeadAndSeizureArmy] = true
 	CommandTacticsMap[consts.SuppressYellowScarves] = true
 	CommandTacticsMap[consts.TheGodOfCraftsmen] = true
+	CommandTacticsMap[consts.BenevolentAndVirtuousThroughoutTheWorld] = true
+	CommandTacticsMap[consts.WieldTroopsToSeekVictory] = true
 	//阵法
 	TroopsTacticsMap[consts.FrontalVectorArray] = true
 	TroopsTacticsMap[consts.EightGateGoldenLockArray] = true
@@ -555,7 +641,29 @@ func initTacticsMap() {
 	ArmTacticsMap[consts.TigerGuardArmy] = true
 	ArmTacticsMap[consts.WhiteArmy] = true
 	ArmTacticsMap[consts.WhiteHorseFollowsWithLoyalty] = true
+	ArmTacticsMap[consts.ElephantSoldier] = true
 	//主动
+	ActiveTacticsMap[consts.TheSharpnessOfMilitaryStrength] = true
+	ActiveTacticsMap[consts.PullingSwordsAndChoppingEnemies] = true
+	ActiveTacticsMap[consts.SweepAwayTheMillionsOfEnemyTroops] = true
+	ActiveTacticsMap[consts.ShockingFourRealms] = true
+	ActiveTacticsMap[consts.Purify] = true
+	ActiveTacticsMap[consts.Provoke] = true
+	ActiveTacticsMap[consts.PromiseToKeepWithoutSurrender] = true
+	ActiveTacticsMap[consts.FearlessAndBraveFlyingSwallow] = true
+	ActiveTacticsMap[consts.HaveSucceededInCarryingOutAnAssignment] = true
+	ActiveTacticsMap[consts.DecisiveStrategy] = true
+	ActiveTacticsMap[consts.Dress] = true
+	ActiveTacticsMap[consts.DrawTheBowBothOnTheLeftAndRight] = true
+	ActiveTacticsMap[consts.DivinelyInspiredStratagem] = true
+	ActiveTacticsMap[consts.ChargeIntoTheEnemyRanks] = true
+	ActiveTacticsMap[consts.BraveAndBattleWise] = true
+	ActiveTacticsMap[consts.BecomeFamousAndFearInspiringThroughoutChina] = true
+	ActiveTacticsMap[consts.BeautyWhichOverthrowsStatesAndCities] = true
+	ActiveTacticsMap[consts.BattleOfWits] = true
+	ActiveTacticsMap[consts.AvoidTheSolidAndStrikeTheWeak] = true
+	ActiveTacticsMap[consts.AweInspiring] = true
+	ActiveTacticsMap[consts.AnnihilateInOneFellSwoop] = true
 	ActiveTacticsMap[consts.TheKnifeLikeThunderbolt] = true
 	ActiveTacticsMap[consts.TheLionFliesFast] = true
 	ActiveTacticsMap[consts.InChaosNotConfused] = true
@@ -654,6 +762,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.TakingAdvantageOfTheSituationToGainPower] = true
 
 	//突击
+	AssaultTacticsMap[consts.CutDown] = true
 	AssaultTacticsMap[consts.WhenTheFrontIsDestroyed] = true
 	AssaultTacticsMap[consts.ToCureOnesSpeed] = true
 	AssaultTacticsMap[consts.TheBraveLeadTheWay] = true

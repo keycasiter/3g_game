@@ -108,7 +108,7 @@ func (n NanManQuKuiTactic) Prepare() {
 		triggerResp := &vo.TacticsTriggerResult{}
 		triggerGeneral := params.CurrentGeneral
 
-		if triggerGeneral.SufferGeneralAttackNum == 7 {
+		if triggerGeneral.SufferExecuteGeneralAttackNum == 7 {
 			if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_Awe, &vo.EffectHolderParams{
 				EffectRound:    1,
 				FromTactic:     n.Id(),

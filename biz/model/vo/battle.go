@@ -41,6 +41,8 @@ type EffectHolderParams struct {
 	TauntByTarget *BattleGeneral
 	//锁定攻击目标
 	LockingTarget *BattleGeneral
+	//被谁分担伤害
+	ShareResponsibilityForByGeneral *BattleGeneral
 	//效果施加者
 	ProduceGeneral *BattleGeneral
 }
@@ -132,6 +134,8 @@ type TacticsTriggerParams struct {
 
 	//施加参数
 	EffectHolderParams *EffectHolderParams
+	//伤害类型
+	DamageType consts.DamageType
 }
 
 // 战法触发结果

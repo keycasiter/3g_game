@@ -91,6 +91,17 @@ func FluctuateDamage(dmg int64) int64 {
 // @suffer 被攻击武将
 func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, attackDmg int64) {
 	defer func() {
+		//「伤害结束」触发器
+		if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_DamageEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: attackGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
 		//「遭受伤害结束」触发器
 		if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamageEnd]; okk {
 			for _, f := range funcs {
@@ -98,6 +109,7 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 					CurrentRound:   tacticsParams.CurrentRound,
 					CurrentGeneral: attackGeneral,
 					AttackGeneral:  attackGeneral,
+					DamageType:     consts.DamageType_Weapon,
 				}
 				f(params)
 			}
@@ -260,6 +272,28 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 			params := &vo.TacticsTriggerParams{
 				CurrentRound:   tacticsParams.CurrentRound,
 				CurrentGeneral: sufferGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	//「伤害开始」触发器
+	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_Damage]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	//「兵刃伤害开始」触发器
+	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_WeaponDamage]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
 				AttackGeneral:  attackGeneral,
 			}
 			f(params)
@@ -451,6 +485,17 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	isEffect = true
 
 	defer func() {
+		// 「伤害开始」触发器
+		if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_DamageEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					CurrentRound:   tacticsParams.CurrentRound,
+					CurrentGeneral: attackGeneral,
+					AttackGeneral:  attackGeneral,
+				}
+				f(params)
+			}
+		}
 		// 「遭受伤害结束」触发器
 		if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamageEnd]; okk {
 			for _, f := range funcs {
@@ -458,6 +503,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 					CurrentRound:   tacticsParams.CurrentRound,
 					CurrentGeneral: attackGeneral,
 					AttackGeneral:  attackGeneral,
+					DamageType:     damageType,
 				}
 				f(params)
 			}
@@ -553,6 +599,17 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		}
 	}
 
+	// 「伤害开始」触发器
+	if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_Damage]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
 	// 「遭受伤害开始」触发器
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; okk {
 		for _, f := range funcs {

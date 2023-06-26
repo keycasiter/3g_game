@@ -107,29 +107,35 @@ func (r RefinedStrategiesTactic) Name() string {
 }
 
 func (r RefinedStrategiesTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (r RefinedStrategiesTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return r.triggerRate
 }
 
 func (r RefinedStrategiesTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	r.triggerRate = rate
 }
 
 func (r RefinedStrategiesTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Active
 }
 
 func (r RefinedStrategiesTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (r RefinedStrategiesTactic) Execute() {
-	panic("implement me")
+
 }
 
 func (r RefinedStrategiesTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

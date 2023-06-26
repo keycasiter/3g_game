@@ -518,6 +518,20 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.TheSharpnessOfMilitaryStrength] = &TheSharpnessOfMilitaryStrengthTactic{}
 	//挥兵谋胜
 	TacticsHandlerMap[consts.WieldTroopsToSeekVictory] = &WieldTroopsToSeekVictoryTactic{}
+	//白衣渡江
+	TacticsHandlerMap[consts.CrossingTheRiverInWhiteClothes] = &CrossingTheRiverInWhiteClothesTactic{}
+	//溯江摇橹
+	TacticsHandlerMap[consts.ChasingTheRiverAndRidingRows] = &ChasingTheRiverAndRidingRowsTactic{}
+	//江东小霸王
+	TacticsHandlerMap[consts.JiangdongLittleOverlord] = &JiangdongLittleOverlordTactic{}
+	//国士将风
+	TacticsHandlerMap[consts.CountryPersonGeneralStyle] = &CountryPersonGeneralStyleTactic{}
+	//追伤
+	TacticsHandlerMap[consts.ChasingInjury] = &ChasingInjuryTactic{}
+	//闭月
+	TacticsHandlerMap[consts.ClosedMoon] = &ClosedMoonTactic{}
+	//苦肉计
+	TacticsHandlerMap[consts.InjuryOnOneself] = &InjuryOnOneselfTactic{}
 }
 
 func initTacticsMap() {
@@ -573,7 +587,11 @@ func initTacticsMap() {
 	PassiveTacticsMap[consts.BloodyAndUnrestrained] = true
 	PassiveTacticsMap[consts.DivineEjaculation] = true
 	PassiveTacticsMap[consts.DivineFireMeter] = true
+	PassiveTacticsMap[consts.ChasingTheRiverAndRidingRows] = true
+	PassiveTacticsMap[consts.JiangdongLittleOverlord] = true
 	//指挥战法
+	CommandTacticsMap[consts.CountryPersonGeneralStyle] = true
+	CommandTacticsMap[consts.CrossingTheRiverInWhiteClothes] = true
 	CommandTacticsMap[consts.TheHeartOfRighteousnessShines] = true
 	CommandTacticsMap[consts.BrocadeBagAndCleverPlan] = true
 	CommandTacticsMap[consts.ProudPrince] = true
@@ -644,6 +662,7 @@ func initTacticsMap() {
 	ArmTacticsMap[consts.ElephantSoldier] = true
 	//主动
 	ActiveTacticsMap[consts.TheSharpnessOfMilitaryStrength] = true
+	ActiveTacticsMap[consts.ClosedMoon] = true
 	ActiveTacticsMap[consts.PullingSwordsAndChoppingEnemies] = true
 	ActiveTacticsMap[consts.SweepAwayTheMillionsOfEnemyTroops] = true
 	ActiveTacticsMap[consts.ShockingFourRealms] = true
@@ -762,6 +781,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[consts.TakingAdvantageOfTheSituationToGainPower] = true
 
 	//突击
+	AssaultTacticsMap[consts.ChasingInjury] = true
 	AssaultTacticsMap[consts.CutDown] = true
 	AssaultTacticsMap[consts.WhenTheFrontIsDestroyed] = true
 	AssaultTacticsMap[consts.ToCureOnesSpeed] = true

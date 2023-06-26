@@ -95,29 +95,35 @@ func (g GoldenPillSecretTechniqueTactic) Name() string {
 }
 
 func (g GoldenPillSecretTechniqueTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (g GoldenPillSecretTechniqueTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return g.triggerRate
 }
 
 func (g GoldenPillSecretTechniqueTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	g.triggerRate = rate
 }
 
 func (g GoldenPillSecretTechniqueTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Command
 }
 
 func (g GoldenPillSecretTechniqueTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (g GoldenPillSecretTechniqueTactic) Execute() {
-	panic("implement me")
+
 }
 
 func (g GoldenPillSecretTechniqueTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

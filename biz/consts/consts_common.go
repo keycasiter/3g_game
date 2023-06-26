@@ -344,6 +344,8 @@ const (
 	BattleAction_WeaponDamageEnd                       //发动兵刃伤害结束
 	BattleAction_StrategyDamage                        //发动谋略伤害开始
 	BattleAction_StrategyDamageEnd                     //发动谋略伤害结束
+	BattleAction_Damage                                //发动伤害开始
+	BattleAction_DamageEnd                             //发动伤害结束
 	BattleAction_DebuffEffect                          //施加负面效果开始
 	BattleAction_DebuffEffectEnd                       //施加负面效果结束
 	BattleAction_BuffEffect                            //施加正面效果开始

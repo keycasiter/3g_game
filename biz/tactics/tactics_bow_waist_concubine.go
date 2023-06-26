@@ -76,29 +76,35 @@ func (b BowWaistConcubineTactic) Name() string {
 }
 
 func (b BowWaistConcubineTactic) TacticsSource() consts.TacticsSource {
-	panic("implement me")
+	return consts.TacticsSource_SelfContained
 }
 
 func (b BowWaistConcubineTactic) GetTriggerRate() float64 {
-	panic("implement me")
+	return b.triggerRate
 }
 
 func (b BowWaistConcubineTactic) SetTriggerRate(rate float64) {
-	panic("implement me")
+	b.triggerRate = rate
 }
 
 func (b BowWaistConcubineTactic) TacticsType() consts.TacticsType {
-	panic("implement me")
+	return consts.TacticsType_Command
 }
 
 func (b BowWaistConcubineTactic) SupportArmTypes() []consts.ArmType {
-	panic("implement me")
+	return []consts.ArmType{
+		consts.ArmType_Cavalry,
+		consts.ArmType_Mauler,
+		consts.ArmType_Archers,
+		consts.ArmType_Spearman,
+		consts.ArmType_Apparatus,
+	}
 }
 
 func (b BowWaistConcubineTactic) Execute() {
-	panic("implement me")
+
 }
 
 func (b BowWaistConcubineTactic) IsTriggerPrepare() bool {
-	panic("implement me")
+	return false
 }

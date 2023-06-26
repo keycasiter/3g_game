@@ -23,6 +23,10 @@ type BattleLogicContextRequest struct {
 
 // resp
 type BattleLogicContextResponse struct {
+	//我军武将对战信息
+	FightingGeneralStatistics []*vo.BattleGeneralStatistics
+	//敌军武将对战信息
+	EnemyGeneralStatistics []*vo.BattleGeneralStatistics
 }
 
 //resp
@@ -33,7 +37,9 @@ type BattleLogicContext struct {
 	//上下文
 	Ctx context.Context
 	// 入参
-	ReqParam *BattleLogicContextRequest
+	Req *BattleLogicContextRequest
+	// 出参
+	Resp *BattleLogicContextResponse
 	// 执行方法
 	Funcs []func()
 	// 执行错误
@@ -48,8 +54,10 @@ type BattleLogicContext struct {
 
 func NewBattleLogicContext(ctx context.Context, req *BattleLogicContextRequest) *BattleLogicContext {
 	runCtx := &BattleLogicContext{
-		ReqParam: req,
+		Req:  req,
+		Resp: &BattleLogicContextResponse{},
 	}
+
 	//注入方法执行顺序
 	runCtx.Funcs = []func(){
 		//初始化元数据
@@ -60,20 +68,22 @@ func NewBattleLogicContext(ctx context.Context, req *BattleLogicContextRequest) 
 		runCtx.processBattlePreparePhase,
 		//对战对阵阶段处理
 		runCtx.processBattleFightingPhase,
+		//对战战报统计数据处理
+		runCtx.processBattleReportStatistics,
 	}
 
 	return runCtx
 }
 
-func (runCtx *BattleLogicContext) Run() error {
+func (runCtx *BattleLogicContext) Run() (*BattleLogicContextResponse, error) {
 	for _, f := range runCtx.Funcs {
 		f()
 		if runCtx.RunErr != nil {
 			hlog.CtxErrorf(runCtx.Ctx, "BattleLogicContext Func=%v Run err:%v", f, runCtx.RunErr)
-			return runCtx.RunErr
+			return nil, runCtx.RunErr
 		}
 	}
-	return nil
+	return runCtx.Resp, nil
 }
 
 func (runCtx *BattleLogicContext) initMetadata() {
@@ -260,15 +270,15 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 	/********************************************************/
 
 	//我方武将加成处理
-	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
-		runCtx.handleGeneralAddition(runCtx.ReqParam.FightingTeam, general)
-		runCtx.handleTeamAddition(runCtx.ReqParam.FightingTeam)
+	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
+		runCtx.handleGeneralAddition(runCtx.Req.FightingTeam, general)
+		runCtx.handleTeamAddition(runCtx.Req.FightingTeam)
 	}
 
 	//敌方武将加成处理
-	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
-		runCtx.handleGeneralAddition(runCtx.ReqParam.EnemyTeam, general)
-		runCtx.handleTeamAddition(runCtx.ReqParam.EnemyTeam)
+	for _, general := range runCtx.Req.EnemyTeam.BattleGenerals {
+		runCtx.handleGeneralAddition(runCtx.Req.EnemyTeam, general)
+		runCtx.handleTeamAddition(runCtx.Req.EnemyTeam)
 	}
 
 	//兵书处理：一兵书效果
@@ -364,6 +374,83 @@ func (runCtx *BattleLogicContext) handleTeamAddition(team *vo.BattleTeam) {
 	//3.兵种-科技加成 TODO
 }
 
+// 对战战报统计数据处理
+func (runCtx *BattleLogicContext) processBattleReportStatistics() {
+	//我方
+	fightingBattleGeneralStatistics := make([]*vo.BattleGeneralStatistics, 0)
+	for _, general := range runCtx.TacticsParams.FightingTeam.BattleGenerals {
+		//战法统计
+		tacticStatistics := make([]*vo.BattleGeneralTacticStatistics, 0)
+		for _, tactic := range general.EquipTactics {
+			triggerCnt := int64(0)
+			damageNum := int64(0)
+			resumeNum := int64(0)
+			if cnt, ok := general.TacticAccumulateTriggerMap[tactic.Id]; ok {
+				triggerCnt = cnt
+			}
+			if cnt, ok := general.TacticAccumulateDamageMap[tactic.Id]; ok {
+				damageNum = cnt
+			}
+			if cnt, ok := general.TacticAccumulateResumeMap[tactic.Id]; ok {
+				resumeNum = cnt
+			}
+
+			tacticStatistics = append(tacticStatistics, &vo.BattleGeneralTacticStatistics{
+				TriggerCnt: triggerCnt,
+				DamageNum:  damageNum,
+				ResumeNum:  resumeNum,
+			})
+		}
+
+		fightingBattleGeneralStatistics = append(fightingBattleGeneralStatistics, &vo.BattleGeneralStatistics{
+			BattleGeneral:    general,
+			TacticStatistics: nil,
+			AttackStatistics: &vo.BattleGeneralTacticStatistics{
+				TriggerCnt: general.ExecuteGeneralAttackNum,
+				DamageNum:  general.AccumulateAttackDamageNum,
+			},
+		})
+	}
+	//敌军
+	enemyBattleGeneralStatistics := make([]*vo.BattleGeneralStatistics, 0)
+	for _, general := range runCtx.TacticsParams.EnemyTeam.BattleGenerals {
+		//战法统计
+		tacticStatistics := make([]*vo.BattleGeneralTacticStatistics, 0)
+		for _, tactic := range general.EquipTactics {
+			triggerCnt := int64(0)
+			damageNum := int64(0)
+			resumeNum := int64(0)
+			if cnt, ok := general.TacticAccumulateTriggerMap[tactic.Id]; ok {
+				triggerCnt = cnt
+			}
+			if cnt, ok := general.TacticAccumulateDamageMap[tactic.Id]; ok {
+				damageNum = cnt
+			}
+			if cnt, ok := general.TacticAccumulateResumeMap[tactic.Id]; ok {
+				resumeNum = cnt
+			}
+
+			tacticStatistics = append(tacticStatistics, &vo.BattleGeneralTacticStatistics{
+				TriggerCnt: triggerCnt,
+				DamageNum:  damageNum,
+				ResumeNum:  resumeNum,
+			})
+		}
+
+		fightingBattleGeneralStatistics = append(fightingBattleGeneralStatistics, &vo.BattleGeneralStatistics{
+			BattleGeneral:    general,
+			TacticStatistics: nil,
+			AttackStatistics: &vo.BattleGeneralTacticStatistics{
+				TriggerCnt: general.ExecuteGeneralAttackNum,
+				DamageNum:  general.AccumulateAttackDamageNum,
+			},
+		})
+	}
+
+	runCtx.Resp.FightingGeneralStatistics = fightingBattleGeneralStatistics
+	runCtx.Resp.EnemyGeneralStatistics = enemyBattleGeneralStatistics
+}
+
 // 对战对阵阶段处理
 func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 	//对战阶段
@@ -387,10 +474,10 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 	//打印每队战况
 	hlog.CtxInfof(runCtx.Ctx, "******************《 战报总结 》********************")
 	hlog.CtxInfof(runCtx.Ctx, "战斗结束 , 结束时回合数：%d", currentRound)
-	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
+	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
 		hlog.CtxInfof(runCtx.Ctx, "[%s]兵力[%d]", general.BaseInfo.Name, general.SoldierNum)
 	}
-	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
+	for _, general := range runCtx.Req.EnemyTeam.BattleGenerals {
 		hlog.CtxInfof(runCtx.Ctx, "[%s]兵力[%d]", general.BaseInfo.Name, general.SoldierNum)
 	}
 }
@@ -744,19 +831,19 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 	tacticsParams.CurrentRound = consts.Battle_Round_Unknow
 
 	//对阵队伍信息
-	tacticsParams.FightingTeam = runCtx.ReqParam.FightingTeam
-	tacticsParams.EnemyTeam = runCtx.ReqParam.EnemyTeam
+	tacticsParams.FightingTeam = runCtx.Req.FightingTeam
+	tacticsParams.EnemyTeam = runCtx.Req.EnemyTeam
 
 	//武将信息转map/arr，方便后续直接调用
 	tacticsParams.FightingGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	tacticsParams.EnemyGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
 	tacticsParams.AllGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
-	for _, general := range runCtx.ReqParam.FightingTeam.BattleGenerals {
+	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
 		tacticsParams.FightingGeneralMap[general.BaseInfo.UniqueId] = general
 		tacticsParams.AllGeneralMap[general.BaseInfo.UniqueId] = general
 		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)
 	}
-	for _, general := range runCtx.ReqParam.EnemyTeam.BattleGenerals {
+	for _, general := range runCtx.Req.EnemyTeam.BattleGenerals {
 		tacticsParams.EnemyGeneralMap[general.BaseInfo.UniqueId] = general
 		tacticsParams.AllGeneralMap[general.BaseInfo.UniqueId] = general
 		tacticsParams.AllGeneralArr = append(tacticsParams.AllGeneralArr, general)

@@ -45,5 +45,8 @@ type TacticsParams struct {
 	AllGeneralArr []*vo.BattleGeneral
 
 	/******** 对战战报信息 *******/
+	//对战回合描述 map<对战阶段,<回合,[]战报内容>>
 	BattleReports map[consts.BattlePhase]map[consts.BattleRound][]string
+	//我方武将统计 map<武将uniqueId,武将>
+	BattleFightGeneralStatistics map[int64]*vo.BattleGeneral
 }

@@ -2,11 +2,13 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"github.com/keycasiter/3g_game/biz/conf"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/mongodb"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/kr/pretty"
 	"go.mongodb.org/mongo-driver/bson"
 	"testing"
@@ -462,6 +464,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 			BattleGenerals: enemyGenerals,
 		},
 	}
+	fmt.Printf("req :%s \n", util.ToJsonString(context.Background(), req))
 	runCtx := NewBattleLogicContext(context.Background(), req)
 	runCtx.Run()
 }

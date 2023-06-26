@@ -47,6 +47,26 @@ type EffectHolderParams struct {
 	ProduceGeneral *BattleGeneral
 }
 
+// 对战武将统计
+type BattleGeneralStatistics struct {
+	//武将基础信息
+	BattleGeneral *BattleGeneral
+	//战法统计
+	TacticStatistics []*BattleGeneralTacticStatistics
+	//普攻统计
+	AttackStatistics *BattleGeneralTacticStatistics
+}
+
+// 对战战法统计
+type BattleGeneralTacticStatistics struct {
+	//释放次数
+	TriggerCnt int64
+	//伤害量
+	DamageNum int64
+	//恢复量
+	ResumeNum int64
+}
+
 // 对战武将信息
 type BattleGeneral struct {
 	//基础信息
@@ -61,6 +81,19 @@ type BattleGeneral struct {
 	SoldierNum int64
 	//已损失兵力
 	LossSoldierNum int64
+	//累计伤害
+	AccumulateTotalDamageNum int64
+	//累计普通攻击伤害
+	AccumulateAttackDamageNum int64
+	//累计治疗
+	AccumulateTotalResumeNum int64
+	//战法伤害统计
+	TacticAccumulateDamageMap map[consts.TacticId]int64
+	//战法治疗统计
+	TacticAccumulateResumeMap map[consts.TacticId]int64
+	//战法发动统计
+	TacticAccumulateTriggerMap map[consts.TacticId]int64
+
 	//被谁援护
 	HelpByGeneral *BattleGeneral
 	//被谁嘲讽

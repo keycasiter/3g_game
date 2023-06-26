@@ -43,9 +43,9 @@ func (b BrocadeBagAndCleverPlanTactic) Prepare() {
 			//找到友军单体
 			pairGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, b.tacticsParams)
 			//找到自带主动战法
-			for _, equipTactic := range pairGeneral.EquipTactics {
+			for idx, equipTactic := range pairGeneral.EquipTactics {
 				//自带 + 主动
-				if cast.ToBool(equipTactic.SelfContained) && consts.ActiveTacticsMap[equipTactic.Id] {
+				if idx == 0 && consts.ActiveTacticsMap[equipTactic.Id] {
 					util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 						triggerGeneral := params.CurrentGeneral
 						triggerResp := &vo.TacticsTriggerResult{}

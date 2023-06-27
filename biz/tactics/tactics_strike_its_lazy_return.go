@@ -84,8 +84,13 @@ func (s StrikeItsLazyReturnTactic) Execute() {
 			if cast.ToFloat64(diffLostSoliderNum/triggerGeneral.SoldierNum) > 0.2 {
 				//恢复
 				resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.CommandBase * 2.96)
-				util.ResumeSoldierNum(ctx, currentGeneral, resumeNum)
-
+				util.ResumeSoldierNum(&util.ResumeParams{
+					Ctx:            ctx,
+					TacticsParams:  s.tacticsParams,
+					ProduceGeneral: triggerGeneral,
+					SufferGeneral:  currentGeneral,
+					ResumeNum:      resumeNum,
+				})
 				//效果
 				if util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
 					EffectRate:     0.25,

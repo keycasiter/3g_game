@@ -49,7 +49,13 @@ func (s SelfHealingTactic) Prepare() {
 				TacticId:   s.Id(),
 			}) {
 				resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1)
-				util.ResumeSoldierNum(ctx, currentGeneral, resumeNum)
+				util.ResumeSoldierNum(&util.ResumeParams{
+					Ctx:            ctx,
+					TacticsParams:  s.tacticsParams,
+					ProduceGeneral: currentGeneral,
+					SufferGeneral:  currentGeneral,
+					ResumeNum:      resumeNum,
+				})
 			}
 
 			return triggerResp

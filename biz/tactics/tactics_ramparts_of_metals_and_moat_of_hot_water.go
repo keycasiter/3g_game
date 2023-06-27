@@ -52,7 +52,13 @@ func (r RampartsOfMetalsAndAMoatOfHotWaterTactic) Prepare() {
 				pairGenerals := util.GetPairGeneralsTwoOrThreeMap(r.tacticsParams)
 				for _, pairGeneral := range pairGenerals {
 					resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.98)
-					util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
+					util.ResumeSoldierNum(&util.ResumeParams{
+						Ctx:            ctx,
+						TacticsParams:  r.tacticsParams,
+						ProduceGeneral: currentGeneral,
+						SufferGeneral:  pairGeneral,
+						ResumeNum:      resumeNum,
+					})
 				}
 
 				//切换执行标志

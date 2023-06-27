@@ -135,7 +135,13 @@ func (r RidingTheEnemyWithoutFearTactic) Execute() {
 						TacticId:   r.Id(),
 					}) {
 						resumeNum := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.05)
-						util.ResumeSoldierNum(ctx, revokeGeneral, resumeNum)
+						util.ResumeSoldierNum(&util.ResumeParams{
+							Ctx:            ctx,
+							TacticsParams:  r.tacticsParams,
+							ProduceGeneral: revokeGeneral,
+							SufferGeneral:  revokeGeneral,
+							ResumeNum:      resumeNum,
+						})
 					}
 
 					return revokeResp

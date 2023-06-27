@@ -42,8 +42,13 @@ func (g GatheringOfTroopsTactic) Prepare() {
 			triggerGeneral := params.CurrentGeneral
 
 			resumeNum := cast.ToInt64(cast.ToFloat64(triggerGeneral.SoldierNum) * 1.24)
-			util.ResumeSoldierNum(ctx, triggerGeneral, resumeNum)
-
+			util.ResumeSoldierNum(&util.ResumeParams{
+				Ctx:            ctx,
+				TacticsParams:  g.tacticsParams,
+				ProduceGeneral: triggerGeneral,
+				SufferGeneral:  triggerGeneral,
+				ResumeNum:      resumeNum,
+			})
 			return triggerResp
 		})
 	}

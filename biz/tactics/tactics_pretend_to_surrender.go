@@ -81,7 +81,13 @@ func (p PretendToSurrenderTactic) Prepare() {
 						TacticId:   p.Id(),
 					}) {
 						resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
-						util.ResumeSoldierNum(ctx, revokeGeneral, resumeNum)
+						util.ResumeSoldierNum(&util.ResumeParams{
+							Ctx:            ctx,
+							TacticsParams:  p.tacticsParams,
+							ProduceGeneral: currentGeneral,
+							SufferGeneral:  revokeGeneral,
+							ResumeNum:      resumeNum,
+						})
 					}
 
 					return revokeResp

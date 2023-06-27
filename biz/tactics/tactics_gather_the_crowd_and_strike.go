@@ -85,7 +85,13 @@ func (g GatherTheCrowdAndStrikeTactic) Execute() {
 	//并有45%概率治疗自身（治疗率88%，受武力影响）
 	if util.GenerateRate(0.45) {
 		resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.88)
-		util.ResumeSoldierNum(ctx, currentGeneral, resumeNum)
+		util.ResumeSoldierNum(&util.ResumeParams{
+			Ctx:            ctx,
+			TacticsParams:  g.tacticsParams,
+			ProduceGeneral: currentGeneral,
+			SufferGeneral:  currentGeneral,
+			ResumeNum:      resumeNum,
+		})
 	}
 }
 

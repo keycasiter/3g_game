@@ -81,7 +81,13 @@ func (s SuperviseLeadAndSeizureArmyTactic) Prepare() {
 			// 若敌军都没有负面状态则为损失兵力最多的我军单体恢复兵力（治疗率92%，受智力影响）
 			general := util.GetPairLowestSoldierNumGeneral(s.tacticsParams, currentGeneral)
 			resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.92)
-			util.ResumeSoldierNum(ctx, general, resumeNum)
+			util.ResumeSoldierNum(&util.ResumeParams{
+				Ctx:            ctx,
+				TacticsParams:  s.tacticsParams,
+				ProduceGeneral: currentGeneral,
+				SufferGeneral:  general,
+				ResumeNum:      resumeNum,
+			})
 		}
 
 		return triggerResp

@@ -74,7 +74,13 @@ func (m MedicalPracticeTactic) Prepare() {
 				}) {
 					if util.GenerateRate(0.5) {
 						resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.88)
-						util.ResumeSoldierNum(ctx, revokeGeneral, resumeNum)
+						util.ResumeSoldierNum(&util.ResumeParams{
+							Ctx:            ctx,
+							TacticsParams:  m.tacticsParams,
+							ProduceGeneral: currentGeneral,
+							SufferGeneral:  revokeGeneral,
+							ResumeNum:      resumeNum,
+						})
 					}
 				}
 

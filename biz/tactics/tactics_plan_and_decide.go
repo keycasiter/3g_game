@@ -53,8 +53,13 @@ func (p PlanAndDecideTactic) Prepare() {
 
 		pairGeneral := util.GetPairOneGeneral(p.tacticsParams, currentGeneral)
 		resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.64)
-		util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
-
+		util.ResumeSoldierNum(&util.ResumeParams{
+			Ctx:            ctx,
+			TacticsParams:  p.tacticsParams,
+			ProduceGeneral: triggerGeneral,
+			SufferGeneral:  pairGeneral,
+			ResumeNum:      resumeNum,
+		})
 		return triggerResp
 	})
 }

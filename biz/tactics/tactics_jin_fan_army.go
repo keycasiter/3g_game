@@ -61,8 +61,13 @@ func (j JinFanArmyTactic) Prepare() {
 					})
 					//恢复
 					resumeNum := cast.ToInt64(cast.ToFloat64(weaponDmg) * 0.3)
-					util.ResumeSoldierNum(ctx, triggerGeneral, resumeNum)
-
+					util.ResumeSoldierNum(&util.ResumeParams{
+						Ctx:            ctx,
+						TacticsParams:  j.tacticsParams,
+						ProduceGeneral: triggerGeneral,
+						SufferGeneral:  triggerGeneral,
+						ResumeNum:      resumeNum,
+					})
 				} else {
 					//部队普通攻击时，有45%概率使目标进入溃逃状态（伤害率64%，受武力影响），持续2回合
 					if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Escape, &vo.EffectHolderParams{

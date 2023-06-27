@@ -76,7 +76,13 @@ func (h HuJiaLingeringSoundTactic) Execute() {
 	for _, pairGeneral := range pairGenerals {
 		//治疗
 		resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.22)
-		util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
+		util.ResumeSoldierNum(&util.ResumeParams{
+			Ctx:            ctx,
+			TacticsParams:  h.tacticsParams,
+			ProduceGeneral: currentGeneral,
+			SufferGeneral:  pairGeneral,
+			ResumeNum:      resumeNum,
+		})
 		//效果施加
 		if util.GenerateRate(0.5) {
 			//找到自己和友军单体

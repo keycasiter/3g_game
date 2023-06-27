@@ -72,7 +72,13 @@ func (s SittingInAnIsolatedCityTactic) Execute() {
 	pairGenerals := util.GetEnemyTwoGeneralByGeneral(currentGeneral, s.tacticsParams)
 	resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.16)
 	for _, general := range pairGenerals {
-		util.ResumeSoldierNum(ctx, general, resumeNum)
+		util.ResumeSoldierNum(&util.ResumeParams{
+			Ctx:            ctx,
+			TacticsParams:  s.tacticsParams,
+			ProduceGeneral: currentGeneral,
+			SufferGeneral:  general,
+			ResumeNum:      resumeNum,
+		})
 	}
 }
 

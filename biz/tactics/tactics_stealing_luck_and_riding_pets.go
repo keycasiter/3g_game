@@ -47,9 +47,13 @@ func (s StealingLuckAndRidingPetsTactic) Prepare() {
 	util.TacticsTriggerWrapRegister(pairMasterGeneral, consts.BattleAction_SufferResume, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
 		resumeNum := cast.ToInt64(cast.ToFloat64(params.CurrentResume) * 0.2)
-
-		util.ResumeSoldierNum(ctx, currentGeneral, resumeNum)
-
+		util.ResumeSoldierNum(&util.ResumeParams{
+			Ctx:            ctx,
+			TacticsParams:  s.tacticsParams,
+			ProduceGeneral: currentGeneral,
+			SufferGeneral:  currentGeneral,
+			ResumeNum:      resumeNum,
+		})
 		return triggerResp
 	})
 

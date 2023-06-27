@@ -70,7 +70,13 @@ func (w WuFengArrayTactic) Prepare() {
 		if triggeRound%2 != 0 {
 			pairGeneral := util.GetPairOneGeneral(w.tacticsParams, triggerGeneral)
 			resumeNum := cast.ToInt64(lowGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.84)
-			util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
+			util.ResumeSoldierNum(&util.ResumeParams{
+				Ctx:            ctx,
+				TacticsParams:  w.tacticsParams,
+				ProduceGeneral: lowGeneral,
+				SufferGeneral:  pairGeneral,
+				ResumeNum:      resumeNum,
+			})
 		} else {
 			// 偶数回合使兵种适性较高的副将造成伤害提高15%（可叠加）
 			//兵刃伤害

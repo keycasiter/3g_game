@@ -53,7 +53,13 @@ func (j JiangdongLittleOverlordTactic) Prepare() {
 			//并为我军单体恢复兵力（治疗率56%，受武力影响）
 			pairGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, j.tacticsParams)
 			resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.56)
-			util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
+			util.ResumeSoldierNum(&util.ResumeParams{
+				Ctx:            ctx,
+				TacticsParams:  j.tacticsParams,
+				ProduceGeneral: triggerGeneral,
+				SufferGeneral:  pairGeneral,
+				ResumeNum:      resumeNum,
+			})
 		}
 
 		return triggerResp

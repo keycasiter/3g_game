@@ -54,7 +54,13 @@ func (w WorkOutMeasuresToSuitLocalConditionsTactic) Prepare() {
 			})
 			//治疗
 			resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
-			util.ResumeSoldierNum(ctx, triggerGeneral, resumeNum)
+			util.ResumeSoldierNum(&util.ResumeParams{
+				Ctx:            ctx,
+				TacticsParams:  w.tacticsParams,
+				ProduceGeneral: triggerGeneral,
+				SufferGeneral:  triggerGeneral,
+				ResumeNum:      resumeNum,
+			})
 		}
 
 		return triggerResp

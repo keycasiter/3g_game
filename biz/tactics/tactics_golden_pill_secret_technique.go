@@ -77,7 +77,13 @@ func (g GoldenPillSecretTechniqueTactic) Prepare() {
 					TacticId:   g.Id(),
 				}) {
 					resumeNum := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.58)
-					util.ResumeSoldierNum(ctx, revokeGeneral, resumeNum)
+					util.ResumeSoldierNum(&util.ResumeParams{
+						Ctx:            ctx,
+						TacticsParams:  g.tacticsParams,
+						ProduceGeneral: revokeGeneral,
+						SufferGeneral:  revokeGeneral,
+						ResumeNum:      resumeNum,
+					})
 				}
 
 				return revokeResp

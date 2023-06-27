@@ -126,8 +126,14 @@ func (f FireGodHeroStyleTactic) Prepare() {
 				//找到我军群体2人
 				pairGenerals := util.GetPairGeneralsTwoArrByGeneral(revokeGeneral, f.tacticsParams)
 				for _, general := range pairGenerals {
-					resumeNum := cast.ToInt64(general.BaseInfo.AbilityAttr.ForceBase * 1.58)
-					util.ResumeSoldierNum(ctx, general, resumeNum)
+					resumeNum := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.ForceBase * 1.58)
+					util.ResumeSoldierNum(&util.ResumeParams{
+						Ctx:            ctx,
+						TacticsParams:  f.tacticsParams,
+						ProduceGeneral: revokeGeneral,
+						SufferGeneral:  general,
+						ResumeNum:      resumeNum,
+					})
 				}
 			}
 

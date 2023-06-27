@@ -76,7 +76,13 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 	pairGenerals := util.GetPairGeneralsTwoArrByGeneral(currentGeneral, w.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.54)
-		util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
+		util.ResumeSoldierNum(&util.ResumeParams{
+			Ctx:            ctx,
+			TacticsParams:  w.tacticsParams,
+			ProduceGeneral: currentGeneral,
+			SufferGeneral:  pairGeneral,
+			ResumeNum:      resumeNum,
+		})
 		// 并使其下次3次受到伤害分别降低（50%、37.5%、25%，受智力影响
 		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_WaitAtOnesEaseForTheFatigued_Prepare, &vo.EffectHolderParams{
 			EffectTimes:    3,

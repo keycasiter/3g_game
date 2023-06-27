@@ -68,8 +68,13 @@ func (h HelpingThePoorAndGivingGenerouslyTactic) Prepare() {
 			lowestSoliderGeneral := util.GetPairLowestSoldierNumGeneral(h.tacticsParams, triggerGeneral)
 
 			resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.84)
-			util.ResumeSoldierNum(ctx, lowestSoliderGeneral, resumeNum)
-
+			util.ResumeSoldierNum(&util.ResumeParams{
+				Ctx:            ctx,
+				TacticsParams:  h.tacticsParams,
+				ProduceGeneral: currentGeneral,
+				SufferGeneral:  lowestSoliderGeneral,
+				ResumeNum:      resumeNum,
+			})
 			//施加效果
 			effectRate := 0.26 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
 			if util.BuffEffectWrapSet(ctx, lowestSoliderGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{

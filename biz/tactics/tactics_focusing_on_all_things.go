@@ -95,7 +95,13 @@ func (f FocusingOnAllThingsTactic) Prepare() {
 				pairGenerals := util.GetPairGeneralsTwoArrByGeneral(currentGeneral, f.tacticsParams)
 				for _, general := range pairGenerals {
 					resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.86)
-					util.ResumeSoldierNum(ctx, general, resumeNum)
+					util.ResumeSoldierNum(&util.ResumeParams{
+						Ctx:            ctx,
+						TacticsParams:  f.tacticsParams,
+						ProduceGeneral: currentGeneral,
+						SufferGeneral:  general,
+						ResumeNum:      resumeNum,
+					})
 				}
 			}
 		}

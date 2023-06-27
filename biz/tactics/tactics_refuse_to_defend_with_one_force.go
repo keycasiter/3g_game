@@ -77,7 +77,13 @@ func (r RefuseToDefendWithOneForceTactic) Execute() {
 		resumeRate += currentGeneral.BaseInfo.AbilityAttr.ForceBase / 100 / 100
 	}
 	resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * resumeRate)
-	util.ResumeSoldierNum(ctx, currentGeneral, resumeNum)
+	util.ResumeSoldierNum(&util.ResumeParams{
+		Ctx:            ctx,
+		TacticsParams:  r.tacticsParams,
+		ProduceGeneral: currentGeneral,
+		SufferGeneral:  currentGeneral,
+		ResumeNum:      resumeNum,
+	})
 
 	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{
 		EffectValue:    21,

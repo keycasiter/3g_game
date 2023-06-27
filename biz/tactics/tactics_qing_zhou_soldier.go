@@ -78,13 +78,24 @@ func (q QingZhouSoldierTactic) Prepare() {
 			//优先完全恢复我军兵力最低单体
 			allPairGenerals := util.GetPairGeneralArr(q.tacticsParams)
 			general := util.GetLowestSoliderNumGeneral(allPairGenerals)
-			util.ResumeSoldierNum(ctx, general, general.LossSoldierNum)
-
+			util.ResumeSoldierNum(&util.ResumeParams{
+				Ctx:            ctx,
+				TacticsParams:  q.tacticsParams,
+				ProduceGeneral: general,
+				SufferGeneral:  general,
+				ResumeNum:      general.LossSoldierNum,
+			})
 			//再恢复我军其他单体
 			for _, pairGeneral := range allPairGenerals {
 				if pairGeneral.BaseInfo.Id != general.BaseInfo.Id {
 					resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * resumeRate)
-					util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
+					util.ResumeSoldierNum(&util.ResumeParams{
+						Ctx:            ctx,
+						TacticsParams:  q.tacticsParams,
+						ProduceGeneral: triggerGeneral,
+						SufferGeneral:  pairGeneral,
+						ResumeNum:      resumeNum,
+					})
 				}
 			}
 		}

@@ -74,7 +74,13 @@ func (i InfantryCitySelfDefenseTactic) Execute() {
 	pairGenerals := util.GetPairGeneralsTwoArr(i.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		resumeNum := cast.ToInt64(pairGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.92)
-		util.ResumeSoldierNum(ctx, pairGeneral, resumeNum)
+		util.ResumeSoldierNum(&util.ResumeParams{
+			Ctx:            ctx,
+			TacticsParams:  i.tacticsParams,
+			ProduceGeneral: pairGeneral,
+			SufferGeneral:  pairGeneral,
+			ResumeNum:      resumeNum,
+		})
 		//施加状态
 		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_Rest, &vo.EffectHolderParams{
 			EffectRound:    1,
@@ -93,7 +99,13 @@ func (i InfantryCitySelfDefenseTactic) Execute() {
 					TacticId:   i.Id(),
 				}) {
 					restResumeNum := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.62)
-					util.ResumeSoldierNum(ctx, revokeGeneral, restResumeNum)
+					util.ResumeSoldierNum(&util.ResumeParams{
+						Ctx:            ctx,
+						TacticsParams:  i.tacticsParams,
+						ProduceGeneral: revokeGeneral,
+						SufferGeneral:  revokeGeneral,
+						ResumeNum:      restResumeNum,
+					})
 				}
 
 				return revokeResp

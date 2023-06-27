@@ -870,6 +870,15 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 		if general.TacticFrozenMap == nil {
 			general.TacticFrozenMap = map[consts.TacticId]bool{}
 		}
+		if general.TacticAccumulateDamageMap == nil {
+			general.TacticAccumulateDamageMap = map[consts.TacticId]int64{}
+		}
+		if general.TacticAccumulateResumeMap == nil {
+			general.TacticAccumulateResumeMap = map[consts.TacticId]int64{}
+		}
+		if general.TacticAccumulateTriggerMap == nil {
+			general.TacticAccumulateTriggerMap = map[consts.TacticId]int64{}
+		}
 	}
 
 	//战报对象初始化

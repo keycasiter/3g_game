@@ -23,5 +23,21 @@ func Register(r *server.Hertz) {
 			_battle := _v1.Group("/battle", _battleMw()...)
 			_battle.POST("/execute", append(_battleexecuteMw(), api.BattleExecute)...)
 		}
+		{
+			_general := _v1.Group("/general", _generalMw()...)
+			_general.GET("/query", append(_generalqueryMw(), api.GeneralQuery)...)
+		}
+		{
+			_special_tech := _v1.Group("/special_tech", _special_techMw()...)
+			_special_tech.GET("/query", append(_specialtechqueryMw(), api.SpecialTechQuery)...)
+		}
+		{
+			_tactic := _v1.Group("/tactic", _tacticMw()...)
+			_tactic.GET("/query", append(_tacticqueryMw(), api.TacticQuery)...)
+		}
+		{
+			_warbook := _v1.Group("/warbook", _warbookMw()...)
+			_warbook.GET("/query", append(_warbookqueryMw(), api.WarBookQuery)...)
+		}
 	}
 }

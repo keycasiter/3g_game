@@ -262,3 +262,67 @@ func buildServiceReq(req api.BattleExecuteRequest) *logic.BattleLogicContextRequ
 	}
 	return serviceReq
 }
+
+// TacticQuery .
+// @router /v1/tactic/query [GET]
+func TacticQuery(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.TacticQueryRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(hertzconsts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.TacticQueryResponse)
+
+	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+// GeneralQuery .
+// @router /v1/general/query [GET]
+func GeneralQuery(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.GeneralQueryRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(hertzconsts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.GeneralQueryResponse)
+
+	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+// WarBookQuery .
+// @router /v1/warbook/query [GET]
+func WarBookQuery(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.WarBookQueryRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(hertzconsts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.WarBookQueryResponse)
+
+	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+// SpecialTechQuery .
+// @router /v1/special_tech/query [GET]
+func SpecialTechQuery(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.SpecialTechQueryRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(hertzconsts.StatusBadRequest, err.Error())
+		return
+	}
+
+	resp := new(api.SpecialTechQueryResponse)
+
+	c.JSON(hertzconsts.StatusOK, resp)
+}

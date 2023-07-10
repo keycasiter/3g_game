@@ -40,3 +40,38 @@ func _battleexecuteMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _generalqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _special_techMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _specialtechqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _tacticMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _tacticqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _warbookMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _warbookqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

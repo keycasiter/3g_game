@@ -155,7 +155,75 @@ struct BattleGeneralTacticStatistics {
 
 //============= 模拟对战 END ==============
 
+//============= 查询战法列表 BEGIN ==============
+struct TacticQueryRequest{
+    //战法类型
+    1: enum.TacticsType TacticsType
+}
+
+struct TacticQueryResponse{
+    1: common.Meta meta
+    //战法信息列表
+    2: list<Tactics> TacticList
+}
+//============= 查询战法列表 END ==============
+
+//============= 查询武将列表 BEGIN ==============
+struct GeneralQueryRequest{
+    //阵营
+    1: enum.Group Group
+}
+
+struct GeneralQueryResponse{
+    1: common.Meta meta
+    //武将信息列表
+    2: list<BattleGeneral> GeneralList
+}
+//============= 查询武将列表 END ==============
+
+//============= 查询兵书列表 BEGIN ==============
+struct WarBookQueryRequest{
+    //武将ID
+    1: i64 GeneralId
+}
+
+struct WarBookQueryResponse{
+    1: common.Meta meta
+    //兵书信息列表
+    2: list<WarBook> WarBookList
+}
+
+struct WarBook {
+    1: i64 Id
+    2: string Name
+}
+//============= 查询兵书列表 END ==============
+
+//============= 查询特技列表 BEGIN ==============
+struct SpecialTechQueryRequest{
+}
+
+struct SpecialTechQueryResponse{
+    1: common.Meta meta
+    //特技信息列表
+    2: list<SpecialTech> SpecialTechList
+}
+
+struct SpecialTech {
+    1: i64 Id
+    2: string Name
+}
+//============= 查询特技列表 END ==============
+
 service ApiService {
     //模拟对战
     BattleExecuteResponse BattleExecute(1: BattleExecuteRequest request) (api.post="/v1/battle/execute");
+    //查询战法列表
+    TacticQueryResponse TacticQuery(1:TacticQueryRequest request)(api.get="/v1/tactic/query");
+    //查询武将列表
+    GeneralQueryResponse GeneralQuery(1:GeneralQueryRequest request)(api.get="/v1/general/query");
+    //查询兵书列表
+    WarBookQueryResponse WarBookQuery(1:WarBookQueryRequest request)(api.get="/v1/warbook/query");
+    //查询特技列表
+    SpecialTechQueryResponse SpecialTechQuery(1:SpecialTechQueryRequest request)(api.get="/v1/special_tech/query");
 }

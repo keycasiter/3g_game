@@ -167,6 +167,25 @@ const (
 	ArmsAbility_C ArmsAbility = 4 // C级
 )
 
+// 兵书层级
+type WarBookLevel int
+
+const (
+	WarBook_Level_1 WarBookLevel = 1 //未知
+	WarBook_Level_2 WarBookLevel = 2 //未知
+	WarBook_Level_3 WarBookLevel = 3 //未知
+)
+
+// 武将品质
+type GeneralQuality int
+
+const (
+	GeneralQuality_S GeneralQuality = 1 // S级
+	GeneralQuality_A GeneralQuality = 2 // A级
+	GeneralQuality_B GeneralQuality = 3 // B级
+	GeneralQuality_C GeneralQuality = 4 // C级
+)
+
 type TacticsType int
 
 /** 战法相关 **/

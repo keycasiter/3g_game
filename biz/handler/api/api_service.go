@@ -4,6 +4,7 @@ package api
 
 import (
 	"context"
+	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -290,23 +291,31 @@ func GeneralQuery(ctx context.Context, c *app.RequestContext) {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
-
 	//dal
-	mysql.NewGeneral().QueryGeneralList(ctx, &vo.QueryGeneralCondition{
-		Id:                0,
-		Name:              "",
-		Gender:            0,
-		Control:           0,
-		Group:             0,
-		Quality:           0,
-		Tags:              nil,
-		IsSupportDynamics: nil,
-		IsSupportCollect:  nil,
-	})
+	mysql.NewGeneral().QueryGeneralList(ctx, buildQueryGeneralListReq(req))
 
 	resp := new(api.GeneralQueryResponse)
 
 	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+func buildQueryGeneralListReq(req api.GeneralQueryRequest) *vo.QueryGeneralCondition {
+	tags := make([]int, 0)
+	for _, tag := range req.GetTags() {
+		tags = append(tags, int(tag))
+	}
+
+	return &vo.QueryGeneralCondition{
+		Id:                req.GetId(),
+		Name:              req.GetName(),
+		Gender:            int8(req.GetGender()),
+		Control:           int32(req.GetControl()),
+		Group:             int8(req.GetGroup()),
+		Quality:           int8(req.GetQuality()),
+		Tags:              tags,
+		IsSupportDynamics: thrift.Int8Ptr(int8(req.GetIsSupportDynamics())),
+		IsSupportCollect:  thrift.Int8Ptr(int8(req.GetIsSupportCollect())),
+	}
 }
 
 // WarBookQuery .

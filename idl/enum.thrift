@@ -104,24 +104,6 @@ enum TacticsType {
 	Arm           = 6 // 兵种
 }
 
-// 武将标签
-enum GeneralTag {
-	Shield        = 1  // 盾
-	Assist        = 2  // 辅
-	YellowTurbans = 3  // 黄
-	Both          = 4  // 兼
-	Control       = 5  // 控
-	Barbarian     = 6  // 蛮
-	Charm         = 7  // 魅
-	Strategy      = 8  // 谋
-	Martial       = 9  // 武
-	Medical       = 10 // 医
-	Fight         = 11 // 战
-	Politics      = 12 // 政
-	Pawn          = 13 // 卒
-	Celestials    = 14 // 仙
-}
-
 // 兵种类型
 enum ArmType {
 	Unknow    = 0 //未知
@@ -145,11 +127,4 @@ enum GeneralStarLevel {
 	Three = 3
 	Four = 4
 	Five = 5
-}
-
-// 战法来源
-enum TacticsSource {
-	SelfContained = 1 //自带战法
-	Inherit       = 2 //传承战法
-	Event         = 3 //事件战法
 }

@@ -4,16 +4,10 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
-	"github.com/keycasiter/3g_game/biz/conf"
-	"github.com/keycasiter/3g_game/biz/dal"
 )
 
 func main() {
-	h := server.Default()
-
-	//初始化
-	conf.InitConfig()
-	dal.InitMysql()
+	h := server.Default(server.WithHostPorts("127.0.0.1:80"))
 
 	register(h)
 	h.Spin()

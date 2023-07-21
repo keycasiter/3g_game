@@ -56,6 +56,49 @@ func (p *ResponseCode) Value() (driver.Value, error) {
 	return int64(*p), nil
 }
 
+// 判定
+type Enable int64
+
+const (
+	Enable_YES Enable = 1
+	Enable_NO  Enable = 0
+)
+
+func (p Enable) String() string {
+	switch p {
+	case Enable_YES:
+		return "YES"
+	case Enable_NO:
+		return "NO"
+	}
+	return "<UNSET>"
+}
+
+func EnableFromString(s string) (Enable, error) {
+	switch s {
+	case "YES":
+		return Enable_YES, nil
+	case "NO":
+		return Enable_NO, nil
+	}
+	return Enable(0), fmt.Errorf("not a valid Enable string")
+}
+
+func EnablePtr(v Enable) *Enable { return &v }
+func (p *Enable) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = Enable(result.Int64)
+	return
+}
+
+func (p *Enable) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
 // 兵种适性
 type ArmsAbility int64
 
@@ -210,106 +253,63 @@ func (p *Group) Value() (driver.Value, error) {
 	return int64(*p), nil
 }
 
-// 对战参战类型
-type GeneralBattleType int64
+// 统御 （2 - 7）
+type ControlLevel int64
 
 const (
-	GeneralBattleType_Fighting GeneralBattleType = 1
-	GeneralBattleType_Enemy    GeneralBattleType = 2
+	ControlLevel_Level_2 ControlLevel = 2
+	ControlLevel_Level_3 ControlLevel = 3
+	ControlLevel_Level_4 ControlLevel = 4
+	ControlLevel_Level_5 ControlLevel = 5
+	ControlLevel_Level_6 ControlLevel = 6
+	ControlLevel_Level_7 ControlLevel = 7
 )
 
-func (p GeneralBattleType) String() string {
+func (p ControlLevel) String() string {
 	switch p {
-	case GeneralBattleType_Fighting:
-		return "Fighting"
-	case GeneralBattleType_Enemy:
-		return "Enemy"
+	case ControlLevel_Level_2:
+		return "Level_2"
+	case ControlLevel_Level_3:
+		return "Level_3"
+	case ControlLevel_Level_4:
+		return "Level_4"
+	case ControlLevel_Level_5:
+		return "Level_5"
+	case ControlLevel_Level_6:
+		return "Level_6"
+	case ControlLevel_Level_7:
+		return "Level_7"
 	}
 	return "<UNSET>"
 }
 
-func GeneralBattleTypeFromString(s string) (GeneralBattleType, error) {
+func ControlLevelFromString(s string) (ControlLevel, error) {
 	switch s {
-	case "Fighting":
-		return GeneralBattleType_Fighting, nil
-	case "Enemy":
-		return GeneralBattleType_Enemy, nil
+	case "Level_2":
+		return ControlLevel_Level_2, nil
+	case "Level_3":
+		return ControlLevel_Level_3, nil
+	case "Level_4":
+		return ControlLevel_Level_4, nil
+	case "Level_5":
+		return ControlLevel_Level_5, nil
+	case "Level_6":
+		return ControlLevel_Level_6, nil
+	case "Level_7":
+		return ControlLevel_Level_7, nil
 	}
-	return GeneralBattleType(0), fmt.Errorf("not a valid GeneralBattleType string")
+	return ControlLevel(0), fmt.Errorf("not a valid ControlLevel string")
 }
 
-func GeneralBattleTypePtr(v GeneralBattleType) *GeneralBattleType { return &v }
-func (p *GeneralBattleType) Scan(value interface{}) (err error) {
+func ControlLevelPtr(v ControlLevel) *ControlLevel { return &v }
+func (p *ControlLevel) Scan(value interface{}) (err error) {
 	var result sql.NullInt64
 	err = result.Scan(value)
-	*p = GeneralBattleType(result.Int64)
+	*p = ControlLevel(result.Int64)
 	return
 }
 
-func (p *GeneralBattleType) Value() (driver.Value, error) {
-	if p == nil {
-		return nil, nil
-	}
-	return int64(*p), nil
-}
-
-// 战法类型
-type TacticsType int64
-
-const (
-	TacticsType_Active        TacticsType = 1
-	TacticsType_Passive       TacticsType = 2
-	TacticsType_Command       TacticsType = 3
-	TacticsType_Assault       TacticsType = 4
-	TacticsType_TroopsTactics TacticsType = 5
-	TacticsType_Arm           TacticsType = 6
-)
-
-func (p TacticsType) String() string {
-	switch p {
-	case TacticsType_Active:
-		return "Active"
-	case TacticsType_Passive:
-		return "Passive"
-	case TacticsType_Command:
-		return "Command"
-	case TacticsType_Assault:
-		return "Assault"
-	case TacticsType_TroopsTactics:
-		return "TroopsTactics"
-	case TacticsType_Arm:
-		return "Arm"
-	}
-	return "<UNSET>"
-}
-
-func TacticsTypeFromString(s string) (TacticsType, error) {
-	switch s {
-	case "Active":
-		return TacticsType_Active, nil
-	case "Passive":
-		return TacticsType_Passive, nil
-	case "Command":
-		return TacticsType_Command, nil
-	case "Assault":
-		return TacticsType_Assault, nil
-	case "TroopsTactics":
-		return TacticsType_TroopsTactics, nil
-	case "Arm":
-		return TacticsType_Arm, nil
-	}
-	return TacticsType(0), fmt.Errorf("not a valid TacticsType string")
-}
-
-func TacticsTypePtr(v TacticsType) *TacticsType { return &v }
-func (p *TacticsType) Scan(value interface{}) (err error) {
-	var result sql.NullInt64
-	err = result.Scan(value)
-	*p = TacticsType(result.Int64)
-	return
-}
-
-func (p *TacticsType) Value() (driver.Value, error) {
+func (p *ControlLevel) Value() (driver.Value, error) {
 	if p == nil {
 		return nil, nil
 	}
@@ -413,6 +413,266 @@ func (p *GeneralTag) Scan(value interface{}) (err error) {
 }
 
 func (p *GeneralTag) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
+// 战法品质
+type TacticQuality int64
+
+const (
+	TacticQuality_S TacticQuality = 1
+	TacticQuality_A TacticQuality = 2
+	TacticQuality_B TacticQuality = 3
+	TacticQuality_C TacticQuality = 4
+)
+
+func (p TacticQuality) String() string {
+	switch p {
+	case TacticQuality_S:
+		return "S"
+	case TacticQuality_A:
+		return "A"
+	case TacticQuality_B:
+		return "B"
+	case TacticQuality_C:
+		return "C"
+	}
+	return "<UNSET>"
+}
+
+func TacticQualityFromString(s string) (TacticQuality, error) {
+	switch s {
+	case "S":
+		return TacticQuality_S, nil
+	case "A":
+		return TacticQuality_A, nil
+	case "B":
+		return TacticQuality_B, nil
+	case "C":
+		return TacticQuality_C, nil
+	}
+	return TacticQuality(0), fmt.Errorf("not a valid TacticQuality string")
+}
+
+func TacticQualityPtr(v TacticQuality) *TacticQuality { return &v }
+func (p *TacticQuality) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = TacticQuality(result.Int64)
+	return
+}
+
+func (p *TacticQuality) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
+// 战法来源
+type TacticsSource int64
+
+const (
+	TacticsSource_SelfContained TacticsSource = 1
+	TacticsSource_Inherit       TacticsSource = 2
+	TacticsSource_Event         TacticsSource = 3
+)
+
+func (p TacticsSource) String() string {
+	switch p {
+	case TacticsSource_SelfContained:
+		return "SelfContained"
+	case TacticsSource_Inherit:
+		return "Inherit"
+	case TacticsSource_Event:
+		return "Event"
+	}
+	return "<UNSET>"
+}
+
+func TacticsSourceFromString(s string) (TacticsSource, error) {
+	switch s {
+	case "SelfContained":
+		return TacticsSource_SelfContained, nil
+	case "Inherit":
+		return TacticsSource_Inherit, nil
+	case "Event":
+		return TacticsSource_Event, nil
+	}
+	return TacticsSource(0), fmt.Errorf("not a valid TacticsSource string")
+}
+
+func TacticsSourcePtr(v TacticsSource) *TacticsSource { return &v }
+func (p *TacticsSource) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = TacticsSource(result.Int64)
+	return
+}
+
+func (p *TacticsSource) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
+// 武将品质
+type GeneralQuality int64
+
+const (
+	GeneralQuality_S GeneralQuality = 1
+	GeneralQuality_A GeneralQuality = 2
+	GeneralQuality_B GeneralQuality = 3
+	GeneralQuality_C GeneralQuality = 4
+)
+
+func (p GeneralQuality) String() string {
+	switch p {
+	case GeneralQuality_S:
+		return "S"
+	case GeneralQuality_A:
+		return "A"
+	case GeneralQuality_B:
+		return "B"
+	case GeneralQuality_C:
+		return "C"
+	}
+	return "<UNSET>"
+}
+
+func GeneralQualityFromString(s string) (GeneralQuality, error) {
+	switch s {
+	case "S":
+		return GeneralQuality_S, nil
+	case "A":
+		return GeneralQuality_A, nil
+	case "B":
+		return GeneralQuality_B, nil
+	case "C":
+		return GeneralQuality_C, nil
+	}
+	return GeneralQuality(0), fmt.Errorf("not a valid GeneralQuality string")
+}
+
+func GeneralQualityPtr(v GeneralQuality) *GeneralQuality { return &v }
+func (p *GeneralQuality) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = GeneralQuality(result.Int64)
+	return
+}
+
+func (p *GeneralQuality) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
+// 对战参战类型
+type GeneralBattleType int64
+
+const (
+	GeneralBattleType_Fighting GeneralBattleType = 1
+	GeneralBattleType_Enemy    GeneralBattleType = 2
+)
+
+func (p GeneralBattleType) String() string {
+	switch p {
+	case GeneralBattleType_Fighting:
+		return "Fighting"
+	case GeneralBattleType_Enemy:
+		return "Enemy"
+	}
+	return "<UNSET>"
+}
+
+func GeneralBattleTypeFromString(s string) (GeneralBattleType, error) {
+	switch s {
+	case "Fighting":
+		return GeneralBattleType_Fighting, nil
+	case "Enemy":
+		return GeneralBattleType_Enemy, nil
+	}
+	return GeneralBattleType(0), fmt.Errorf("not a valid GeneralBattleType string")
+}
+
+func GeneralBattleTypePtr(v GeneralBattleType) *GeneralBattleType { return &v }
+func (p *GeneralBattleType) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = GeneralBattleType(result.Int64)
+	return
+}
+
+func (p *GeneralBattleType) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
+// 战法类型
+type TacticsType int64
+
+const (
+	TacticsType_Active        TacticsType = 1
+	TacticsType_Passive       TacticsType = 2
+	TacticsType_Command       TacticsType = 3
+	TacticsType_Assault       TacticsType = 4
+	TacticsType_TroopsTactics TacticsType = 5
+	TacticsType_Arm           TacticsType = 6
+)
+
+func (p TacticsType) String() string {
+	switch p {
+	case TacticsType_Active:
+		return "Active"
+	case TacticsType_Passive:
+		return "Passive"
+	case TacticsType_Command:
+		return "Command"
+	case TacticsType_Assault:
+		return "Assault"
+	case TacticsType_TroopsTactics:
+		return "TroopsTactics"
+	case TacticsType_Arm:
+		return "Arm"
+	}
+	return "<UNSET>"
+}
+
+func TacticsTypeFromString(s string) (TacticsType, error) {
+	switch s {
+	case "Active":
+		return TacticsType_Active, nil
+	case "Passive":
+		return TacticsType_Passive, nil
+	case "Command":
+		return TacticsType_Command, nil
+	case "Assault":
+		return TacticsType_Assault, nil
+	case "TroopsTactics":
+		return TacticsType_TroopsTactics, nil
+	case "Arm":
+		return TacticsType_Arm, nil
+	}
+	return TacticsType(0), fmt.Errorf("not a valid TacticsType string")
+}
+
+func TacticsTypePtr(v TacticsType) *TacticsType { return &v }
+func (p *TacticsType) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = TacticsType(result.Int64)
+	return
+}
+
+func (p *TacticsType) Value() (driver.Value, error) {
 	if p == nil {
 		return nil, nil
 	}
@@ -577,54 +837,6 @@ func (p *GeneralStarLevel) Scan(value interface{}) (err error) {
 }
 
 func (p *GeneralStarLevel) Value() (driver.Value, error) {
-	if p == nil {
-		return nil, nil
-	}
-	return int64(*p), nil
-}
-
-// 战法来源
-type TacticsSource int64
-
-const (
-	TacticsSource_SelfContained TacticsSource = 1
-	TacticsSource_Inherit       TacticsSource = 2
-	TacticsSource_Event         TacticsSource = 3
-)
-
-func (p TacticsSource) String() string {
-	switch p {
-	case TacticsSource_SelfContained:
-		return "SelfContained"
-	case TacticsSource_Inherit:
-		return "Inherit"
-	case TacticsSource_Event:
-		return "Event"
-	}
-	return "<UNSET>"
-}
-
-func TacticsSourceFromString(s string) (TacticsSource, error) {
-	switch s {
-	case "SelfContained":
-		return TacticsSource_SelfContained, nil
-	case "Inherit":
-		return TacticsSource_Inherit, nil
-	case "Event":
-		return TacticsSource_Event, nil
-	}
-	return TacticsSource(0), fmt.Errorf("not a valid TacticsSource string")
-}
-
-func TacticsSourcePtr(v TacticsSource) *TacticsSource { return &v }
-func (p *TacticsSource) Scan(value interface{}) (err error) {
-	var result sql.NullInt64
-	err = result.Scan(value)
-	*p = TacticsSource(result.Int64)
-	return
-}
-
-func (p *TacticsSource) Value() (driver.Value, error) {
 	if p == nil {
 		return nil, nil
 	}

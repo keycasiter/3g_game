@@ -17,3 +17,5 @@ require (
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.2
 )
+
+replace github.com/apache/thrift => github.com/apache/thrift v0.13.0

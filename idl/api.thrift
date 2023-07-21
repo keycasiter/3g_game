@@ -157,8 +157,11 @@ struct BattleGeneralTacticStatistics {
 
 //============= 查询战法列表 BEGIN ==============
 struct TacticQueryRequest{
-    //战法类型
-    1: enum.TacticsType TacticsType
+   1: i64  Id      // 主键ID
+   2: string Name    // 战法名称
+   3: enum.TacticQuality  Quality // 战法品质
+   4: enum.TacticsSource  Source  // 战法来源
+   5: enum.TacticsType  Type    // 战法类型
 }
 
 struct TacticQueryResponse{
@@ -170,8 +173,15 @@ struct TacticQueryResponse{
 
 //============= 查询武将列表 BEGIN ==============
 struct GeneralQueryRequest{
-    //阵营
-    1: enum.Group Group
+     1: i64  Id               // 主键ID
+     2: string Name             // 姓名
+     3: enum.Gender   Gender           // 性别
+     4: enum.ControlLevel  Control          // 统御
+     5: enum.Group   Group            // 阵营
+     6: enum.GeneralQuality   Quality          // 品质
+     7: list<enum.GeneralTag>  Tags             // 标签
+     8: enum.Enable  IsSupportDynamics// 是否支持动态
+     9: enum.Enable  IsSupportCollect // 是否支持典藏
 }
 
 struct GeneralQueryResponse{

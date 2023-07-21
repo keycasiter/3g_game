@@ -8,6 +8,12 @@ enum ResponseCode {
    UnknownError = 999
 }
 
+// 判定
+enum Enable {
+	YES = 1
+	NO = 0
+}
+
 // 兵种适性
 enum ArmsAbility {
 	S = 1 // S级
@@ -29,6 +35,57 @@ enum Group {
 	ShuGuo   = 2 //蜀国
 	WuGuo    = 3 //吴国
 	QunXiong = 4 //群雄
+}
+
+// 统御 （2 - 7）
+enum ControlLevel {
+	Level_2 = 2
+	Level_3 = 3
+	Level_4 = 4
+	Level_5 = 5
+	Level_6 = 6
+	Level_7 = 7
+}
+
+// 武将标签
+enum GeneralTag {
+	Shield        = 1  // 盾
+	Assist        = 2  // 辅
+	YellowTurbans = 3  // 黄
+	Both          = 4  // 兼
+	Control       = 5  // 控
+	Barbarian     = 6  // 蛮
+	Charm         = 7  // 魅
+	Strategy      = 8  // 谋
+	Martial       = 9  // 武
+	Medical       = 10 // 医
+	Fight         = 11 // 战
+	Politics      = 12 // 政
+	Pawn          = 13 // 卒
+	Celestials    = 14 // 仙
+}
+
+// 战法品质
+enum TacticQuality {
+	S = 1 // S级
+	A = 2 // A级
+	B = 3 // B级
+	C = 4 // C级
+}
+
+// 战法来源
+enum TacticsSource {
+	SelfContained = 1 //自带战法
+	Inherit       = 2 //传承战法
+	Event         = 3 //事件战法
+}
+
+// 武将品质
+enum GeneralQuality {
+	S = 1 // S级
+	A = 2 // A级
+	B = 3 // B级
+	C = 4 // C级
 }
 
 // 对战参战类型

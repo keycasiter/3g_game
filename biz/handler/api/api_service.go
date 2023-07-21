@@ -9,6 +9,7 @@ import (
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/jinzhu/copier"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/model/common"
@@ -289,6 +290,19 @@ func GeneralQuery(ctx context.Context, c *app.RequestContext) {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
+
+	//dal
+	mysql.NewGeneral().QueryGeneralList(ctx, &vo.QueryGeneralCondition{
+		Id:                0,
+		Name:              "",
+		Gender:            0,
+		Control:           0,
+		Group:             0,
+		Quality:           0,
+		Tags:              nil,
+		IsSupportDynamics: nil,
+		IsSupportCollect:  nil,
+	})
 
 	resp := new(api.GeneralQueryResponse)
 

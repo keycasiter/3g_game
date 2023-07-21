@@ -26,6 +26,11 @@ type redis struct {
 }
 
 type mysql struct {
+	User     string `yaml:"User"`
+	Password string `yaml:"Password"`
+	Host     string `yaml:"Host"`
+	Port     string `yaml:"Port"`
+	DbName   string `yaml:"DbName"`
 }
 
 var Config *config
@@ -36,8 +41,8 @@ func InitConfig() {
 	viper.SetConfigType("yaml")
 	runEnv := os.Getenv("RUN_ENV")
 	confPath := util.GetAbsolutePath() + "../../conf"
-	if runEnv == consts.RUN_ENV_TEST {
-		viper.SetConfigFile(filepath.Join(confPath, "config.dev.yaml"))
+	if runEnv == consts.RUN_ENV_LOCAL {
+		viper.SetConfigFile(filepath.Join(confPath, "config.local.yaml"))
 	} else if runEnv == consts.RUN_ENV_PROD {
 		viper.SetConfigFile(filepath.Join(confPath, "config.prod.yaml"))
 	} else {
@@ -56,4 +61,8 @@ func InitConfig() {
 	hlog.CtxInfof(ctx, "[Config] config.Mongodb: %#v", Config.Mongodb)
 	hlog.CtxInfof(ctx, "[Config] config.Mysql: %#v", Config.Mysql)
 	hlog.CtxInfof(ctx, "[Config] config.Redis: %#v", Config.Redis)
+}
+
+func GetConfig() *config {
+	return Config
 }

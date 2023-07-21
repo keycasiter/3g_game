@@ -2,9 +2,9 @@ package consts
 
 // 环境
 const (
-	RUN_ENV_DEV  = "dev"
-	RUN_ENV_TEST = "test"
-	RUN_ENV_PROD = "prod"
+	RUN_ENV_DEV   = "dev"
+	RUN_ENV_LOCAL = "local"
+	RUN_ENV_PROD  = "prod"
 )
 
 // 最小值/最大值
@@ -184,6 +184,16 @@ const (
 	GeneralQuality_A GeneralQuality = 2 // A级
 	GeneralQuality_B GeneralQuality = 3 // B级
 	GeneralQuality_C GeneralQuality = 4 // C级
+)
+
+// 战法品质
+type TacticQuality int
+
+const (
+	TacticQuality_S TacticQuality = 1 // S级
+	TacticQuality_A TacticQuality = 2 // A级
+	TacticQuality_B TacticQuality = 3 // B级
+	TacticQuality_C TacticQuality = 4 // C级
 )
 
 type TacticsType int

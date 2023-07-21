@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	jsoniter "github.com/json-iterator/go"
+	"github.com/spf13/cast"
 )
 
 func ToJsonString(ctx context.Context, obj interface{}) string {
@@ -13,6 +14,14 @@ func ToJsonString(ctx context.Context, obj interface{}) string {
 		return ""
 	}
 	return string(byt)
+}
+
+func ToIntArrayString(arr []int) string {
+	strArr := make([]string, 0)
+	for i := 0; i < len(arr); i++ {
+		strArr = append(strArr, cast.ToString(arr[i]))
+	}
+	return ToJsonString(context.Background(), strArr)
 }
 
 func ParseJsonObj(ctx context.Context, obj interface{}, str string) {

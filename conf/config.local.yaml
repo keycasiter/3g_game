@@ -1,9 +1,9 @@
 Mysql:
   User: "root"
-  Password: "gj+9012-"
-  Host: "59.110.5.63"
+  Password: "root123!@#"
+  Host: "127.0.0.1"
   Port: "3306"
-  DbName: "3game"
+  DbName: "3g_game"
 
 Redis:
 

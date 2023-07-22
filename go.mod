@@ -1,6 +1,6 @@
 module github.com/keycasiter/3g_game
 
-go 1.16
+go 1.17
 
 require (
 	github.com/apache/thrift v0.13.0

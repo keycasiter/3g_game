@@ -4,7 +4,6 @@ package api
 
 import (
 	"context"
-	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/cloudwego/hertz/pkg/app"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
@@ -44,7 +43,7 @@ func buildQueryGeneralListReq(req api.GeneralQueryRequest) *vo.QueryGeneralCondi
 		Group:             int8(req.GetGroup()),
 		Quality:           int8(req.GetQuality()),
 		Tags:              tags,
-		IsSupportDynamics: thrift.Int8Ptr(int8(req.GetIsSupportDynamics())),
-		IsSupportCollect:  thrift.Int8Ptr(int8(req.GetIsSupportCollect())),
+		IsSupportDynamics: int8(req.GetIsSupportDynamics()),
+		IsSupportCollect:  int8(req.GetIsSupportCollect()),
 	}
 }

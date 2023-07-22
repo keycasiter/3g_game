@@ -10,10 +10,8 @@ require (
 	github.com/kr/pretty v0.3.1
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/cast v1.5.0
-	github.com/spf13/viper v1.14.0
+	github.com/spf13/viper v1.9.0
 	go.mongodb.org/mongo-driver v1.11.0
-	golang.org/x/crypto v0.11.0 // indirect
-	golang.org/x/sync v0.3.0 // indirect
 	gorm.io/driver/mysql v1.5.1
 	gorm.io/gorm v1.25.2
 )

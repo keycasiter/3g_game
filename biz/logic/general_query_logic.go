@@ -28,13 +28,13 @@ func NewGeneralQueryLogic(ctx context.Context, req api.GeneralQueryRequest) *Gen
 	}
 }
 
-func (g *GeneralQueryLogic) Handle() api.GeneralQueryResponse {
+func (g *GeneralQueryLogic) Handle() (api.GeneralQueryResponse, error) {
 	//查询武将列表
 	list, err := mysql.NewGeneral().QueryGeneralList(g.Ctx, buildQueryGeneralListReq(g.Req))
 	if err != nil {
 		hlog.CtxErrorf(g.Ctx, "QueryGeneralList err:%v", err)
 		g.Resp.Meta = util.BuildFailMeta()
-		return g.Resp
+		return g.Resp, err
 	}
 
 	//查询战法列表
@@ -51,7 +51,7 @@ func (g *GeneralQueryLogic) Handle() api.GeneralQueryResponse {
 	if err != nil {
 		hlog.CtxErrorf(g.Ctx, "QueryTacticList err:%v", err)
 		g.Resp.Meta = util.BuildFailMeta()
-		return g.Resp
+		return g.Resp, err
 	}
 	for _, tactic := range tactics {
 		tacticMap[tactic.Id] = tactic
@@ -125,7 +125,7 @@ func (g *GeneralQueryLogic) Handle() api.GeneralQueryResponse {
 	}
 	g.Resp.GeneralList = resList
 
-	return g.Resp
+	return g.Resp, nil
 }
 
 func buildQueryGeneralListReq(req api.GeneralQueryRequest) *vo.QueryGeneralCondition {

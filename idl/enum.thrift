@@ -17,6 +17,7 @@ enum Enable {
 
 // 兵种适性
 enum ArmsAbility {
+    Unknow = 0 //为主
 	S = 1 // S级
 	A = 2 // A级
 	B = 3 // B级
@@ -25,6 +26,7 @@ enum ArmsAbility {
 
 // 性别
 enum Gender {
+    Unknow = 0 //未知
 	Male   = 1 //男
 	Female = 2 //女
 }

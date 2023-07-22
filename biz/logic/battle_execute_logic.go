@@ -226,35 +226,35 @@ func (runCtx *BattleLogicContext) handleBuildingTechAttrAddition(team *vo.Battle
 
 // 兵种适性处理
 func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, general *vo.BattleGeneral) {
-	armType := consts.ArmType_Unknow
+	armsAbility := consts.ArmsAbility_Unknow
 	switch teamArmType {
 	//骑兵
 	case consts.ArmType_Cavalry:
-		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Cavalry)
+		armsAbility = general.BaseInfo.ArmsAttr.Cavalry
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Cavalry, general.BaseInfo.AbilityAttr)
 	//盾兵
 	case consts.ArmType_Mauler:
-		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Mauler)
+		armsAbility = general.BaseInfo.ArmsAttr.Mauler
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Mauler, general.BaseInfo.AbilityAttr)
 	//弓兵
 	case consts.ArmType_Archers:
-		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Archers)
+		armsAbility = general.BaseInfo.ArmsAttr.Archers
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Archers, general.BaseInfo.AbilityAttr)
 	//枪兵
 	case consts.ArmType_Spearman:
-		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Spearman)
+		armsAbility = general.BaseInfo.ArmsAttr.Spearman
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Spearman, general.BaseInfo.AbilityAttr)
 	//器械
 	case consts.ArmType_Apparatus:
-		armType = consts.ArmType(general.BaseInfo.ArmsAttr.Apparatus)
+		armsAbility = general.BaseInfo.ArmsAttr.Apparatus
 		util.CalGeneralArmAbility(general.BaseInfo.ArmsAttr.Apparatus, general.BaseInfo.AbilityAttr)
 	}
 
 	hlog.CtxInfof(runCtx.Ctx, "[%s]的【 %s 】兵种适性为【 %s 】，属性调整为原来的%s",
 		general.BaseInfo.Name,
 		util.TranslateArmType(teamArmType),
-		util.TranslateArmsAbility(consts.ArmsAbility(armType)),
-		util.TranslateArmsAbilityAddition(consts.ArmsAbility(armType)),
+		util.TranslateArmsAbility(armsAbility),
+		util.TranslateArmsAbilityAddition(armsAbility),
 	)
 }
 

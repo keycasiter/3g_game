@@ -6,9 +6,7 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
-	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	api "github.com/keycasiter/3g_game/biz/model/api"
-	"github.com/keycasiter/3g_game/biz/model/vo"
 )
 
 // GeneralQuery .
@@ -16,34 +14,12 @@ import (
 func GeneralQuery(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.GeneralQueryRequest
+	resp := new(api.GeneralQueryResponse)
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
-	//dal
-	mysql.NewGeneral().QueryGeneralList(ctx, buildQueryGeneralListReq(req))
-
-	resp := new(api.GeneralQueryResponse)
 
 	c.JSON(hertzconsts.StatusOK, resp)
-}
-
-func buildQueryGeneralListReq(req api.GeneralQueryRequest) *vo.QueryGeneralCondition {
-	tags := make([]int, 0)
-	for _, tag := range req.GetTags() {
-		tags = append(tags, int(tag))
-	}
-
-	return &vo.QueryGeneralCondition{
-		Id:                req.GetId(),
-		Name:              req.GetName(),
-		Gender:            int8(req.GetGender()),
-		Control:           int32(req.GetControl()),
-		Group:             int8(req.GetGroup()),
-		Quality:           int8(req.GetQuality()),
-		Tags:              tags,
-		IsSupportDynamics: int8(req.GetIsSupportDynamics()),
-		IsSupportCollect:  int8(req.GetIsSupportCollect()),
-	}
 }

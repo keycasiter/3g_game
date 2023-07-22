@@ -1832,13 +1832,15 @@ type MetadataGeneral struct {
 	Gender      enum.Gender       `thrift:"Gender,3" form:"Gender" json:"Gender" query:"Gender"`
 	Group       enum.Group        `thrift:"Group,4" form:"Group" json:"Group" query:"Group"`
 	GeneralTag  []enum.GeneralTag `thrift:"GeneralTag,5" form:"GeneralTag" json:"GeneralTag" query:"GeneralTag"`
-	AvatarUri   string            `thrift:"AvatarUri,6" form:"AvatarUri" json:"AvatarUri" query:"AvatarUri"`
+	AvatarUrl   string            `thrift:"AvatarUrl,6" form:"AvatarUrl" json:"AvatarUrl" query:"AvatarUrl"`
 	AbilityAttr *AbilityAttr      `thrift:"AbilityAttr,7" form:"AbilityAttr" json:"AbilityAttr" query:"AbilityAttr"`
 	ArmsAttr    *ArmsAttr         `thrift:"ArmsAttr,8" form:"ArmsAttr" json:"ArmsAttr" query:"ArmsAttr"`
 	//业务字段
 	GeneralBattleType enum.GeneralBattleType `thrift:"GeneralBattleType,9" form:"GeneralBattleType" json:"GeneralBattleType" query:"GeneralBattleType"`
 	//唯一对战ID
 	UniqueId int64 `thrift:"UniqueId,10" form:"UniqueId" json:"UniqueId" query:"UniqueId"`
+	//自带战法
+	SelfTactic *Tactics `thrift:"SelfTactic,11" form:"SelfTactic" json:"SelfTactic" query:"SelfTactic"`
 }
 
 func NewMetadataGeneral() *MetadataGeneral {
@@ -1865,8 +1867,8 @@ func (p *MetadataGeneral) GetGeneralTag() (v []enum.GeneralTag) {
 	return p.GeneralTag
 }
 
-func (p *MetadataGeneral) GetAvatarUri() (v string) {
-	return p.AvatarUri
+func (p *MetadataGeneral) GetAvatarUrl() (v string) {
+	return p.AvatarUrl
 }
 
 var MetadataGeneral_AbilityAttr_DEFAULT *AbilityAttr
@@ -1895,17 +1897,27 @@ func (p *MetadataGeneral) GetUniqueId() (v int64) {
 	return p.UniqueId
 }
 
+var MetadataGeneral_SelfTactic_DEFAULT *Tactics
+
+func (p *MetadataGeneral) GetSelfTactic() (v *Tactics) {
+	if !p.IsSetSelfTactic() {
+		return MetadataGeneral_SelfTactic_DEFAULT
+	}
+	return p.SelfTactic
+}
+
 var fieldIDToName_MetadataGeneral = map[int16]string{
 	1:  "Id",
 	2:  "Name",
 	3:  "Gender",
 	4:  "Group",
 	5:  "GeneralTag",
-	6:  "AvatarUri",
+	6:  "AvatarUrl",
 	7:  "AbilityAttr",
 	8:  "ArmsAttr",
 	9:  "GeneralBattleType",
 	10: "UniqueId",
+	11: "SelfTactic",
 }
 
 func (p *MetadataGeneral) IsSetAbilityAttr() bool {
@@ -1914,6 +1926,10 @@ func (p *MetadataGeneral) IsSetAbilityAttr() bool {
 
 func (p *MetadataGeneral) IsSetArmsAttr() bool {
 	return p.ArmsAttr != nil
+}
+
+func (p *MetadataGeneral) IsSetSelfTactic() bool {
+	return p.SelfTactic != nil
 }
 
 func (p *MetadataGeneral) Read(iprot thrift.TProtocol) (err error) {
@@ -2035,6 +2051,16 @@ func (p *MetadataGeneral) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
+		case 11:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField11(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -2127,7 +2153,7 @@ func (p *MetadataGeneral) ReadField6(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.AvatarUri = v
+		p.AvatarUrl = v
 	}
 	return nil
 }
@@ -2162,6 +2188,14 @@ func (p *MetadataGeneral) ReadField10(iprot thrift.TProtocol) error {
 		return err
 	} else {
 		p.UniqueId = v
+	}
+	return nil
+}
+
+func (p *MetadataGeneral) ReadField11(iprot thrift.TProtocol) error {
+	p.SelfTactic = NewTactics()
+	if err := p.SelfTactic.Read(iprot); err != nil {
+		return err
 	}
 	return nil
 }
@@ -2210,6 +2244,10 @@ func (p *MetadataGeneral) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField10(oprot); err != nil {
 			fieldId = 10
+			goto WriteFieldError
+		}
+		if err = p.writeField11(oprot); err != nil {
+			fieldId = 11
 			goto WriteFieldError
 		}
 
@@ -2325,10 +2363,10 @@ WriteFieldEndError:
 }
 
 func (p *MetadataGeneral) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("AvatarUri", thrift.STRING, 6); err != nil {
+	if err = oprot.WriteFieldBegin("AvatarUrl", thrift.STRING, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.AvatarUri); err != nil {
+	if err := oprot.WriteString(p.AvatarUrl); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2407,6 +2445,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
+func (p *MetadataGeneral) writeField11(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("SelfTactic", thrift.STRUCT, 11); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.SelfTactic.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
 }
 
 func (p *MetadataGeneral) String() string {
@@ -4890,6 +4945,8 @@ type GeneralQueryRequest struct {
 	Tags              []enum.GeneralTag    `thrift:"Tags,7,optional" form:"Tags" json:"Tags,omitempty" query:"Tags"`
 	IsSupportDynamics *enum.Enable         `thrift:"IsSupportDynamics,8,optional" form:"IsSupportDynamics" json:"IsSupportDynamics,omitempty" query:"IsSupportDynamics"`
 	IsSupportCollect  *enum.Enable         `thrift:"IsSupportCollect,9,optional" form:"IsSupportCollect" json:"IsSupportCollect,omitempty" query:"IsSupportCollect"`
+	PageNo            int64                `thrift:"PageNo,100" form:"PageNo" json:"PageNo" query:"PageNo"`
+	PageSize          int64                `thrift:"PageSize,101" form:"PageSize" json:"PageSize" query:"PageSize"`
 }
 
 func NewGeneralQueryRequest() *GeneralQueryRequest {
@@ -4977,16 +5034,26 @@ func (p *GeneralQueryRequest) GetIsSupportCollect() (v enum.Enable) {
 	return *p.IsSupportCollect
 }
 
+func (p *GeneralQueryRequest) GetPageNo() (v int64) {
+	return p.PageNo
+}
+
+func (p *GeneralQueryRequest) GetPageSize() (v int64) {
+	return p.PageSize
+}
+
 var fieldIDToName_GeneralQueryRequest = map[int16]string{
-	1: "Id",
-	2: "Name",
-	3: "Gender",
-	4: "Control",
-	5: "Group",
-	6: "Quality",
-	7: "Tags",
-	8: "IsSupportDynamics",
-	9: "IsSupportCollect",
+	1:   "Id",
+	2:   "Name",
+	3:   "Gender",
+	4:   "Control",
+	5:   "Group",
+	6:   "Quality",
+	7:   "Tags",
+	8:   "IsSupportDynamics",
+	9:   "IsSupportCollect",
+	100: "PageNo",
+	101: "PageSize",
 }
 
 func (p *GeneralQueryRequest) IsSetId() bool {
@@ -5134,6 +5201,26 @@ func (p *GeneralQueryRequest) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
+		case 100:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField100(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 101:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField101(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -5264,6 +5351,24 @@ func (p *GeneralQueryRequest) ReadField9(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *GeneralQueryRequest) ReadField100(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.PageNo = v
+	}
+	return nil
+}
+
+func (p *GeneralQueryRequest) ReadField101(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.PageSize = v
+	}
+	return nil
+}
+
 func (p *GeneralQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("GeneralQueryRequest"); err != nil {
@@ -5304,6 +5409,14 @@ func (p *GeneralQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField9(oprot); err != nil {
 			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField100(oprot); err != nil {
+			fieldId = 100
+			goto WriteFieldError
+		}
+		if err = p.writeField101(oprot); err != nil {
+			fieldId = 101
 			goto WriteFieldError
 		}
 
@@ -5502,6 +5615,40 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
+func (p *GeneralQueryRequest) writeField100(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("PageNo", thrift.I64, 100); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.PageNo); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 100 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 100 end error: ", p), err)
+}
+
+func (p *GeneralQueryRequest) writeField101(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("PageSize", thrift.I64, 101); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.PageSize); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 101 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 101 end error: ", p), err)
 }
 
 func (p *GeneralQueryRequest) String() string {

@@ -29,6 +29,9 @@ func (g *TacticDal) QueryTacticList(ctx context.Context, condition *vo.QueryTact
 	if condition.Id > 0 {
 		conn.Where("id = ?", condition.Id)
 	}
+	if len(condition.Ids) > 0 {
+		conn.Where("id in (?)", condition.Ids)
+	}
 	if strings.Trim(condition.Name, " ") != "" {
 		conn.Where("name like ?", fmt.Sprintf("%%%s%%", condition.Name))
 	}
@@ -42,7 +45,9 @@ func (g *TacticDal) QueryTacticList(ctx context.Context, condition *vo.QueryTact
 		conn.Where("type = ?", condition.Type)
 	}
 
-	if err := conn.Find(&list).Error; err != nil {
+	if err := conn.Find(&list).
+		Offset(condition.Offset).
+		Limit(condition.Limit).Error; err != nil {
 		hlog.CtxErrorf(ctx, "QueryTacticList err:%v", err)
 		return list, err
 	}

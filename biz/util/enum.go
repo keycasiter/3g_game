@@ -1,6 +1,9 @@
 package util
 
-import "github.com/keycasiter/3g_game/biz/consts"
+import (
+	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/enum"
+)
 
 //兵种类型转义
 func TranslateArmType(armType consts.ArmType) string {
@@ -32,6 +35,21 @@ func TranslateArmsAbility(armsAbility consts.ArmsAbility) string {
 		return "C"
 	}
 	return "未知兵种适性"
+}
+
+//兵种适性转义
+func ArmsAbilityToEnum(armsAbility consts.ArmsAbility) enum.ArmsAbility {
+	switch armsAbility {
+	case consts.ArmsAbility_S:
+		return enum.ArmsAbility_S
+	case consts.ArmsAbility_A:
+		return enum.ArmsAbility_A
+	case consts.ArmsAbility_B:
+		return enum.ArmsAbility_B
+	case consts.ArmsAbility_C:
+		return enum.ArmsAbility_C
+	}
+	return enum.ArmsAbility_Unknow
 }
 
 //兵种适性属性加成转义

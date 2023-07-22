@@ -82,7 +82,7 @@ struct MetadataGeneral {
 	3:enum.Gender Gender
 	4:enum.Group Group
 	5:list<enum.GeneralTag> GeneralTag
-	6:string AvatarUri
+	6:string AvatarUrl
 	7:AbilityAttr AbilityAttr
 	8:ArmsAttr ArmsAttr
 
@@ -90,6 +90,8 @@ struct MetadataGeneral {
 	9:enum.GeneralBattleType GeneralBattleType
 	//唯一对战ID
 	10:i64 UniqueId
+	//自带战法
+	11:Tactics SelfTactic
 }
 
 // 战法资料
@@ -182,6 +184,9 @@ struct GeneralQueryRequest{
      7: optional list<enum.GeneralTag>  Tags             // 标签
      8: optional enum.Enable  IsSupportDynamics// 是否支持动态
      9: optional enum.Enable  IsSupportCollect // 是否支持典藏
+
+     100: i64 PageNo,
+     101: i64 PageSize
 }
 
 struct GeneralQueryResponse{

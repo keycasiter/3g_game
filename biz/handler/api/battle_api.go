@@ -97,7 +97,7 @@ func buildBattleExecuteRequest(req api.BattleExecuteRequest) *logic.BattleLogicC
 				Gender:     consts.Gender(general.BaseInfo.Gender),
 				Group:      consts.Group(general.BaseInfo.Group),
 				GeneralTag: generalTags,
-				AvatarUri:  general.BaseInfo.AvatarUri,
+				AvatarUri:  general.BaseInfo.AvatarUrl,
 				AbilityAttr: &po.AbilityAttr{
 					ForceBase:        general.BaseInfo.AbilityAttr.ForceBase,
 					ForceRate:        general.BaseInfo.AbilityAttr.ForceRate,
@@ -172,7 +172,7 @@ func buildBattleExecuteRequest(req api.BattleExecuteRequest) *logic.BattleLogicC
 				Gender:     consts.Gender(general.BaseInfo.Gender),
 				Group:      consts.Group(general.BaseInfo.Group),
 				GeneralTag: generalTags,
-				AvatarUri:  general.BaseInfo.AvatarUri,
+				AvatarUri:  general.BaseInfo.AvatarUrl,
 				AbilityAttr: &po.AbilityAttr{
 					ForceBase:        general.BaseInfo.AbilityAttr.ForceBase,
 					ForceRate:        general.BaseInfo.AbilityAttr.ForceRate,

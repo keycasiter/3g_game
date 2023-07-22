@@ -24,27 +24,27 @@ type MetadataGeneral struct {
 
 // 能力属性
 type AbilityAttr struct {
-	ForceBase        float64 `bson:"force_base"`
-	ForceRate        float64 `bson:"force_rate"`
-	IntelligenceBase float64 `bson:"intelligence_base"`
-	IntelligenceRate float64 `bson:"intelligence_rate"`
-	CharmBase        float64 `bson:"charm_base"`
-	CharmRate        float64 `bson:"charm_rate"`
-	CommandBase      float64 `bson:"command_base"`
-	CommandRate      float64 `bson:"command_rate"`
-	PoliticsBase     float64 `bson:"politics_base"`
-	PoliticsRate     float64 `bson:"politics_rate"`
-	SpeedBase        float64 `bson:"speed_base"`
-	SpeedRate        float64 `bson:"speed_rate"`
+	ForceBase        float64
+	ForceRate        float64
+	IntelligenceBase float64
+	IntelligenceRate float64
+	CharmBase        float64
+	CharmRate        float64
+	CommandBase      float64
+	CommandRate      float64
+	PoliticsBase     float64
+	PoliticsRate     float64
+	SpeedBase        float64
+	SpeedRate        float64
 }
 
 // 兵种属性
 type ArmsAttr struct {
-	Cavalry   consts.ArmsAbility `bson:"cavalry"`
-	Mauler    consts.ArmsAbility `bson:"mauler"`
-	Archers   consts.ArmsAbility `bson:"archers"`
-	Spearman  consts.ArmsAbility `bson:"spearman"`
-	Apparatus consts.ArmsAbility `bson:"apparatus"`
+	Cavalry   consts.ArmsAbility
+	Mauler    consts.ArmsAbility
+	Archers   consts.ArmsAbility
+	Spearman  consts.ArmsAbility
+	Apparatus consts.ArmsAbility
 }
 
 // 战法资料

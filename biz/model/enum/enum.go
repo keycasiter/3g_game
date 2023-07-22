@@ -108,14 +108,17 @@ func (p *Enable) Value() (driver.Value, error) {
 type ArmsAbility int64
 
 const (
-	ArmsAbility_S ArmsAbility = 1
-	ArmsAbility_A ArmsAbility = 2
-	ArmsAbility_B ArmsAbility = 3
-	ArmsAbility_C ArmsAbility = 4
+	ArmsAbility_Unknow ArmsAbility = 0
+	ArmsAbility_S      ArmsAbility = 1
+	ArmsAbility_A      ArmsAbility = 2
+	ArmsAbility_B      ArmsAbility = 3
+	ArmsAbility_C      ArmsAbility = 4
 )
 
 func (p ArmsAbility) String() string {
 	switch p {
+	case ArmsAbility_Unknow:
+		return "Unknow"
 	case ArmsAbility_S:
 		return "S"
 	case ArmsAbility_A:
@@ -130,6 +133,8 @@ func (p ArmsAbility) String() string {
 
 func ArmsAbilityFromString(s string) (ArmsAbility, error) {
 	switch s {
+	case "Unknow":
+		return ArmsAbility_Unknow, nil
 	case "S":
 		return ArmsAbility_S, nil
 	case "A":
@@ -161,12 +166,15 @@ func (p *ArmsAbility) Value() (driver.Value, error) {
 type Gender int64
 
 const (
+	Gender_Unknow Gender = 0
 	Gender_Male   Gender = 1
 	Gender_Female Gender = 2
 )
 
 func (p Gender) String() string {
 	switch p {
+	case Gender_Unknow:
+		return "Unknow"
 	case Gender_Male:
 		return "Male"
 	case Gender_Female:
@@ -177,6 +185,8 @@ func (p Gender) String() string {
 
 func GenderFromString(s string) (Gender, error) {
 	switch s {
+	case "Unknow":
+		return Gender_Unknow, nil
 	case "Male":
 		return Gender_Male, nil
 	case "Female":

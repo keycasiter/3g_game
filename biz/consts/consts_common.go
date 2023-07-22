@@ -157,14 +157,15 @@ const (
 	GeneralTag_Celestials    GeneralTag = 14 // 仙
 )
 
-type ArmsAbility int
+type ArmsAbility string
 
 const (
 	// 兵种适性
-	ArmsAbility_S ArmsAbility = 1 // S级
-	ArmsAbility_A ArmsAbility = 2 // A级
-	ArmsAbility_B ArmsAbility = 3 // B级
-	ArmsAbility_C ArmsAbility = 4 // C级
+	ArmsAbility_Unknow ArmsAbility = "-" // 未知
+	ArmsAbility_S      ArmsAbility = "S" // S级
+	ArmsAbility_A      ArmsAbility = "A" // A级
+	ArmsAbility_B      ArmsAbility = "B" // B级
+	ArmsAbility_C      ArmsAbility = "C" // C级
 )
 
 // 兵书层级

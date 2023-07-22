@@ -10,8 +10,9 @@ enum ResponseCode {
 
 // 判定
 enum Enable {
+    UNKNOW = 0
 	YES = 1
-	NO = 0
+	NO = 2
 }
 
 // 兵种适性

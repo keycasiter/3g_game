@@ -173,15 +173,15 @@ struct TacticQueryResponse{
 
 //============= 查询武将列表 BEGIN ==============
 struct GeneralQueryRequest{
-     1: i64  Id               // 主键ID
-     2: string Name             // 姓名
-     3: enum.Gender   Gender           // 性别
-     4: enum.ControlLevel  Control          // 统御
-     5: enum.Group   Group            // 阵营
-     6: enum.GeneralQuality   Quality          // 品质
-     7: list<enum.GeneralTag>  Tags             // 标签
-     8: enum.Enable  IsSupportDynamics// 是否支持动态
-     9: enum.Enable  IsSupportCollect // 是否支持典藏
+     1: optional i64  Id               // 武将ID
+     2: optional string Name             // 姓名
+     3: optional enum.Gender   Gender           // 性别
+     4: optional enum.ControlLevel  Control          // 统御
+     5: optional enum.Group   Group            // 阵营
+     6: optional enum.GeneralQuality   Quality          // 品质
+     7: optional list<enum.GeneralTag>  Tags             // 标签
+     8: optional enum.Enable  IsSupportDynamics// 是否支持动态
+     9: optional enum.Enable  IsSupportCollect // 是否支持典藏
 }
 
 struct GeneralQueryResponse{

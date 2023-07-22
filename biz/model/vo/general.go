@@ -8,6 +8,6 @@ type QueryGeneralCondition struct { // nolint:maligned
 	Group             int8   // 阵营
 	Quality           int8   // 品质
 	Tags              []int  // 标签
-	IsSupportDynamics *int8  // 是否支持动态
-	IsSupportCollect  *int8  // 是否支持典藏
+	IsSupportDynamics int8   // 是否支持动态
+	IsSupportCollect  int8   // 是否支持典藏
 }

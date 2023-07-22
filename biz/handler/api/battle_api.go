@@ -4,13 +4,11 @@ package api
 
 import (
 	"context"
-	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/jinzhu/copier"
 	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/model/common"
@@ -51,7 +49,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//逻辑执行
-	serviceResp, err := logic.NewBattleLogicContext(ctx, buildServiceReq(req)).Run()
+	serviceResp, err := logic.NewBattleLogicContext(ctx, buildBattleExecuteRequest(req)).Run()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
 		resp.Meta = &common.Meta{
@@ -72,7 +70,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	c.JSON(hertzconsts.StatusOK, resp)
 }
 
-func buildServiceReq(req api.BattleExecuteRequest) *logic.BattleLogicContextRequest {
+func buildBattleExecuteRequest(req api.BattleExecuteRequest) *logic.BattleLogicContextRequest {
 	//我方信息
 	fightingTeamGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range req.FightingTeam.BattleGenerals {
@@ -263,89 +261,4 @@ func buildServiceReq(req api.BattleExecuteRequest) *logic.BattleLogicContextRequ
 		},
 	}
 	return serviceReq
-}
-
-// TacticQuery .
-// @router /v1/tactic/query [GET]
-func TacticQuery(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req api.TacticQueryRequest
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(hertzconsts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(api.TacticQueryResponse)
-
-	c.JSON(hertzconsts.StatusOK, resp)
-}
-
-// GeneralQuery .
-// @router /v1/general/query [GET]
-func GeneralQuery(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req api.GeneralQueryRequest
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(hertzconsts.StatusBadRequest, err.Error())
-		return
-	}
-	//dal
-	mysql.NewGeneral().QueryGeneralList(ctx, buildQueryGeneralListReq(req))
-
-	resp := new(api.GeneralQueryResponse)
-
-	c.JSON(hertzconsts.StatusOK, resp)
-}
-
-func buildQueryGeneralListReq(req api.GeneralQueryRequest) *vo.QueryGeneralCondition {
-	tags := make([]int, 0)
-	for _, tag := range req.GetTags() {
-		tags = append(tags, int(tag))
-	}
-
-	return &vo.QueryGeneralCondition{
-		Id:                req.GetId(),
-		Name:              req.GetName(),
-		Gender:            int8(req.GetGender()),
-		Control:           int32(req.GetControl()),
-		Group:             int8(req.GetGroup()),
-		Quality:           int8(req.GetQuality()),
-		Tags:              tags,
-		IsSupportDynamics: thrift.Int8Ptr(int8(req.GetIsSupportDynamics())),
-		IsSupportCollect:  thrift.Int8Ptr(int8(req.GetIsSupportCollect())),
-	}
-}
-
-// WarBookQuery .
-// @router /v1/warbook/query [GET]
-func WarBookQuery(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req api.WarBookQueryRequest
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(hertzconsts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(api.WarBookQueryResponse)
-
-	c.JSON(hertzconsts.StatusOK, resp)
-}
-
-// SpecialTechQuery .
-// @router /v1/special_tech/query [GET]
-func SpecialTechQuery(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req api.SpecialTechQueryRequest
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(hertzconsts.StatusBadRequest, err.Error())
-		return
-	}
-
-	resp := new(api.SpecialTechQueryResponse)
-
-	c.JSON(hertzconsts.StatusOK, resp)
 }

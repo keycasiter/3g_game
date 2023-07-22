@@ -48,10 +48,10 @@ func (g *GeneralDal) QueryGeneralList(ctx context.Context, condition *vo.QueryGe
 	if len(condition.Tags) > 0 {
 		conn.Where("json_contains(tag->'$',?,'$')", util.ToIntArrayString(condition.Tags))
 	}
-	if condition.IsSupportCollect != nil {
+	if condition.IsSupportCollect > 0 {
 		conn.Where("is_support_collect = ?", condition.IsSupportCollect)
 	}
-	if condition.IsSupportDynamics != nil {
+	if condition.IsSupportDynamics > 0 {
 		conn.Where("is_support_dynamics = ?", condition.IsSupportDynamics)
 	}
 

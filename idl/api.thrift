@@ -190,7 +190,7 @@ struct GeneralQueryRequest{
 }
 
 struct GeneralQueryResponse{
-    1: common.Meta meta
+    1: common.Meta Meta
     //武将信息列表
     2: list<BattleGeneral> GeneralList
 }

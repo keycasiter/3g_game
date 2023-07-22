@@ -5659,7 +5659,7 @@ func (p *GeneralQueryRequest) String() string {
 }
 
 type GeneralQueryResponse struct {
-	Meta *common.Meta `thrift:"meta,1" form:"meta" json:"meta" query:"meta"`
+	Meta *common.Meta `thrift:"Meta,1" form:"Meta" json:"Meta" query:"Meta"`
 	//武将信息列表
 	GeneralList []*BattleGeneral `thrift:"GeneralList,2" form:"GeneralList" json:"GeneralList" query:"GeneralList"`
 }
@@ -5682,7 +5682,7 @@ func (p *GeneralQueryResponse) GetGeneralList() (v []*BattleGeneral) {
 }
 
 var fieldIDToName_GeneralQueryResponse = map[int16]string{
-	1: "meta",
+	1: "Meta",
 	2: "GeneralList",
 }
 
@@ -5821,7 +5821,7 @@ WriteStructEndError:
 }
 
 func (p *GeneralQueryResponse) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("meta", thrift.STRUCT, 1); err != nil {
+	if err = oprot.WriteFieldBegin("Meta", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := p.Meta.Write(oprot); err != nil {

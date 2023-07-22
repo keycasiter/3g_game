@@ -1840,7 +1840,8 @@ type MetadataGeneral struct {
 	//唯一对战ID
 	UniqueId int64 `thrift:"UniqueId,10" form:"UniqueId" json:"UniqueId" query:"UniqueId"`
 	//自带战法
-	SelfTactic *Tactics `thrift:"SelfTactic,11" form:"SelfTactic" json:"SelfTactic" query:"SelfTactic"`
+	SelfTactic     *Tactics            `thrift:"SelfTactic,11" form:"SelfTactic" json:"SelfTactic" query:"SelfTactic"`
+	GeneralQuality enum.GeneralQuality `thrift:"GeneralQuality,12" form:"GeneralQuality" json:"GeneralQuality" query:"GeneralQuality"`
 }
 
 func NewMetadataGeneral() *MetadataGeneral {
@@ -1906,6 +1907,10 @@ func (p *MetadataGeneral) GetSelfTactic() (v *Tactics) {
 	return p.SelfTactic
 }
 
+func (p *MetadataGeneral) GetGeneralQuality() (v enum.GeneralQuality) {
+	return p.GeneralQuality
+}
+
 var fieldIDToName_MetadataGeneral = map[int16]string{
 	1:  "Id",
 	2:  "Name",
@@ -1918,6 +1923,7 @@ var fieldIDToName_MetadataGeneral = map[int16]string{
 	9:  "GeneralBattleType",
 	10: "UniqueId",
 	11: "SelfTactic",
+	12: "GeneralQuality",
 }
 
 func (p *MetadataGeneral) IsSetAbilityAttr() bool {
@@ -2054,6 +2060,16 @@ func (p *MetadataGeneral) Read(iprot thrift.TProtocol) (err error) {
 		case 11:
 			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField11(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 12:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField12(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -2200,6 +2216,15 @@ func (p *MetadataGeneral) ReadField11(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *MetadataGeneral) ReadField12(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.GeneralQuality = enum.GeneralQuality(v)
+	}
+	return nil
+}
+
 func (p *MetadataGeneral) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("MetadataGeneral"); err != nil {
@@ -2248,6 +2273,10 @@ func (p *MetadataGeneral) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField11(oprot); err != nil {
 			fieldId = 11
+			goto WriteFieldError
+		}
+		if err = p.writeField12(oprot); err != nil {
+			fieldId = 12
 			goto WriteFieldError
 		}
 
@@ -2462,6 +2491,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
+}
+
+func (p *MetadataGeneral) writeField12(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("GeneralQuality", thrift.I32, 12); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(int32(p.GeneralQuality)); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
 }
 
 func (p *MetadataGeneral) String() string {

@@ -92,6 +92,7 @@ struct MetadataGeneral {
 	10:i64 UniqueId
 	//自带战法
 	11:Tactics SelfTactic
+	12:enum.GeneralQuality GeneralQuality,
 }
 
 // 战法资料

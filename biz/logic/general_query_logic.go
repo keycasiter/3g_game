@@ -111,15 +111,16 @@ func (g *GeneralQueryLogic) Handle() (api.GeneralQueryResponse, error) {
 
 		resList = append(resList, &api.BattleGeneral{
 			BaseInfo: &api.MetadataGeneral{
-				Id:          general.Id,
-				Name:        general.Name,
-				Gender:      enum.Gender(general.Gender),
-				Group:       enum.Group(general.Group),
-				GeneralTag:  generalTags,
-				AvatarUrl:   general.AvatarUrl,
-				AbilityAttr: &abilityAttr,
-				ArmsAttr:    &armsAttr,
-				SelfTactic:  tactic,
+				Id:             general.Id,
+				Name:           general.Name,
+				Gender:         enum.Gender(general.Gender),
+				Group:          enum.Group(general.Group),
+				GeneralTag:     generalTags,
+				AvatarUrl:      general.AvatarUrl,
+				AbilityAttr:    &abilityAttr,
+				ArmsAttr:       &armsAttr,
+				GeneralQuality: enum.GeneralQuality(general.Quality),
+				SelfTactic:     tactic,
 			},
 		})
 	}

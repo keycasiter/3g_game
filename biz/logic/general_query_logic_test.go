@@ -19,7 +19,9 @@ func TestGeneralQueryLogic_Handle(t *testing.T) {
 	ctx := context.Background()
 	gender := enum.Gender_Female
 	resp, err := NewGeneralQueryLogic(ctx, api.GeneralQueryRequest{
-		Gender: &gender,
+		Gender:   &gender,
+		PageNo:   0,
+		PageSize: 1,
 	}).Handle()
 	if err != nil {
 		fmt.Errorf("err:%v", err)

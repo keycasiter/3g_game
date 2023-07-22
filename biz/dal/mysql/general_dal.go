@@ -55,7 +55,7 @@ func (g *GeneralDal) QueryGeneralList(ctx context.Context, condition *vo.QueryGe
 		conn.Where("is_support_dynamics = ?", condition.IsSupportDynamics)
 	}
 
-	if err := conn.Find(&list).Error; err != nil {
+	if err := conn.Find(&list).Offset(condition.Offset).Limit(condition.Limit).Error; err != nil {
 		hlog.CtxErrorf(ctx, "QueryGeneralList err:%v", err)
 		return list, err
 	}

@@ -10,4 +10,6 @@ type QueryGeneralCondition struct { // nolint:maligned
 	Tags              []int  // 标签
 	IsSupportDynamics int8   // 是否支持动态
 	IsSupportCollect  int8   // 是否支持典藏
+	Offset            int
+	Limit             int
 }

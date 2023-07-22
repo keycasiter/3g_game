@@ -18,9 +18,12 @@ func TestGeneralQueryLogic_Handle(t *testing.T) {
 
 	ctx := context.Background()
 	gender := enum.Gender_Female
-	resp := NewGeneralQueryLogic(ctx, api.GeneralQueryRequest{
+	resp, err := NewGeneralQueryLogic(ctx, api.GeneralQueryRequest{
 		Gender: &gender,
 	}).Handle()
+	if err != nil {
+		fmt.Errorf("err:%v", err)
+	}
 	fmt.Printf("resp:%s", util.ToJsonString(ctx, resp))
 }
 

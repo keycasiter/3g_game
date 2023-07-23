@@ -7,6 +7,7 @@ type QueryTacticCondition struct {
 	Source  int32   // 战法来源
 	Type    int32   // 战法类型
 	Ids     []int64 //id集合
+	Sources []int32 // 战法来源列表
 
 	Offset int
 	Limit  int

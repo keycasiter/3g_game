@@ -4494,13 +4494,14 @@ func (p *BattleGeneralTacticStatistics) String() string {
 //============= 模拟对战 END ==============
 //============= 查询战法列表 BEGIN ==============
 type TacticQueryRequest struct {
-	Id       int64              `thrift:"Id,1" form:"Id" json:"Id" query:"Id"`
-	Name     string             `thrift:"Name,2" form:"Name" json:"Name" query:"Name"`
-	Quality  enum.TacticQuality `thrift:"Quality,3" form:"Quality" json:"Quality" query:"Quality"`
-	Source   enum.TacticsSource `thrift:"Source,4" form:"Source" json:"Source" query:"Source"`
-	Type     enum.TacticsType   `thrift:"Type,5" form:"Type" json:"Type" query:"Type"`
-	PageNo   int64              `thrift:"PageNo,100" form:"PageNo" json:"PageNo" query:"PageNo"`
-	PageSize int64              `thrift:"PageSize,101" form:"PageSize" json:"PageSize" query:"PageSize"`
+	Id       int64                `thrift:"Id,1" form:"Id" json:"Id" query:"Id"`
+	Name     string               `thrift:"Name,2" form:"Name" json:"Name" query:"Name"`
+	Quality  enum.TacticQuality   `thrift:"Quality,3" form:"Quality" json:"Quality" query:"Quality"`
+	Source   enum.TacticsSource   `thrift:"Source,4" form:"Source" json:"Source" query:"Source"`
+	Type     enum.TacticsType     `thrift:"Type,5" form:"Type" json:"Type" query:"Type"`
+	Sources  []enum.TacticsSource `thrift:"Sources,6" form:"Sources" json:"Sources" query:"Sources"`
+	PageNo   int64                `thrift:"PageNo,100" form:"PageNo" json:"PageNo" query:"PageNo"`
+	PageSize int64                `thrift:"PageSize,101" form:"PageSize" json:"PageSize" query:"PageSize"`
 }
 
 func NewTacticQueryRequest() *TacticQueryRequest {
@@ -4527,6 +4528,10 @@ func (p *TacticQueryRequest) GetType() (v enum.TacticsType) {
 	return p.Type
 }
 
+func (p *TacticQueryRequest) GetSources() (v []enum.TacticsSource) {
+	return p.Sources
+}
+
 func (p *TacticQueryRequest) GetPageNo() (v int64) {
 	return p.PageNo
 }
@@ -4541,6 +4546,7 @@ var fieldIDToName_TacticQueryRequest = map[int16]string{
 	3:   "Quality",
 	4:   "Source",
 	5:   "Type",
+	6:   "Sources",
 	100: "PageNo",
 	101: "PageSize",
 }
@@ -4607,6 +4613,16 @@ func (p *TacticQueryRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 5:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 6:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -4709,6 +4725,28 @@ func (p *TacticQueryRequest) ReadField5(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *TacticQueryRequest) ReadField6(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	p.Sources = make([]enum.TacticsSource, 0, size)
+	for i := 0; i < size; i++ {
+		var _elem enum.TacticsSource
+		if v, err := iprot.ReadI32(); err != nil {
+			return err
+		} else {
+			_elem = enum.TacticsSource(v)
+		}
+
+		p.Sources = append(p.Sources, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *TacticQueryRequest) ReadField100(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -4751,6 +4789,10 @@ func (p *TacticQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField5(oprot); err != nil {
 			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
 			goto WriteFieldError
 		}
 		if err = p.writeField100(oprot); err != nil {
@@ -4863,6 +4905,31 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
+func (p *TacticQueryRequest) writeField6(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Sources", thrift.LIST, 6); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.I32, len(p.Sources)); err != nil {
+		return err
+	}
+	for _, v := range p.Sources {
+		if err := oprot.WriteI32(int32(v)); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
 }
 
 func (p *TacticQueryRequest) writeField100(oprot thrift.TProtocol) (err error) {

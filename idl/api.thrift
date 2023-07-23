@@ -166,6 +166,7 @@ struct TacticQueryRequest{
    3: enum.TacticQuality  Quality // 战法品质
    4: enum.TacticsSource  Source  // 战法来源
    5: enum.TacticsType  Type    // 战法类型
+   6: list<enum.TacticsSource>  Sources    // 战法类型列表
 
    100: i64 PageNo,
    101: i64 PageSize
@@ -245,7 +246,7 @@ service ApiService {
     //查询武将列表
     GeneralQueryResponse GeneralQuery(1:GeneralQueryRequest request)(api.get="/v1/general/query");
     //查询兵书列表
-    GeneralWarBookQueryResponse WarBookQuery(1:GeneralWarBookQueryRequest request)(api.get="/v1/general_warbook/query");
+    GeneralWarBookQueryResponse GeneralWarBookQuery(1:GeneralWarBookQueryRequest request)(api.get="/v1/general_warbook/query");
     //查询特技列表
     SpecialTechQueryResponse SpecialTechQuery(1:SpecialTechQueryRequest request)(api.get="/v1/special_tech/query");
 }

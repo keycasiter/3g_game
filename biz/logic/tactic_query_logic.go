@@ -28,11 +28,16 @@ func NewTacticQueryLogic(ctx context.Context, req api.TacticQueryRequest) *Tacti
 
 func (g *TacticQueryLogic) Handle() (api.TacticQueryResponse, error) {
 	//查询战法列表
+	sources := make([]int32, 0)
+	for _, source := range g.Req.Sources {
+		sources = append(sources, int32(source))
+	}
 	list, err := mysql.NewTactic().QueryTacticList(g.Ctx, &vo.QueryTacticCondition{
 		Id:      g.Req.Id,
 		Name:    g.Req.Name,
 		Quality: int32(g.Req.Quality),
 		Source:  int32(g.Req.Source),
+		Sources: sources,
 		Type:    int32(g.Req.Type),
 		Offset:  util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize),
 		Limit:   int(g.Req.PageSize),

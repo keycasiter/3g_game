@@ -41,6 +41,9 @@ func (g *TacticDal) QueryTacticList(ctx context.Context, condition *vo.QueryTact
 	if condition.Source > 0 {
 		conn.Where("source = ?", condition.Source)
 	}
+	if len(condition.Sources) > 0 {
+		conn.Where("source in (?)", condition.Sources)
+	}
 	if condition.Type > 0 {
 		conn.Where("type = ?", condition.Type)
 	}

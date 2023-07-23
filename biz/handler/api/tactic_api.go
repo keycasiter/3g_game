@@ -5,7 +5,9 @@ package api
 import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 )
 
@@ -14,13 +16,18 @@ import (
 func TacticQuery(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.TacticQueryRequest
+
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
-
-	resp := new(api.TacticQueryResponse)
+	resp, err := logic.NewTacticQueryLogic(ctx, req).Handle()
+	if err != nil {
+		hlog.CtxErrorf(ctx, "TacticQueryLogic handle err:%v", err)
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

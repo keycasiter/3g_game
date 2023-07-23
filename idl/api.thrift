@@ -166,6 +166,9 @@ struct TacticQueryRequest{
    3: enum.TacticQuality  Quality // 战法品质
    4: enum.TacticsSource  Source  // 战法来源
    5: enum.TacticsType  Type    // 战法类型
+
+   100: i64 PageNo,
+   101: i64 PageSize
 }
 
 struct TacticQueryResponse{

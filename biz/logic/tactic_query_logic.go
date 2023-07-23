@@ -1,0 +1,60 @@
+package logic
+
+import (
+	"context"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
+	"github.com/keycasiter/3g_game/biz/model/api"
+	"github.com/keycasiter/3g_game/biz/model/enum"
+	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/util"
+)
+
+type TacticQueryLogic struct {
+	Ctx  context.Context
+	Req  api.TacticQueryRequest
+	Resp api.TacticQueryResponse
+}
+
+func NewTacticQueryLogic(ctx context.Context, req api.TacticQueryRequest) *TacticQueryLogic {
+	return &TacticQueryLogic{
+		Ctx: ctx,
+		Req: req,
+		Resp: api.TacticQueryResponse{
+			Meta: util.BuildSuccMeta(),
+		},
+	}
+}
+
+func (g *TacticQueryLogic) Handle() (api.TacticQueryResponse, error) {
+	//查询战法列表
+	list, err := mysql.NewTactic().QueryTacticList(g.Ctx, &vo.QueryTacticCondition{
+		Id:      g.Req.Id,
+		Name:    g.Req.Name,
+		Quality: int32(g.Req.Quality),
+		Source:  int32(g.Req.Source),
+		Type:    int32(g.Req.Type),
+		Offset:  util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize),
+		Limit:   int(g.Req.PageSize),
+	})
+	if err != nil {
+		hlog.CtxErrorf(g.Ctx, "QueryTacticList err:%v", err)
+		g.Resp.Meta = util.BuildFailMeta()
+		return g.Resp, err
+	}
+
+	//组合resp
+	resList := make([]*api.Tactics, 0)
+	for _, tactic := range list {
+		resList = append(resList, &api.Tactics{
+			Id:            tactic.Id,
+			Name:          tactic.Name,
+			TacticsSource: enum.TacticsSource(tactic.Source),
+			Type:          enum.TacticsType(tactic.Type),
+			Quality:       enum.TacticQuality(tactic.Quality),
+		})
+	}
+	g.Resp.TacticList = resList
+
+	return g.Resp, nil
+}

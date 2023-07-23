@@ -101,6 +101,7 @@ struct Tactics {
 	2:string             Name
 	3:enum.TacticsSource TacticsSource
 	4:enum.TacticsType   Type
+	5:enum.TacticQuality Quality
 }
 
 // 兵种属性

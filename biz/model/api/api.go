@@ -2523,6 +2523,7 @@ type Tactics struct {
 	Name          string             `thrift:"Name,2" form:"Name" json:"Name" query:"Name"`
 	TacticsSource enum.TacticsSource `thrift:"TacticsSource,3" form:"TacticsSource" json:"TacticsSource" query:"TacticsSource"`
 	Type          enum.TacticsType   `thrift:"Type,4" form:"Type" json:"Type" query:"Type"`
+	Quality       enum.TacticQuality `thrift:"Quality,5" form:"Quality" json:"Quality" query:"Quality"`
 }
 
 func NewTactics() *Tactics {
@@ -2545,11 +2546,16 @@ func (p *Tactics) GetType() (v enum.TacticsType) {
 	return p.Type
 }
 
+func (p *Tactics) GetQuality() (v enum.TacticQuality) {
+	return p.Quality
+}
+
 var fieldIDToName_Tactics = map[int16]string{
 	1: "Id",
 	2: "Name",
 	3: "TacticsSource",
 	4: "Type",
+	5: "Quality",
 }
 
 func (p *Tactics) Read(iprot thrift.TProtocol) (err error) {
@@ -2604,6 +2610,16 @@ func (p *Tactics) Read(iprot thrift.TProtocol) (err error) {
 		case 4:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 5:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -2677,6 +2693,15 @@ func (p *Tactics) ReadField4(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *Tactics) ReadField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.Quality = enum.TacticQuality(v)
+	}
+	return nil
+}
+
 func (p *Tactics) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("Tactics"); err != nil {
@@ -2697,6 +2722,10 @@ func (p *Tactics) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
 			goto WriteFieldError
 		}
 
@@ -2784,6 +2813,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *Tactics) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Quality", thrift.I32, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(int32(p.Quality)); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 
 func (p *Tactics) String() string {

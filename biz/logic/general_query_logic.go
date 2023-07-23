@@ -105,6 +105,7 @@ func (g *GeneralQueryLogic) Handle() (api.GeneralQueryResponse, error) {
 					Name:          v.Name,
 					TacticsSource: enum.TacticsSource(v.Source),
 					Type:          enum.TacticsType(v.Type),
+					Quality:       enum.TacticQuality(v.Quality),
 				}
 			}
 		}

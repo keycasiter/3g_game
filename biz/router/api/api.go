@@ -28,16 +28,16 @@ func Register(r *server.Hertz) {
 			_general.GET("/query", append(_generalqueryMw(), api.GeneralQuery)...)
 		}
 		{
+			_general_warbook := _v1.Group("/general_warbook", _general_warbookMw()...)
+			_general_warbook.GET("/query", append(_warbookqueryMw(), api.GeneralWarBookQuery)...)
+		}
+		{
 			_special_tech := _v1.Group("/special_tech", _special_techMw()...)
 			_special_tech.GET("/query", append(_specialtechqueryMw(), api.SpecialTechQuery)...)
 		}
 		{
 			_tactic := _v1.Group("/tactic", _tacticMw()...)
 			_tactic.GET("/query", append(_tacticqueryMw(), api.TacticQuery)...)
-		}
-		{
-			_warbook := _v1.Group("/warbook", _warbookMw()...)
-			_warbook.GET("/query", append(_warbookqueryMw(), api.WarBookQuery)...)
 		}
 	}
 }

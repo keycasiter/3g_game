@@ -172,7 +172,7 @@ struct TacticQueryRequest{
 }
 
 struct TacticQueryResponse{
-    1: common.Meta meta
+    1: common.Meta Meta
     //战法信息列表
     2: list<Tactics> TacticList
 }
@@ -202,15 +202,15 @@ struct GeneralQueryResponse{
 //============= 查询武将列表 END ==============
 
 //============= 查询兵书列表 BEGIN ==============
-struct WarBookQueryRequest{
+struct GeneralWarBookQueryRequest{
     //武将ID
     1: i64 GeneralId
 }
 
-struct WarBookQueryResponse{
-    1: common.Meta meta
+struct GeneralWarBookQueryResponse{
+    1: common.Meta Meta
     //兵书信息列表
-    2: list<WarBook> WarBookList
+    2: map<i64,list<WarBook>> WarBookMapList
 }
 
 struct WarBook {
@@ -243,7 +243,7 @@ service ApiService {
     //查询武将列表
     GeneralQueryResponse GeneralQuery(1:GeneralQueryRequest request)(api.get="/v1/general/query");
     //查询兵书列表
-    WarBookQueryResponse WarBookQuery(1:WarBookQueryRequest request)(api.get="/v1/warbook/query");
+    GeneralWarBookQueryResponse WarBookQuery(1:GeneralWarBookQueryRequest request)(api.get="/v1/general_warbook/query");
     //查询特技列表
     SpecialTechQueryResponse SpecialTechQuery(1:SpecialTechQueryRequest request)(api.get="/v1/special_tech/query");
 }

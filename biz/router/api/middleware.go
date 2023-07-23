@@ -75,3 +75,8 @@ func _warbookqueryMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _general_warbookMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

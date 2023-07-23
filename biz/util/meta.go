@@ -18,3 +18,10 @@ func BuildFailMeta() *common.Meta {
 		StatusMsg:  "失败",
 	}
 }
+
+func BuildFailMetaWithMsg(msg string) *common.Meta {
+	return &common.Meta{
+		StatusCode: enum.ResponseCode_UnknownError,
+		StatusMsg:  msg,
+	}
+}

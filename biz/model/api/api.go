@@ -4907,7 +4907,7 @@ func (p *TacticQueryRequest) String() string {
 }
 
 type TacticQueryResponse struct {
-	Meta *common.Meta `thrift:"meta,1" form:"meta" json:"meta" query:"meta"`
+	Meta *common.Meta `thrift:"Meta,1" form:"Meta" json:"Meta" query:"Meta"`
 	//战法信息列表
 	TacticList []*Tactics `thrift:"TacticList,2" form:"TacticList" json:"TacticList" query:"TacticList"`
 }
@@ -4930,7 +4930,7 @@ func (p *TacticQueryResponse) GetTacticList() (v []*Tactics) {
 }
 
 var fieldIDToName_TacticQueryResponse = map[int16]string{
-	1: "meta",
+	1: "Meta",
 	2: "TacticList",
 }
 
@@ -5069,7 +5069,7 @@ WriteStructEndError:
 }
 
 func (p *TacticQueryResponse) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("meta", thrift.STRUCT, 1); err != nil {
+	if err = oprot.WriteFieldBegin("Meta", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := p.Meta.Write(oprot); err != nil {
@@ -6055,24 +6055,24 @@ func (p *GeneralQueryResponse) String() string {
 
 //============= 查询武将列表 END ==============
 //============= 查询兵书列表 BEGIN ==============
-type WarBookQueryRequest struct {
+type GeneralWarBookQueryRequest struct {
 	//武将ID
 	GeneralId int64 `thrift:"GeneralId,1" form:"GeneralId" json:"GeneralId" query:"GeneralId"`
 }
 
-func NewWarBookQueryRequest() *WarBookQueryRequest {
-	return &WarBookQueryRequest{}
+func NewGeneralWarBookQueryRequest() *GeneralWarBookQueryRequest {
+	return &GeneralWarBookQueryRequest{}
 }
 
-func (p *WarBookQueryRequest) GetGeneralId() (v int64) {
+func (p *GeneralWarBookQueryRequest) GetGeneralId() (v int64) {
 	return p.GeneralId
 }
 
-var fieldIDToName_WarBookQueryRequest = map[int16]string{
+var fieldIDToName_GeneralWarBookQueryRequest = map[int16]string{
 	1: "GeneralId",
 }
 
-func (p *WarBookQueryRequest) Read(iprot thrift.TProtocol) (err error) {
+func (p *GeneralWarBookQueryRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -6121,7 +6121,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_WarBookQueryRequest[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_GeneralWarBookQueryRequest[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -6131,7 +6131,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *WarBookQueryRequest) ReadField1(iprot thrift.TProtocol) error {
+func (p *GeneralWarBookQueryRequest) ReadField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
@@ -6140,9 +6140,9 @@ func (p *WarBookQueryRequest) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *WarBookQueryRequest) Write(oprot thrift.TProtocol) (err error) {
+func (p *GeneralWarBookQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("WarBookQueryRequest"); err != nil {
+	if err = oprot.WriteStructBegin("GeneralWarBookQueryRequest"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -6169,7 +6169,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *WarBookQueryRequest) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *GeneralWarBookQueryRequest) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("GeneralId", thrift.I64, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -6186,46 +6186,46 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *WarBookQueryRequest) String() string {
+func (p *GeneralWarBookQueryRequest) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("WarBookQueryRequest(%+v)", *p)
+	return fmt.Sprintf("GeneralWarBookQueryRequest(%+v)", *p)
 }
 
-type WarBookQueryResponse struct {
-	Meta *common.Meta `thrift:"meta,1" form:"meta" json:"meta" query:"meta"`
+type GeneralWarBookQueryResponse struct {
+	Meta *common.Meta `thrift:"Meta,1" form:"Meta" json:"Meta" query:"Meta"`
 	//兵书信息列表
-	WarBookList []*WarBook `thrift:"WarBookList,2" form:"WarBookList" json:"WarBookList" query:"WarBookList"`
+	WarBookMapList map[int64][]*WarBook `thrift:"WarBookMapList,2" form:"WarBookMapList" json:"WarBookMapList" query:"WarBookMapList"`
 }
 
-func NewWarBookQueryResponse() *WarBookQueryResponse {
-	return &WarBookQueryResponse{}
+func NewGeneralWarBookQueryResponse() *GeneralWarBookQueryResponse {
+	return &GeneralWarBookQueryResponse{}
 }
 
-var WarBookQueryResponse_Meta_DEFAULT *common.Meta
+var GeneralWarBookQueryResponse_Meta_DEFAULT *common.Meta
 
-func (p *WarBookQueryResponse) GetMeta() (v *common.Meta) {
+func (p *GeneralWarBookQueryResponse) GetMeta() (v *common.Meta) {
 	if !p.IsSetMeta() {
-		return WarBookQueryResponse_Meta_DEFAULT
+		return GeneralWarBookQueryResponse_Meta_DEFAULT
 	}
 	return p.Meta
 }
 
-func (p *WarBookQueryResponse) GetWarBookList() (v []*WarBook) {
-	return p.WarBookList
+func (p *GeneralWarBookQueryResponse) GetWarBookMapList() (v map[int64][]*WarBook) {
+	return p.WarBookMapList
 }
 
-var fieldIDToName_WarBookQueryResponse = map[int16]string{
-	1: "meta",
-	2: "WarBookList",
+var fieldIDToName_GeneralWarBookQueryResponse = map[int16]string{
+	1: "Meta",
+	2: "WarBookMapList",
 }
 
-func (p *WarBookQueryResponse) IsSetMeta() bool {
+func (p *GeneralWarBookQueryResponse) IsSetMeta() bool {
 	return p.Meta != nil
 }
 
-func (p *WarBookQueryResponse) Read(iprot thrift.TProtocol) (err error) {
+func (p *GeneralWarBookQueryResponse) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -6255,7 +6255,7 @@ func (p *WarBookQueryResponse) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 2:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.MAP {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -6284,7 +6284,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_WarBookQueryResponse[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_GeneralWarBookQueryResponse[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -6294,7 +6294,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *WarBookQueryResponse) ReadField1(iprot thrift.TProtocol) error {
+func (p *GeneralWarBookQueryResponse) ReadField1(iprot thrift.TProtocol) error {
 	p.Meta = common.NewMeta()
 	if err := p.Meta.Read(iprot); err != nil {
 		return err
@@ -6302,29 +6302,48 @@ func (p *WarBookQueryResponse) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *WarBookQueryResponse) ReadField2(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
+func (p *GeneralWarBookQueryResponse) ReadField2(iprot thrift.TProtocol) error {
+	_, _, size, err := iprot.ReadMapBegin()
 	if err != nil {
 		return err
 	}
-	p.WarBookList = make([]*WarBook, 0, size)
+	p.WarBookMapList = make(map[int64][]*WarBook, size)
 	for i := 0; i < size; i++ {
-		_elem := NewWarBook()
-		if err := _elem.Read(iprot); err != nil {
+		var _key int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_key = v
+		}
+
+		_, size, err := iprot.ReadListBegin()
+		if err != nil {
+			return err
+		}
+		_val := make([]*WarBook, 0, size)
+		for i := 0; i < size; i++ {
+			_elem := NewWarBook()
+			if err := _elem.Read(iprot); err != nil {
+				return err
+			}
+
+			_val = append(_val, _elem)
+		}
+		if err := iprot.ReadListEnd(); err != nil {
 			return err
 		}
 
-		p.WarBookList = append(p.WarBookList, _elem)
+		p.WarBookMapList[_key] = _val
 	}
-	if err := iprot.ReadListEnd(); err != nil {
+	if err := iprot.ReadMapEnd(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (p *WarBookQueryResponse) Write(oprot thrift.TProtocol) (err error) {
+func (p *GeneralWarBookQueryResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("WarBookQueryResponse"); err != nil {
+	if err = oprot.WriteStructBegin("GeneralWarBookQueryResponse"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -6355,8 +6374,8 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *WarBookQueryResponse) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("meta", thrift.STRUCT, 1); err != nil {
+func (p *GeneralWarBookQueryResponse) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Meta", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := p.Meta.Write(oprot); err != nil {
@@ -6372,19 +6391,32 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *WarBookQueryResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("WarBookList", thrift.LIST, 2); err != nil {
+func (p *GeneralWarBookQueryResponse) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("WarBookMapList", thrift.MAP, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.WarBookList)); err != nil {
+	if err := oprot.WriteMapBegin(thrift.I64, thrift.LIST, len(p.WarBookMapList)); err != nil {
 		return err
 	}
-	for _, v := range p.WarBookList {
-		if err := v.Write(oprot); err != nil {
+	for k, v := range p.WarBookMapList {
+
+		if err := oprot.WriteI64(k); err != nil {
+			return err
+		}
+
+		if err := oprot.WriteListBegin(thrift.STRUCT, len(v)); err != nil {
+			return err
+		}
+		for _, v := range v {
+			if err := v.Write(oprot); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
 			return err
 		}
 	}
-	if err := oprot.WriteListEnd(); err != nil {
+	if err := oprot.WriteMapEnd(); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -6397,11 +6429,11 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *WarBookQueryResponse) String() string {
+func (p *GeneralWarBookQueryResponse) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("WarBookQueryResponse(%+v)", *p)
+	return fmt.Sprintf("GeneralWarBookQueryResponse(%+v)", *p)
 }
 
 type WarBook struct {
@@ -7073,7 +7105,7 @@ type ApiService interface {
 	//查询武将列表
 	GeneralQuery(ctx context.Context, request *GeneralQueryRequest) (r *GeneralQueryResponse, err error)
 	//查询兵书列表
-	WarBookQuery(ctx context.Context, request *WarBookQueryRequest) (r *WarBookQueryResponse, err error)
+	WarBookQuery(ctx context.Context, request *GeneralWarBookQueryRequest) (r *GeneralWarBookQueryResponse, err error)
 	//查询特技列表
 	SpecialTechQuery(ctx context.Context, request *SpecialTechQueryRequest) (r *SpecialTechQueryResponse, err error)
 }
@@ -7131,7 +7163,7 @@ func (p *ApiServiceClient) GeneralQuery(ctx context.Context, request *GeneralQue
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *ApiServiceClient) WarBookQuery(ctx context.Context, request *WarBookQueryRequest) (r *WarBookQueryResponse, err error) {
+func (p *ApiServiceClient) WarBookQuery(ctx context.Context, request *GeneralWarBookQueryRequest) (r *GeneralWarBookQueryResponse, err error) {
 	var _args ApiServiceWarBookQueryArgs
 	_args.Request = request
 	var _result ApiServiceWarBookQueryResult
@@ -7358,7 +7390,7 @@ func (p *apiServiceProcessorWarBookQuery) Process(ctx context.Context, seqId int
 	iprot.ReadMessageEnd()
 	var err2 error
 	result := ApiServiceWarBookQueryResult{}
-	var retval *WarBookQueryResponse
+	var retval *GeneralWarBookQueryResponse
 	if retval, err2 = p.handler.WarBookQuery(ctx, args.Request); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing WarBookQuery: "+err2.Error())
 		oprot.WriteMessageBegin("WarBookQuery", thrift.EXCEPTION, seqId)
@@ -8312,16 +8344,16 @@ func (p *ApiServiceGeneralQueryResult) String() string {
 }
 
 type ApiServiceWarBookQueryArgs struct {
-	Request *WarBookQueryRequest `thrift:"request,1"`
+	Request *GeneralWarBookQueryRequest `thrift:"request,1"`
 }
 
 func NewApiServiceWarBookQueryArgs() *ApiServiceWarBookQueryArgs {
 	return &ApiServiceWarBookQueryArgs{}
 }
 
-var ApiServiceWarBookQueryArgs_Request_DEFAULT *WarBookQueryRequest
+var ApiServiceWarBookQueryArgs_Request_DEFAULT *GeneralWarBookQueryRequest
 
-func (p *ApiServiceWarBookQueryArgs) GetRequest() (v *WarBookQueryRequest) {
+func (p *ApiServiceWarBookQueryArgs) GetRequest() (v *GeneralWarBookQueryRequest) {
 	if !p.IsSetRequest() {
 		return ApiServiceWarBookQueryArgs_Request_DEFAULT
 	}
@@ -8396,7 +8428,7 @@ ReadStructEndError:
 }
 
 func (p *ApiServiceWarBookQueryArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.Request = NewWarBookQueryRequest()
+	p.Request = NewGeneralWarBookQueryRequest()
 	if err := p.Request.Read(iprot); err != nil {
 		return err
 	}
@@ -8457,16 +8489,16 @@ func (p *ApiServiceWarBookQueryArgs) String() string {
 }
 
 type ApiServiceWarBookQueryResult struct {
-	Success *WarBookQueryResponse `thrift:"success,0,optional"`
+	Success *GeneralWarBookQueryResponse `thrift:"success,0,optional"`
 }
 
 func NewApiServiceWarBookQueryResult() *ApiServiceWarBookQueryResult {
 	return &ApiServiceWarBookQueryResult{}
 }
 
-var ApiServiceWarBookQueryResult_Success_DEFAULT *WarBookQueryResponse
+var ApiServiceWarBookQueryResult_Success_DEFAULT *GeneralWarBookQueryResponse
 
-func (p *ApiServiceWarBookQueryResult) GetSuccess() (v *WarBookQueryResponse) {
+func (p *ApiServiceWarBookQueryResult) GetSuccess() (v *GeneralWarBookQueryResponse) {
 	if !p.IsSetSuccess() {
 		return ApiServiceWarBookQueryResult_Success_DEFAULT
 	}
@@ -8541,7 +8573,7 @@ ReadStructEndError:
 }
 
 func (p *ApiServiceWarBookQueryResult) ReadField0(iprot thrift.TProtocol) error {
-	p.Success = NewWarBookQueryResponse()
+	p.Success = NewGeneralWarBookQueryResponse()
 	if err := p.Success.Read(iprot); err != nil {
 		return err
 	}

@@ -29,6 +29,9 @@ func (g *WarBookDal) QueryWarbookList(ctx context.Context, condition *vo.QueryWa
 	if condition.Id > 0 {
 		conn.Where("id = ?", condition.Id)
 	}
+	if len(condition.Ids) > 0 {
+		conn.Where("ids in (?)", condition.Ids)
+	}
 	if strings.Trim(condition.Name, " ") != "" {
 		conn.Where("name like ?", fmt.Sprintf("%%%s%%", condition.Name))
 	}
@@ -36,7 +39,7 @@ func (g *WarBookDal) QueryWarbookList(ctx context.Context, condition *vo.QueryWa
 		conn.Where("level = ?", condition.Level)
 	}
 
-	if err := conn.Find(&list).Error; err != nil {
+	if err := conn.Offset(condition.Offset).Limit(condition.Limit).Find(&list).Error; err != nil {
 		hlog.CtxErrorf(ctx, "QueryWarbookList err:%v", err)
 		return list, err
 	}

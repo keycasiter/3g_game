@@ -45,7 +45,7 @@ func (g *TacticDal) QueryTacticList(ctx context.Context, condition *vo.QueryTact
 		conn.Where("type = ?", condition.Type)
 	}
 
-	if err := conn.Find(&list).
+	if err := conn.Offset(condition.Offset).Limit(condition.Limit).Find(&list).
 		Offset(condition.Offset).
 		Limit(condition.Limit).Error; err != nil {
 		hlog.CtxErrorf(ctx, "QueryTacticList err:%v", err)

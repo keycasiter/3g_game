@@ -6195,8 +6195,8 @@ func (p *GeneralWarBookQueryRequest) String() string {
 
 type GeneralWarBookQueryResponse struct {
 	Meta *common.Meta `thrift:"Meta,1" form:"Meta" json:"Meta" query:"Meta"`
-	//兵书信息列表
-	WarBookMapList map[int64][]*WarBook `thrift:"WarBookMapList,2" form:"WarBookMapList" json:"WarBookMapList" query:"WarBookMapList"`
+	//兵书信息列表<map<兵书类型,map<层级,兵书list>>>
+	WarBookMapList map[int64]map[int64][]*WarBook `thrift:"WarBookMapList,2" form:"WarBookMapList" json:"WarBookMapList" query:"WarBookMapList"`
 }
 
 func NewGeneralWarBookQueryResponse() *GeneralWarBookQueryResponse {
@@ -6212,7 +6212,7 @@ func (p *GeneralWarBookQueryResponse) GetMeta() (v *common.Meta) {
 	return p.Meta
 }
 
-func (p *GeneralWarBookQueryResponse) GetWarBookMapList() (v map[int64][]*WarBook) {
+func (p *GeneralWarBookQueryResponse) GetWarBookMapList() (v map[int64]map[int64][]*WarBook) {
 	return p.WarBookMapList
 }
 
@@ -6307,7 +6307,7 @@ func (p *GeneralWarBookQueryResponse) ReadField2(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	p.WarBookMapList = make(map[int64][]*WarBook, size)
+	p.WarBookMapList = make(map[int64]map[int64][]*WarBook, size)
 	for i := 0; i < size; i++ {
 		var _key int64
 		if v, err := iprot.ReadI64(); err != nil {
@@ -6316,20 +6316,39 @@ func (p *GeneralWarBookQueryResponse) ReadField2(iprot thrift.TProtocol) error {
 			_key = v
 		}
 
-		_, size, err := iprot.ReadListBegin()
+		_, _, size, err := iprot.ReadMapBegin()
 		if err != nil {
 			return err
 		}
-		_val := make([]*WarBook, 0, size)
+		_val := make(map[int64][]*WarBook, size)
 		for i := 0; i < size; i++ {
-			_elem := NewWarBook()
-			if err := _elem.Read(iprot); err != nil {
+			var _key1 int64
+			if v, err := iprot.ReadI64(); err != nil {
+				return err
+			} else {
+				_key1 = v
+			}
+
+			_, size, err := iprot.ReadListBegin()
+			if err != nil {
+				return err
+			}
+			_val1 := make([]*WarBook, 0, size)
+			for i := 0; i < size; i++ {
+				_elem := NewWarBook()
+				if err := _elem.Read(iprot); err != nil {
+					return err
+				}
+
+				_val1 = append(_val1, _elem)
+			}
+			if err := iprot.ReadListEnd(); err != nil {
 				return err
 			}
 
-			_val = append(_val, _elem)
+			_val[_key1] = _val1
 		}
-		if err := iprot.ReadListEnd(); err != nil {
+		if err := iprot.ReadMapEnd(); err != nil {
 			return err
 		}
 
@@ -6395,7 +6414,7 @@ func (p *GeneralWarBookQueryResponse) writeField2(oprot thrift.TProtocol) (err e
 	if err = oprot.WriteFieldBegin("WarBookMapList", thrift.MAP, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteMapBegin(thrift.I64, thrift.LIST, len(p.WarBookMapList)); err != nil {
+	if err := oprot.WriteMapBegin(thrift.I64, thrift.MAP, len(p.WarBookMapList)); err != nil {
 		return err
 	}
 	for k, v := range p.WarBookMapList {
@@ -6404,15 +6423,28 @@ func (p *GeneralWarBookQueryResponse) writeField2(oprot thrift.TProtocol) (err e
 			return err
 		}
 
-		if err := oprot.WriteListBegin(thrift.STRUCT, len(v)); err != nil {
+		if err := oprot.WriteMapBegin(thrift.I64, thrift.LIST, len(v)); err != nil {
 			return err
 		}
-		for _, v := range v {
-			if err := v.Write(oprot); err != nil {
+		for k, v := range v {
+
+			if err := oprot.WriteI64(k); err != nil {
+				return err
+			}
+
+			if err := oprot.WriteListBegin(thrift.STRUCT, len(v)); err != nil {
+				return err
+			}
+			for _, v := range v {
+				if err := v.Write(oprot); err != nil {
+					return err
+				}
+			}
+			if err := oprot.WriteListEnd(); err != nil {
 				return err
 			}
 		}
-		if err := oprot.WriteListEnd(); err != nil {
+		if err := oprot.WriteMapEnd(); err != nil {
 			return err
 		}
 	}
@@ -6437,8 +6469,10 @@ func (p *GeneralWarBookQueryResponse) String() string {
 }
 
 type WarBook struct {
-	Id   int64  `thrift:"Id,1" form:"Id" json:"Id" query:"Id"`
-	Name string `thrift:"Name,2" form:"Name" json:"Name" query:"Name"`
+	Id    int64  `thrift:"Id,1" form:"Id" json:"Id" query:"Id"`
+	Name  string `thrift:"Name,2" form:"Name" json:"Name" query:"Name"`
+	Type  int64  `thrift:"Type,3" form:"Type" json:"Type" query:"Type"`
+	Level int64  `thrift:"Level,4" form:"Level" json:"Level" query:"Level"`
 }
 
 func NewWarBook() *WarBook {
@@ -6453,9 +6487,19 @@ func (p *WarBook) GetName() (v string) {
 	return p.Name
 }
 
+func (p *WarBook) GetType() (v int64) {
+	return p.Type
+}
+
+func (p *WarBook) GetLevel() (v int64) {
+	return p.Level
+}
+
 var fieldIDToName_WarBook = map[int16]string{
 	1: "Id",
 	2: "Name",
+	3: "Type",
+	4: "Level",
 }
 
 func (p *WarBook) Read(iprot thrift.TProtocol) (err error) {
@@ -6490,6 +6534,26 @@ func (p *WarBook) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 3:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -6545,6 +6609,24 @@ func (p *WarBook) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *WarBook) ReadField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Type = v
+	}
+	return nil
+}
+
+func (p *WarBook) ReadField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Level = v
+	}
+	return nil
+}
+
 func (p *WarBook) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("WarBook"); err != nil {
@@ -6557,6 +6639,14 @@ func (p *WarBook) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 
@@ -6610,6 +6700,40 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *WarBook) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Type", thrift.I64, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Type); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *WarBook) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Level", thrift.I64, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Level); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
 func (p *WarBook) String() string {

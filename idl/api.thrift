@@ -209,13 +209,15 @@ struct GeneralWarBookQueryRequest{
 
 struct GeneralWarBookQueryResponse{
     1: common.Meta Meta
-    //兵书信息列表
-    2: map<i64,list<WarBook>> WarBookMapList
+    //兵书信息列表<map<兵书类型,map<层级,兵书list>>>
+    2: map<i64,map<i64,list<WarBook>>> WarBookMapList
 }
 
 struct WarBook {
     1: i64 Id
     2: string Name
+    3: i64 Type
+    4: i64 Level
 }
 //============= 查询兵书列表 END ==============
 

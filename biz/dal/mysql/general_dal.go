@@ -40,7 +40,7 @@ func (g *GeneralDal) QueryGeneralList(ctx context.Context, condition *vo.QueryGe
 		conn.Where("control = ?", condition.Control)
 	}
 	if condition.Group > 0 {
-		conn.Where("group = ?", condition.Group)
+		conn.Where("`group` = ?", condition.Group)
 	}
 	if condition.Quality > 0 {
 		conn.Where("quality = ?", condition.Quality)

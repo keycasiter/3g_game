@@ -80,3 +80,8 @@ func _general_warbookMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _generalwarbookqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

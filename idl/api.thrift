@@ -224,6 +224,11 @@ struct WarBook {
 
 //============= 查询特技列表 BEGIN ==============
 struct SpecialTechQueryRequest{
+    1: string Name
+    2: i64 Id
+
+    100: i64 PageNo,
+    101: i64 PageSize
 }
 
 struct SpecialTechQueryResponse{

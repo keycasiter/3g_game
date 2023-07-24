@@ -5,7 +5,9 @@ package api
 import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 )
 
@@ -19,8 +21,12 @@ func SpecialTechQuery(ctx context.Context, c *app.RequestContext) {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
-
-	resp := new(api.SpecialTechQueryResponse)
+	resp, err := logic.NewSpecialTechQueryLogic(ctx, req).Handle()
+	if err != nil {
+		hlog.CtxErrorf(ctx, "SpecialTechQueryLogic handle err:%v", err)
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

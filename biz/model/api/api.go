@@ -6813,13 +6813,38 @@ func (p *WarBook) String() string {
 //============= 查询兵书列表 END ==============
 //============= 查询特技列表 BEGIN ==============
 type SpecialTechQueryRequest struct {
+	Name     string `thrift:"Name,1" form:"Name" json:"Name" query:"Name"`
+	Id       int64  `thrift:"Id,2" form:"Id" json:"Id" query:"Id"`
+	PageNo   int64  `thrift:"PageNo,100" form:"PageNo" json:"PageNo" query:"PageNo"`
+	PageSize int64  `thrift:"PageSize,101" form:"PageSize" json:"PageSize" query:"PageSize"`
 }
 
 func NewSpecialTechQueryRequest() *SpecialTechQueryRequest {
 	return &SpecialTechQueryRequest{}
 }
 
-var fieldIDToName_SpecialTechQueryRequest = map[int16]string{}
+func (p *SpecialTechQueryRequest) GetName() (v string) {
+	return p.Name
+}
+
+func (p *SpecialTechQueryRequest) GetId() (v int64) {
+	return p.Id
+}
+
+func (p *SpecialTechQueryRequest) GetPageNo() (v int64) {
+	return p.PageNo
+}
+
+func (p *SpecialTechQueryRequest) GetPageSize() (v int64) {
+	return p.PageSize
+}
+
+var fieldIDToName_SpecialTechQueryRequest = map[int16]string{
+	1:   "Name",
+	2:   "Id",
+	100: "PageNo",
+	101: "PageSize",
+}
 
 func (p *SpecialTechQueryRequest) Read(iprot thrift.TProtocol) (err error) {
 
@@ -6838,8 +6863,52 @@ func (p *SpecialTechQueryRequest) Read(iprot thrift.TProtocol) (err error) {
 		if fieldTypeId == thrift.STOP {
 			break
 		}
-		if err = iprot.Skip(fieldTypeId); err != nil {
-			goto SkipFieldTypeError
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 2:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 100:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField100(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 101:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField101(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
 		}
 
 		if err = iprot.ReadFieldEnd(); err != nil {
@@ -6855,8 +6924,10 @@ ReadStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
-SkipFieldTypeError:
-	return thrift.PrependError(fmt.Sprintf("%T skip field type %d error", p, fieldTypeId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SpecialTechQueryRequest[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
 ReadFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
@@ -6864,11 +6935,64 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
+func (p *SpecialTechQueryRequest) ReadField1(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Name = v
+	}
+	return nil
+}
+
+func (p *SpecialTechQueryRequest) ReadField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Id = v
+	}
+	return nil
+}
+
+func (p *SpecialTechQueryRequest) ReadField100(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.PageNo = v
+	}
+	return nil
+}
+
+func (p *SpecialTechQueryRequest) ReadField101(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.PageSize = v
+	}
+	return nil
+}
+
 func (p *SpecialTechQueryRequest) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
 	if err = oprot.WriteStructBegin("SpecialTechQueryRequest"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField100(oprot); err != nil {
+			fieldId = 100
+			goto WriteFieldError
+		}
+		if err = p.writeField101(oprot); err != nil {
+			fieldId = 101
+			goto WriteFieldError
+		}
 
 	}
 	if err = oprot.WriteFieldStop(); err != nil {
@@ -6880,10 +7004,80 @@ func (p *SpecialTechQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 	return nil
 WriteStructBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
 WriteFieldStopError:
 	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
 WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *SpecialTechQueryRequest) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Name", thrift.STRING, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Name); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *SpecialTechQueryRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Id", thrift.I64, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Id); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *SpecialTechQueryRequest) writeField100(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("PageNo", thrift.I64, 100); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.PageNo); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 100 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 100 end error: ", p), err)
+}
+
+func (p *SpecialTechQueryRequest) writeField101(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("PageSize", thrift.I64, 101); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.PageSize); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 101 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 101 end error: ", p), err)
 }
 
 func (p *SpecialTechQueryRequest) String() string {
@@ -7296,7 +7490,7 @@ type ApiService interface {
 	//查询武将列表
 	GeneralQuery(ctx context.Context, request *GeneralQueryRequest) (r *GeneralQueryResponse, err error)
 	//查询兵书列表
-	WarBookQuery(ctx context.Context, request *GeneralWarBookQueryRequest) (r *GeneralWarBookQueryResponse, err error)
+	GeneralWarBookQuery(ctx context.Context, request *GeneralWarBookQueryRequest) (r *GeneralWarBookQueryResponse, err error)
 	//查询特技列表
 	SpecialTechQuery(ctx context.Context, request *SpecialTechQueryRequest) (r *SpecialTechQueryResponse, err error)
 }
@@ -7354,11 +7548,11 @@ func (p *ApiServiceClient) GeneralQuery(ctx context.Context, request *GeneralQue
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *ApiServiceClient) WarBookQuery(ctx context.Context, request *GeneralWarBookQueryRequest) (r *GeneralWarBookQueryResponse, err error) {
-	var _args ApiServiceWarBookQueryArgs
+func (p *ApiServiceClient) GeneralWarBookQuery(ctx context.Context, request *GeneralWarBookQueryRequest) (r *GeneralWarBookQueryResponse, err error) {
+	var _args ApiServiceGeneralWarBookQueryArgs
 	_args.Request = request
-	var _result ApiServiceWarBookQueryResult
-	if err = p.Client_().Call(ctx, "WarBookQuery", &_args, &_result); err != nil {
+	var _result ApiServiceGeneralWarBookQueryResult
+	if err = p.Client_().Call(ctx, "GeneralWarBookQuery", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -7396,7 +7590,7 @@ func NewApiServiceProcessor(handler ApiService) *ApiServiceProcessor {
 	self.AddToProcessorMap("BattleExecute", &apiServiceProcessorBattleExecute{handler: handler})
 	self.AddToProcessorMap("TacticQuery", &apiServiceProcessorTacticQuery{handler: handler})
 	self.AddToProcessorMap("GeneralQuery", &apiServiceProcessorGeneralQuery{handler: handler})
-	self.AddToProcessorMap("WarBookQuery", &apiServiceProcessorWarBookQuery{handler: handler})
+	self.AddToProcessorMap("GeneralWarBookQuery", &apiServiceProcessorGeneralWarBookQuery{handler: handler})
 	self.AddToProcessorMap("SpecialTechQuery", &apiServiceProcessorSpecialTechQuery{handler: handler})
 	return self
 }
@@ -7562,16 +7756,16 @@ func (p *apiServiceProcessorGeneralQuery) Process(ctx context.Context, seqId int
 	return true, err
 }
 
-type apiServiceProcessorWarBookQuery struct {
+type apiServiceProcessorGeneralWarBookQuery struct {
 	handler ApiService
 }
 
-func (p *apiServiceProcessorWarBookQuery) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := ApiServiceWarBookQueryArgs{}
+func (p *apiServiceProcessorGeneralWarBookQuery) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ApiServiceGeneralWarBookQueryArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("WarBookQuery", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("GeneralWarBookQuery", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush(ctx)
@@ -7580,11 +7774,11 @@ func (p *apiServiceProcessorWarBookQuery) Process(ctx context.Context, seqId int
 
 	iprot.ReadMessageEnd()
 	var err2 error
-	result := ApiServiceWarBookQueryResult{}
+	result := ApiServiceGeneralWarBookQueryResult{}
 	var retval *GeneralWarBookQueryResponse
-	if retval, err2 = p.handler.WarBookQuery(ctx, args.Request); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing WarBookQuery: "+err2.Error())
-		oprot.WriteMessageBegin("WarBookQuery", thrift.EXCEPTION, seqId)
+	if retval, err2 = p.handler.GeneralWarBookQuery(ctx, args.Request); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GeneralWarBookQuery: "+err2.Error())
+		oprot.WriteMessageBegin("GeneralWarBookQuery", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush(ctx)
@@ -7592,7 +7786,7 @@ func (p *apiServiceProcessorWarBookQuery) Process(ctx context.Context, seqId int
 	} else {
 		result.Success = retval
 	}
-	if err2 = oprot.WriteMessageBegin("WarBookQuery", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("GeneralWarBookQuery", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -8534,32 +8728,32 @@ func (p *ApiServiceGeneralQueryResult) String() string {
 	return fmt.Sprintf("ApiServiceGeneralQueryResult(%+v)", *p)
 }
 
-type ApiServiceWarBookQueryArgs struct {
+type ApiServiceGeneralWarBookQueryArgs struct {
 	Request *GeneralWarBookQueryRequest `thrift:"request,1"`
 }
 
-func NewApiServiceWarBookQueryArgs() *ApiServiceWarBookQueryArgs {
-	return &ApiServiceWarBookQueryArgs{}
+func NewApiServiceGeneralWarBookQueryArgs() *ApiServiceGeneralWarBookQueryArgs {
+	return &ApiServiceGeneralWarBookQueryArgs{}
 }
 
-var ApiServiceWarBookQueryArgs_Request_DEFAULT *GeneralWarBookQueryRequest
+var ApiServiceGeneralWarBookQueryArgs_Request_DEFAULT *GeneralWarBookQueryRequest
 
-func (p *ApiServiceWarBookQueryArgs) GetRequest() (v *GeneralWarBookQueryRequest) {
+func (p *ApiServiceGeneralWarBookQueryArgs) GetRequest() (v *GeneralWarBookQueryRequest) {
 	if !p.IsSetRequest() {
-		return ApiServiceWarBookQueryArgs_Request_DEFAULT
+		return ApiServiceGeneralWarBookQueryArgs_Request_DEFAULT
 	}
 	return p.Request
 }
 
-var fieldIDToName_ApiServiceWarBookQueryArgs = map[int16]string{
+var fieldIDToName_ApiServiceGeneralWarBookQueryArgs = map[int16]string{
 	1: "request",
 }
 
-func (p *ApiServiceWarBookQueryArgs) IsSetRequest() bool {
+func (p *ApiServiceGeneralWarBookQueryArgs) IsSetRequest() bool {
 	return p.Request != nil
 }
 
-func (p *ApiServiceWarBookQueryArgs) Read(iprot thrift.TProtocol) (err error) {
+func (p *ApiServiceGeneralWarBookQueryArgs) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -8608,7 +8802,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ApiServiceWarBookQueryArgs[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ApiServiceGeneralWarBookQueryArgs[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -8618,7 +8812,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *ApiServiceWarBookQueryArgs) ReadField1(iprot thrift.TProtocol) error {
+func (p *ApiServiceGeneralWarBookQueryArgs) ReadField1(iprot thrift.TProtocol) error {
 	p.Request = NewGeneralWarBookQueryRequest()
 	if err := p.Request.Read(iprot); err != nil {
 		return err
@@ -8626,9 +8820,9 @@ func (p *ApiServiceWarBookQueryArgs) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ApiServiceWarBookQueryArgs) Write(oprot thrift.TProtocol) (err error) {
+func (p *ApiServiceGeneralWarBookQueryArgs) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("WarBookQuery_args"); err != nil {
+	if err = oprot.WriteStructBegin("GeneralWarBookQuery_args"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -8655,7 +8849,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *ApiServiceWarBookQueryArgs) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *ApiServiceGeneralWarBookQueryArgs) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("request", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -8672,39 +8866,39 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *ApiServiceWarBookQueryArgs) String() string {
+func (p *ApiServiceGeneralWarBookQueryArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ApiServiceWarBookQueryArgs(%+v)", *p)
+	return fmt.Sprintf("ApiServiceGeneralWarBookQueryArgs(%+v)", *p)
 }
 
-type ApiServiceWarBookQueryResult struct {
+type ApiServiceGeneralWarBookQueryResult struct {
 	Success *GeneralWarBookQueryResponse `thrift:"success,0,optional"`
 }
 
-func NewApiServiceWarBookQueryResult() *ApiServiceWarBookQueryResult {
-	return &ApiServiceWarBookQueryResult{}
+func NewApiServiceGeneralWarBookQueryResult() *ApiServiceGeneralWarBookQueryResult {
+	return &ApiServiceGeneralWarBookQueryResult{}
 }
 
-var ApiServiceWarBookQueryResult_Success_DEFAULT *GeneralWarBookQueryResponse
+var ApiServiceGeneralWarBookQueryResult_Success_DEFAULT *GeneralWarBookQueryResponse
 
-func (p *ApiServiceWarBookQueryResult) GetSuccess() (v *GeneralWarBookQueryResponse) {
+func (p *ApiServiceGeneralWarBookQueryResult) GetSuccess() (v *GeneralWarBookQueryResponse) {
 	if !p.IsSetSuccess() {
-		return ApiServiceWarBookQueryResult_Success_DEFAULT
+		return ApiServiceGeneralWarBookQueryResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-var fieldIDToName_ApiServiceWarBookQueryResult = map[int16]string{
+var fieldIDToName_ApiServiceGeneralWarBookQueryResult = map[int16]string{
 	0: "success",
 }
 
-func (p *ApiServiceWarBookQueryResult) IsSetSuccess() bool {
+func (p *ApiServiceGeneralWarBookQueryResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *ApiServiceWarBookQueryResult) Read(iprot thrift.TProtocol) (err error) {
+func (p *ApiServiceGeneralWarBookQueryResult) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -8753,7 +8947,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ApiServiceWarBookQueryResult[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ApiServiceGeneralWarBookQueryResult[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -8763,7 +8957,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *ApiServiceWarBookQueryResult) ReadField0(iprot thrift.TProtocol) error {
+func (p *ApiServiceGeneralWarBookQueryResult) ReadField0(iprot thrift.TProtocol) error {
 	p.Success = NewGeneralWarBookQueryResponse()
 	if err := p.Success.Read(iprot); err != nil {
 		return err
@@ -8771,9 +8965,9 @@ func (p *ApiServiceWarBookQueryResult) ReadField0(iprot thrift.TProtocol) error 
 	return nil
 }
 
-func (p *ApiServiceWarBookQueryResult) Write(oprot thrift.TProtocol) (err error) {
+func (p *ApiServiceGeneralWarBookQueryResult) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("WarBookQuery_result"); err != nil {
+	if err = oprot.WriteStructBegin("GeneralWarBookQuery_result"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -8800,7 +8994,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *ApiServiceWarBookQueryResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *ApiServiceGeneralWarBookQueryResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
 			goto WriteFieldBeginError
@@ -8819,11 +9013,11 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
 }
 
-func (p *ApiServiceWarBookQueryResult) String() string {
+func (p *ApiServiceGeneralWarBookQueryResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ApiServiceWarBookQueryResult(%+v)", *p)
+	return fmt.Sprintf("ApiServiceGeneralWarBookQueryResult(%+v)", *p)
 }
 
 type ApiServiceSpecialTechQueryArgs struct {

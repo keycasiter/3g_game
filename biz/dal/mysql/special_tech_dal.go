@@ -33,7 +33,7 @@ func (g *SpecialTechDal) QuerySpecialTechList(ctx context.Context, condition *vo
 		conn.Where("name like ?", fmt.Sprintf("%%%s%%", condition.Name))
 	}
 
-	if err := conn.Find(&list).Error; err != nil {
+	if err := conn.Offset(condition.Offset).Limit(condition.Limit).Find(&list).Error; err != nil {
 		hlog.CtxErrorf(ctx, "QuerySpecialTechList err:%v", err)
 		return list, err
 	}

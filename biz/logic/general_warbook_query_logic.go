@@ -8,6 +8,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
+	"strings"
 )
 
 type GeneralWarBookQueryLogic struct {
@@ -28,7 +30,7 @@ func NewGeneralWarBookQueryLogic(ctx context.Context, req api.GeneralWarBookQuer
 
 func (g *GeneralWarBookQueryLogic) Handle() (api.GeneralWarBookQueryResponse, error) {
 	//查询武将战法
-	generalWarbooklist, err := mysql.NewGeneralWarbook().QueryGeneralWarbookList(g.Ctx, &vo.QueryGeneralWarbookCondition{
+	generalWarbookList, err := mysql.NewGeneralWarbook().QueryGeneralWarbookList(g.Ctx, &vo.QueryGeneralWarbookCondition{
 		GeneralID: g.Req.GeneralId,
 		OffSet:    0,
 		Limit:     1,
@@ -38,49 +40,69 @@ func (g *GeneralWarBookQueryLogic) Handle() (api.GeneralWarBookQueryResponse, er
 		g.Resp.Meta = util.BuildFailMeta()
 		return g.Resp, err
 	}
-	if len(generalWarbooklist) == 0 {
+	if len(generalWarbookList) == 0 {
 		g.Resp.Meta = util.BuildFailMetaWithMsg("未查询到武将战法")
 		return g.Resp, nil
 	}
-	generalWarbook := generalWarbooklist[0]
-	warbookIds := make([]int64, 0)
-	warbookMap := make(map[int64]map[int64][]*po.Warbook, 0)
-	util.ParseJsonObj(g.Ctx, warbookMap, generalWarbook.WarBook)
-	for _, warbookTypeMap := range warbookMap {
-		for _, warbookList := range warbookTypeMap {
-			for _, warbook := range warbookList {
-				warbookIds = append(warbookIds, warbook.Id)
-			}
-		}
-	}
 
-	//查询战法列表
-	list, err := mysql.NewWarbook().QueryWarbookList(g.Ctx, &vo.QueryWarbookCondition{
-		Ids:    warbookIds,
+	//单个武将兵书信息结构
+	warbookHolder := make([]*TypeList, 0)
+	util.ParseJsonObj(g.Ctx, &warbookHolder, generalWarbookList[0].WarBook)
+
+	//查询全部战法信息
+	warbookList, err := mysql.NewWarbook().QueryWarbookList(g.Ctx, &vo.QueryWarbookCondition{
 		Offset: 0,
-		Limit:  len(warbookIds),
+		Limit:  999,
 	})
 	if err != nil {
 		hlog.CtxErrorf(g.Ctx, "QueryWarbookList err:%v", err)
 		g.Resp.Meta = util.BuildFailMeta()
 		return g.Resp, err
 	}
-	//整理战法map
+	//整理兵书listToMap
+	warbookMap := make(map[int64]*po.Warbook, 0)
+	for _, warbook := range warbookList {
+		warbookMap[warbook.Id] = warbook
+	}
+
+	//整理resp
 	resMap := make(map[int64]map[int64][]*api.WarBook, 0)
-	for _, warbook := range list {
-		if warbookMapList, ok := resMap[int64(warbook.Type)]; ok {
-			if warbookList, okk := warbookMapList[int64(warbook.Level)]; okk {
-				warbookList = append(warbookList, &api.WarBook{
-					Id:    warbook.Id,
-					Name:  warbook.Name,
-					Type:  int64(warbook.Type),
-					Level: int64(warbook.Level),
-				})
+	//解析整体
+	for _, typeItem := range warbookHolder {
+		//按层级解析
+		levMap := make(map[int64][]*api.WarBook, 0)
+		for _, warbookEnum := range typeItem.List {
+			warbookHolderList := make([]*api.WarBook, 0)
+			//拆分
+			enumArr := strings.Split(warbookEnum.Enum, ",")
+			for _, enumId := range enumArr {
+				//转义
+				if warbook, ok := warbookMap[cast.ToInt64(enumId)]; ok {
+					warbookHolderList = append(warbookHolderList, &api.WarBook{
+						Id:    warbook.Id,
+						Name:  warbook.Name,
+						Type:  int64(warbook.Type),
+						Level: int64(warbook.Level),
+					})
+				}
 			}
+			levMap[cast.ToInt64(warbookEnum.Lev)] = warbookHolderList
+
 		}
+		resMap[cast.ToInt64(typeItem.Type)] = levMap
 	}
 
 	g.Resp.Meta = util.BuildSuccMeta()
 	g.Resp.WarBookMapList = resMap
 	return g.Resp, nil
+}
+
+type TypeList struct {
+	Type string         `json:"type"`
+	List []*WarbookEnum `json:"list"`
+}
+
+type WarbookEnum struct {
+	Lev  int    `json:"lev"`
+	Enum string `json:"enum"`
 }

@@ -91,7 +91,7 @@ func (g *GeneralWarBookQueryLogic) Handle() (api.GeneralWarBookQueryResponse, er
 
 		}
 		//按req条件过滤结果
-		if g.Req.WarbookType == enum.WarbookType(cast.ToInt64(typeItem.Type)) {
+		if g.Req.WarbookType > 0 && g.Req.WarbookType == enum.WarbookType(cast.ToInt64(typeItem.Type)) {
 			resMap[cast.ToInt64(typeItem.Type)] = levMap
 			break
 		}

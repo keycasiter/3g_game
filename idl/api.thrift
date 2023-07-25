@@ -206,6 +206,8 @@ struct GeneralQueryResponse{
 struct GeneralWarBookQueryRequest{
     //武将ID
     1: i64 GeneralId
+    //兵书类型
+    2: enum.WarbookType WarbookType
 }
 
 struct GeneralWarBookQueryResponse{

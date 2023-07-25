@@ -17,12 +17,22 @@ enum Enable {
 
 // 兵种适性
 enum ArmsAbility {
-    Unknow = 0 //为主
+    Unknow = 0 //未知
 	S = 1 // S级
 	A = 2 // A级
 	B = 3 // B级
 	C = 4 // C级
 }
+
+// 兵书类型
+enum WarbookType {
+    Unknow = 0 //未知
+	Battle = 1 // 作战（红色兵书）
+	MilitaryForm = 2 // 虚实（紫色兵书）
+	FalsehoodVersusReality = 3 // 军形（蓝色兵书）
+	NineVariations = 4 // 九变（绿色兵书）
+}
+
 
 // 性别
 enum Gender {

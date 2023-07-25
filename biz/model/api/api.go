@@ -6125,6 +6125,8 @@ func (p *GeneralQueryResponse) String() string {
 type GeneralWarBookQueryRequest struct {
 	//武将ID
 	GeneralId int64 `thrift:"GeneralId,1" form:"GeneralId" json:"GeneralId" query:"GeneralId"`
+	//兵书类型
+	WarbookType enum.WarbookType `thrift:"WarbookType,2" form:"WarbookType" json:"WarbookType" query:"WarbookType"`
 }
 
 func NewGeneralWarBookQueryRequest() *GeneralWarBookQueryRequest {
@@ -6135,8 +6137,13 @@ func (p *GeneralWarBookQueryRequest) GetGeneralId() (v int64) {
 	return p.GeneralId
 }
 
+func (p *GeneralWarBookQueryRequest) GetWarbookType() (v enum.WarbookType) {
+	return p.WarbookType
+}
+
 var fieldIDToName_GeneralWarBookQueryRequest = map[int16]string{
 	1: "GeneralId",
+	2: "WarbookType",
 }
 
 func (p *GeneralWarBookQueryRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -6161,6 +6168,16 @@ func (p *GeneralWarBookQueryRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 1:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 2:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -6207,6 +6224,15 @@ func (p *GeneralWarBookQueryRequest) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *GeneralWarBookQueryRequest) ReadField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.WarbookType = enum.WarbookType(v)
+	}
+	return nil
+}
+
 func (p *GeneralWarBookQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("GeneralWarBookQueryRequest"); err != nil {
@@ -6215,6 +6241,10 @@ func (p *GeneralWarBookQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
 			goto WriteFieldError
 		}
 
@@ -6251,6 +6281,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *GeneralWarBookQueryRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("WarbookType", thrift.I32, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(int32(p.WarbookType)); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
 func (p *GeneralWarBookQueryRequest) String() string {

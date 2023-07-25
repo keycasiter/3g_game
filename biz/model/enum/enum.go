@@ -162,6 +162,64 @@ func (p *ArmsAbility) Value() (driver.Value, error) {
 	return int64(*p), nil
 }
 
+// 兵书类型
+type WarbookType int64
+
+const (
+	WarbookType_Unknow                 WarbookType = 0
+	WarbookType_Battle                 WarbookType = 1
+	WarbookType_MilitaryForm           WarbookType = 2
+	WarbookType_FalsehoodVersusReality WarbookType = 3
+	WarbookType_NineVariations         WarbookType = 4
+)
+
+func (p WarbookType) String() string {
+	switch p {
+	case WarbookType_Unknow:
+		return "Unknow"
+	case WarbookType_Battle:
+		return "Battle"
+	case WarbookType_MilitaryForm:
+		return "MilitaryForm"
+	case WarbookType_FalsehoodVersusReality:
+		return "FalsehoodVersusReality"
+	case WarbookType_NineVariations:
+		return "NineVariations"
+	}
+	return "<UNSET>"
+}
+
+func WarbookTypeFromString(s string) (WarbookType, error) {
+	switch s {
+	case "Unknow":
+		return WarbookType_Unknow, nil
+	case "Battle":
+		return WarbookType_Battle, nil
+	case "MilitaryForm":
+		return WarbookType_MilitaryForm, nil
+	case "FalsehoodVersusReality":
+		return WarbookType_FalsehoodVersusReality, nil
+	case "NineVariations":
+		return WarbookType_NineVariations, nil
+	}
+	return WarbookType(0), fmt.Errorf("not a valid WarbookType string")
+}
+
+func WarbookTypePtr(v WarbookType) *WarbookType { return &v }
+func (p *WarbookType) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = WarbookType(result.Int64)
+	return
+}
+
+func (p *WarbookType) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
 // 性别
 type Gender int64
 

@@ -5,6 +5,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
+	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -89,7 +90,12 @@ func (g *GeneralWarBookQueryLogic) Handle() (api.GeneralWarBookQueryResponse, er
 			levMap[cast.ToInt64(warbookEnum.Lev)] = warbookHolderList
 
 		}
-		resMap[cast.ToInt64(typeItem.Type)] = levMap
+		//按req条件过滤结果
+		if g.Req.WarbookType == enum.WarbookType(cast.ToInt64(typeItem.Type)) {
+			resMap[cast.ToInt64(typeItem.Type)] = levMap
+		} else {
+			resMap[cast.ToInt64(typeItem.Type)] = levMap
+		}
 	}
 
 	g.Resp.Meta = util.BuildSuccMeta()

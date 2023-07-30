@@ -122,8 +122,8 @@ func (g *GeneralQueryLogic) Handle() (api.GeneralQueryResponse, error) {
 				ArmsAttr:          &armsAttr,
 				SelfTactic:        tactic,
 				GeneralQuality:    enum.GeneralQuality(general.Quality),
-				IsSupportDynamics: cast.ToBool(general.IsSupportDynamics),
-				IsSupportCollect:  cast.ToBool(general.IsSupportCollect),
+				IsSupportDynamics: general.IsSupportDynamics == 1,
+				IsSupportCollect:  general.IsSupportCollect == 1,
 			},
 		})
 	}

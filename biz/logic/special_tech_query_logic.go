@@ -5,6 +5,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
+	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
 )
@@ -46,6 +47,7 @@ func (s *SpecialTechQueryLogic) Handle() (api.SpecialTechQueryResponse, error) {
 		resList = append(resList, &api.SpecialTech{
 			Id:   tech.Id,
 			Name: tech.Name,
+			Type: enum.EquipType(tech.Type),
 		})
 	}
 

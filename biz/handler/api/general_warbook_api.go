@@ -9,6 +9,7 @@ import (
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // WarBookQuery .
@@ -22,12 +23,16 @@ func GeneralWarBookQuery(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	hlog.CtxInfof(ctx, "GeneralWarBookQuery Req:%s", util.ToJsonString(ctx, req))
+
 	resp, err := logic.NewGeneralWarBookQueryLogic(ctx, req).Handle()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "GeneralWarBookQueryLogic handle err:%v", err)
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
+
+	hlog.CtxInfof(ctx, "GeneralWarBookQuery Resp:%s", util.ToJsonString(ctx, resp))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

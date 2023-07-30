@@ -9,6 +9,7 @@ import (
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // TacticQuery .
@@ -22,12 +23,17 @@ func TacticQuery(ctx context.Context, c *app.RequestContext) {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
+
+	hlog.CtxInfof(ctx, "TacticQuery Req:%s", util.ToJsonString(ctx, req))
+
 	resp, err := logic.NewTacticQueryLogic(ctx, req).Handle()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "TacticQueryLogic handle err:%v", err)
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
+
+	hlog.CtxInfof(ctx, "TacticQuery Resp:%s", util.ToJsonString(ctx, resp))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

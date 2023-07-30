@@ -7486,8 +7486,9 @@ func (p *SpecialTechQueryResponse) String() string {
 }
 
 type SpecialTech struct {
-	Id   int64  `thrift:"Id,1" form:"Id" json:"Id" query:"Id"`
-	Name string `thrift:"Name,2" form:"Name" json:"Name" query:"Name"`
+	Id   int64          `thrift:"Id,1" form:"Id" json:"Id" query:"Id"`
+	Name string         `thrift:"Name,2" form:"Name" json:"Name" query:"Name"`
+	Type enum.EquipType `thrift:"Type,3" form:"Type" json:"Type" query:"Type"`
 }
 
 func NewSpecialTech() *SpecialTech {
@@ -7502,9 +7503,14 @@ func (p *SpecialTech) GetName() (v string) {
 	return p.Name
 }
 
+func (p *SpecialTech) GetType() (v enum.EquipType) {
+	return p.Type
+}
+
 var fieldIDToName_SpecialTech = map[int16]string{
 	1: "Id",
 	2: "Name",
+	3: "Type",
 }
 
 func (p *SpecialTech) Read(iprot thrift.TProtocol) (err error) {
@@ -7539,6 +7545,16 @@ func (p *SpecialTech) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 3:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -7594,6 +7610,15 @@ func (p *SpecialTech) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *SpecialTech) ReadField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.Type = enum.EquipType(v)
+	}
+	return nil
+}
+
 func (p *SpecialTech) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("SpecialTech"); err != nil {
@@ -7606,6 +7631,10 @@ func (p *SpecialTech) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 
@@ -7659,6 +7688,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *SpecialTech) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Type", thrift.I32, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(int32(p.Type)); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *SpecialTech) String() string {

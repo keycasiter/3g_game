@@ -1842,6 +1842,10 @@ type MetadataGeneral struct {
 	//自带战法
 	SelfTactic     *Tactics            `thrift:"SelfTactic,11" form:"SelfTactic" json:"SelfTactic" query:"SelfTactic"`
 	GeneralQuality enum.GeneralQuality `thrift:"GeneralQuality,12" form:"GeneralQuality" json:"GeneralQuality" query:"GeneralQuality"`
+	//动态
+	IsSupportDynamics bool `thrift:"IsSupportDynamics,13" form:"IsSupportDynamics" json:"IsSupportDynamics" query:"IsSupportDynamics"`
+	//典藏
+	IsSupportCollect bool `thrift:"IsSupportCollect,14" form:"IsSupportCollect" json:"IsSupportCollect" query:"IsSupportCollect"`
 }
 
 func NewMetadataGeneral() *MetadataGeneral {
@@ -1911,6 +1915,14 @@ func (p *MetadataGeneral) GetGeneralQuality() (v enum.GeneralQuality) {
 	return p.GeneralQuality
 }
 
+func (p *MetadataGeneral) GetIsSupportDynamics() (v bool) {
+	return p.IsSupportDynamics
+}
+
+func (p *MetadataGeneral) GetIsSupportCollect() (v bool) {
+	return p.IsSupportCollect
+}
+
 var fieldIDToName_MetadataGeneral = map[int16]string{
 	1:  "Id",
 	2:  "Name",
@@ -1924,6 +1936,8 @@ var fieldIDToName_MetadataGeneral = map[int16]string{
 	10: "UniqueId",
 	11: "SelfTactic",
 	12: "GeneralQuality",
+	13: "IsSupportDynamics",
+	14: "IsSupportCollect",
 }
 
 func (p *MetadataGeneral) IsSetAbilityAttr() bool {
@@ -2070,6 +2084,26 @@ func (p *MetadataGeneral) Read(iprot thrift.TProtocol) (err error) {
 		case 12:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField12(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 13:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField13(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 14:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField14(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -2225,6 +2259,24 @@ func (p *MetadataGeneral) ReadField12(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *MetadataGeneral) ReadField13(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		p.IsSupportDynamics = v
+	}
+	return nil
+}
+
+func (p *MetadataGeneral) ReadField14(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		p.IsSupportCollect = v
+	}
+	return nil
+}
+
 func (p *MetadataGeneral) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("MetadataGeneral"); err != nil {
@@ -2277,6 +2329,14 @@ func (p *MetadataGeneral) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField12(oprot); err != nil {
 			fieldId = 12
+			goto WriteFieldError
+		}
+		if err = p.writeField13(oprot); err != nil {
+			fieldId = 13
+			goto WriteFieldError
+		}
+		if err = p.writeField14(oprot); err != nil {
+			fieldId = 14
 			goto WriteFieldError
 		}
 
@@ -2508,6 +2568,40 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
+}
+
+func (p *MetadataGeneral) writeField13(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("IsSupportDynamics", thrift.BOOL, 13); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.IsSupportDynamics); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 13 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 13 end error: ", p), err)
+}
+
+func (p *MetadataGeneral) writeField14(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("IsSupportCollect", thrift.BOOL, 14); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.IsSupportCollect); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 14 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 14 end error: ", p), err)
 }
 
 func (p *MetadataGeneral) String() string {

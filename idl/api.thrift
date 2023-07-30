@@ -93,6 +93,10 @@ struct MetadataGeneral {
 	//自带战法
 	11:Tactics SelfTactic
 	12:enum.GeneralQuality GeneralQuality,
+	//动态
+	13:bool IsSupportDynamics
+	//典藏
+	14:bool IsSupportCollect
 }
 
 // 战法资料

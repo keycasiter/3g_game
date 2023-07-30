@@ -16,7 +16,8 @@ func TestSpecialTechDal_GetSpecialTechList(t *testing.T) {
 	ctx := context.Background()
 
 	list, err := NewSpecialTech().QuerySpecialTechList(ctx, &vo.QuerySpecialTechCondition{
-		Name: "",
+		Name:  "",
+		Limit: 1,
 	})
 	if err != nil {
 		fmt.Errorf("%v", err)

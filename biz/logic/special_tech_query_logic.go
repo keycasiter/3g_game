@@ -30,6 +30,7 @@ func (s *SpecialTechQueryLogic) Handle() (api.SpecialTechQueryResponse, error) {
 	list, err := mysql.NewSpecialTech().QuerySpecialTechList(s.Ctx, &vo.QuerySpecialTechCondition{
 		Id:     s.Req.Id,
 		Name:   s.Req.Name,
+		Type:   int(s.Req.Type),
 		Offset: util.PageNoToOffset(s.Req.PageNo, s.Req.PageSize),
 		Limit:  int(s.Req.PageSize),
 	})

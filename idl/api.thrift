@@ -232,6 +232,7 @@ struct WarBook {
 struct SpecialTechQueryRequest{
     1: string Name
     2: i64 Id
+    3: enum.EquipType Type
 
     100: i64 PageNo,
     101: i64 PageSize

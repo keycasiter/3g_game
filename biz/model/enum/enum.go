@@ -915,3 +915,56 @@ func (p *GeneralStarLevel) Value() (driver.Value, error) {
 	}
 	return int64(*p), nil
 }
+
+// 装备类型
+type EquipType int64
+
+const (
+	EquipType_Weapon   EquipType = 1
+	EquipType_Armor    EquipType = 2
+	EquipType_Horse    EquipType = 3
+	EquipType_Treasure EquipType = 4
+)
+
+func (p EquipType) String() string {
+	switch p {
+	case EquipType_Weapon:
+		return "Weapon"
+	case EquipType_Armor:
+		return "Armor"
+	case EquipType_Horse:
+		return "Horse"
+	case EquipType_Treasure:
+		return "Treasure"
+	}
+	return "<UNSET>"
+}
+
+func EquipTypeFromString(s string) (EquipType, error) {
+	switch s {
+	case "Weapon":
+		return EquipType_Weapon, nil
+	case "Armor":
+		return EquipType_Armor, nil
+	case "Horse":
+		return EquipType_Horse, nil
+	case "Treasure":
+		return EquipType_Treasure, nil
+	}
+	return EquipType(0), fmt.Errorf("not a valid EquipType string")
+}
+
+func EquipTypePtr(v EquipType) *EquipType { return &v }
+func (p *EquipType) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = EquipType(result.Int64)
+	return
+}
+
+func (p *EquipType) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}

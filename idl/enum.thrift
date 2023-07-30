@@ -141,3 +141,11 @@ enum GeneralStarLevel {
 	Four = 4
 	Five = 5
 }
+
+// 装备类型
+enum EquipType {
+	Weapon = 1
+	Armor = 2
+	Horse = 3
+	Treasure = 4
+}

@@ -6954,10 +6954,11 @@ func (p *WarBook) String() string {
 //============= 查询兵书列表 END ==============
 //============= 查询特技列表 BEGIN ==============
 type SpecialTechQueryRequest struct {
-	Name     string `thrift:"Name,1" form:"Name" json:"Name" query:"Name"`
-	Id       int64  `thrift:"Id,2" form:"Id" json:"Id" query:"Id"`
-	PageNo   int64  `thrift:"PageNo,100" form:"PageNo" json:"PageNo" query:"PageNo"`
-	PageSize int64  `thrift:"PageSize,101" form:"PageSize" json:"PageSize" query:"PageSize"`
+	Name     string         `thrift:"Name,1" form:"Name" json:"Name" query:"Name"`
+	Id       int64          `thrift:"Id,2" form:"Id" json:"Id" query:"Id"`
+	Type     enum.EquipType `thrift:"Type,3" form:"Type" json:"Type" query:"Type"`
+	PageNo   int64          `thrift:"PageNo,100" form:"PageNo" json:"PageNo" query:"PageNo"`
+	PageSize int64          `thrift:"PageSize,101" form:"PageSize" json:"PageSize" query:"PageSize"`
 }
 
 func NewSpecialTechQueryRequest() *SpecialTechQueryRequest {
@@ -6972,6 +6973,10 @@ func (p *SpecialTechQueryRequest) GetId() (v int64) {
 	return p.Id
 }
 
+func (p *SpecialTechQueryRequest) GetType() (v enum.EquipType) {
+	return p.Type
+}
+
 func (p *SpecialTechQueryRequest) GetPageNo() (v int64) {
 	return p.PageNo
 }
@@ -6983,6 +6988,7 @@ func (p *SpecialTechQueryRequest) GetPageSize() (v int64) {
 var fieldIDToName_SpecialTechQueryRequest = map[int16]string{
 	1:   "Name",
 	2:   "Id",
+	3:   "Type",
 	100: "PageNo",
 	101: "PageSize",
 }
@@ -7019,6 +7025,16 @@ func (p *SpecialTechQueryRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 3:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -7094,6 +7110,15 @@ func (p *SpecialTechQueryRequest) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *SpecialTechQueryRequest) ReadField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		p.Type = enum.EquipType(v)
+	}
+	return nil
+}
+
 func (p *SpecialTechQueryRequest) ReadField100(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -7124,6 +7149,10 @@ func (p *SpecialTechQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 		if err = p.writeField100(oprot); err != nil {
@@ -7185,6 +7214,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *SpecialTechQueryRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Type", thrift.I32, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(int32(p.Type)); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *SpecialTechQueryRequest) writeField100(oprot thrift.TProtocol) (err error) {

@@ -247,6 +247,7 @@ struct SpecialTechQueryResponse{
 struct SpecialTech {
     1: i64 Id
     2: string Name
+    3: enum.EquipType Type
 }
 //============= 查询特技列表 END ==============
 

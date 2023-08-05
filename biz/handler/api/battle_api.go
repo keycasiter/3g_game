@@ -15,6 +15,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // BattleExecute .模拟对战
@@ -25,6 +26,8 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	resp := new(api.BattleExecuteResponse)
 
 	err = c.BindAndValidate(&req)
+	hlog.CtxInfof(ctx, "BattleExecute Req:%s", util.ToJsonString(ctx, req))
+
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
 		resp.Meta = &common.Meta{
@@ -68,6 +71,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 		StatusMsg:  "成功",
 	}
 	c.JSON(hertzconsts.StatusOK, resp)
+	hlog.CtxInfof(ctx, "BattleExecute Resp:%s", util.ToJsonString(ctx, resp))
 }
 
 func buildBattleExecuteRequest(req api.BattleExecuteRequest) *logic.BattleLogicContextRequest {

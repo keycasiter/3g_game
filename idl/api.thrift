@@ -35,12 +35,15 @@ struct BattleGeneral {
 	1:MetadataGeneral BaseInfo
 	//佩戴战法
 	2:list<Tactics> EquipTactics
+	//佩戴兵书
+	3: list<WarBook> WarBooks
 	//武将对战加成
-	3:BattleGeneralAddition Addition
+	4:BattleGeneralAddition Addition
 	//是否主将
-	4: bool IsMaster
+	5: bool IsMaster
 	//携带兵力
-	5: i64 SoldierNum
+	6: i64 SoldierNum
+
 }
 
 // 武将对战加成

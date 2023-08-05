@@ -37,12 +37,14 @@ struct BattleGeneral {
 	2:list<Tactics> EquipTactics
 	//佩戴兵书
 	3: list<WarBook> WarBooks
+	//佩戴装备特技
+	4: list<SpecialTech> SpecialTechs
 	//武将对战加成
-	4:BattleGeneralAddition Addition
+	5:BattleGeneralAddition Addition
 	//是否主将
-	5: bool IsMaster
+	6: bool IsMaster
 	//携带兵力
-	6: i64 SoldierNum
+	7: i64 SoldierNum
 
 }
 

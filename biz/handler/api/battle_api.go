@@ -4,11 +4,14 @@ package api
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/jinzhu/copier"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/model/common"
@@ -16,6 +19,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // BattleExecute .模拟对战
@@ -26,7 +30,8 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	resp := new(api.BattleExecuteResponse)
 
 	err = c.BindAndValidate(&req)
-	hlog.CtxInfof(ctx, "BattleExecute Req:%s", util.ToJsonString(ctx, req))
+	//日志打印
+	//hlog.CtxInfof(ctx, "BattleExecute Req:%s", util.ToJsonString(ctx, req))
 
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
@@ -40,11 +45,11 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//参数校验
-	if req.FightingTeam == nil || req.EnemyTeam == nil {
+	if err := checkParam(req); err != nil {
 		hlog.CtxWarnf(ctx, "BattleLogicContext Param Err:%v", err)
 		resp.Meta = &common.Meta{
 			StatusCode: enum.ResponseCode_ParamInvalid,
-			StatusMsg:  "参数错误",
+			StatusMsg:  "参数错误:" + err.Error(),
 		}
 
 		c.JSON(hertzconsts.StatusOK, resp)
@@ -52,7 +57,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//逻辑执行
-	serviceResp, err := logic.NewBattleLogicContext(ctx, buildBattleExecuteRequest(req)).Run()
+	serviceResp, err := logic.NewBattleLogicContext(ctx, buildBattleExecuteRequest(ctx, req)).Run()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
 		resp.Meta = &common.Meta{
@@ -71,19 +76,50 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 		StatusMsg:  "成功",
 	}
 	c.JSON(hertzconsts.StatusOK, resp)
-	hlog.CtxInfof(ctx, "BattleExecute Resp:%s", util.ToJsonString(ctx, resp))
+	//日志打印
+	//hlog.CtxInfof(ctx, "BattleExecute Resp:%s", util.ToJsonString(ctx, resp))
 }
 
-func buildBattleExecuteRequest(req api.BattleExecuteRequest) *logic.BattleLogicContextRequest {
+func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest) *logic.BattleLogicContextRequest {
+	//查询武将信息
+	generalIds := make([]int64, 0)
+	for _, general := range req.FightingTeam.BattleGenerals {
+		generalIds = append(generalIds, general.BaseInfo.Id)
+	}
+	for _, general := range req.EnemyTeam.BattleGenerals {
+		generalIds = append(generalIds, general.BaseInfo.Id)
+	}
+	generals, err := mysql.NewGeneral().QueryGeneralList(ctx, &vo.QueryGeneralCondition{
+		Ids:    generalIds,
+		Offset: 0,
+		Limit:  len(generalIds),
+	})
+	if err != nil {
+		hlog.CtxErrorf(ctx, "QueryGeneralList err:%v", err)
+		return nil
+	}
+	//整理成map
+	generalInfoMap := make(map[int64]*po.General, 0)
+	for _, general := range generals {
+		generalInfoMap[general.Id] = general
+	}
+
 	//我方信息
 	fightingTeamGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range req.FightingTeam.BattleGenerals {
-		//标签
+		//我方武将信息（从db获取）
+		generalInfo := &po.General{}
+		if info, ok := generalInfoMap[general.BaseInfo.Id]; ok {
+			generalInfo = info
+		} else {
+			panic(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id))
+		}
+		//武将标签
 		generalTags := make([]consts.GeneralTag, 0)
-		for _, tag := range general.BaseInfo.GeneralTag {
+		for _, tag := range generalInfo.Tag {
 			generalTags = append(generalTags, consts.GeneralTag(tag))
 		}
-		//佩戴战法
+		//佩戴战法(自带战法+选择战法)
 		equipTactics := make([]*po.Tactics, 0)
 		for _, tactic := range general.EquipTactics {
 			equipTactics = append(equipTactics, &po.Tactics{
@@ -93,59 +129,46 @@ func buildBattleExecuteRequest(req api.BattleExecuteRequest) *logic.BattleLogicC
 				Type:          consts.TacticsType(tactic.Type),
 			})
 		}
-
+		//武将信息
 		fightingTeamGenerals = append(fightingTeamGenerals, &vo.BattleGeneral{
+			//基础信息
 			BaseInfo: &po.MetadataGeneral{
-				Id:         general.BaseInfo.Id,
-				Name:       general.BaseInfo.Name,
-				Gender:     consts.Gender(general.BaseInfo.Gender),
-				Group:      consts.Group(general.BaseInfo.Group),
+				//ID，从参数获取
+				Id: general.BaseInfo.Id,
+				//姓名，从db获取
+				Name: generalInfo.Name,
+				//阵营，从db获取
+				Group: consts.Group(generalInfo.Group),
+				//标签，从db获取
 				GeneralTag: generalTags,
-				AvatarUri:  general.BaseInfo.AvatarUrl,
-				AbilityAttr: &po.AbilityAttr{
-					ForceBase:        general.BaseInfo.AbilityAttr.ForceBase,
-					ForceRate:        general.BaseInfo.AbilityAttr.ForceRate,
-					IntelligenceBase: general.BaseInfo.AbilityAttr.IntelligenceBase,
-					IntelligenceRate: general.BaseInfo.AbilityAttr.IntelligenceRate,
-					CharmBase:        general.BaseInfo.AbilityAttr.CharmBase,
-					CharmRate:        general.BaseInfo.AbilityAttr.CharmRate,
-					CommandBase:      general.BaseInfo.AbilityAttr.CommandBase,
-					CommandRate:      general.BaseInfo.AbilityAttr.CommandRate,
-					PoliticsBase:     general.BaseInfo.AbilityAttr.PoliticsBase,
-					PoliticsRate:     general.BaseInfo.AbilityAttr.PoliticsRate,
-					SpeedBase:        general.BaseInfo.AbilityAttr.SpeedBase,
-					SpeedRate:        general.BaseInfo.AbilityAttr.SpeedRate,
-				},
-				ArmsAttr: &po.ArmsAttr{
-					Cavalry:   consts.ArmsAbility(general.BaseInfo.ArmsAttr.Cavalry),
-					Mauler:    consts.ArmsAbility(general.BaseInfo.ArmsAttr.Mauler),
-					Archers:   consts.ArmsAbility(general.BaseInfo.ArmsAttr.Archers),
-					Spearman:  consts.ArmsAbility(general.BaseInfo.ArmsAttr.Spearman),
-					Apparatus: consts.ArmsAbility(general.BaseInfo.ArmsAttr.Apparatus),
-				},
+				//能力值，从db获取
+				AbilityAttr: buildAbilityAttr(ctx, generalInfo),
+				//兵种适性，从参数获取
+				ArmsAttr: buildArmsAttr(general),
+				//我军/敌军，从参数获取
 				GeneralBattleType: consts.GeneralBattleType(general.BaseInfo.GeneralBattleType),
-				UniqueId:          general.BaseInfo.UniqueId,
+				//本局对战唯一ID，系统每次生成
+				UniqueId: util.GenerateUUID(),
 			},
+			//战法
 			EquipTactics: equipTactics,
+			//加点
 			Addition: &vo.BattleGeneralAddition{
+				//属性加点，从参数获取
 				AbilityAttr: po.AbilityAttr{
 					ForceBase:        general.Addition.AbilityAttr.ForceBase,
-					ForceRate:        general.Addition.AbilityAttr.ForceRate,
 					IntelligenceBase: general.Addition.AbilityAttr.IntelligenceBase,
-					IntelligenceRate: general.Addition.AbilityAttr.IntelligenceRate,
-					CharmBase:        general.Addition.AbilityAttr.CharmBase,
-					CharmRate:        general.Addition.AbilityAttr.CharmRate,
 					CommandBase:      general.Addition.AbilityAttr.CommandBase,
-					CommandRate:      general.Addition.AbilityAttr.CommandRate,
-					PoliticsBase:     general.Addition.AbilityAttr.PoliticsBase,
-					PoliticsRate:     general.Addition.AbilityAttr.PoliticsRate,
 					SpeedBase:        general.Addition.AbilityAttr.SpeedBase,
-					SpeedRate:        general.Addition.AbilityAttr.SpeedRate,
 				},
-				GeneralLevel:     consts.GeneralLevel(general.Addition.GeneralLevel),
+				//武将等级，从参数获取
+				GeneralLevel: consts.GeneralLevel(general.Addition.GeneralLevel),
+				//武将红度，从参数获取
 				GeneralStarLevel: consts.GeneralStarLevel(general.Addition.GeneralStarLevel),
 			},
-			IsMaster:   general.IsMaster,
+			//是否主将，从参数获取
+			IsMaster: general.IsMaster,
+			//携带兵力，从参数获取
 			SoldierNum: general.SoldierNum,
 		})
 	}
@@ -153,12 +176,19 @@ func buildBattleExecuteRequest(req api.BattleExecuteRequest) *logic.BattleLogicC
 	//敌方信息
 	enemyTeamGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range req.EnemyTeam.BattleGenerals {
-		//标签
+		//我方武将信息（从db获取）
+		generalInfo := &po.General{}
+		if info, ok := generalInfoMap[general.BaseInfo.Id]; ok {
+			generalInfo = info
+		} else {
+			panic(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id))
+		}
+		//武将标签
 		generalTags := make([]consts.GeneralTag, 0)
-		for _, tag := range general.BaseInfo.GeneralTag {
+		for _, tag := range generalInfo.Tag {
 			generalTags = append(generalTags, consts.GeneralTag(tag))
 		}
-		//佩戴战法
+		//佩戴战法(自带战法+选择战法)
 		equipTactics := make([]*po.Tactics, 0)
 		for _, tactic := range general.EquipTactics {
 			equipTactics = append(equipTactics, &po.Tactics{
@@ -168,60 +198,47 @@ func buildBattleExecuteRequest(req api.BattleExecuteRequest) *logic.BattleLogicC
 				Type:          consts.TacticsType(tactic.Type),
 			})
 		}
-
+		//武将信息
 		enemyTeamGenerals = append(enemyTeamGenerals, &vo.BattleGeneral{
+			//基础信息
 			BaseInfo: &po.MetadataGeneral{
-				Id:         general.BaseInfo.Id,
-				Name:       general.BaseInfo.Name,
-				Gender:     consts.Gender(general.BaseInfo.Gender),
-				Group:      consts.Group(general.BaseInfo.Group),
+				//ID，从参数获取
+				Id: general.BaseInfo.Id,
+				//姓名，从db获取
+				Name: generalInfo.Name,
+				//阵营，从db获取
+				Group: consts.Group(generalInfo.Group),
+				//标签，从db获取
 				GeneralTag: generalTags,
-				AvatarUri:  general.BaseInfo.AvatarUrl,
-				AbilityAttr: &po.AbilityAttr{
-					ForceBase:        general.BaseInfo.AbilityAttr.ForceBase,
-					ForceRate:        general.BaseInfo.AbilityAttr.ForceRate,
-					IntelligenceBase: general.BaseInfo.AbilityAttr.IntelligenceBase,
-					IntelligenceRate: general.BaseInfo.AbilityAttr.IntelligenceRate,
-					CharmBase:        general.BaseInfo.AbilityAttr.CharmBase,
-					CharmRate:        general.BaseInfo.AbilityAttr.CharmRate,
-					CommandBase:      general.BaseInfo.AbilityAttr.CommandBase,
-					CommandRate:      general.BaseInfo.AbilityAttr.CommandRate,
-					PoliticsBase:     general.BaseInfo.AbilityAttr.PoliticsBase,
-					PoliticsRate:     general.BaseInfo.AbilityAttr.PoliticsRate,
-					SpeedBase:        general.BaseInfo.AbilityAttr.SpeedBase,
-					SpeedRate:        general.BaseInfo.AbilityAttr.SpeedRate,
-				},
-				ArmsAttr: &po.ArmsAttr{
-					Cavalry:   consts.ArmsAbility(general.BaseInfo.ArmsAttr.Cavalry),
-					Mauler:    consts.ArmsAbility(general.BaseInfo.ArmsAttr.Mauler),
-					Archers:   consts.ArmsAbility(general.BaseInfo.ArmsAttr.Archers),
-					Spearman:  consts.ArmsAbility(general.BaseInfo.ArmsAttr.Spearman),
-					Apparatus: consts.ArmsAbility(general.BaseInfo.ArmsAttr.Apparatus),
-				},
+				//能力值，从db获取
+				AbilityAttr: buildAbilityAttr(ctx, generalInfo),
+				//兵种适性，从参数获取
+				ArmsAttr: buildArmsAttr(general),
+				//我军/敌军，从参数获取
 				GeneralBattleType: consts.GeneralBattleType(general.BaseInfo.GeneralBattleType),
-				UniqueId:          general.BaseInfo.UniqueId,
+				//本局对战唯一ID，系统每次生成
+				UniqueId: util.GenerateUUID(),
 			},
+			//战法
+			EquipTactics: equipTactics,
+			//加点
 			Addition: &vo.BattleGeneralAddition{
+				//属性加点，从参数获取
 				AbilityAttr: po.AbilityAttr{
 					ForceBase:        general.Addition.AbilityAttr.ForceBase,
-					ForceRate:        general.Addition.AbilityAttr.ForceRate,
 					IntelligenceBase: general.Addition.AbilityAttr.IntelligenceBase,
-					IntelligenceRate: general.Addition.AbilityAttr.IntelligenceRate,
-					CharmBase:        general.Addition.AbilityAttr.CharmBase,
-					CharmRate:        general.Addition.AbilityAttr.CharmRate,
 					CommandBase:      general.Addition.AbilityAttr.CommandBase,
-					CommandRate:      general.Addition.AbilityAttr.CommandRate,
-					PoliticsBase:     general.Addition.AbilityAttr.PoliticsBase,
-					PoliticsRate:     general.Addition.AbilityAttr.PoliticsRate,
 					SpeedBase:        general.Addition.AbilityAttr.SpeedBase,
-					SpeedRate:        general.Addition.AbilityAttr.SpeedRate,
 				},
-				GeneralLevel:     consts.GeneralLevel(general.Addition.GeneralLevel),
+				//武将等级，从参数获取
+				GeneralLevel: consts.GeneralLevel(general.Addition.GeneralLevel),
+				//武将红度，从参数获取
 				GeneralStarLevel: consts.GeneralStarLevel(general.Addition.GeneralStarLevel),
 			},
-			EquipTactics: equipTactics,
-			IsMaster:     general.IsMaster,
-			SoldierNum:   general.SoldierNum,
+			//是否主将，从参数获取
+			IsMaster: general.IsMaster,
+			//携带兵力，从参数获取
+			SoldierNum: general.SoldierNum,
 		})
 	}
 
@@ -229,40 +246,95 @@ func buildBattleExecuteRequest(req api.BattleExecuteRequest) *logic.BattleLogicC
 	serviceReq := &logic.BattleLogicContextRequest{
 		//我方
 		FightingTeam: &vo.BattleTeam{
-			TeamType:       consts.TeamType(req.FightingTeam.TeamType),
-			ArmType:        consts.ArmType(req.FightingTeam.ArmType),
-			BattleGenerals: fightingTeamGenerals,
-			BuildingTechAttrAddition: vo.BuildingTechAttrAddition{
-				ForceAddition:        req.FightingTeam.BuildingTechAttrAddition.ForceAddition,
-				IntelligenceAddition: req.FightingTeam.BuildingTechAttrAddition.IntelligenceAddition,
-				CommandAddition:      req.FightingTeam.BuildingTechAttrAddition.CommandAddition,
-				SpeedAddition:        req.FightingTeam.BuildingTechAttrAddition.SpeedAddition,
-			},
-			BuildingTechGroupAddition: vo.BuildingTechGroupAddition{
-				GroupWeiGuoRate:   req.FightingTeam.BuildingTechGroupAddition.GroupWuGuoRate,
-				GroupShuGuoRate:   req.FightingTeam.BuildingTechGroupAddition.GroupShuGuoRate,
-				GroupWuGuoRate:    req.FightingTeam.BuildingTechGroupAddition.GroupWuGuoRate,
-				GroupQunXiongRate: req.FightingTeam.BuildingTechGroupAddition.GroupQunXiongRate,
-			},
+			TeamType:                  consts.TeamType(req.FightingTeam.TeamType),
+			ArmType:                   consts.ArmType(req.FightingTeam.ArmType),
+			BattleGenerals:            fightingTeamGenerals,
+			BuildingTechAttrAddition:  makeBuildingTechAttrAddition(req.FightingTeam),
+			BuildingTechGroupAddition: makeBuildingTechGroupAddition(req.FightingTeam),
 		},
 		//敌方
 		EnemyTeam: &vo.BattleTeam{
-			TeamType:       consts.TeamType(req.EnemyTeam.TeamType),
-			ArmType:        consts.ArmType(req.EnemyTeam.ArmType),
-			BattleGenerals: enemyTeamGenerals,
-			BuildingTechAttrAddition: vo.BuildingTechAttrAddition{
-				ForceAddition:        req.EnemyTeam.BuildingTechAttrAddition.ForceAddition,
-				IntelligenceAddition: req.EnemyTeam.BuildingTechAttrAddition.IntelligenceAddition,
-				CommandAddition:      req.EnemyTeam.BuildingTechAttrAddition.CommandAddition,
-				SpeedAddition:        req.EnemyTeam.BuildingTechAttrAddition.SpeedAddition,
-			},
-			BuildingTechGroupAddition: vo.BuildingTechGroupAddition{
-				GroupWeiGuoRate:   req.EnemyTeam.BuildingTechGroupAddition.GroupWuGuoRate,
-				GroupShuGuoRate:   req.EnemyTeam.BuildingTechGroupAddition.GroupShuGuoRate,
-				GroupWuGuoRate:    req.EnemyTeam.BuildingTechGroupAddition.GroupWuGuoRate,
-				GroupQunXiongRate: req.EnemyTeam.BuildingTechGroupAddition.GroupQunXiongRate,
-			},
+			TeamType:                  consts.TeamType(req.EnemyTeam.TeamType),
+			ArmType:                   consts.ArmType(req.EnemyTeam.ArmType),
+			BattleGenerals:            enemyTeamGenerals,
+			BuildingTechAttrAddition:  makeBuildingTechAttrAddition(req.EnemyTeam),
+			BuildingTechGroupAddition: makeBuildingTechGroupAddition(req.EnemyTeam),
 		},
 	}
 	return serviceReq
+}
+
+func makeBuildingTechGroupAddition(team *api.BattleTeam) vo.BuildingTechGroupAddition {
+	if team.BuildingTechGroupAddition == nil {
+		return vo.BuildingTechGroupAddition{}
+	}
+	return vo.BuildingTechGroupAddition{
+		GroupWeiGuoRate:   team.BuildingTechGroupAddition.GroupWuGuoRate,
+		GroupShuGuoRate:   team.BuildingTechGroupAddition.GroupShuGuoRate,
+		GroupWuGuoRate:    team.BuildingTechGroupAddition.GroupWuGuoRate,
+		GroupQunXiongRate: team.BuildingTechGroupAddition.GroupQunXiongRate,
+	}
+}
+
+func makeBuildingTechAttrAddition(team *api.BattleTeam) vo.BuildingTechAttrAddition {
+	if team.BuildingTechAttrAddition == nil {
+		return vo.BuildingTechAttrAddition{}
+	}
+
+	return vo.BuildingTechAttrAddition{
+		ForceAddition:        team.BuildingTechAttrAddition.ForceAddition,
+		IntelligenceAddition: team.BuildingTechAttrAddition.IntelligenceAddition,
+		CommandAddition:      team.BuildingTechAttrAddition.CommandAddition,
+		SpeedAddition:        team.BuildingTechAttrAddition.SpeedAddition,
+	}
+}
+
+func buildArmsAttr(general *api.BattleGeneral) *po.ArmsAttr {
+	return &po.ArmsAttr{
+		Cavalry:   consts.ArmsAbility(cast.ToString(general.BaseInfo.ArmsAttr.Cavalry)),
+		Mauler:    consts.ArmsAbility(cast.ToString(general.BaseInfo.ArmsAttr.Mauler)),
+		Archers:   consts.ArmsAbility(cast.ToString(general.BaseInfo.ArmsAttr.Archers)),
+		Spearman:  consts.ArmsAbility(cast.ToString(general.BaseInfo.ArmsAttr.Spearman)),
+		Apparatus: consts.ArmsAbility(cast.ToString(general.BaseInfo.ArmsAttr.Apparatus)),
+	}
+}
+
+func buildAbilityAttr(ctx context.Context, generalInfo *po.General) *po.AbilityAttr {
+	attr := &po.AbilityAttrString{}
+	util.ParseJsonObj(ctx, attr, generalInfo.AbilityAttr)
+	return &po.AbilityAttr{
+		ForceBase:        cast.ToFloat64(attr.ForceBase),
+		ForceRate:        cast.ToFloat64(attr.ForceRate),
+		IntelligenceBase: cast.ToFloat64(attr.IntelligenceBase),
+		IntelligenceRate: cast.ToFloat64(attr.IntelligenceRate),
+		CommandBase:      cast.ToFloat64(attr.CommandBase),
+		CommandRate:      cast.ToFloat64(attr.CommandRate),
+		SpeedBase:        cast.ToFloat64(attr.SpeedBase),
+		SpeedRate:        cast.ToFloat64(attr.SpeedRate),
+	}
+}
+
+func checkParam(req api.BattleExecuteRequest) error {
+	//队伍
+	if req.FightingTeam == nil {
+		return errors.New("我军队伍不能为空")
+	}
+	if req.EnemyTeam == nil {
+		return errors.New("敌军队伍不能为空")
+	}
+	//兵种
+	if req.FightingTeam.ArmType == enum.ArmType_Unknow {
+		return errors.New("我军队伍兵种不能为空")
+	}
+	if req.EnemyTeam.ArmType == enum.ArmType_Unknow {
+		return errors.New("敌军队伍兵种不能为空")
+	}
+	// 武将数量
+	if len(req.FightingTeam.BattleGenerals) == 0 {
+		return errors.New("我军武将数量不能为空")
+	}
+	if len(req.EnemyTeam.BattleGenerals) == 0 {
+		return errors.New("敌军武将数量不能为空")
+	}
+	return nil
 }

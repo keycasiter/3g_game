@@ -141,9 +141,10 @@ func (runCtx *BattleLogicContext) handleGeneralTag(general *vo.BattleGeneral) {
 			general.BaseInfo.AbilityAttr.CommandBase = general.BaseInfo.AbilityAttr.CommandBase * 1.3
 			//速度加成
 			general.BaseInfo.AbilityAttr.SpeedBase = general.BaseInfo.AbilityAttr.SpeedBase * 1.3
+
+			hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【仙人】", general.BaseInfo.Name)
+			hlog.CtxInfof(runCtx.Ctx, "[%s]是一名【仙人】，属性提高30%%", general.BaseInfo.Name)
 		}
-		hlog.CtxInfof(runCtx.Ctx, "[%s]发动战法【仙人】", general.BaseInfo.Name)
-		hlog.CtxInfof(runCtx.Ctx, "[%s]是一名【仙人】，属性提高30%", general.BaseInfo.Name)
 	}
 }
 
@@ -835,9 +836,9 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 	tacticsParams.EnemyTeam = runCtx.Req.EnemyTeam
 
 	//武将信息转map/arr，方便后续直接调用
-	tacticsParams.FightingGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
-	tacticsParams.EnemyGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
-	tacticsParams.AllGeneralMap = make(map[int64]*vo.BattleGeneral, 0)
+	tacticsParams.FightingGeneralMap = make(map[string]*vo.BattleGeneral, 0)
+	tacticsParams.EnemyGeneralMap = make(map[string]*vo.BattleGeneral, 0)
+	tacticsParams.AllGeneralMap = make(map[string]*vo.BattleGeneral, 0)
 	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
 		tacticsParams.FightingGeneralMap[general.BaseInfo.UniqueId] = general
 		tacticsParams.AllGeneralMap[general.BaseInfo.UniqueId] = general

@@ -584,7 +584,8 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 
 	//必填参数
 	if attackGeneral == nil || sufferGeneral == nil || damage <= 0 || damageType == consts.DamageType_None {
-		panic("params err")
+		hlog.CtxErrorf(ctx, "damage params err")
+		panic("damage params err")
 	}
 
 	//触发器禁用开关

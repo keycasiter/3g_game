@@ -134,7 +134,9 @@ func (o OpportunityIdentificationFirstTactic) Prepare() {
 						if perGeneralRoundCntMap == nil {
 							perGeneralRoundCntMap = map[consts.General_Id]map[consts.BattleRound]bool{}
 						}
-						perGeneralRoundCntMap[consts.General_Id(pairGeneral.BaseInfo.Id)][currentRound] = true
+						m := make(map[consts.BattleRound]bool, 0)
+						m[currentRound] = true
+						perGeneralRoundCntMap[consts.General_Id(pairGeneral.BaseInfo.Id)] = m
 					}
 				}
 

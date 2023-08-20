@@ -36,11 +36,11 @@ type TacticsParams struct {
 	// 对战队伍信息
 	EnemyTeam *vo.BattleTeam
 	// 出战武将信息Map
-	FightingGeneralMap map[int64]*vo.BattleGeneral
+	FightingGeneralMap map[string]*vo.BattleGeneral
 	// 对战武将信息Map
-	EnemyGeneralMap map[int64]*vo.BattleGeneral
+	EnemyGeneralMap map[string]*vo.BattleGeneral
 	// 全部武将信息Map
-	AllGeneralMap map[int64]*vo.BattleGeneral
+	AllGeneralMap map[string]*vo.BattleGeneral
 	// 全部武将信息Arr
 	AllGeneralArr []*vo.BattleGeneral
 

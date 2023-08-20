@@ -12,4 +12,5 @@ type QueryGeneralCondition struct { // nolint:maligned
 	IsSupportCollect  int8   // 是否支持典藏
 	Offset            int
 	Limit             int
+	Ids               []int64 //武将ID列表
 }

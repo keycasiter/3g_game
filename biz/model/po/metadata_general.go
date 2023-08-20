@@ -19,23 +19,39 @@ type MetadataGeneral struct {
 	//业务字段
 	GeneralBattleType consts.GeneralBattleType
 	//唯一对战ID
-	UniqueId int64
+	UniqueId string
 }
 
 // 能力属性
 type AbilityAttr struct {
-	ForceBase        float64
-	ForceRate        float64
-	IntelligenceBase float64
-	IntelligenceRate float64
-	CharmBase        float64
-	CharmRate        float64
-	CommandBase      float64
-	CommandRate      float64
-	PoliticsBase     float64
-	PoliticsRate     float64
-	SpeedBase        float64
-	SpeedRate        float64
+	ForceBase        float64 `json:"force_base"`
+	ForceRate        float64 `json:"force_rate"`
+	IntelligenceBase float64 `json:"intelligence_base"`
+	IntelligenceRate float64 `json:"intelligence_rate"`
+	CharmBase        float64 `json:"charm_base"`
+	CharmRate        float64 `json:"charm_rate"`
+	CommandBase      float64 `json:"command_base"`
+	CommandRate      float64 `json:"command_rate"`
+	PoliticsBase     float64 `json:"politics_base"`
+	PoliticsRate     float64 `json:"politics_rate"`
+	SpeedBase        float64 `json:"speed_base"`
+	SpeedRate        float64 `json:"speed_rate"`
+}
+
+// 能力属性
+type AbilityAttrString struct {
+	ForceBase        string `json:"force_base"`
+	ForceRate        string `json:"force_rate"`
+	IntelligenceBase string `json:"intelligence_base"`
+	IntelligenceRate string `json:"intelligence_rate"`
+	CharmBase        string `json:"charm_base"`
+	CharmRate        string `json:"charm_rate"`
+	CommandBase      string `json:"command_base"`
+	CommandRate      string `json:"command_rate"`
+	PoliticsBase     string `json:"politics_base"`
+	PoliticsRate     string `json:"politics_rate"`
+	SpeedBase        string `json:"speed_base"`
+	SpeedRate        string `json:"speed_rate"`
 }
 
 // 兵种属性

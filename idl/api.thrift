@@ -93,15 +93,13 @@ struct MetadataGeneral {
 
 	//业务字段
 	9:enum.GeneralBattleType GeneralBattleType
-	//唯一对战ID
-	10:i64 UniqueId
 	//自带战法
-	11:Tactics SelfTactic
-	12:enum.GeneralQuality GeneralQuality,
+	10:Tactics SelfTactic
+	11:enum.GeneralQuality GeneralQuality,
 	//动态
-	13:bool IsSupportDynamics
+	12:bool IsSupportDynamics
 	//典藏
-	14:bool IsSupportCollect
+	13:bool IsSupportCollect
 }
 
 // 战法资料

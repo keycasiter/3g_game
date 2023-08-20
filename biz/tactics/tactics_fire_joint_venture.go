@@ -67,7 +67,7 @@ func (f FireJointVentureTactic) Execute() {
 	ctx := f.tacticsParams.Ctx
 	currentGeneral := f.tacticsParams.CurrentGeneral
 	//被焚营的目标计数器
-	fireCampGenerals := make(map[int64]int, 0)
+	fireCampGenerals := make(map[string]int, 0)
 
 	hlog.CtxInfof(ctx, "[%s]发动战法【%s】",
 		currentGeneral.BaseInfo.Name,

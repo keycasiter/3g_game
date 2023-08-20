@@ -8,8 +8,8 @@ import (
 )
 
 // 找到当前执行战法武将的队友Map
-func GetPairGeneralMap(tacticsParams *model.TacticsParams) map[int64]*vo.BattleGeneral {
-	pairGeneralMap := make(map[int64]*vo.BattleGeneral, 0)
+func GetPairGeneralMap(tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
+	pairGeneralMap := make(map[string]*vo.BattleGeneral, 0)
 	currentGeneralId := tacticsParams.CurrentGeneral.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; ok {
 		pairGeneralMap = tacticsParams.FightingGeneralMap
@@ -49,8 +49,8 @@ func GetLowestSoliderNumGeneral(generals []*vo.BattleGeneral) *vo.BattleGeneral 
 }
 
 // 找到当前执行战法武将的敌军Map
-func GetEnemyGeneralMap(tacticsParams *model.TacticsParams) map[int64]*vo.BattleGeneral {
-	enemyGeneralMap := make(map[int64]*vo.BattleGeneral, 0)
+func GetEnemyGeneralMap(tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
+	enemyGeneralMap := make(map[string]*vo.BattleGeneral, 0)
 	currentGeneralId := tacticsParams.CurrentGeneral.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
 		enemyGeneralMap = tacticsParams.FightingGeneralMap
@@ -442,10 +442,10 @@ func GetPairGeneralsTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGener
 }
 
 // 找到当前敌军两到三个敌人
-func GetEnemyGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) map[int64]*vo.BattleGeneral {
+func GetEnemyGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
 	//找到敌人
 	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
-	enemyGeneralMap := make(map[int64]*vo.BattleGeneral, 0)
+	enemyGeneralMap := make(map[string]*vo.BattleGeneral, 0)
 	//两到三个
 	totalNum := len(enemyGeneralArr)
 	hitIdxMap := GenerateHitTwoOrThreeIdxMap(totalNum)
@@ -458,10 +458,10 @@ func GetEnemyGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) map[int64
 }
 
 // 找到当前敌军1到2个敌人
-func GetEnemyGeneralsOneOrTwoMap(tacticsParams *model.TacticsParams) map[int64]*vo.BattleGeneral {
+func GetEnemyGeneralsOneOrTwoMap(tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
 	//找到敌人
 	enemyGeneralArr := make([]*vo.BattleGeneral, 0)
-	enemyGeneralMap := make(map[int64]*vo.BattleGeneral, 0)
+	enemyGeneralMap := make(map[string]*vo.BattleGeneral, 0)
 
 	if GenerateRate(0.5) {
 		enemyGeneralArr = append(enemyGeneralArr, GetEnemyOneGeneral(tacticsParams))

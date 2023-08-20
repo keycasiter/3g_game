@@ -27,6 +27,9 @@ func (g *GeneralDal) QueryGeneralList(ctx context.Context, condition *vo.QueryGe
 	conn := dal.DataBase.Model(&po.General{})
 
 	//条件查询
+	if len(condition.Ids) > 0 {
+		conn.Where("id in (?)", condition.Ids)
+	}
 	if condition.Id > 0 {
 		conn.Where("id = ?", condition.Id)
 	}

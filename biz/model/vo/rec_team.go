@@ -5,4 +5,5 @@ type QueryRecTeamCondition struct {
 	Limit      int
 	Name       string
 	GeneralIds []int64
+	Group      int64
 }

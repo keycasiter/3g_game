@@ -28,6 +28,7 @@ func NewRecTeamQueryLogic(ctx context.Context, req api.RecTeamQueryRequest) *Rec
 func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
 	list, err := mysql.NewRecTeam().QueryRecTeamList(g.Ctx, &vo.QueryRecTeamCondition{
 		Name:   g.Req.Name,
+		Group:  g.Req.Group,
 		Offset: util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize),
 		Limit:  int(g.Req.PageSize),
 	})

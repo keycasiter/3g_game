@@ -7803,6 +7803,7 @@ func (p *SpecialTech) String() string {
 //============= 查询推荐阵容列表 BEGIN ==============
 type RecTeamQueryRequest struct {
 	Name     string `thrift:"Name,1" form:"Name" json:"Name" query:"Name"`
+	Group    int64  `thrift:"Group,2" form:"Group" json:"Group" query:"Group"`
 	PageNo   int64  `thrift:"PageNo,100" form:"PageNo" json:"PageNo" query:"PageNo"`
 	PageSize int64  `thrift:"PageSize,101" form:"PageSize" json:"PageSize" query:"PageSize"`
 }
@@ -7815,6 +7816,10 @@ func (p *RecTeamQueryRequest) GetName() (v string) {
 	return p.Name
 }
 
+func (p *RecTeamQueryRequest) GetGroup() (v int64) {
+	return p.Group
+}
+
 func (p *RecTeamQueryRequest) GetPageNo() (v int64) {
 	return p.PageNo
 }
@@ -7825,6 +7830,7 @@ func (p *RecTeamQueryRequest) GetPageSize() (v int64) {
 
 var fieldIDToName_RecTeamQueryRequest = map[int16]string{
 	1:   "Name",
+	2:   "Group",
 	100: "PageNo",
 	101: "PageSize",
 }
@@ -7851,6 +7857,16 @@ func (p *RecTeamQueryRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 1:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 2:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -7917,6 +7933,15 @@ func (p *RecTeamQueryRequest) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *RecTeamQueryRequest) ReadField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Group = v
+	}
+	return nil
+}
+
 func (p *RecTeamQueryRequest) ReadField100(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -7943,6 +7968,10 @@ func (p *RecTeamQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
 			goto WriteFieldError
 		}
 		if err = p.writeField100(oprot); err != nil {
@@ -7987,6 +8016,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *RecTeamQueryRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Group", thrift.I64, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Group); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
 func (p *RecTeamQueryRequest) writeField100(oprot thrift.TProtocol) (err error) {

@@ -28,6 +28,9 @@ func (g *RecTeamDal) QueryRecTeamList(ctx context.Context, condition *vo.QueryRe
 	if condition.Name != "" {
 		conn.Where("name like ?", fmt.Sprintf("%%%s%%", condition.Name))
 	}
+	if condition.Group > 0 {
+		conn.Where("group = ?", condition.Group)
+	}
 
 	if err := conn.Offset(condition.Offset).Limit(condition.Limit).Find(&list).Error; err != nil {
 		hlog.CtxErrorf(ctx, "QueryRecTeamList err:%v", err)

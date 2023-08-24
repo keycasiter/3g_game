@@ -257,6 +257,7 @@ struct SpecialTech {
 //============= 查询推荐阵容列表 BEGIN ==============
 struct RecTeamQueryRequest{
     1: string Name
+    2: i64 Group
 
     100: i64 PageNo,
     101: i64 PageSize

@@ -5,6 +5,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
+	"github.com/keycasiter/3g_game/biz/model/enum"
+	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
 )
@@ -26,7 +28,8 @@ func NewRecTeamQueryLogic(ctx context.Context, req api.RecTeamQueryRequest) *Rec
 }
 
 func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
-	list, err := mysql.NewRecTeam().QueryRecTeamList(g.Ctx, &vo.QueryRecTeamCondition{
+	//推荐队伍查询
+	recTeamlist, err := mysql.NewRecTeam().QueryRecTeamList(g.Ctx, &vo.QueryRecTeamCondition{
 		Name:   g.Req.Name,
 		Group:  g.Req.Group,
 		Offset: util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize),
@@ -38,18 +41,122 @@ func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
 		return g.Resp, err
 	}
 
+	generalIds := make([]int64, 0)
+	tacticIds := make([]int64, 0)
+	warbookIds := make([]int64, 0)
+	//整理武将id
+	for _, recTeam := range recTeamlist {
+		generalIds = append(generalIds, util.StringToIntArray(recTeam.GeneralIds)...)
+	}
+	//武将信息查询
+	generalQueryResp, err := NewGeneralQueryLogic(g.Ctx, api.GeneralQueryRequest{}).Handle()
+	if err != nil {
+		hlog.CtxErrorf(g.Ctx, "QueryGeneralList err:%v", err)
+		g.Resp.Meta = util.BuildFailMeta()
+		return g.Resp, err
+	}
+
+	//整理战法ID
+	for _, recTeam := range recTeamlist {
+		tacticIds = append(tacticIds, util.StringToIntArray(recTeam.TacticIds)...)
+	}
+	//战法信息查询
+	tacticList, err := mysql.NewTactic().QueryTacticList(g.Ctx, &vo.QueryTacticCondition{
+		Ids: tacticIds,
+	})
+	if err != nil {
+		hlog.CtxErrorf(g.Ctx, "QueryTacticList err:%v", err)
+		g.Resp.Meta = util.BuildFailMeta()
+		return g.Resp, err
+	}
+
+	//整理兵书ID
+	for _, recTeam := range recTeamlist {
+		warbookIds = append(warbookIds, util.StringToIntArray(recTeam.WarbookIds)...)
+	}
+	//兵书信息查询
+	warbookList, err := mysql.NewWarbook().QueryWarbookList(g.Ctx, &vo.QueryWarbookCondition{
+		Ids: warbookIds,
+	})
+	if err != nil {
+		hlog.CtxErrorf(g.Ctx, "QueryWarbookList err:%v", err)
+		g.Resp.Meta = util.BuildFailMeta()
+		return g.Resp, err
+	}
+
+	//整理map
+	generalMap := make(map[int64]*api.BattleGeneral, 0)
+	tacticMap := make(map[int64]*po.Tactic, 0)
+	warbookMap := make(map[int64]*po.Warbook, 0)
+	for _, general := range generalQueryResp.GetGeneralList() {
+		generalMap[general.BaseInfo.Id] = general
+	}
+	for _, tactic := range tacticList {
+		tacticMap[tactic.Id] = tactic
+	}
+	for _, warbook := range warbookList {
+		warbookMap[warbook.Id] = warbook
+	}
+
 	//组合resp
 	resList := make([]*api.RecTeamGeneral, 0)
-	for _, recTeam := range list {
+	for _, recTeam := range recTeamlist {
 		resList = append(resList, &api.RecTeamGeneral{
-			GeneralIds: util.StringToIntArray(recTeam.GeneralIds),
-			TacticIds:  util.StringToIntArray(recTeam.TacticIds),
-			WarbookIds: util.StringToIntArray(recTeam.WarbookIds),
-			Name:       recTeam.Name,
-			Id:         recTeam.Id,
+			GeneralList: makeGeneralList(recTeam, generalMap, tacticMap, warbookMap),
+			Name:        recTeam.Name,
+			Id:          recTeam.Id,
 		})
 	}
+
 	g.Resp.RecTeamGeneralList = resList
 
 	return g.Resp, nil
+}
+
+func makeGeneralList(recTeam *po.RecTeam,
+	generalMap map[int64]*api.BattleGeneral,
+	tacticMap map[int64]*po.Tactic,
+	warbookMap map[int64]*po.Warbook) []*api.BattleGeneral {
+
+	resList := make([]*api.BattleGeneral, 0)
+	generalIdsArr := util.StringToIntArray(recTeam.GeneralIds)
+	generalTacticIdsArr := [][]int64{
+		util.StringToIntArray(recTeam.TacticIds)[0:3],
+		util.StringToIntArray(recTeam.TacticIds)[3:6],
+		util.StringToIntArray(recTeam.TacticIds)[6:9],
+	}
+	generalWarbookIdsArr := [][]int64{
+		util.StringToIntArray(recTeam.WarbookIds)[0:3],
+		util.StringToIntArray(recTeam.WarbookIds)[3:6],
+		util.StringToIntArray(recTeam.WarbookIds)[6:9],
+	}
+	//阵容武将
+	for idx, generalId := range generalIdsArr {
+		if general, ok := generalMap[generalId]; ok {
+			//阵容战法
+			for _, tacticId := range generalTacticIdsArr[idx] {
+				if tactic, okk := tacticMap[tacticId]; okk {
+					general.EquipTactics = append(general.EquipTactics, &api.Tactics{
+						Id:            tactic.Id,
+						Name:          tactic.Name,
+						TacticsSource: enum.TacticsSource(tactic.Source),
+						Type:          enum.TacticsType(tactic.Type),
+						Quality:       enum.TacticQuality(tactic.Quality),
+					})
+				}
+			}
+			//阵容兵书
+			for _, warbookId := range generalWarbookIdsArr[idx] {
+				if warbook, okk := tacticMap[warbookId]; okk {
+					general.WarBooks = append(general.WarBooks, &api.WarBook{
+						Id:   warbook.Id,
+						Name: warbook.Name,
+					})
+				}
+			}
+			resList = append(resList, general)
+		}
+	}
+
+	return resList
 }

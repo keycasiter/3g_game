@@ -270,11 +270,9 @@ struct RecTeamQueryResponse{
 }
 
 struct RecTeamGeneral {
-    1: list<i64> GeneralIds
-    2: list<i64> TacticIds
-    3: list<i64> WarbookIds
-    4: string Name
-    5: i64 Id
+    1: list<BattleGeneral> GeneralList
+    2: string Name
+    3: i64 Id
 }
 //============= 查询推荐阵容列表 END ==============
 

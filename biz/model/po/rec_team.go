@@ -7,6 +7,7 @@ type RecTeam struct { // nolint:maligned
 	TacticIds    string `gorm:"column:tactic_ids" json:"tactic_ids"`       //战法
 	WarbookIds   string `gorm:"column:warbook_ids" json:"warbook_ids"`     //兵书
 	TechIds      string `gorm:"column:tech_ids" json:"tech_ids"`           //特技
+	Group        string `gorm:"column:group" json:"group"`                 //阵容
 	Desc         string `gorm:"column:desc" json:"desc"`                   //描述
 	EvaluateDesc string `gorm:"column:evaluate_desc" json:"evaluate_desc"` //评级描述
 }

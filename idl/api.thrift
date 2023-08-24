@@ -197,6 +197,7 @@ struct GeneralQueryRequest{
      7: optional list<enum.GeneralTag>  Tags             // 标签
      8: optional enum.Enable  IsSupportDynamics// 是否支持动态
      9: optional enum.Enable  IsSupportCollect // 是否支持典藏
+     10: list<i64> Ids //武将ID列表
 
      100: i64 PageNo,
      101: i64 PageSize

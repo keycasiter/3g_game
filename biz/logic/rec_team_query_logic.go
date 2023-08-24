@@ -49,7 +49,11 @@ func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
 		generalIds = append(generalIds, util.StringToIntArray(recTeam.GeneralIds)...)
 	}
 	//武将信息查询
-	generalQueryResp, err := NewGeneralQueryLogic(g.Ctx, api.GeneralQueryRequest{}).Handle()
+	generalQueryResp, err := NewGeneralQueryLogic(g.Ctx, api.GeneralQueryRequest{
+		PageNo:   0,
+		PageSize: int64(len(generalIds)),
+		Ids:      generalIds,
+	}).Handle()
 	if err != nil {
 		hlog.CtxErrorf(g.Ctx, "QueryGeneralList err:%v", err)
 		g.Resp.Meta = util.BuildFailMeta()
@@ -62,7 +66,9 @@ func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
 	}
 	//战法信息查询
 	tacticList, err := mysql.NewTactic().QueryTacticList(g.Ctx, &vo.QueryTacticCondition{
-		Ids: tacticIds,
+		Ids:    tacticIds,
+		Offset: 0,
+		Limit:  len(tacticIds),
 	})
 	if err != nil {
 		hlog.CtxErrorf(g.Ctx, "QueryTacticList err:%v", err)
@@ -76,7 +82,9 @@ func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
 	}
 	//兵书信息查询
 	warbookList, err := mysql.NewWarbook().QueryWarbookList(g.Ctx, &vo.QueryWarbookCondition{
-		Ids: warbookIds,
+		Ids:    warbookIds,
+		Offset: 0,
+		Limit:  len(warbookIds),
 	})
 	if err != nil {
 		hlog.CtxErrorf(g.Ctx, "QueryWarbookList err:%v", err)
@@ -147,7 +155,7 @@ func makeGeneralList(recTeam *po.RecTeam,
 			}
 			//阵容兵书
 			for _, warbookId := range generalWarbookIdsArr[idx] {
-				if warbook, okk := tacticMap[warbookId]; okk {
+				if warbook, okk := warbookMap[warbookId]; okk {
 					general.WarBooks = append(general.WarBooks, &api.WarBook{
 						Id:   warbook.Id,
 						Name: warbook.Name,

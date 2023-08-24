@@ -5375,6 +5375,7 @@ type GeneralQueryRequest struct {
 	Tags              []enum.GeneralTag    `thrift:"Tags,7,optional" form:"Tags" json:"Tags,omitempty" query:"Tags"`
 	IsSupportDynamics *enum.Enable         `thrift:"IsSupportDynamics,8,optional" form:"IsSupportDynamics" json:"IsSupportDynamics,omitempty" query:"IsSupportDynamics"`
 	IsSupportCollect  *enum.Enable         `thrift:"IsSupportCollect,9,optional" form:"IsSupportCollect" json:"IsSupportCollect,omitempty" query:"IsSupportCollect"`
+	Ids               []int64              `thrift:"Ids,10" form:"Ids" json:"Ids" query:"Ids"`
 	PageNo            int64                `thrift:"PageNo,100" form:"PageNo" json:"PageNo" query:"PageNo"`
 	PageSize          int64                `thrift:"PageSize,101" form:"PageSize" json:"PageSize" query:"PageSize"`
 }
@@ -5464,6 +5465,10 @@ func (p *GeneralQueryRequest) GetIsSupportCollect() (v enum.Enable) {
 	return *p.IsSupportCollect
 }
 
+func (p *GeneralQueryRequest) GetIds() (v []int64) {
+	return p.Ids
+}
+
 func (p *GeneralQueryRequest) GetPageNo() (v int64) {
 	return p.PageNo
 }
@@ -5482,6 +5487,7 @@ var fieldIDToName_GeneralQueryRequest = map[int16]string{
 	7:   "Tags",
 	8:   "IsSupportDynamics",
 	9:   "IsSupportCollect",
+	10:  "Ids",
 	100: "PageNo",
 	101: "PageSize",
 }
@@ -5624,6 +5630,16 @@ func (p *GeneralQueryRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 9:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 10:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -5781,6 +5797,28 @@ func (p *GeneralQueryRequest) ReadField9(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *GeneralQueryRequest) ReadField10(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	p.Ids = make([]int64, 0, size)
+	for i := 0; i < size; i++ {
+		var _elem int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_elem = v
+		}
+
+		p.Ids = append(p.Ids, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *GeneralQueryRequest) ReadField100(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI64(); err != nil {
 		return err
@@ -5839,6 +5877,10 @@ func (p *GeneralQueryRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField9(oprot); err != nil {
 			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
 			goto WriteFieldError
 		}
 		if err = p.writeField100(oprot); err != nil {
@@ -6045,6 +6087,31 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
+func (p *GeneralQueryRequest) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Ids", thrift.LIST, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.I64, len(p.Ids)); err != nil {
+		return err
+	}
+	for _, v := range p.Ids {
+		if err := oprot.WriteI64(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
 }
 
 func (p *GeneralQueryRequest) writeField100(oprot thrift.TProtocol) (err error) {

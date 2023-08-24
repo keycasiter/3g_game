@@ -10,6 +10,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/kr/pretty"
+	"github.com/spf13/cast"
 	"go.mongodb.org/mongo-driver/bson"
 	"testing"
 )
@@ -97,7 +98,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		//司马懿
 		{
 			Id:       int64(consts.SiMaYi),
-			UniqueId: 10 + int64(consts.SiMaYi),
+			UniqueId: cast.ToString(10 + int64(consts.SiMaYi)),
 			Name:     "司马懿",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
@@ -125,7 +126,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		//曹操
 		{
 			Id:       int64(consts.CaoCao),
-			UniqueId: 10 + int64(consts.CaoCao),
+			UniqueId: cast.ToString(10 + int64(consts.CaoCao)),
 			Name:     "曹操",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
@@ -153,7 +154,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		//满宠
 		{
 			Id:       int64(consts.ManChong),
-			UniqueId: 10 + int64(consts.ManChong),
+			UniqueId: cast.ToString(10 + int64(consts.ManChong)),
 			Name:     "满宠",
 			Group:    consts.Group_WeiGuo,
 			AbilityAttr: &po.AbilityAttr{
@@ -185,7 +186,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		//姜维
 		{
 			Id:       int64(consts.JiangWei),
-			UniqueId: 20 + int64(consts.JiangWei),
+			UniqueId: cast.ToString(20 + int64(consts.JiangWei)),
 			Name:     "姜维",
 			Group:    consts.Group_ShuGuo,
 			AbilityAttr: &po.AbilityAttr{
@@ -213,7 +214,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		//庞统
 		{
 			Id:       int64(consts.PangTong),
-			UniqueId: 20 + int64(consts.PangTong),
+			UniqueId: cast.ToString(20 + int64(consts.PangTong)),
 			Name:     "庞统",
 			Group:    consts.Group_ShuGuo,
 			AbilityAttr: &po.AbilityAttr{
@@ -241,7 +242,7 @@ func TestBattleLogicContext_Run_DataFromMock(t *testing.T) {
 		//诸葛亮
 		{
 			Id:       int64(consts.ZhuGeLiang),
-			UniqueId: 20 + int64(consts.ZhuGeLiang),
+			UniqueId: cast.ToString(20 + int64(consts.ZhuGeLiang)),
 			Name:     "诸葛亮",
 			Group:    consts.Group_ShuGuo,
 			AbilityAttr: &po.AbilityAttr{

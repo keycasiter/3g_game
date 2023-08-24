@@ -150,5 +150,6 @@ func buildQueryGeneralListReq(req api.GeneralQueryRequest) *vo.QueryGeneralCondi
 		IsSupportCollect:  int8(req.GetIsSupportCollect()),
 		Offset:            util.PageNoToOffset(req.GetPageNo(), req.GetPageSize()),
 		Limit:             int(req.GetPageSize()),
+		Ids:               req.Ids,
 	}
 }

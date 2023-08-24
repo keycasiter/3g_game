@@ -254,6 +254,27 @@ struct SpecialTech {
 }
 //============= 查询特技列表 END ==============
 
+//============= 查询推荐阵容列表 BEGIN ==============
+struct RecTeamQueryRequest{
+    1: string Name
+
+    100: i64 PageNo,
+    101: i64 PageSize
+}
+
+struct RecTeamQueryResponse{
+    1: common.Meta meta
+    //武将信息列表
+    2: list<RecTeamGeneral> RecTeamGeneralList
+}
+
+struct RecTeamGeneral {
+    1: list<i64> GeneralIds
+    2: list<i64> TacticIds
+    3: list<i64> WarbookIds
+}
+//============= 查询推荐阵容列表 END ==============
+
 service ApiService {
     //模拟对战
     BattleExecuteResponse BattleExecute(1: BattleExecuteRequest request) (api.post="/v1/battle/execute");
@@ -265,4 +286,6 @@ service ApiService {
     GeneralWarBookQueryResponse GeneralWarBookQuery(1:GeneralWarBookQueryRequest request)(api.get="/v1/general_warbook/query");
     //查询特技列表
     SpecialTechQueryResponse SpecialTechQuery(1:SpecialTechQueryRequest request)(api.get="/v1/special_tech/query");
+    //推荐阵容列表
+    RecTeamQueryResponse RecTeamQuery(1:RecTeamQueryRequest request)(api.get="/v1/rec_team/query");
 }

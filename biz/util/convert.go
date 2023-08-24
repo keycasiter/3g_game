@@ -3,7 +3,9 @@ package util
 import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/spf13/cast"
 	"strconv"
+	"strings"
 )
 
 func String2Float64(x string) float64 {
@@ -12,4 +14,13 @@ func String2Float64(x string) float64 {
 		hlog.CtxErrorf(context.Background(), "String2Float64 err:%v", err)
 	}
 	return res
+}
+
+func StringToIntArray(str string) []int64 {
+	strArr := strings.Split(str, ",")
+	intArr := make([]int64, 0)
+	for _, i := range strArr {
+		intArr = append(intArr, cast.ToInt64(i))
+	}
+	return intArr
 }

@@ -85,3 +85,13 @@ func _generalwarbookqueryMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _rec_teamMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _recteamqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

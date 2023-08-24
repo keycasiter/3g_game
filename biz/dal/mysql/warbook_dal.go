@@ -30,7 +30,7 @@ func (g *WarBookDal) QueryWarbookList(ctx context.Context, condition *vo.QueryWa
 		conn.Where("id = ?", condition.Id)
 	}
 	if len(condition.Ids) > 0 {
-		conn.Where("ids in (?)", condition.Ids)
+		conn.Where("id in (?)", condition.Ids)
 	}
 	if strings.Trim(condition.Name, " ") != "" {
 		conn.Where("name like ?", fmt.Sprintf("%%%s%%", condition.Name))

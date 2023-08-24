@@ -44,6 +44,7 @@ func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
 			GeneralIds: util.StringToIntArray(recTeam.GeneralIds),
 			TacticIds:  util.StringToIntArray(recTeam.TacticIds),
 			WarbookIds: util.StringToIntArray(recTeam.WarbookIds),
+			Name:       recTeam.Name,
 		})
 	}
 	g.Resp.RecTeamGeneralList = resList

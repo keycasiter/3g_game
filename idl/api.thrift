@@ -272,6 +272,7 @@ struct RecTeamGeneral {
     1: list<i64> GeneralIds
     2: list<i64> TacticIds
     3: list<i64> WarbookIds
+    4: string Name
 }
 //============= 查询推荐阵容列表 END ==============
 

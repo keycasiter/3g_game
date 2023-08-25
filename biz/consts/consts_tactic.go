@@ -502,10 +502,55 @@ const (
 	UndercurrentSurge
 	//镇压黄巾
 	SuppressYellowScarves
+	//飞沙走石
+	FlyingSandAndRollingPebbles
+	//扶危定倾
+	DeliverTheCountryFromDistress
+	//聚石成金
+	AggregateStoneIntoGold
+	//短兵相见
+	CloseQuarters
+	//疑城
+	ShamCastles
+	//神上使
+	DivineEnvoy
+	//进言
+	Introduction
+	//非攻制胜
+	NonOffensiveVictory
+	//疾风骤雨
+	StrongWindAndSwiftRain
 )
 
 func (b TacticId) String() string {
 	switch b {
+	//飞沙走石
+	case FlyingSandAndRollingPebbles:
+		return "飞沙走石"
+	//扶危定倾
+	case DeliverTheCountryFromDistress:
+		return "扶危定倾"
+	//聚石成金
+	case AggregateStoneIntoGold:
+		return "聚石成金"
+	//短兵相见
+	case CloseQuarters:
+		return "短兵相见"
+	//疑城
+	case ShamCastles:
+		return "疑城"
+	//神上使
+	case DivineEnvoy:
+		return "神上使"
+	//进言
+	case Introduction:
+		return "进言"
+	//非攻制胜
+	case NonOffensiveVictory:
+		return "非攻制胜"
+	//疾风骤雨
+	case StrongWindAndSwiftRain:
+		return "疾风骤雨"
 	//鹰视狼顾
 	case ClearEyedAndMalicious:
 		return "鹰视狼顾"
@@ -1336,6 +1381,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[ChasingTheRiverAndRidingRows] = true
 	PassiveTacticsMap[JiangdongLittleOverlord] = true
 	//指挥战法
+	CommandTacticsMap[NonOffensiveVictory] = true
 	CommandTacticsMap[CountryPersonGeneralStyle] = true
 	CommandTacticsMap[CrossingTheRiverInWhiteClothes] = true
 	CommandTacticsMap[TheHeartOfRighteousnessShines] = true
@@ -1386,6 +1432,7 @@ func initTacticsMap() {
 	CommandTacticsMap[TheGodOfCraftsmen] = true
 	CommandTacticsMap[BenevolentAndVirtuousThroughoutTheWorld] = true
 	CommandTacticsMap[WieldTroopsToSeekVictory] = true
+	CommandTacticsMap[DeliverTheCountryFromDistress] = true
 	//阵法
 	TroopsTacticsMap[FrontalVectorArray] = true
 	TroopsTacticsMap[EightGateGoldenLockArray] = true
@@ -1407,6 +1454,12 @@ func initTacticsMap() {
 	ArmTacticsMap[WhiteHorseFollowsWithLoyalty] = true
 	ArmTacticsMap[ElephantSoldier] = true
 	//主动
+	ActiveTacticsMap[Introduction] = true
+	ActiveTacticsMap[DivineEnvoy] = true
+	ActiveTacticsMap[ShamCastles] = true
+	ActiveTacticsMap[CloseQuarters] = true
+	ActiveTacticsMap[StrongWindAndSwiftRain] = true
+	ActiveTacticsMap[FlyingSandAndRollingPebbles] = true
 	ActiveTacticsMap[TheSharpnessOfMilitaryStrength] = true
 	ActiveTacticsMap[ClosedMoon] = true
 	ActiveTacticsMap[PullingSwordsAndChoppingEnemies] = true
@@ -1525,6 +1578,7 @@ func initTacticsMap() {
 	ActiveTacticsMap[ForetellLikeProphet] = true
 	ActiveTacticsMap[FrustrationAndAngerAttack] = true
 	ActiveTacticsMap[TakingAdvantageOfTheSituationToGainPower] = true
+	ActiveTacticsMap[AggregateStoneIntoGold] = true
 
 	//突击
 	AssaultTacticsMap[ChasingInjury] = true

@@ -13,6 +13,24 @@ func init() {
 }
 
 func initTacticsHandler() {
+	//飞沙走石
+	TacticsHandlerMap[consts.FlyingSandAndRollingPebbles] = &FlyingSandAndRollingPebblesTactic{}
+	//进言
+	TacticsHandlerMap[consts.Introduction] = &IntroductionTactic{}
+	//疑城
+	TacticsHandlerMap[consts.ShamCastles] = &ShamCastlesTactic{}
+	//神上使
+	TacticsHandlerMap[consts.DivineEnvoy] = &DivineEnvoyTactic{}
+	//扶危定倾
+	TacticsHandlerMap[consts.DeliverTheCountryFromDistress] = &DeliverTheCountryFromDistressTactic{}
+	//聚石成金
+	TacticsHandlerMap[consts.AggregateStoneIntoGold] = &AggregateStoneIntoGoldTactic{}
+	//短兵相见
+	TacticsHandlerMap[consts.CloseQuarters] = &CloseQuartersTactic{}
+	//非攻制胜
+	TacticsHandlerMap[consts.NonOffensiveVictory] = &NonOffensiveVictoryTactic{}
+	//疾风骤雨
+	TacticsHandlerMap[consts.StrongWindAndSwiftRain] = &StrongWindAndSwiftRainTactic{}
 	//鹰视狼顾
 	TacticsHandlerMap[consts.ClearEyedAndMalicious] = &ClearEyedAndMaliciousTactic{}
 	//士别三日

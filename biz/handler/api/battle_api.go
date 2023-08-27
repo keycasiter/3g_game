@@ -21,7 +21,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
-	"strings"
 )
 
 // BattleExecute .模拟对战
@@ -235,7 +234,9 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 		}
 		//武将标签
 		generalTags := make([]consts.GeneralTag, 0)
-		for _, tag := range strings.Split(generalInfo.Tag, ",") {
+		generalTagsArr := make([]string, 0)
+		util.ParseJsonObj(ctx, generalTagsArr, generalInfo.Tag)
+		for _, tag := range generalTagsArr {
 			generalTags = append(generalTags, consts.GeneralTag(cast.ToInt(tag)))
 		}
 		//佩戴战法(自带战法+选择战法)
@@ -304,7 +305,9 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 		}
 		//武将标签
 		generalTags := make([]consts.GeneralTag, 0)
-		for _, tag := range strings.Split(generalInfo.Tag, ",") {
+		generalTagsArr := make([]string, 0)
+		util.ParseJsonObj(ctx, generalTagsArr, generalInfo.Tag)
+		for _, tag := range generalTagsArr {
 			generalTags = append(generalTags, consts.GeneralTag(cast.ToInt(tag)))
 		}
 		//佩戴战法(自带战法+选择战法)

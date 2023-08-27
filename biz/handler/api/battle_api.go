@@ -234,8 +234,8 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 		}
 		//武将标签
 		generalTags := make([]consts.GeneralTag, 0)
-		generalTagsArr := make([]string, 0)
-		util.ParseJsonObj(ctx, generalTagsArr, generalInfo.Tag)
+		generalTagsArr := []string{}
+		util.ParseJsonObj(ctx, &generalTagsArr, generalInfo.Tag)
 		for _, tag := range generalTagsArr {
 			generalTags = append(generalTags, consts.GeneralTag(cast.ToInt(tag)))
 		}
@@ -305,8 +305,8 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 		}
 		//武将标签
 		generalTags := make([]consts.GeneralTag, 0)
-		generalTagsArr := make([]string, 0)
-		util.ParseJsonObj(ctx, generalTagsArr, generalInfo.Tag)
+		generalTagsArr := []string{}
+		util.ParseJsonObj(ctx, &generalTagsArr, generalInfo.Tag)
 		for _, tag := range generalTagsArr {
 			generalTags = append(generalTags, consts.GeneralTag(cast.ToInt(tag)))
 		}

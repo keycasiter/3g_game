@@ -85,6 +85,7 @@ func (a AmbushOnAllSidesTactic) Execute() {
 				Damage:        dmg,
 				DamageType:    consts.DamageType_Strategy,
 				TacticName:    a.Name(),
+				TacticId:      a.Id(),
 			})
 		}
 	}

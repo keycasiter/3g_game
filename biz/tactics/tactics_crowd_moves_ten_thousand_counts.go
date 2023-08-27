@@ -51,6 +51,7 @@ func (c CrowdMovesTenThousandCountsTactic) Prepare() {
 				SufferGeneral: params.AttackGeneral,
 				DamageType:    consts.DamageType_Weapon,
 				Damage:        dmg,
+				TacticId:      c.Id(),
 				TacticName:    c.Name(),
 				EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_CrowdMovesTenThousandCounts_Prepare),
 			})

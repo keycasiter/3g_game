@@ -65,16 +65,16 @@ type ArmsAttr struct {
 
 // 战法资料
 type Tactics struct {
-	Id            consts.TacticId      `bson:"id"`
-	Name          string               `bson:"name"`
-	TacticsSource consts.TacticsSource `bson:"tactics_source"`
-	Type          consts.TacticsType   `bson:"type"`
+	Id            consts.TacticId      `json:"id"`
+	Name          string               `json:"name"`
+	TacticsSource consts.TacticsSource `json:"tactics_source"`
+	Type          consts.TacticsType   `json:"type"`
 }
 
 // 列传资料
 type Biographies struct {
-	Desc           string            `bson:"desc"`
-	Predestination []*Predestination `bson:"predestination"`
+	Desc           string            `json:"desc"`
+	Predestination []*Predestination `json:"predestination"`
 }
 
 // 缘分资料

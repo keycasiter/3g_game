@@ -91,9 +91,8 @@ func FluctuateDamage(dmg int64) int64 {
 func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, attackDmg int64) {
 	defer func() {
 		//统计上报
-		TacticReport(tacticsParams,
+		AttackReport(tacticsParams,
 			attackGeneral.BaseInfo.UniqueId,
-			0,
 			1,
 			attackDmg,
 			0,
@@ -482,6 +481,10 @@ type TacticDamageParam struct {
 // @damage 伤害量
 // @return 实际伤害/原兵力/剩余兵力
 func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldierNum int64, isEffect bool) {
+	if param.TacticId == 0 {
+		panic("tacticId is nil")
+	}
+
 	ctx := param.TacticsParams.Ctx
 	tacticsParams := param.TacticsParams
 	sufferGeneral := param.SufferGeneral
@@ -497,7 +500,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		//统计上报
 		TacticReport(tacticsParams,
 			attackGeneral.BaseInfo.UniqueId,
-			cast.ToInt64(param.TacticId),
+			int64(param.TacticId),
 			1,
 			damage,
 			0,

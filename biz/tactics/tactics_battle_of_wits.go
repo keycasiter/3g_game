@@ -102,6 +102,7 @@ func (b BattleOfWitsTactic) Execute() {
 					DamageType:    consts.DamageType_Strategy,
 					Damage:        dmg,
 					TacticName:    b.Name(),
+					TacticId:      b.Id(),
 				})
 			}
 		}

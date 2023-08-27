@@ -118,6 +118,7 @@ func (b BrocadeBagAndCleverPlanTactic) Prepare() {
 				DamageType:    consts.DamageType_Strategy,
 				Damage:        dmg,
 				TacticName:    b.Name(),
+				TacticId:      b.Id(),
 			})
 		}
 

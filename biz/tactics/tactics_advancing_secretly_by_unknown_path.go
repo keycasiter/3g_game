@@ -109,6 +109,7 @@ func (a AdvancingSecretlyByUnknownPathTactic) Execute() {
 				Damage:        dmg,
 				DamageType:    consts.DamageType_Strategy,
 				TacticName:    a.Name(),
+				TacticId:      a.Id(),
 			})
 			if isEffect {
 				//震慑效果施加

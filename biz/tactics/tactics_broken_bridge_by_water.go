@@ -134,6 +134,7 @@ func (b BrokenBridgeByWaterTactic) Execute() {
 						DamageType:    consts.DamageType_Weapon,
 						Damage:        dmg,
 						TacticName:    b.Name(),
+						TacticId:      b.Id(),
 						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
 					})
 				}

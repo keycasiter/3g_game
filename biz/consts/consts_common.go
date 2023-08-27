@@ -213,6 +213,7 @@ type TacticsType int
 /** 战法相关 **/
 const (
 	// 战法类型
+	TacticsType_Unknown       TacticsType = 0 // 未知
 	TacticsType_Active        TacticsType = 1 // 主动
 	TacticsType_Passive       TacticsType = 2 // 被动
 	TacticsType_Command       TacticsType = 3 // 指挥
@@ -235,6 +236,7 @@ type TacticsSource int
 
 const (
 	// 战法来源
+	TacticsSource_Unknown       TacticsSource = 0 //未知来源
 	TacticsSource_SelfContained TacticsSource = 1 //自带战法
 	TacticsSource_Inherit       TacticsSource = 2 //传承战法
 	TacticsSource_Event         TacticsSource = 3 //事件战法

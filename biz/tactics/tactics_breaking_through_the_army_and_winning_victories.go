@@ -112,6 +112,7 @@ func (b BreakingThroughTheArmyAndWinningVictoriesTactic) Execute() {
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
 			TacticName:    b.Name(),
+			TacticId:      b.Id(),
 		})
 	}
 }

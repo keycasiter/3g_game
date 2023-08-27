@@ -81,6 +81,7 @@ func (b BraveAmbitionTactic) Prepare() {
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Weapon,
 					TacticName:    b.Name(),
+					TacticId:      b.Id(),
 				})
 
 				//施加效果
@@ -143,6 +144,7 @@ func (b BraveAmbitionTactic) Prepare() {
 						Damage:        dmg,
 						DamageType:    consts.DamageType_Strategy,
 						TacticName:    b.Name(),
+						TacticId:      b.Id(),
 					})
 					//降低智力34点，持续2回合；
 					decrNum := float64(34)

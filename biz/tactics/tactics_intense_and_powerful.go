@@ -136,6 +136,7 @@ func (i IntenseAndPowerfulTactic) Execute() {
 									SufferGeneral:  revokeGeneral,
 									DamageType:     dmgType,
 									Damage:         dmg,
+									TacticId:       i.Id(),
 									TacticName:     i.Name(),
 									EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
 									IsIgnoreDefend: true,

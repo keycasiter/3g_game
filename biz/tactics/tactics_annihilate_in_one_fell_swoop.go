@@ -106,6 +106,7 @@ func (a AnnihilateInOneFellSwoopTactic) Execute() {
 				DamageType:    consts.DamageType_Weapon,
 				Damage:        dmg,
 				TacticName:    a.Name(),
+				TacticId:      a.Id(),
 			})
 			//若目标处于沙暴状态，则额外使目标进入混乱（攻击和战法无差别选择目标）状态，持续2回合
 			if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Sandstorm) {

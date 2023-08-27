@@ -7,6 +7,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
+//武将战法触发次数容器 map<武将ID,map<战法,mao<回合，触发次数>>>
+var generalTacticCountMap = map[string]map[consts.TacticId]map[consts.BattleRound]int64{}
+
 //判断对战结果
 func JudgeBattleResult(team1 *vo.BattleTeam, team2 *vo.BattleTeam) consts.BattleResult {
 	team1SoliderNum := int64(0)
@@ -37,6 +40,28 @@ func JudgeBattleResult(team1 *vo.BattleTeam, team2 *vo.BattleTeam) consts.Battle
 
 //战法触发统计
 func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tacticId int64, triggerTimes int64, killSoliderNum int64, resumeSoliderNum int64) {
+	if generalUniqueId == "" {
+		panic("generalUniqueId is nil")
+	}
+	if tacticId == 0 {
+		panic("tacticId is nil")
+	}
+	if triggerTimes == 0 {
+		panic("triggerTimes is nil")
+	}
+
+	//次数去重
+	if tacticRoundTriggerMap, ok := generalTacticCountMap[generalUniqueId]; ok {
+		if roundTriggerMap, okk := tacticRoundTriggerMap[consts.TacticId(tacticId)]; okk {
+			if times, okkk := roundTriggerMap[tacticParams.CurrentRound]; okkk {
+				if times > 0 {
+					triggerTimes = 0
+				}
+			}
+		}
+	}
+
+	//累计对战数据
 	if tacticStatisticsMap, ok := tacticParams.BattleTacticStatisticsMap[generalUniqueId]; ok {
 		if tacticStatistics, okk := tacticStatisticsMap[tacticId]; okk {
 			tacticStatistics.TriggerTimes += triggerTimes
@@ -51,6 +76,16 @@ func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tac
 				ResumeSoliderNum: resumeSoliderNum,
 			}
 		}
+	} else {
+		m := make(map[int64]*model.TacticStatistics, 0)
+		m[tacticId] = &model.TacticStatistics{
+			TacticId:         tacticId,
+			TacticName:       fmt.Sprintf("%v", consts.TacticId(tacticId)),
+			TriggerTimes:     triggerTimes,
+			KillSoliderNum:   killSoliderNum,
+			ResumeSoliderNum: resumeSoliderNum,
+		}
+		tacticParams.BattleTacticStatisticsMap[generalUniqueId] = m
 	}
 }
 

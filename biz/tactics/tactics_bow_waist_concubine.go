@@ -42,6 +42,7 @@ func (b BowWaistConcubineTactic) Prepare() {
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
 			TacticName:    b.Name(),
+			TacticId:      b.Id(),
 		})
 		//自身拥有功能性增益状态时额外对其造成兵刃伤害（伤害率20%x状态数）
 		buffEffectNum := util.BuffEffectContainsNum(currentGeneral)

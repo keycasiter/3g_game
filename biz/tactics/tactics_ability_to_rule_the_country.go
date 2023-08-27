@@ -63,6 +63,7 @@ func (a AbilityToRuleTheCountryTactic) Prepare() {
 				SufferGeneral: enemyGeneral,
 				Damage:        dmg,
 				DamageType:    consts.DamageType_Strategy,
+				TacticId:      a.Id(),
 				TacticName:    a.Name(),
 			})
 

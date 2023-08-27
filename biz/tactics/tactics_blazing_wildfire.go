@@ -98,6 +98,7 @@ func (b BlazingWildfireTactic) Execute() {
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Weapon,
 					TacticName:    b.Name(),
+					TacticId:      b.Id(),
 				})
 			}
 		} else {
@@ -131,6 +132,7 @@ func (b BlazingWildfireTactic) Execute() {
 							Damage:        dmgNum,
 							DamageType:    consts.DamageType_Strategy,
 							TacticName:    b.Name(),
+							TacticId:      b.Id(),
 						})
 					}
 					//注册中毒效果消失

@@ -71,6 +71,7 @@ func (a AvoidTheSolidAndStrikeTheWeakTactic) Execute() {
 		Damage:        dmg,
 		DamageType:    consts.DamageType_Weapon,
 		TacticName:    a.Name(),
+		TacticId:      a.Id(),
 	})
 }
 

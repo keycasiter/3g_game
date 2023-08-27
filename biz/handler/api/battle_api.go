@@ -20,7 +20,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/kr/pretty"
 	"github.com/spf13/cast"
 )
 
@@ -33,7 +32,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 
 	err = c.BindAndValidate(&req)
 	//日志打印
-	//hlog.CtxInfof(ctx, "BattleExecute Req:%s", util.ToJsonString(ctx, req))
+	hlog.CtxInfof(ctx, "BattleExecute Req:%s", util.ToJsonString(ctx, req))
 
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
@@ -77,7 +76,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(hertzconsts.StatusOK, resp)
 	//日志打印
-	pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
+	//pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
 }
 
 func buildResponse(resp *api.BattleExecuteResponse, serviceResp *logic.BattleLogicContextResponse) {
@@ -231,7 +230,7 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 		for _, tactic := range general.EquipTactics {
 			equipTactics = append(equipTactics, &po.Tactics{
 				Id:            consts.TacticId(tactic.Id),
-				Name:          tactic.Name,
+				Name:          fmt.Sprintf("%v", consts.TacticId(tactic.Id)),
 				TacticsSource: consts.TacticsSource(tactic.TacticsSource),
 				Type:          consts.TacticsType(tactic.Type),
 			})
@@ -300,7 +299,7 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 		for _, tactic := range general.EquipTactics {
 			equipTactics = append(equipTactics, &po.Tactics{
 				Id:            consts.TacticId(tactic.Id),
-				Name:          tactic.Name,
+				Name:          fmt.Sprintf("%v", tactic.Id),
 				TacticsSource: consts.TacticsSource(tactic.TacticsSource),
 				Type:          consts.TacticsType(tactic.Type),
 			})

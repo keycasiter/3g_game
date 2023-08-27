@@ -312,7 +312,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				//统计上报
 				util.TacticReport(runCtx.TacticsParams,
 					currentGeneral.BaseInfo.UniqueId,
-					cast.ToInt64(tactic.Id),
+					int64(tactic.Id),
 					1,
 					0,
 					0,
@@ -331,7 +331,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				//统计上报
 				util.TacticReport(runCtx.TacticsParams,
 					currentGeneral.BaseInfo.UniqueId,
-					cast.ToInt64(tactic.Id),
+					int64(tactic.Id),
 					1,
 					0,
 					0,
@@ -350,7 +350,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				//统计上报
 				util.TacticReport(runCtx.TacticsParams,
 					currentGeneral.BaseInfo.UniqueId,
-					cast.ToInt64(tactic.Id),
+					int64(tactic.Id),
 					1,
 					0,
 					0,
@@ -369,7 +369,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				//统计上报
 				util.TacticReport(runCtx.TacticsParams,
 					currentGeneral.BaseInfo.UniqueId,
-					cast.ToInt64(tactic.Id),
+					int64(tactic.Id),
 					1,
 					0,
 					0,
@@ -689,7 +689,6 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				if !util.GenerateRate(triggerRate) {
 					continue
 				}
-
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 
@@ -792,6 +791,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 						if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 							continue
 						}
+
 						//战法执行
 						execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 

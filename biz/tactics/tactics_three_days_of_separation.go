@@ -77,6 +77,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 					SufferGeneral: sufferGeneral,
 					Damage:        dmgNum,
 					DamageType:    consts.DamageType_Strategy,
+					TacticId:      t.Id(),
 					TacticName:    t.Name(),
 				})
 			}

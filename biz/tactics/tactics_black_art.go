@@ -126,6 +126,7 @@ func (b BlackArtTactic) Execute() {
 								DamageType:    consts.DamageType_Strategy,
 								Damage:        dmg,
 								TacticName:    b.Name(),
+								TacticId:      b.Id(),
 								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
 							})
 						}

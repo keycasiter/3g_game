@@ -58,6 +58,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 					SufferGeneral: sufferGeneral,
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Strategy,
+					TacticId:      u.Id(),
 					TacticName:    u.Name(),
 				})
 			}
@@ -76,6 +77,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 					SufferGeneral: sufferGeneral,
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Strategy,
+					TacticId:      u.Id(),
 					TacticName:    u.Name(),
 				})
 			}
@@ -94,6 +96,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 					SufferGeneral: sufferGeneral,
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Strategy,
+					TacticId:      u.Id(),
 					TacticName:    u.Name(),
 				})
 			}
@@ -112,6 +115,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 					SufferGeneral: sufferGeneral,
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Strategy,
+					TacticId:      u.Id(),
 					TacticName:    u.Name(),
 				})
 			}

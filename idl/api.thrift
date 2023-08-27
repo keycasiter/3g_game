@@ -46,7 +46,7 @@ struct BattleGeneral {
 	//携带兵力
 	7: i64 SoldierNum
 	//兵种适性
-    8: list<enum.ArmsAbility> ArmsAbility
+    8: enum.ArmsAbility ArmsAbility
 }
 
 // 武将对战加成

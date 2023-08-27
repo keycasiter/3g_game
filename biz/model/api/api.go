@@ -593,7 +593,7 @@ type BattleGeneral struct {
 	//携带兵力
 	SoldierNum int64 `thrift:"SoldierNum,7" form:"SoldierNum" json:"SoldierNum" query:"SoldierNum"`
 	//兵种适性
-	ArmsAbility []enum.ArmsAbility `thrift:"ArmsAbility,8" form:"ArmsAbility" json:"ArmsAbility" query:"ArmsAbility"`
+	ArmsAbility enum.ArmsAbility `thrift:"ArmsAbility,8" form:"ArmsAbility" json:"ArmsAbility" query:"ArmsAbility"`
 }
 
 func NewBattleGeneral() *BattleGeneral {
@@ -638,7 +638,7 @@ func (p *BattleGeneral) GetSoldierNum() (v int64) {
 	return p.SoldierNum
 }
 
-func (p *BattleGeneral) GetArmsAbility() (v []enum.ArmsAbility) {
+func (p *BattleGeneral) GetArmsAbility() (v enum.ArmsAbility) {
 	return p.ArmsAbility
 }
 
@@ -751,7 +751,7 @@ func (p *BattleGeneral) Read(iprot thrift.TProtocol) (err error) {
 				}
 			}
 		case 8:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -885,23 +885,10 @@ func (p *BattleGeneral) ReadField7(iprot thrift.TProtocol) error {
 }
 
 func (p *BattleGeneral) ReadField8(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
+	if v, err := iprot.ReadI32(); err != nil {
 		return err
-	}
-	p.ArmsAbility = make([]enum.ArmsAbility, 0, size)
-	for i := 0; i < size; i++ {
-		var _elem enum.ArmsAbility
-		if v, err := iprot.ReadI32(); err != nil {
-			return err
-		} else {
-			_elem = enum.ArmsAbility(v)
-		}
-
-		p.ArmsAbility = append(p.ArmsAbility, _elem)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
-		return err
+	} else {
+		p.ArmsAbility = enum.ArmsAbility(v)
 	}
 	return nil
 }
@@ -1107,18 +1094,10 @@ WriteFieldEndError:
 }
 
 func (p *BattleGeneral) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("ArmsAbility", thrift.LIST, 8); err != nil {
+	if err = oprot.WriteFieldBegin("ArmsAbility", thrift.I32, 8); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.I32, len(p.ArmsAbility)); err != nil {
-		return err
-	}
-	for _, v := range p.ArmsAbility {
-		if err := oprot.WriteI32(int32(v)); err != nil {
-			return err
-		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
+	if err := oprot.WriteI32(int32(p.ArmsAbility)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

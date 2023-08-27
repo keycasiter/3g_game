@@ -50,7 +50,7 @@ func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tac
 		panic("triggerTimes is nil")
 	}
 
-	//次数去重
+	//按回合次数去重
 	if tacticRoundTriggerMap, ok := generalTacticCountMap[generalUniqueId]; ok { //武将判断
 		if roundTriggerMap, okk := tacticRoundTriggerMap[consts.TacticId(tacticId)]; okk { //战法判断
 			if times, okkk := roundTriggerMap[tacticParams.CurrentRound]; okkk { //回合判断
@@ -73,6 +73,14 @@ func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tac
 		roundTriggerM[tacticParams.CurrentRound] = triggerTimes
 		tacticRoundTriggerM[consts.TacticId(tacticId)] = roundTriggerM
 		generalTacticCountMap[generalUniqueId] = tacticRoundTriggerM
+	}
+
+	//按类型次数去重 被动、指挥、兵种、阵法，只在准备阶段触发计数1次
+	if (consts.PassiveTacticsMap[consts.TacticId(tacticId)] ||
+		consts.CommandTacticsMap[consts.TacticId(tacticId)] ||
+		consts.TroopsTacticsMap[consts.TacticId(tacticId)] ||
+		consts.ArmTacticsMap[consts.TacticId(tacticId)]) && tacticParams.CurrentRound > 0 {
+		triggerTimes = 0
 	}
 
 	//累计对战数据

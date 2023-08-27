@@ -859,7 +859,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		attackGeneral.BaseInfo.UniqueId,
 		int64(param.TacticId),
 		1,
-		damage,
+		damageNum,
 		0,
 	)
 

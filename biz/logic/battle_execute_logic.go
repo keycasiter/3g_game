@@ -419,7 +419,7 @@ func (runCtx *BattleLogicContext) processBattleReportStatistics() {
 		tacticStatisticsList := make([]*model.TacticStatistics, 0)
 		if tacticStatisticsMap, ok := runCtx.TacticsParams.BattleTacticStatisticsMap[general.BaseInfo.UniqueId]; ok {
 			for _, tactic := range general.EquipTactics {
-				if tacticStatistics, okk := tacticStatisticsMap[cast.ToInt64(tactic.Id)]; okk {
+				if tacticStatistics, okk := tacticStatisticsMap[int64(tactic.Id)]; okk {
 					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
 						TacticId:         tacticStatistics.TacticId,
 						TacticName:       tacticStatistics.TacticName,

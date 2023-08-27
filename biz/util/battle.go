@@ -51,14 +51,28 @@ func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tac
 	}
 
 	//次数去重
-	if tacticRoundTriggerMap, ok := generalTacticCountMap[generalUniqueId]; ok {
-		if roundTriggerMap, okk := tacticRoundTriggerMap[consts.TacticId(tacticId)]; okk {
-			if times, okkk := roundTriggerMap[tacticParams.CurrentRound]; okkk {
+	if tacticRoundTriggerMap, ok := generalTacticCountMap[generalUniqueId]; ok { //武将判断
+		if roundTriggerMap, okk := tacticRoundTriggerMap[consts.TacticId(tacticId)]; okk { //战法判断
+			if times, okkk := roundTriggerMap[tacticParams.CurrentRound]; okkk { //回合判断
 				if times > 0 {
 					triggerTimes = 0
 				}
+			} else {
+				roundTriggerMap[tacticParams.CurrentRound] = triggerTimes
 			}
+		} else {
+			roundTriggerM := make(map[consts.BattleRound]int64, 0)
+			roundTriggerM[tacticParams.CurrentRound] = triggerTimes
+			tacticRoundTriggerMap[consts.TacticId(tacticId)] = roundTriggerM
 		}
+	} else {
+		//初始化
+		roundTriggerM := make(map[consts.BattleRound]int64, 0)
+		tacticRoundTriggerM := make(map[consts.TacticId]map[consts.BattleRound]int64, 0)
+		//赋值
+		roundTriggerM[tacticParams.CurrentRound] = triggerTimes
+		tacticRoundTriggerM[consts.TacticId(tacticId)] = roundTriggerM
+		generalTacticCountMap[generalUniqueId] = tacticRoundTriggerM
 	}
 
 	//累计对战数据

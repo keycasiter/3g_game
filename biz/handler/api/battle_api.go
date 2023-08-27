@@ -85,17 +85,28 @@ func buildResponse(resp *api.BattleExecuteResponse, serviceResp *logic.BattleLog
 		StatusMsg:  "成功",
 	}
 	//组合过程数据
+	resp.BattleProcessStatistics = makeBattleProcessStatistics(serviceResp)
+	//组合统计数据
+	resp.BattleResultStatistics = makeBattleResultStatistics(serviceResp)
+}
+
+//战报数据
+func makeBattleProcessStatistics(serviceResp *logic.BattleLogicContextResponse) map[int64]map[int64][]string {
 	battleProcessStatistics := make(map[int64]map[int64][]string, 0)
 	for battlePhase, battleRoundStatisticsMap := range serviceResp.BattleProcessStatistics {
 		m := make(map[int64][]string, 0)
 		for round, strings := range battleRoundStatisticsMap {
 			m[cast.ToInt64(round)] = strings
 		}
-		battleProcessStatistics[cast.ToInt64(battlePhase)] = m
+		battleProcessStatistics[int64(battlePhase)] = m
 	}
-	resp.BattleProcessStatistics = battleProcessStatistics
-	//组合统计数据
-	resp.BattleResultStatistics = &api.BattleResultStatistics{
+	return battleProcessStatistics
+}
+
+//对战统计数据
+func makeBattleResultStatistics(serviceResp *logic.BattleLogicContextResponse) *api.BattleResultStatistics {
+	return &api.BattleResultStatistics{
+		//我军
 		FightingTeam: &api.TeamBattleStatistics{
 			BattleTeam: &api.BattleTeam{
 				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.TeamType),
@@ -105,6 +116,7 @@ func buildResponse(resp *api.BattleExecuteResponse, serviceResp *logic.BattleLog
 			BattleResult:                int64(serviceResp.BattleResultStatistics.FightingTeam.BattleResult),
 			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
 		},
+		//敌军
 		EnemyTeam: &api.TeamBattleStatistics{
 			BattleTeam: &api.BattleTeam{
 				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.TeamType),
@@ -119,8 +131,8 @@ func buildResponse(resp *api.BattleExecuteResponse, serviceResp *logic.BattleLog
 
 func makeGeneralBattleStatisticsList(statisticsList []*model.GeneralBattleStatistics) []*api.GeneralBattleStatistics {
 	resList := make([]*api.GeneralBattleStatistics, 0)
-	tacticStatisticsList := make([]*api.TacticStatistics, 0)
 	for _, statistics := range statisticsList {
+		tacticStatisticsList := make([]*api.TacticStatistics, 0)
 		//战法统计
 		for _, tacticStatistics := range statistics.TacticStatisticsList {
 			tacticStatisticsList = append(tacticStatisticsList, &api.TacticStatistics{

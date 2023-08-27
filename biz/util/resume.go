@@ -90,6 +90,14 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		param.SufferGeneral.SoldierNum += param.ResumeNum
 	}
 
+	TacticReport(param.TacticsParams,
+		param.ProduceGeneral.BaseInfo.UniqueId,
+		int64(param.TacticId),
+		1,
+		0,
+		finalResumeNum,
+	)
+
 	hlog.CtxInfof(param.Ctx, "[%s]恢复了兵力%d(%d↗%d)",
 		param.SufferGeneral.BaseInfo.Name,
 		finalResumeNum,

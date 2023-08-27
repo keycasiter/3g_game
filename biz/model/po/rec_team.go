@@ -10,7 +10,7 @@ type RecTeam struct { // nolint:maligned
 	ArmTypeAbilityIds string `gorm:"column:arm_type_ability_ids" json:"arm_type_ability_ids"` //兵种适性
 	AttrAddition      string `gorm:"column:attr_addition" json:"attr_addition"`               //属性加点
 	ArmType           int64  `gorm:"column:arm_type" json:"arm_type"`                         //兵种
-	Group             string `gorm:"column:group" json:"group"`                               //阵容
+	Group             int64  `gorm:"column:group" json:"group"`                               //阵容
 	Desc              string `gorm:"column:desc" json:"desc"`                                 //描述
 	EvaluateDesc      string `gorm:"column:evaluate_desc" json:"evaluate_desc"`               //评级描述
 }

@@ -114,6 +114,7 @@ func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
 			Name:        recTeam.Name,
 			Id:          recTeam.Id,
 			ArmType:     recTeam.ArmType,
+			Group:       recTeam.Group,
 		})
 	}
 

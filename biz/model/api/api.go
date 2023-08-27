@@ -592,6 +592,8 @@ type BattleGeneral struct {
 	IsMaster bool `thrift:"IsMaster,6" form:"IsMaster" json:"IsMaster" query:"IsMaster"`
 	//携带兵力
 	SoldierNum int64 `thrift:"SoldierNum,7" form:"SoldierNum" json:"SoldierNum" query:"SoldierNum"`
+	//兵种适性
+	ArmsAbility []enum.ArmsAbility `thrift:"ArmsAbility,8" form:"ArmsAbility" json:"ArmsAbility" query:"ArmsAbility"`
 }
 
 func NewBattleGeneral() *BattleGeneral {
@@ -636,6 +638,10 @@ func (p *BattleGeneral) GetSoldierNum() (v int64) {
 	return p.SoldierNum
 }
 
+func (p *BattleGeneral) GetArmsAbility() (v []enum.ArmsAbility) {
+	return p.ArmsAbility
+}
+
 var fieldIDToName_BattleGeneral = map[int16]string{
 	1: "BaseInfo",
 	2: "EquipTactics",
@@ -644,6 +650,7 @@ var fieldIDToName_BattleGeneral = map[int16]string{
 	5: "Addition",
 	6: "IsMaster",
 	7: "SoldierNum",
+	8: "ArmsAbility",
 }
 
 func (p *BattleGeneral) IsSetBaseInfo() bool {
@@ -736,6 +743,16 @@ func (p *BattleGeneral) Read(iprot thrift.TProtocol) (err error) {
 		case 7:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField7(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 8:
+			if fieldTypeId == thrift.LIST {
+				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -867,6 +884,28 @@ func (p *BattleGeneral) ReadField7(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *BattleGeneral) ReadField8(iprot thrift.TProtocol) error {
+	_, size, err := iprot.ReadListBegin()
+	if err != nil {
+		return err
+	}
+	p.ArmsAbility = make([]enum.ArmsAbility, 0, size)
+	for i := 0; i < size; i++ {
+		var _elem enum.ArmsAbility
+		if v, err := iprot.ReadI32(); err != nil {
+			return err
+		} else {
+			_elem = enum.ArmsAbility(v)
+		}
+
+		p.ArmsAbility = append(p.ArmsAbility, _elem)
+	}
+	if err := iprot.ReadListEnd(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (p *BattleGeneral) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("BattleGeneral"); err != nil {
@@ -899,6 +938,10 @@ func (p *BattleGeneral) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField7(oprot); err != nil {
 			fieldId = 7
+			goto WriteFieldError
+		}
+		if err = p.writeField8(oprot); err != nil {
+			fieldId = 8
 			goto WriteFieldError
 		}
 
@@ -1061,6 +1104,31 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
+}
+
+func (p *BattleGeneral) writeField8(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ArmsAbility", thrift.LIST, 8); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteListBegin(thrift.I32, len(p.ArmsAbility)); err != nil {
+		return err
+	}
+	for _, v := range p.ArmsAbility {
+		if err := oprot.WriteI32(int32(v)); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteListEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
 }
 
 func (p *BattleGeneral) String() string {
@@ -8358,6 +8426,8 @@ type RecTeamGeneral struct {
 	GeneralList []*BattleGeneral `thrift:"GeneralList,1" form:"GeneralList" json:"GeneralList" query:"GeneralList"`
 	Name        string           `thrift:"Name,2" form:"Name" json:"Name" query:"Name"`
 	Id          int64            `thrift:"Id,3" form:"Id" json:"Id" query:"Id"`
+	Group       int64            `thrift:"Group,4" form:"Group" json:"Group" query:"Group"`
+	ArmType     int64            `thrift:"ArmType,5" form:"ArmType" json:"ArmType" query:"ArmType"`
 }
 
 func NewRecTeamGeneral() *RecTeamGeneral {
@@ -8376,10 +8446,20 @@ func (p *RecTeamGeneral) GetId() (v int64) {
 	return p.Id
 }
 
+func (p *RecTeamGeneral) GetGroup() (v int64) {
+	return p.Group
+}
+
+func (p *RecTeamGeneral) GetArmType() (v int64) {
+	return p.ArmType
+}
+
 var fieldIDToName_RecTeamGeneral = map[int16]string{
 	1: "GeneralList",
 	2: "Name",
 	3: "Id",
+	4: "Group",
+	5: "ArmType",
 }
 
 func (p *RecTeamGeneral) Read(iprot thrift.TProtocol) (err error) {
@@ -8424,6 +8504,26 @@ func (p *RecTeamGeneral) Read(iprot thrift.TProtocol) (err error) {
 		case 3:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 5:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -8499,6 +8599,24 @@ func (p *RecTeamGeneral) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *RecTeamGeneral) ReadField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Group = v
+	}
+	return nil
+}
+
+func (p *RecTeamGeneral) ReadField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.ArmType = v
+	}
+	return nil
+}
+
 func (p *RecTeamGeneral) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("RecTeamGeneral"); err != nil {
@@ -8515,6 +8633,14 @@ func (p *RecTeamGeneral) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
 			goto WriteFieldError
 		}
 
@@ -8593,6 +8719,40 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *RecTeamGeneral) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Group", thrift.I64, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Group); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *RecTeamGeneral) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ArmType", thrift.I64, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.ArmType); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 
 func (p *RecTeamGeneral) String() string {

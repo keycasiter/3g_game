@@ -113,6 +113,7 @@ func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
 			GeneralList: makeGeneralList(recTeam, generalMap, tacticMap, warbookMap),
 			Name:        recTeam.Name,
 			Id:          recTeam.Id,
+			ArmType:     recTeam.ArmType,
 		})
 	}
 
@@ -138,6 +139,11 @@ func makeGeneralList(recTeam *po.RecTeam,
 		util.StringToIntArray(recTeam.WarbookIds)[4:8],
 		util.StringToIntArray(recTeam.WarbookIds)[8:12],
 	}
+	generalArmTypeAbilityIdsArr := [][]int64{
+		util.StringToIntArray(recTeam.ArmTypeAbilityIds)[0:3],
+		util.StringToIntArray(recTeam.ArmTypeAbilityIds)[3:6],
+		util.StringToIntArray(recTeam.ArmTypeAbilityIds)[6:9],
+	}
 	//阵容武将
 	for idx, generalId := range generalIdsArr {
 		if general, ok := generalMap[generalId]; ok {
@@ -145,6 +151,7 @@ func makeGeneralList(recTeam *po.RecTeam,
 				BaseInfo:     general.BaseInfo,
 				EquipTactics: make([]*api.Tactics, 0),
 				WarBooks:     make([]*api.WarBook, 0),
+				ArmsAbility:  make([]enum.ArmsAbility, 0),
 				SoldierNum:   10000,
 			}
 			//阵容战法
@@ -167,6 +174,10 @@ func makeGeneralList(recTeam *po.RecTeam,
 						Name: warbook.Name,
 					})
 				}
+			}
+			//兵种适性
+			for _, armTypeAbilityId := range generalArmTypeAbilityIdsArr[idx] {
+				newGeneral.ArmsAbility = append(newGeneral.ArmsAbility, enum.ArmsAbility(armTypeAbilityId))
 			}
 			resList = append(resList, newGeneral)
 		}

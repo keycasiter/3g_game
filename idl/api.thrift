@@ -45,7 +45,8 @@ struct BattleGeneral {
 	6: bool IsMaster
 	//携带兵力
 	7: i64 SoldierNum
-
+	//兵种适性
+    8: list<enum.ArmsAbility> ArmsAbility
 }
 
 // 武将对战加成
@@ -274,6 +275,8 @@ struct RecTeamGeneral {
     1: list<BattleGeneral> GeneralList
     2: string Name
     3: i64 Id
+    4: i64 Group
+    5: i64 ArmType
 }
 //============= 查询推荐阵容列表 END ==============
 

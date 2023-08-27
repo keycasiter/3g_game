@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
@@ -141,10 +142,16 @@ func makeGeneralList(recTeam *po.RecTeam,
 	//阵容武将
 	for idx, generalId := range generalIdsArr {
 		if general, ok := generalMap[generalId]; ok {
+			newGeneral := &api.BattleGeneral{
+				BaseInfo:     general.BaseInfo,
+				EquipTactics: make([]*api.Tactics, 0),
+				WarBooks:     make([]*api.WarBook, 0),
+				SoldierNum:   10000,
+			}
 			//阵容战法
 			for _, tacticId := range generalTacticIdsArr[idx] {
 				if tactic, okk := tacticMap[tacticId]; okk {
-					general.EquipTactics = append(general.EquipTactics, &api.Tactics{
+					newGeneral.EquipTactics = append(newGeneral.EquipTactics, &api.Tactics{
 						Id:            tactic.Id,
 						Name:          tactic.Name,
 						TacticsSource: enum.TacticsSource(tactic.Source),
@@ -156,15 +163,16 @@ func makeGeneralList(recTeam *po.RecTeam,
 			//阵容兵书
 			for _, warbookId := range generalWarbookIdsArr[idx] {
 				if warbook, okk := warbookMap[warbookId]; okk {
-					general.WarBooks = append(general.WarBooks, &api.WarBook{
+					newGeneral.WarBooks = append(newGeneral.WarBooks, &api.WarBook{
 						Id:   warbook.Id,
 						Name: warbook.Name,
 					})
 				}
 			}
-			resList = append(resList, general)
+			resList = append(resList, newGeneral)
 		}
 	}
+	fmt.Printf("resList: %s\n", util.ToJsonString(context.Background(), resList))
 
 	return resList
 }

@@ -140,9 +140,9 @@ func makeGeneralList(recTeam *po.RecTeam,
 		util.StringToIntArray(recTeam.WarbookIds)[8:12],
 	}
 	generalArmTypeAbilityIdsArr := [][]int64{
-		util.StringToIntArray(recTeam.ArmTypeAbilityIds)[0:3],
-		util.StringToIntArray(recTeam.ArmTypeAbilityIds)[3:6],
-		util.StringToIntArray(recTeam.ArmTypeAbilityIds)[6:9],
+		util.StringToIntArray(recTeam.ArmTypeAbilityIds)[0:1],
+		util.StringToIntArray(recTeam.ArmTypeAbilityIds)[1:2],
+		util.StringToIntArray(recTeam.ArmTypeAbilityIds)[2:3],
 	}
 	//阵容武将
 	for idx, generalId := range generalIdsArr {

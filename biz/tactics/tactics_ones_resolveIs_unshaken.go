@@ -71,6 +71,7 @@ func (o OnesResolveIsUnshakenTactic) Prepare() {
 						SufferGeneral: enemyGeneral,
 						Damage:        dmg,
 						DamageType:    consts.DamageType_Weapon,
+						TacticId:      o.Id(),
 						TacticName:    o.Name(),
 						EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_GroupAttack),
 					})

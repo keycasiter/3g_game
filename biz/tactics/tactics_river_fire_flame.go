@@ -70,6 +70,7 @@ func (r RiverFireFlameTactic) Prepare() {
 			SufferGeneral: enemyGeneral,
 			DamageType:    consts.DamageType_Strategy,
 			Damage:        dmg,
+			TacticId:      r.Id(),
 			TacticName:    r.Name(),
 		})
 

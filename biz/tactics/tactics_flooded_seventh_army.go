@@ -123,6 +123,7 @@ func (f FloodedSeventhArmyTactic) Execute() {
 							SufferGeneral: enemyGeneral,
 							DamageType:    consts.DamageType_Weapon,
 							Damage:        dmg,
+							TacticId:      f.Id(),
 							TacticName:    f.Name(),
 							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 						})
@@ -145,6 +146,7 @@ func (f FloodedSeventhArmyTactic) Execute() {
 					SufferGeneral: general,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      f.Id(),
 					TacticName:    f.Name(),
 				})
 			}
@@ -185,6 +187,7 @@ func (f FloodedSeventhArmyTactic) Execute() {
 						SufferGeneral: revokeGeneral,
 						DamageType:    consts.DamageType_Weapon,
 						Damage:        dmg,
+						TacticId:      f.Id(),
 						TacticName:    f.Name(),
 						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 					})

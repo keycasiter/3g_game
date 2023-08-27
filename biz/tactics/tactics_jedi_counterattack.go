@@ -61,6 +61,7 @@ func (j JediCounterattackTactic) Prepare() {
 					SufferGeneral: enemyGeneral,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      j.Id(),
 					TacticName:    j.Name(),
 				})
 			}

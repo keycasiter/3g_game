@@ -104,6 +104,7 @@ func (m MakeFeintToTheEastButAttackInTheWestTactic) Execute() {
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,
 					DamageType:    consts.DamageType_Strategy,
+					TacticId:      m.Id(),
 					Damage:        dmg,
 					TacticName:    m.Name(),
 				})

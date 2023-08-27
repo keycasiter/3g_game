@@ -122,6 +122,7 @@ func (l LureTheEnemyInDeepTactic) Execute() {
 								SufferGeneral: enemyGeneral,
 								DamageType:    consts.DamageType_Strategy,
 								Damage:        dmg,
+								TacticId:      l.Id(),
 								TacticName:    l.Name(),
 								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
 							})

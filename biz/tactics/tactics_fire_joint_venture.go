@@ -93,6 +93,7 @@ func (f FireJointVentureTactic) Execute() {
 					SufferGeneral: general,
 					DamageType:    consts.DamageType_Strategy,
 					Damage:        dmg,
+					TacticId:      f.Id(),
 					TacticName:    f.Name(),
 					EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_FireJointVenture_BurningCamp),
 				})
@@ -155,6 +156,7 @@ func (f FireJointVentureTactic) Execute() {
 							SufferGeneral: revokeGeneral,
 							DamageType:    consts.DamageType_Strategy,
 							Damage:        dmg,
+							TacticId:      f.Id(),
 							TacticName:    f.Name(),
 							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 						})
@@ -193,6 +195,7 @@ func (f FireJointVentureTactic) Execute() {
 							SufferGeneral: revokeGeneral,
 							DamageType:    consts.DamageType_Strategy,
 							Damage:        dmg,
+							TacticId:      f.Id(),
 							TacticName:    f.Name(),
 							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 						})

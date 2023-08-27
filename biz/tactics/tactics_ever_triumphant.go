@@ -105,6 +105,7 @@ func (e EverTriumphantTactic) Execute() {
 					SufferGeneral: enemyGeneral,
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Weapon,
+					TacticId:      e.Id(),
 					TacticName:    e.Name(),
 				})
 			}

@@ -81,6 +81,7 @@ func (f ForetellLikeProphetTactic) Execute() {
 			SufferGeneral: general,
 			DamageType:    consts.DamageType_Strategy,
 			Damage:        dmg,
+			TacticId:      f.Id(),
 			TacticName:    f.Name(),
 		})
 		//施加效果

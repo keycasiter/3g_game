@@ -144,6 +144,7 @@ func (p PoisonousSpringRefusesShuTactic) Execute() {
 							SufferGeneral: general,
 							DamageType:    consts.DamageType_Strategy,
 							Damage:        dmg,
+							TacticId:      p.Id(),
 							TacticName:    p.Name(),
 							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_StrongMethysis),
 						})

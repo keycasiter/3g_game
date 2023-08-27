@@ -110,6 +110,7 @@ func (h HiddenArrowsAreDifficultToGuardAgainstTactic) Execute() {
 					SufferGeneral: enemyGeneral,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      h.Id(),
 					TacticName:    h.Name(),
 				})
 			}
@@ -128,6 +129,7 @@ func (h HiddenArrowsAreDifficultToGuardAgainstTactic) Execute() {
 						SufferGeneral: enemyGeneral,
 						DamageType:    consts.DamageType_Weapon,
 						Damage:        dmg,
+						TacticId:      h.Id(),
 						TacticName:    h.Name(),
 					})
 					return triggerResp

@@ -47,6 +47,7 @@ func (g GainMasteryByStrikingOnlyAfterTheEnemyHasStruckTactic) Prepare() {
 			SufferGeneral: attackGeneral,
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
+			TacticId:      g.Id(),
 			TacticName:    g.Name(),
 		})
 

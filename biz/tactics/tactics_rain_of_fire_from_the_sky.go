@@ -106,6 +106,7 @@ func (r RainOfFireFromTheSkyTactic) Execute() {
 					SufferGeneral: enemyGeneral,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      r.Id(),
 					TacticName:    r.Name(),
 				})
 				//灼烧状态
@@ -131,6 +132,7 @@ func (r RainOfFireFromTheSkyTactic) Execute() {
 								SufferGeneral: triggerGeneral,
 								DamageType:    consts.DamageType_Strategy,
 								Damage:        fireDmg,
+								TacticId:      r.Id(),
 								TacticName:    r.Name(),
 								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 							})

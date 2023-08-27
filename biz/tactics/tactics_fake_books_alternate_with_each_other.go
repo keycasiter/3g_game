@@ -82,6 +82,7 @@ func (f FakeBooksAlternateWithEachOtherTactic) Execute() {
 		SufferGeneral: enemeyGeneral,
 		DamageType:    consts.DamageType_Strategy,
 		Damage:        dmg,
+		TacticId:      f.Id(),
 		TacticName:    f.Name(),
 	})
 	//若目标处于混乱状态则使目标对其友军单体发动攻击（伤害率186%，类型取决于目标武力、智力较高的一项），
@@ -103,6 +104,7 @@ func (f FakeBooksAlternateWithEachOtherTactic) Execute() {
 			SufferGeneral: enemyPairGeneral,
 			DamageType:    dmgType,
 			Damage:        chaosDmg,
+			TacticId:      f.Id(),
 			TacticName:    f.Name(),
 		})
 	} else {

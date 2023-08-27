@@ -80,6 +80,7 @@ func (f FlamesFlyingInTheWindTactic) Execute() {
 		SufferGeneral: enemyGeneral,
 		DamageType:    consts.DamageType_Strategy,
 		Damage:        dmg,
+		TacticId:      f.Id(),
 		TacticName:    f.Name(),
 	})
 	//震慑效果

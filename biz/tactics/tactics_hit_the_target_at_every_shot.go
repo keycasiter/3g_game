@@ -118,6 +118,7 @@ func (h HitTheTargetAtEveryShotTactic) Execute() {
 					SufferGeneral: enemyGeneral,
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Weapon,
+					TacticId:      h.Id(),
 					TacticName:    h.Name(),
 				})
 			}

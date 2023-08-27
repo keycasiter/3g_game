@@ -165,6 +165,7 @@ func (b BreakingThroughTheWaterAndCrushingTheCityTactic) tacticTrigger(currentGe
 						SufferGeneral: revokeGeneral,
 						DamageType:    consts.DamageType_Strategy,
 						Damage:        dmg,
+						TacticId:      b.Id(),
 						TacticName:    b.Name(),
 						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 					})

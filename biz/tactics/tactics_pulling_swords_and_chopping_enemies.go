@@ -101,6 +101,7 @@ func (p PullingSwordsAndChoppingEnemiesTactic) Execute() {
 		SufferGeneral: enemyGeneral,
 		DamageType:    consts.DamageType_Weapon,
 		Damage:        dmg,
+		TacticId:      p.Id(),
 		TacticName:    p.Name(),
 	})
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_Awe, &vo.EffectHolderParams{

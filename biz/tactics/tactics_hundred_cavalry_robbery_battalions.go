@@ -74,6 +74,7 @@ func (h HundredCavalryRobberyBattalionsTactic) Execute() {
 		SufferGeneral: enemyGeneral,
 		DamageType:    consts.DamageType_Weapon,
 		Damage:        dmg,
+		TacticId:      h.Id(),
 		TacticName:    h.Name(),
 	})
 	//额外攻击
@@ -87,6 +88,7 @@ func (h HundredCavalryRobberyBattalionsTactic) Execute() {
 			SufferGeneral: enemyMasterGeneral,
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
+			TacticId:      h.Id(),
 			TacticName:    h.Name(),
 		})
 	}

@@ -69,6 +69,7 @@ func (r RefinedStrategiesTactic) Prepare() {
 					SufferGeneral: enemyGeneral,
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Strategy,
+					TacticId:      r.Id(),
 					TacticName:    r.Name(),
 				})
 				//缴械

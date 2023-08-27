@@ -128,6 +128,7 @@ func (b BeBesiegedOnAllSidesTactic) Execute() {
 								SufferGeneral: enemyGeneral,
 								Damage:        dmg,
 								DamageType:    consts.DamageType_Strategy,
+								TacticId:      b.Id(),
 								TacticName:    b.Name(),
 							})
 						}

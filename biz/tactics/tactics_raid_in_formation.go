@@ -62,6 +62,7 @@ func (r RaidInFormationTactic) Prepare() {
 				SufferGeneral: sufferGeneral,
 				DamageType:    consts.DamageType_Weapon,
 				Damage:        dmg,
+				TacticId:      r.Id(),
 				TacticName:    r.Name(),
 			})
 

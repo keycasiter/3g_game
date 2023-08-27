@@ -75,6 +75,7 @@ func (r RampartsOfMetalsAndAMoatOfHotWaterTactic) Prepare() {
 						AttackGeneral: triggerGeneral,
 						SufferGeneral: general,
 						DamageType:    consts.DamageType_Weapon,
+						TacticId:      r.Id(),
 						Damage:        dmg,
 						TacticName:    r.Name(),
 					})
@@ -101,6 +102,7 @@ func (r RampartsOfMetalsAndAMoatOfHotWaterTactic) Prepare() {
 									SufferGeneral: revokeGeneral,
 									DamageType:    consts.DamageType_Strategy,
 									Damage:        fireDmg,
+									TacticId:      r.Id(),
 									TacticName:    r.Name(),
 									EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 								})

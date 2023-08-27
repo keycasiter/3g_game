@@ -79,6 +79,7 @@ func (o OverwhelmingAllDirectionsTactic) Execute() {
 			SufferGeneral: enemyGeneral,
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
+			TacticId:      o.Id(),
 			TacticName:    o.Name(),
 		})
 		if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Awe) {

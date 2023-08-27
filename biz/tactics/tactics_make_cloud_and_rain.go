@@ -65,6 +65,7 @@ func (m MakeCloudAndRainTactic) Prepare() {
 								SufferGeneral: revokeGeneral,
 								DamageType:    consts.DamageType_Strategy,
 								Damage:        dmg,
+								TacticId:      m.Id(),
 								TacticName:    m.Name(),
 								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 							})

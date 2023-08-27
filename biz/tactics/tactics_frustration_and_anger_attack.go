@@ -109,6 +109,7 @@ func (f FrustrationAndAngerAttackTactic) Execute() {
 						SufferGeneral: general,
 						DamageType:    consts.DamageType_Weapon,
 						Damage:        dmg,
+						TacticId:      f.Id(),
 						TacticName:    f.Name(),
 					})
 				} else {

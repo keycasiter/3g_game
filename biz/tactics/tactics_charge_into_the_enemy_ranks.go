@@ -75,6 +75,7 @@ func (c ChargeIntoTheEnemyRanksTactic) Execute() {
 		SufferGeneral: enemyGeneral,
 		DamageType:    consts.DamageType_Weapon,
 		Damage:        dmg,
+		TacticId:      c.Id(),
 		TacticName:    c.Name(),
 	})
 	//施加缴械效果

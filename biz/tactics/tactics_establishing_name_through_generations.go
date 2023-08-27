@@ -110,6 +110,7 @@ func (e EstablishingNameThroughGenerationsTactic) Execute() {
 					SufferGeneral: enemyGeneral,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      e.Id(),
 					TacticName:    e.Name(),
 				})
 				//降低其24统率（受武力影响）
@@ -160,6 +161,7 @@ func (e EstablishingNameThroughGenerationsTactic) Execute() {
 								SufferGeneral: enemyGeneral,
 								DamageType:    consts.DamageType_Strategy,
 								Damage:        fireDmg,
+								TacticId:      e.Id(),
 								TacticName:    e.Name(),
 								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 							})

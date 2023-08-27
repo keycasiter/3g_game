@@ -122,6 +122,7 @@ func (h HoldTheArmyWithDeterminationAndDeterminationTactic) Execute() {
 			SufferGeneral: enemyGeneral,
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
+			TacticId:      h.Id(),
 			TacticName:    h.Name(),
 		})
 	}

@@ -53,6 +53,7 @@ func (q QingZhouSoldierTactic) Prepare() {
 					SufferGeneral: triggerGeneral,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      q.Id(),
 					TacticName:    q.Name(),
 					EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
 				})

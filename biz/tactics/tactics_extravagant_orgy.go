@@ -97,6 +97,7 @@ func (e ExtravagantOrgyTactic) Prepare() {
 					SufferGeneral: general,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      e.Id(),
 					TacticName:    e.Name(),
 				})
 			}

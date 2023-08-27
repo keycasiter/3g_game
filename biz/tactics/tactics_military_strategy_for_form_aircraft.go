@@ -77,6 +77,7 @@ func (m MilitaryStrategyForFormAircraftTactic) Execute() {
 		SufferGeneral: enemyGeneral,
 		DamageType:    consts.DamageType_Weapon,
 		Damage:        weaponDmg,
+		TacticId:      m.Id(),
 		TacticName:    m.Name(),
 	})
 	strategyDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
@@ -86,6 +87,7 @@ func (m MilitaryStrategyForFormAircraftTactic) Execute() {
 		SufferGeneral: enemyGeneral,
 		DamageType:    consts.DamageType_Strategy,
 		Damage:        strategyDmg,
+		TacticId:      m.Id(),
 		TacticName:    m.Name(),
 	})
 }

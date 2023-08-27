@@ -121,6 +121,7 @@ func (d DecisiveStrategyTactic) Execute() {
 			SufferGeneral: enemyGeneral,
 			DamageType:    consts.DamageType_Strategy,
 			Damage:        dmg,
+			TacticId:      d.Id(),
 			TacticName:    d.Name(),
 		})
 	}

@@ -72,6 +72,7 @@ func (c CutDownTactic) Execute() {
 		SufferGeneral: sufferGeneral,
 		DamageType:    consts.DamageType_Weapon,
 		Damage:        dmg,
+		TacticId:      c.Id(),
 		TacticName:    c.Name(),
 	})
 }

@@ -82,6 +82,7 @@ func (h HaveVerbalBattleWithSomebodyTactic) Execute() {
 			SufferGeneral: general,
 			DamageType:    consts.DamageType_Strategy,
 			Damage:        dmg,
+			TacticId:      h.Id(),
 			TacticName:    h.Name(),
 		})
 		//施加效果

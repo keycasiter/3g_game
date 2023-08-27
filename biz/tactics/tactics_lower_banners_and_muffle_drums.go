@@ -147,6 +147,7 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 						SufferGeneral: enemyGeneral,
 						Damage:        dmg,
 						DamageType:    consts.DamageType_Strategy,
+						TacticId:      l.Id(),
 						TacticName:    l.Name(),
 						EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_LowerBannersAndMuffleDrums_Prepare),
 					})

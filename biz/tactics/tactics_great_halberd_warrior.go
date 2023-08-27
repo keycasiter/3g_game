@@ -100,6 +100,7 @@ func (g GreatHalberdWarriorTactic) Execute() {
 					SufferGeneral: enemyGeneral,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      g.Id(),
 					TacticName:    g.Name(),
 				})
 			}

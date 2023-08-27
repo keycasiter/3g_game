@@ -88,6 +88,7 @@ func (t TheSkyIsBlazingTactic) Execute() {
 					SufferGeneral: general,
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Strategy,
+					TacticId:      t.Id(),
 					TacticName:    t.Name(),
 				})
 
@@ -112,6 +113,7 @@ func (t TheSkyIsBlazingTactic) Execute() {
 							SufferGeneral: general,
 							Damage:        firingDmg,
 							DamageType:    consts.DamageType_Strategy,
+							TacticId:      t.Id(),
 							TacticName:    t.Name(),
 						})
 

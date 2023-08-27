@@ -81,6 +81,7 @@ func (h HighWoodenPaddlesConnectedToTheCampTactic) Prepare() {
 					SufferGeneral: enemyGeneral,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      h.Id(),
 					TacticName:    h.Name(),
 				})
 				// 并有50%概率使其受到伤害提高6%，可叠加2次

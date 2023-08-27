@@ -140,6 +140,7 @@ func (d DivinelyInspiredStratagemTactic) Execute() {
 					SufferGeneral: general,
 					DamageType:    consts.DamageType_Strategy,
 					Damage:        dmg,
+					TacticId:      d.Id(),
 					TacticName:    d.Name(),
 				})
 			}

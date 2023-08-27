@@ -1362,17 +1362,9 @@ func (p *BattleGeneralAddition) String() string {
 // 能力属性
 type AbilityAttr struct {
 	ForceBase        string `thrift:"ForceBase,1" form:"ForceBase" json:"ForceBase" query:"ForceBase"`
-	ForceRate        string `thrift:"ForceRate,2" form:"ForceRate" json:"ForceRate" query:"ForceRate"`
-	IntelligenceBase string `thrift:"IntelligenceBase,3" form:"IntelligenceBase" json:"IntelligenceBase" query:"IntelligenceBase"`
-	IntelligenceRate string `thrift:"IntelligenceRate,4" form:"IntelligenceRate" json:"IntelligenceRate" query:"IntelligenceRate"`
-	CharmBase        string `thrift:"CharmBase,5" form:"CharmBase" json:"CharmBase" query:"CharmBase"`
-	CharmRate        string `thrift:"CharmRate,6" form:"CharmRate" json:"CharmRate" query:"CharmRate"`
-	CommandBase      string `thrift:"CommandBase,7" form:"CommandBase" json:"CommandBase" query:"CommandBase"`
-	CommandRate      string `thrift:"CommandRate,8" form:"CommandRate" json:"CommandRate" query:"CommandRate"`
-	PoliticsBase     string `thrift:"PoliticsBase,9" form:"PoliticsBase" json:"PoliticsBase" query:"PoliticsBase"`
-	PoliticsRate     string `thrift:"PoliticsRate,10" form:"PoliticsRate" json:"PoliticsRate" query:"PoliticsRate"`
-	SpeedBase        string `thrift:"SpeedBase,11" form:"SpeedBase" json:"SpeedBase" query:"SpeedBase"`
-	SpeedRate        string `thrift:"SpeedRate,12" form:"SpeedRate" json:"SpeedRate" query:"SpeedRate"`
+	IntelligenceBase string `thrift:"IntelligenceBase,2" form:"IntelligenceBase" json:"IntelligenceBase" query:"IntelligenceBase"`
+	CommandBase      string `thrift:"CommandBase,3" form:"CommandBase" json:"CommandBase" query:"CommandBase"`
+	SpeedBase        string `thrift:"SpeedBase,4" form:"SpeedBase" json:"SpeedBase" query:"SpeedBase"`
 }
 
 func NewAbilityAttr() *AbilityAttr {
@@ -1383,63 +1375,23 @@ func (p *AbilityAttr) GetForceBase() (v string) {
 	return p.ForceBase
 }
 
-func (p *AbilityAttr) GetForceRate() (v string) {
-	return p.ForceRate
-}
-
 func (p *AbilityAttr) GetIntelligenceBase() (v string) {
 	return p.IntelligenceBase
-}
-
-func (p *AbilityAttr) GetIntelligenceRate() (v string) {
-	return p.IntelligenceRate
-}
-
-func (p *AbilityAttr) GetCharmBase() (v string) {
-	return p.CharmBase
-}
-
-func (p *AbilityAttr) GetCharmRate() (v string) {
-	return p.CharmRate
 }
 
 func (p *AbilityAttr) GetCommandBase() (v string) {
 	return p.CommandBase
 }
 
-func (p *AbilityAttr) GetCommandRate() (v string) {
-	return p.CommandRate
-}
-
-func (p *AbilityAttr) GetPoliticsBase() (v string) {
-	return p.PoliticsBase
-}
-
-func (p *AbilityAttr) GetPoliticsRate() (v string) {
-	return p.PoliticsRate
-}
-
 func (p *AbilityAttr) GetSpeedBase() (v string) {
 	return p.SpeedBase
 }
 
-func (p *AbilityAttr) GetSpeedRate() (v string) {
-	return p.SpeedRate
-}
-
 var fieldIDToName_AbilityAttr = map[int16]string{
-	1:  "ForceBase",
-	2:  "ForceRate",
-	3:  "IntelligenceBase",
-	4:  "IntelligenceRate",
-	5:  "CharmBase",
-	6:  "CharmRate",
-	7:  "CommandBase",
-	8:  "CommandRate",
-	9:  "PoliticsBase",
-	10: "PoliticsRate",
-	11: "SpeedBase",
-	12: "SpeedRate",
+	1: "ForceBase",
+	2: "IntelligenceBase",
+	3: "CommandBase",
+	4: "SpeedBase",
 }
 
 func (p *AbilityAttr) Read(iprot thrift.TProtocol) (err error) {
@@ -1501,86 +1453,6 @@ func (p *AbilityAttr) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
-		case 5:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField5(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 6:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField6(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 7:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField7(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 8:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField8(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 9:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField9(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 10:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField10(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 11:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField11(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
-		case 12:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField12(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -1624,7 +1496,7 @@ func (p *AbilityAttr) ReadField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.ForceRate = v
+		p.IntelligenceBase = v
 	}
 	return nil
 }
@@ -1633,7 +1505,7 @@ func (p *AbilityAttr) ReadField3(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.IntelligenceBase = v
+		p.CommandBase = v
 	}
 	return nil
 }
@@ -1642,79 +1514,7 @@ func (p *AbilityAttr) ReadField4(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		p.IntelligenceRate = v
-	}
-	return nil
-}
-
-func (p *AbilityAttr) ReadField5(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.CharmBase = v
-	}
-	return nil
-}
-
-func (p *AbilityAttr) ReadField6(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.CharmRate = v
-	}
-	return nil
-}
-
-func (p *AbilityAttr) ReadField7(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.CommandBase = v
-	}
-	return nil
-}
-
-func (p *AbilityAttr) ReadField8(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.CommandRate = v
-	}
-	return nil
-}
-
-func (p *AbilityAttr) ReadField9(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.PoliticsBase = v
-	}
-	return nil
-}
-
-func (p *AbilityAttr) ReadField10(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.PoliticsRate = v
-	}
-	return nil
-}
-
-func (p *AbilityAttr) ReadField11(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
 		p.SpeedBase = v
-	}
-	return nil
-}
-
-func (p *AbilityAttr) ReadField12(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.SpeedRate = v
 	}
 	return nil
 }
@@ -1739,38 +1539,6 @@ func (p *AbilityAttr) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
-			goto WriteFieldError
-		}
-		if err = p.writeField5(oprot); err != nil {
-			fieldId = 5
-			goto WriteFieldError
-		}
-		if err = p.writeField6(oprot); err != nil {
-			fieldId = 6
-			goto WriteFieldError
-		}
-		if err = p.writeField7(oprot); err != nil {
-			fieldId = 7
-			goto WriteFieldError
-		}
-		if err = p.writeField8(oprot); err != nil {
-			fieldId = 8
-			goto WriteFieldError
-		}
-		if err = p.writeField9(oprot); err != nil {
-			fieldId = 9
-			goto WriteFieldError
-		}
-		if err = p.writeField10(oprot); err != nil {
-			fieldId = 10
-			goto WriteFieldError
-		}
-		if err = p.writeField11(oprot); err != nil {
-			fieldId = 11
-			goto WriteFieldError
-		}
-		if err = p.writeField12(oprot); err != nil {
-			fieldId = 12
 			goto WriteFieldError
 		}
 
@@ -1810,10 +1578,10 @@ WriteFieldEndError:
 }
 
 func (p *AbilityAttr) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("ForceRate", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("IntelligenceBase", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.ForceRate); err != nil {
+	if err := oprot.WriteString(p.IntelligenceBase); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1827,10 +1595,10 @@ WriteFieldEndError:
 }
 
 func (p *AbilityAttr) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("IntelligenceBase", thrift.STRING, 3); err != nil {
+	if err = oprot.WriteFieldBegin("CommandBase", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.IntelligenceBase); err != nil {
+	if err := oprot.WriteString(p.CommandBase); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -1844,126 +1612,7 @@ WriteFieldEndError:
 }
 
 func (p *AbilityAttr) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("IntelligenceRate", thrift.STRING, 4); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.IntelligenceRate); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
-}
-
-func (p *AbilityAttr) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("CharmBase", thrift.STRING, 5); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.CharmBase); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
-}
-
-func (p *AbilityAttr) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("CharmRate", thrift.STRING, 6); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.CharmRate); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
-}
-
-func (p *AbilityAttr) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("CommandBase", thrift.STRING, 7); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.CommandBase); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
-}
-
-func (p *AbilityAttr) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("CommandRate", thrift.STRING, 8); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.CommandRate); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
-}
-
-func (p *AbilityAttr) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("PoliticsBase", thrift.STRING, 9); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.PoliticsBase); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
-}
-
-func (p *AbilityAttr) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("PoliticsRate", thrift.STRING, 10); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.PoliticsRate); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
-}
-
-func (p *AbilityAttr) writeField11(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("SpeedBase", thrift.STRING, 11); err != nil {
+	if err = oprot.WriteFieldBegin("SpeedBase", thrift.STRING, 4); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := oprot.WriteString(p.SpeedBase); err != nil {
@@ -1974,26 +1623,9 @@ func (p *AbilityAttr) writeField11(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
-}
-
-func (p *AbilityAttr) writeField12(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("SpeedRate", thrift.STRING, 12); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.SpeedRate); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
 func (p *AbilityAttr) String() string {

@@ -72,17 +72,9 @@ func (g *GeneralQueryLogic) Handle() (api.GeneralQueryResponse, error) {
 		util.ParseJsonObj(g.Ctx, abilityAttrPo, general.AbilityAttr)
 		abilityAttr := api.AbilityAttr{
 			ForceBase:        abilityAttrPo.ForceBase,
-			ForceRate:        abilityAttrPo.ForceRate,
 			IntelligenceBase: abilityAttrPo.IntelligenceBase,
-			IntelligenceRate: abilityAttrPo.IntelligenceRate,
-			CharmBase:        abilityAttrPo.CharmBase,
-			CharmRate:        abilityAttrPo.CharmRate,
 			CommandBase:      abilityAttrPo.CommandBase,
-			CommandRate:      abilityAttrPo.CommandRate,
-			PoliticsBase:     abilityAttrPo.PoliticsBase,
-			PoliticsRate:     abilityAttrPo.PoliticsRate,
 			SpeedBase:        abilityAttrPo.SpeedBase,
-			SpeedRate:        abilityAttrPo.SpeedRate,
 		}
 
 		//兵种属性

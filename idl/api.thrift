@@ -67,17 +67,9 @@ struct BattleGeneralAddition {
 // 能力属性
 struct AbilityAttr {
 	1: string ForceBase
-	2: string ForceRate
-	3: string IntelligenceBase
-	4: string IntelligenceRate
-	5: string CharmBase
-	6: string CharmRate
-	7: string CommandBase
-	8: string CommandRate
-	9: string PoliticsBase
-	10: string PoliticsRate
-	11: string SpeedBase
-	12: string SpeedRate
+	2: string IntelligenceBase
+	3: string CommandBase
+	4: string SpeedBase
 }
 
 // 武将资料

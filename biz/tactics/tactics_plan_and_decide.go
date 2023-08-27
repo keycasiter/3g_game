@@ -59,6 +59,7 @@ func (p PlanAndDecideTactic) Prepare() {
 			ProduceGeneral: triggerGeneral,
 			SufferGeneral:  pairGeneral,
 			ResumeNum:      resumeNum,
+			TacticId:       p.Id(),
 		})
 		return triggerResp
 	})

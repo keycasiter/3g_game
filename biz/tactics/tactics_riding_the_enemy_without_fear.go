@@ -141,6 +141,7 @@ func (r RidingTheEnemyWithoutFearTactic) Execute() {
 							ProduceGeneral: revokeGeneral,
 							SufferGeneral:  revokeGeneral,
 							ResumeNum:      resumeNum,
+							TacticId:       r.Id(),
 						})
 					}
 

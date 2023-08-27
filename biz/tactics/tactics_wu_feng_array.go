@@ -76,6 +76,7 @@ func (w WuFengArrayTactic) Prepare() {
 				ProduceGeneral: lowGeneral,
 				SufferGeneral:  pairGeneral,
 				ResumeNum:      resumeNum,
+				TacticId:       w.Id(),
 			})
 		} else {
 			// 偶数回合使兵种适性较高的副将造成伤害提高15%（可叠加）

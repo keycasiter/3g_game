@@ -90,6 +90,14 @@ func FluctuateDamage(dmg int64) int64 {
 // @suffer 被攻击武将
 func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, attackDmg int64) {
 	defer func() {
+		//统计上报
+		TacticReport(tacticsParams,
+			attackGeneral.BaseInfo.UniqueId,
+			0,
+			1,
+			attackDmg,
+			0,
+		)
 		//「伤害结束」触发器
 		if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_DamageEnd]; okk {
 			for _, f := range funcs {
@@ -486,6 +494,15 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	isEffect = true
 
 	defer func() {
+		//统计上报
+		TacticReport(tacticsParams,
+			attackGeneral.BaseInfo.UniqueId,
+			cast.ToInt64(param.TacticId),
+			1,
+			damage,
+			0,
+		)
+
 		// 「伤害开始」触发器
 		if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_DamageEnd]; okk {
 			for _, f := range funcs {

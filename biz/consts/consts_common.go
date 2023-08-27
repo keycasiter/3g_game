@@ -22,6 +22,17 @@ const (
 	Max_Soldiers_Num_Per_General = 10000
 )
 
+/** 对战结果 **/
+type BattleResult int
+
+const (
+	BattleResult_Win              BattleResult = 1 //胜利
+	BattleResult_Lose             BattleResult = 2 //失败
+	BattleResult_Draw             BattleResult = 3 //平局
+	BattleResult_Advantage_Draw   BattleResult = 4 //优势平局
+	BattleResult_Inferiority_Draw BattleResult = 5 //劣势平局
+)
+
 /** 武将属性 **/
 type AbilityAttr int
 

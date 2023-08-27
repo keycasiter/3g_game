@@ -67,6 +67,7 @@ func (j JinFanArmyTactic) Prepare() {
 						ProduceGeneral: triggerGeneral,
 						SufferGeneral:  triggerGeneral,
 						ResumeNum:      resumeNum,
+						TacticId:       j.Id(),
 					})
 				} else {
 					//部队普通攻击时，有45%概率使目标进入溃逃状态（伤害率64%，受武力影响），持续2回合

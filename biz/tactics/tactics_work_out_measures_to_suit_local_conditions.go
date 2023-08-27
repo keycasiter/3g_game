@@ -60,6 +60,7 @@ func (w WorkOutMeasuresToSuitLocalConditionsTactic) Prepare() {
 				ProduceGeneral: triggerGeneral,
 				SufferGeneral:  triggerGeneral,
 				ResumeNum:      resumeNum,
+				TacticId:       w.Id(),
 			})
 		}
 

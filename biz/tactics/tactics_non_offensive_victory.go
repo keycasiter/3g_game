@@ -54,6 +54,7 @@ func (n NonOffensiveVictoryTactic) Prepare() {
 				ProduceGeneral: triggerGeneral,
 				SufferGeneral:  lowSoliderNumGeneral,
 				ResumeNum:      resumeNum,
+				TacticId:       n.Id(),
 			})
 		}
 

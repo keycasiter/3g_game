@@ -48,6 +48,7 @@ func (g GatheringOfTroopsTactic) Prepare() {
 				ProduceGeneral: triggerGeneral,
 				SufferGeneral:  triggerGeneral,
 				ResumeNum:      resumeNum,
+				TacticId:       g.Id(),
 			})
 			return triggerResp
 		})

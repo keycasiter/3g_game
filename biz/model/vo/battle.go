@@ -47,26 +47,6 @@ type EffectHolderParams struct {
 	ProduceGeneral *BattleGeneral
 }
 
-// 对战武将统计
-type BattleGeneralStatistics struct {
-	//武将基础信息
-	BattleGeneral *BattleGeneral
-	//战法统计
-	TacticStatistics []*BattleGeneralTacticStatistics
-	//普攻统计
-	AttackStatistics *BattleGeneralTacticStatistics
-}
-
-// 对战战法统计
-type BattleGeneralTacticStatistics struct {
-	//释放次数
-	TriggerCnt int64
-	//伤害量
-	DamageNum int64
-	//恢复量
-	ResumeNum int64
-}
-
 // 对战武将信息
 type BattleGeneral struct {
 	//基础信息

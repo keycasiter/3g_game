@@ -83,6 +83,7 @@ func (g GoldenPillSecretTechniqueTactic) Prepare() {
 						ProduceGeneral: revokeGeneral,
 						SufferGeneral:  revokeGeneral,
 						ResumeNum:      resumeNum,
+						TacticId:       g.Id(),
 					})
 				}
 

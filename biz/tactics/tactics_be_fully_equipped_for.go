@@ -57,6 +57,7 @@ func (b BeFullyEquippedForTactic) Prepare() {
 					ProduceGeneral: triggerGeneral,
 					SufferGeneral:  general,
 					ResumeNum:      resumeNum,
+					TacticId:       b.Id(),
 				})
 			}
 		}

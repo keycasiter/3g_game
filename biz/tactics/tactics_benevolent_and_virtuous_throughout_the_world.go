@@ -42,6 +42,7 @@ func (b BenevolentAndVirtuousThroughoutTheWorldTactic) Prepare() {
 				ProduceGeneral: triggerGeneral,
 				SufferGeneral:  general,
 				ResumeNum:      resume,
+				TacticId:       b.Id(),
 			})
 			//并使其受到伤害降低4%，受智力影响，持续1回合
 			rate := 0.04 + (general.BaseInfo.AbilityAttr.IntelligenceRate / 100 / 100)

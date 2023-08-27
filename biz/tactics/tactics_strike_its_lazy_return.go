@@ -90,6 +90,7 @@ func (s StrikeItsLazyReturnTactic) Execute() {
 					ProduceGeneral: triggerGeneral,
 					SufferGeneral:  currentGeneral,
 					ResumeNum:      resumeNum,
+					TacticId:       s.Id(),
 				})
 				//效果
 				if util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{

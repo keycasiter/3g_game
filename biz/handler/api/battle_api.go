@@ -18,7 +18,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/kr/pretty"
 	"github.com/spf13/cast"
 )
 
@@ -71,13 +73,118 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 
 	//组合resp
 	copier.Copy(resp, serviceResp)
+	buildResponse(resp, serviceResp)
+
+	c.JSON(hertzconsts.StatusOK, resp)
+	//日志打印
+	pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
+}
+
+func buildResponse(resp *api.BattleExecuteResponse, serviceResp *logic.BattleLogicContextResponse) {
 	resp.Meta = &common.Meta{
 		StatusCode: enum.ResponseCode_Success,
 		StatusMsg:  "成功",
 	}
-	c.JSON(hertzconsts.StatusOK, resp)
-	//日志打印
-	//hlog.CtxInfof(ctx, "BattleExecute Resp:%s", util.ToJsonString(ctx, resp))
+	//组合过程数据
+	battleProcessStatistics := make(map[int64]map[int64][]string, 0)
+	for battlePhase, battleRoundStatisticsMap := range serviceResp.BattleProcessStatistics {
+		m := make(map[int64][]string, 0)
+		for round, strings := range battleRoundStatisticsMap {
+			m[cast.ToInt64(round)] = strings
+		}
+		battleProcessStatistics[cast.ToInt64(battlePhase)] = m
+	}
+	resp.BattleProcessStatistics = battleProcessStatistics
+	//组合统计数据
+	resp.BattleResultStatistics = &api.BattleResultStatistics{
+		FightingTeam: &api.TeamBattleStatistics{
+			BattleTeam: &api.BattleTeam{
+				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.TeamType),
+				ArmType:        enum.ArmType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.ArmType),
+				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+			},
+			BattleResult:                int64(serviceResp.BattleResultStatistics.FightingTeam.BattleResult),
+			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
+		},
+		EnemyTeam: &api.TeamBattleStatistics{
+			BattleTeam: &api.BattleTeam{
+				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.TeamType),
+				ArmType:        enum.ArmType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.ArmType),
+				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+			},
+			BattleResult:                int64(serviceResp.BattleResultStatistics.EnemyTeam.BattleResult),
+			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
+		},
+	}
+}
+
+func makeGeneralBattleStatisticsList(statisticsList []*model.GeneralBattleStatistics) []*api.GeneralBattleStatistics {
+	resList := make([]*api.GeneralBattleStatistics, 0)
+	tacticStatisticsList := make([]*api.TacticStatistics, 0)
+	for _, statistics := range statisticsList {
+		//战法统计
+		for _, tacticStatistics := range statistics.TacticStatisticsList {
+			tacticStatisticsList = append(tacticStatisticsList, &api.TacticStatistics{
+				TacticId:         tacticStatistics.TacticId,
+				TacticName:       tacticStatistics.TacticName,
+				TacticQuality:    tacticStatistics.TacticQuality,
+				TriggerTimes:     tacticStatistics.TriggerTimes,
+				KillSoliderNum:   tacticStatistics.KillSoliderNum,
+				ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
+			})
+		}
+		//普攻
+		attackStatistics := &api.TacticStatistics{
+			TriggerTimes:     statistics.GeneralAttackStatistics.TriggerTimes,
+			KillSoliderNum:   statistics.GeneralAttackStatistics.KillSoliderNum,
+			ResumeSoliderNum: statistics.GeneralAttackStatistics.ResumeSoliderNum,
+		}
+		resList = append(resList, &api.GeneralBattleStatistics{
+			TacticStatisticsList:    tacticStatisticsList,
+			GeneralAttackStatistics: attackStatistics,
+		})
+	}
+
+	return resList
+}
+
+func makeBattleGenerals(battleGenerals []*vo.BattleGeneral) []*api.BattleGeneral {
+	resList := make([]*api.BattleGeneral, 0)
+	for _, general := range battleGenerals {
+		resList = append(resList, &api.BattleGeneral{
+			BaseInfo: &api.MetadataGeneral{
+				Id:          general.BaseInfo.Id,
+				Name:        general.BaseInfo.Name,
+				Group:       enum.Group(general.BaseInfo.Group),
+				GeneralTag:  makeGeneralTag(general.BaseInfo.GeneralTag),
+				AvatarUrl:   general.BaseInfo.AvatarUri,
+				AbilityAttr: makeAbilityAttr(general),
+				ArmsAttr:    makeArmsAttr(general),
+			},
+			IsMaster:   general.IsMaster,
+			SoldierNum: general.SoldierNum,
+		})
+	}
+	return resList
+}
+
+func makeAbilityAttr(general *vo.BattleGeneral) *api.AbilityAttr {
+	return &api.AbilityAttr{
+		ForceBase:        cast.ToString(general.BaseInfo.AbilityAttr.ForceBase),
+		IntelligenceBase: cast.ToString(general.BaseInfo.AbilityAttr.IntelligenceBase),
+		CommandBase:      cast.ToString(general.BaseInfo.AbilityAttr.CommandBase),
+		SpeedBase:        cast.ToString(general.BaseInfo.AbilityAttr.SpeedBase),
+	}
+}
+
+func makeArmsAttr(general *vo.BattleGeneral) *api.ArmsAttr {
+	return &api.ArmsAttr{
+		Cavalry:   enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Cavalry)),
+		Mauler:    enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Mauler)),
+		Archers:   enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Archers)),
+		Spearman:  enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Spearman)),
+		Apparatus: enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Apparatus)),
+	}
 }
 
 func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest) *logic.BattleLogicContextRequest {
@@ -156,10 +263,10 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 			Addition: &vo.BattleGeneralAddition{
 				//属性加点，从参数获取
 				AbilityAttr: po.AbilityAttr{
-					ForceBase:        general.Addition.AbilityAttr.ForceBase,
-					IntelligenceBase: general.Addition.AbilityAttr.IntelligenceBase,
-					CommandBase:      general.Addition.AbilityAttr.CommandBase,
-					SpeedBase:        general.Addition.AbilityAttr.SpeedBase,
+					ForceBase:        cast.ToFloat64(general.Addition.AbilityAttr.ForceBase),
+					IntelligenceBase: cast.ToFloat64(general.Addition.AbilityAttr.IntelligenceBase),
+					CommandBase:      cast.ToFloat64(general.Addition.AbilityAttr.CommandBase),
+					SpeedBase:        cast.ToFloat64(general.Addition.AbilityAttr.SpeedBase),
 				},
 				//武将等级，从参数获取
 				GeneralLevel: consts.GeneralLevel(general.Addition.GeneralLevel),
@@ -225,10 +332,10 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 			Addition: &vo.BattleGeneralAddition{
 				//属性加点，从参数获取
 				AbilityAttr: po.AbilityAttr{
-					ForceBase:        general.Addition.AbilityAttr.ForceBase,
-					IntelligenceBase: general.Addition.AbilityAttr.IntelligenceBase,
-					CommandBase:      general.Addition.AbilityAttr.CommandBase,
-					SpeedBase:        general.Addition.AbilityAttr.SpeedBase,
+					ForceBase:        cast.ToFloat64(general.Addition.AbilityAttr.ForceBase),
+					IntelligenceBase: cast.ToFloat64(general.Addition.AbilityAttr.IntelligenceBase),
+					CommandBase:      cast.ToFloat64(general.Addition.AbilityAttr.CommandBase),
+					SpeedBase:        cast.ToFloat64(general.Addition.AbilityAttr.SpeedBase),
 				},
 				//武将等级，从参数获取
 				GeneralLevel: consts.GeneralLevel(general.Addition.GeneralLevel),
@@ -269,11 +376,19 @@ func makeBuildingTechGroupAddition(team *api.BattleTeam) vo.BuildingTechGroupAdd
 		return vo.BuildingTechGroupAddition{}
 	}
 	return vo.BuildingTechGroupAddition{
-		GroupWeiGuoRate:   team.BuildingTechGroupAddition.GroupWuGuoRate,
-		GroupShuGuoRate:   team.BuildingTechGroupAddition.GroupShuGuoRate,
-		GroupWuGuoRate:    team.BuildingTechGroupAddition.GroupWuGuoRate,
-		GroupQunXiongRate: team.BuildingTechGroupAddition.GroupQunXiongRate,
+		GroupWeiGuoRate:   cast.ToFloat64(team.BuildingTechGroupAddition.GroupWuGuoRate),
+		GroupShuGuoRate:   cast.ToFloat64(team.BuildingTechGroupAddition.GroupShuGuoRate),
+		GroupWuGuoRate:    cast.ToFloat64(team.BuildingTechGroupAddition.GroupWuGuoRate),
+		GroupQunXiongRate: cast.ToFloat64(team.BuildingTechGroupAddition.GroupQunXiongRate),
 	}
+}
+
+func makeGeneralTag(tags []consts.GeneralTag) []enum.GeneralTag {
+	resList := make([]enum.GeneralTag, 0)
+	for _, tag := range tags {
+		resList = append(resList, enum.GeneralTag(tag))
+	}
+	return resList
 }
 
 func makeBuildingTechAttrAddition(team *api.BattleTeam) vo.BuildingTechAttrAddition {
@@ -282,10 +397,10 @@ func makeBuildingTechAttrAddition(team *api.BattleTeam) vo.BuildingTechAttrAddit
 	}
 
 	return vo.BuildingTechAttrAddition{
-		ForceAddition:        team.BuildingTechAttrAddition.ForceAddition,
-		IntelligenceAddition: team.BuildingTechAttrAddition.IntelligenceAddition,
-		CommandAddition:      team.BuildingTechAttrAddition.CommandAddition,
-		SpeedAddition:        team.BuildingTechAttrAddition.SpeedAddition,
+		ForceAddition:        cast.ToFloat64(team.BuildingTechAttrAddition.ForceAddition),
+		IntelligenceAddition: cast.ToFloat64(team.BuildingTechAttrAddition.IntelligenceAddition),
+		CommandAddition:      cast.ToFloat64(team.BuildingTechAttrAddition.CommandAddition),
+		SpeedAddition:        cast.ToFloat64(team.BuildingTechAttrAddition.SpeedAddition),
 	}
 }
 

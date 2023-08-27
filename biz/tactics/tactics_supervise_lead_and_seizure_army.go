@@ -87,6 +87,7 @@ func (s SuperviseLeadAndSeizureArmyTactic) Prepare() {
 				ProduceGeneral: currentGeneral,
 				SufferGeneral:  general,
 				ResumeNum:      resumeNum,
+				TacticId:       s.Id(),
 			})
 		}
 

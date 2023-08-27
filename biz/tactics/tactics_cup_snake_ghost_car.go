@@ -122,6 +122,7 @@ func (c CupSnakeGhostCarTactic) Execute() {
 					ProduceGeneral: triggerGeneral,
 					SufferGeneral:  pairGeneral,
 					ResumeNum:      resumeNum,
+					TacticId:       c.Id(),
 				})
 			}
 		}

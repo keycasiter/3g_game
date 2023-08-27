@@ -91,6 +91,7 @@ func (g GatherTheCrowdAndStrikeTactic) Execute() {
 			ProduceGeneral: currentGeneral,
 			SufferGeneral:  currentGeneral,
 			ResumeNum:      resumeNum,
+			TacticId:       g.Id(),
 		})
 	}
 }

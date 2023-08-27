@@ -72,6 +72,7 @@ func (d DressTactic) Execute() {
 		ProduceGeneral: currentGeneral,
 		SufferGeneral:  pairGeneral,
 		ResumeNum:      resume,
+		TacticId:       d.Id(),
 	})
 }
 

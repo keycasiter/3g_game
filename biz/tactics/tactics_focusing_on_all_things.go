@@ -101,6 +101,7 @@ func (f FocusingOnAllThingsTactic) Prepare() {
 						ProduceGeneral: currentGeneral,
 						SufferGeneral:  general,
 						ResumeNum:      resumeNum,
+						TacticId:       f.Id(),
 					})
 				}
 			}

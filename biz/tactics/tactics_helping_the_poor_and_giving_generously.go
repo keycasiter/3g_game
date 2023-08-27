@@ -74,6 +74,7 @@ func (h HelpingThePoorAndGivingGenerouslyTactic) Prepare() {
 				ProduceGeneral: currentGeneral,
 				SufferGeneral:  lowestSoliderGeneral,
 				ResumeNum:      resumeNum,
+				TacticId:       h.Id(),
 			})
 			//施加效果
 			effectRate := 0.26 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100

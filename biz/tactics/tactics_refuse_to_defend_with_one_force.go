@@ -83,6 +83,7 @@ func (r RefuseToDefendWithOneForceTactic) Execute() {
 		ProduceGeneral: currentGeneral,
 		SufferGeneral:  currentGeneral,
 		ResumeNum:      resumeNum,
+		TacticId:       r.Id(),
 	})
 
 	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{

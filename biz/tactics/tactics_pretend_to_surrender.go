@@ -87,6 +87,7 @@ func (p PretendToSurrenderTactic) Prepare() {
 							ProduceGeneral: currentGeneral,
 							SufferGeneral:  revokeGeneral,
 							ResumeNum:      resumeNum,
+							TacticId:       p.Id(),
 						})
 					}
 

@@ -55,6 +55,7 @@ func (s SelfHealingTactic) Prepare() {
 					ProduceGeneral: currentGeneral,
 					SufferGeneral:  currentGeneral,
 					ResumeNum:      resumeNum,
+					TacticId:       s.Id(),
 				})
 			}
 

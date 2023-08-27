@@ -58,6 +58,7 @@ func (r RampartsOfMetalsAndAMoatOfHotWaterTactic) Prepare() {
 						ProduceGeneral: currentGeneral,
 						SufferGeneral:  pairGeneral,
 						ResumeNum:      resumeNum,
+						TacticId:       r.Id(),
 					})
 				}
 

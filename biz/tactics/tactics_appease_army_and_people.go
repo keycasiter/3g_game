@@ -150,6 +150,7 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 					ProduceGeneral: triggerGeneral,
 					SufferGeneral:  general,
 					ResumeNum:      resumeNum,
+					TacticId:       a.Id(),
 				})
 			}
 		}

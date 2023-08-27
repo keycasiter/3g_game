@@ -23,10 +23,10 @@ type BattleLogicContextRequest struct {
 
 // resp
 type BattleLogicContextResponse struct {
-	//我军武将对战信息
-	FightingGeneralStatistics []*vo.BattleGeneralStatistics
-	//敌军武将对战信息
-	EnemyGeneralStatistics []*vo.BattleGeneralStatistics
+	//对战数据统计
+	BattleResultStatistics *model.BattleResultStatistics
+	//对战过程数据
+	BattleProcessStatistics map[consts.BattlePhase]map[consts.BattleRound][]string
 }
 
 //resp
@@ -50,10 +50,13 @@ type BattleLogicContext struct {
 	TacticsParams *model.TacticsParams
 	//回合结束标记
 	BattleRoundEndFlag bool
+
+	/**对战数据统计**/
 }
 
 func NewBattleLogicContext(ctx context.Context, req *BattleLogicContextRequest) *BattleLogicContext {
 	runCtx := &BattleLogicContext{
+		Ctx:  ctx,
 		Req:  req,
 		Resp: &BattleLogicContextResponse{},
 	}
@@ -306,6 +309,14 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
+				//统计上报
+				util.TacticReport(runCtx.TacticsParams,
+					currentGeneral.BaseInfo.UniqueId,
+					cast.ToInt64(tactic.Id),
+					1,
+					0,
+					0,
+				)
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
@@ -317,6 +328,14 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
+				//统计上报
+				util.TacticReport(runCtx.TacticsParams,
+					currentGeneral.BaseInfo.UniqueId,
+					cast.ToInt64(tactic.Id),
+					1,
+					0,
+					0,
+				)
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
@@ -328,6 +347,14 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
+				//统计上报
+				util.TacticReport(runCtx.TacticsParams,
+					currentGeneral.BaseInfo.UniqueId,
+					cast.ToInt64(tactic.Id),
+					1,
+					0,
+					0,
+				)
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
@@ -339,6 +366,14 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
 					continue
 				}
+				//统计上报
+				util.TacticReport(runCtx.TacticsParams,
+					currentGeneral.BaseInfo.UniqueId,
+					cast.ToInt64(tactic.Id),
+					1,
+					0,
+					0,
+				)
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 			}
@@ -377,79 +412,96 @@ func (runCtx *BattleLogicContext) handleTeamAddition(team *vo.BattleTeam) {
 
 // 对战战报统计数据处理
 func (runCtx *BattleLogicContext) processBattleReportStatistics() {
-	//我方
-	fightingBattleGeneralStatistics := make([]*vo.BattleGeneralStatistics, 0)
-	for _, general := range runCtx.TacticsParams.FightingTeam.BattleGenerals {
+	//我军
+	fightingGeneralsStatisticsList := make([]*model.GeneralBattleStatistics, 0)
+	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
 		//战法统计
-		tacticStatistics := make([]*vo.BattleGeneralTacticStatistics, 0)
-		for _, tactic := range general.EquipTactics {
-			triggerCnt := int64(0)
-			damageNum := int64(0)
-			resumeNum := int64(0)
-			if cnt, ok := general.TacticAccumulateTriggerMap[tactic.Id]; ok {
-				triggerCnt = cnt
+		tacticStatisticsList := make([]*model.TacticStatistics, 0)
+		if tacticStatisticsMap, ok := runCtx.TacticsParams.BattleTacticStatisticsMap[general.BaseInfo.UniqueId]; ok {
+			for _, tactic := range general.EquipTactics {
+				if tacticStatistics, okk := tacticStatisticsMap[cast.ToInt64(tactic.Id)]; okk {
+					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
+						TacticId:         tacticStatistics.TacticId,
+						TacticName:       tacticStatistics.TacticName,
+						TriggerTimes:     tacticStatistics.TriggerTimes,
+						KillSoliderNum:   tacticStatistics.KillSoliderNum,
+						ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
+					})
+				}
 			}
-			if cnt, ok := general.TacticAccumulateDamageMap[tactic.Id]; ok {
-				damageNum = cnt
-			}
-			if cnt, ok := general.TacticAccumulateResumeMap[tactic.Id]; ok {
-				resumeNum = cnt
-			}
-
-			tacticStatistics = append(tacticStatistics, &vo.BattleGeneralTacticStatistics{
-				TriggerCnt: triggerCnt,
-				DamageNum:  damageNum,
-				ResumeNum:  resumeNum,
-			})
+		}
+		//普攻统计
+		generalAttackStatistics := &model.TacticStatistics{}
+		if attackStatistics, ok := runCtx.TacticsParams.BattleAttackStatisticsMap[general.BaseInfo.UniqueId]; ok {
+			generalAttackStatistics.KillSoliderNum = attackStatistics.KillSoliderNum
+			generalAttackStatistics.ResumeSoliderNum = attackStatistics.ResumeSoliderNum
+			generalAttackStatistics.TriggerTimes = attackStatistics.TriggerTimes
 		}
 
-		fightingBattleGeneralStatistics = append(fightingBattleGeneralStatistics, &vo.BattleGeneralStatistics{
-			BattleGeneral:    general,
-			TacticStatistics: nil,
-			AttackStatistics: &vo.BattleGeneralTacticStatistics{
-				TriggerCnt: general.ExecuteGeneralAttackNum,
-				DamageNum:  general.AccumulateAttackDamageNum,
-			},
+		fightingGeneralsStatisticsList = append(fightingGeneralsStatisticsList, &model.GeneralBattleStatistics{
+			TacticStatisticsList:    tacticStatisticsList,
+			GeneralAttackStatistics: generalAttackStatistics,
 		})
 	}
+
 	//敌军
-	enemyBattleGeneralStatistics := make([]*vo.BattleGeneralStatistics, 0)
-	for _, general := range runCtx.TacticsParams.EnemyTeam.BattleGenerals {
+	enemyGeneralsStatisticsList := make([]*model.GeneralBattleStatistics, 0)
+	for _, general := range runCtx.Req.EnemyTeam.BattleGenerals {
 		//战法统计
-		tacticStatistics := make([]*vo.BattleGeneralTacticStatistics, 0)
-		for _, tactic := range general.EquipTactics {
-			triggerCnt := int64(0)
-			damageNum := int64(0)
-			resumeNum := int64(0)
-			if cnt, ok := general.TacticAccumulateTriggerMap[tactic.Id]; ok {
-				triggerCnt = cnt
+		tacticStatisticsList := make([]*model.TacticStatistics, 0)
+		if tacticStatisticsMap, ok := runCtx.TacticsParams.BattleTacticStatisticsMap[general.BaseInfo.UniqueId]; ok {
+			for _, tactic := range general.EquipTactics {
+				if tacticStatistics, okk := tacticStatisticsMap[cast.ToInt64(tactic.Id)]; okk {
+					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
+						TacticId:         tacticStatistics.TacticId,
+						TacticName:       tacticStatistics.TacticName,
+						TriggerTimes:     tacticStatistics.TriggerTimes,
+						KillSoliderNum:   tacticStatistics.KillSoliderNum,
+						ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
+					})
+				}
 			}
-			if cnt, ok := general.TacticAccumulateDamageMap[tactic.Id]; ok {
-				damageNum = cnt
-			}
-			if cnt, ok := general.TacticAccumulateResumeMap[tactic.Id]; ok {
-				resumeNum = cnt
-			}
-
-			tacticStatistics = append(tacticStatistics, &vo.BattleGeneralTacticStatistics{
-				TriggerCnt: triggerCnt,
-				DamageNum:  damageNum,
-				ResumeNum:  resumeNum,
-			})
+		}
+		//普攻统计
+		generalAttackStatistics := &model.TacticStatistics{}
+		if attackStatistics, ok := runCtx.TacticsParams.BattleAttackStatisticsMap[general.BaseInfo.UniqueId]; ok {
+			generalAttackStatistics.KillSoliderNum = attackStatistics.KillSoliderNum
+			generalAttackStatistics.ResumeSoliderNum = attackStatistics.ResumeSoliderNum
+			generalAttackStatistics.TriggerTimes = attackStatistics.TriggerTimes
 		}
 
-		fightingBattleGeneralStatistics = append(fightingBattleGeneralStatistics, &vo.BattleGeneralStatistics{
-			BattleGeneral:    general,
-			TacticStatistics: nil,
-			AttackStatistics: &vo.BattleGeneralTacticStatistics{
-				TriggerCnt: general.ExecuteGeneralAttackNum,
-				DamageNum:  general.AccumulateAttackDamageNum,
-			},
+		enemyGeneralsStatisticsList = append(enemyGeneralsStatisticsList, &model.GeneralBattleStatistics{
+			TacticStatisticsList:    tacticStatisticsList,
+			GeneralAttackStatistics: generalAttackStatistics,
 		})
 	}
 
-	runCtx.Resp.FightingGeneralStatistics = fightingBattleGeneralStatistics
-	runCtx.Resp.EnemyGeneralStatistics = enemyBattleGeneralStatistics
+	runCtx.Resp.BattleResultStatistics = &model.BattleResultStatistics{
+		//我军
+		FightingTeam: &model.TeamBattleStatistics{
+			BattleTeam: &vo.BattleTeam{
+				TeamType:       runCtx.Req.FightingTeam.TeamType,
+				ArmType:        runCtx.Req.FightingTeam.ArmType,
+				BattleGenerals: runCtx.Req.FightingTeam.BattleGenerals,
+			},
+			BattleResult:                util.JudgeBattleResult(runCtx.Req.FightingTeam, runCtx.Req.EnemyTeam),
+			GeneralBattleStatisticsList: fightingGeneralsStatisticsList,
+		},
+		//敌军
+		EnemyTeam: &model.TeamBattleStatistics{
+			BattleTeam: &vo.BattleTeam{
+				TeamType:       runCtx.Req.EnemyTeam.TeamType,
+				ArmType:        runCtx.Req.EnemyTeam.ArmType,
+				BattleGenerals: runCtx.Req.EnemyTeam.BattleGenerals,
+			},
+			BattleResult:                util.JudgeBattleResult(runCtx.Req.EnemyTeam, runCtx.Req.FightingTeam),
+			GeneralBattleStatisticsList: enemyGeneralsStatisticsList,
+		},
+	}
+	//处理对战过程数据
+	battleProcessStatistics := make(map[consts.BattlePhase]map[consts.BattleRound][]string, 0)
+
+	runCtx.Resp.BattleProcessStatistics = battleProcessStatistics
 }
 
 // 对战对阵阶段处理
@@ -882,9 +934,17 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 		}
 	}
 
-	//战报对象初始化
-	if tacticsParams.BattleReports == nil {
-		tacticsParams.BattleReports = map[consts.BattlePhase]map[consts.BattleRound][]string{}
+	//对战过程统计
+	if tacticsParams.BattleProcessStatisticsMap == nil {
+		tacticsParams.BattleProcessStatisticsMap = map[consts.BattlePhase]map[consts.BattleRound][]string{}
+	}
+	//对战战法统计
+	if tacticsParams.BattleTacticStatisticsMap == nil {
+		tacticsParams.BattleTacticStatisticsMap = map[string]map[int64]*model.TacticStatistics{}
+	}
+	//对战普攻统计
+	if tacticsParams.BattleAttackStatisticsMap == nil {
+		tacticsParams.BattleAttackStatisticsMap = map[string]*model.TacticStatistics{}
 	}
 
 	runCtx.TacticsParams = tacticsParams

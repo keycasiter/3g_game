@@ -53,6 +53,7 @@ func (s StealingLuckAndRidingPetsTactic) Prepare() {
 			ProduceGeneral: currentGeneral,
 			SufferGeneral:  currentGeneral,
 			ResumeNum:      resumeNum,
+			TacticId:       s.Id(),
 		})
 		return triggerResp
 	})

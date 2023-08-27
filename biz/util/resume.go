@@ -19,6 +19,8 @@ type ResumeParams struct {
 	SufferGeneral *vo.BattleGeneral
 	//恢复量
 	ResumeNum int64
+	//战法ID
+	TacticId consts.TacticId
 }
 
 // 恢复兵力结算
@@ -37,6 +39,9 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 	}
 	if param.TacticsParams == nil {
 		panic("TacticsParams is nil")
+	}
+	if param.TacticId == 0 {
+		panic("TacticId is nil")
 	}
 
 	//效果判定
@@ -85,7 +90,14 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		param.SufferGeneral.SoldierNum += param.ResumeNum
 	}
 
-	//统计数据
+	//统计上报
+	TacticReport(param.TacticsParams,
+		param.ProduceGeneral.BaseInfo.UniqueId,
+		cast.ToInt64(param.TacticId),
+		1,
+		0,
+		param.ResumeNum,
+	)
 
 	hlog.CtxInfof(param.Ctx, "[%s]恢复了兵力%d(%d↗%d)",
 		param.SufferGeneral.BaseInfo.Name,

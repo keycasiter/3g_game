@@ -80,6 +80,7 @@ func (i InfantryCitySelfDefenseTactic) Execute() {
 			ProduceGeneral: pairGeneral,
 			SufferGeneral:  pairGeneral,
 			ResumeNum:      resumeNum,
+			TacticId:       i.Id(),
 		})
 		//施加状态
 		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_Rest, &vo.EffectHolderParams{
@@ -105,6 +106,7 @@ func (i InfantryCitySelfDefenseTactic) Execute() {
 						ProduceGeneral: revokeGeneral,
 						SufferGeneral:  revokeGeneral,
 						ResumeNum:      restResumeNum,
+						TacticId:       i.Id(),
 					})
 				}
 

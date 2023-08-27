@@ -133,6 +133,7 @@ func (f FireGodHeroStyleTactic) Prepare() {
 						ProduceGeneral: revokeGeneral,
 						SufferGeneral:  general,
 						ResumeNum:      resumeNum,
+						TacticId:       f.Id(),
 					})
 				}
 			}

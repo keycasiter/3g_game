@@ -69,6 +69,7 @@ func (c CurettageTactic) Execute() {
 		ProduceGeneral: currentGeneral,
 		SufferGeneral:  maxLossSoldierNumGeneral,
 		ResumeNum:      resumeNum,
+		TacticId:       c.Id(),
 	})
 }
 

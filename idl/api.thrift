@@ -66,18 +66,18 @@ struct BattleGeneralAddition {
 
 // 能力属性
 struct AbilityAttr {
-	1: double ForceBase
-	2: double ForceRate
-	3: double IntelligenceBase
-	4: double IntelligenceRate
-	5: double CharmBase
-	6: double CharmRate
-	7: double CommandBase
-	8: double CommandRate
-	9: double PoliticsBase
-	10: double PoliticsRate
-	11: double SpeedBase
-	12: double SpeedRate
+	1: string ForceBase
+	2: string ForceRate
+	3: string IntelligenceBase
+	4: string IntelligenceRate
+	5: string CharmBase
+	6: string CharmRate
+	7: string CommandBase
+	8: string CommandRate
+	9: string PoliticsBase
+	10: string PoliticsRate
+	11: string SpeedBase
+	12: string SpeedRate
 }
 
 // 武将资料
@@ -123,46 +123,70 @@ struct ArmsAttr{
 
 // 建筑科技属性加成
 struct BuildingTechAttrAddition {
-	1: double ForceAddition
-	2: double IntelligenceAddition
-	3: double CommandAddition
-	4: double SpeedAddition
+	1: string ForceAddition
+	2: string IntelligenceAddition
+	3: string CommandAddition
+	4: string SpeedAddition
 }
 
 // 建筑科技阵营加成
 struct BuildingTechGroupAddition {
-	1: double GroupWeiGuoRate
-	2: double GroupShuGuoRate
-	3: double GroupWuGuoRate
-	4: double GroupQunXiongRate
+	1: string GroupWeiGuoRate
+	2: string GroupShuGuoRate
+	3: string GroupWuGuoRate
+	4: string GroupQunXiongRate
 }
 
 struct BattleExecuteResponse {
   1: common.Meta meta
-    //我军武将对战信息
-  2: list<BattleGeneralStatistics> FightingGeneralStatistics
-    //敌军武将对战信息
-  3: list<BattleGeneralStatistics> EnemyGeneralStatistics
+  //对战数据统计
+  2: BattleResultStatistics BattleResultStatistics
+  //对战过程数据 map<战斗阶段,map<战斗回合,战报内容list>>
+  3: map<i64,map<i64,list<string>>> BattleProcessStatistics
 }
 
-// 对战武将统计
-struct BattleGeneralStatistics {
-	//武将基础信息
-	1:BattleGeneral BattleGeneral
+//对战数据统计
+struct BattleResultStatistics  {
+	//我军统计
+	TeamBattleStatistics FightingTeam
+	//敌军统计
+	TeamBattleStatistics EnemyTeam
+}
+
+//队伍对战数据统计
+struct TeamBattleStatistics  {
+	//***队伍原始数据***
+	//队伍信息
+	BattleTeam BattleTeam
+
+	//***对战数据***
+	//对战结果
+	i64 BattleResult
+	//对战统计信息
+	list<GeneralBattleStatistics> GeneralBattleStatisticsList
+}
+
+//武将对战数据统计
+struct GeneralBattleStatistics {
 	//战法统计
-	2:list<BattleGeneralTacticStatistics> TacticStatistics
+	list<TacticStatistics> TacticStatisticsList
 	//普攻统计
-	3:BattleGeneralTacticStatistics AttackStatistics
+	TacticStatistics GeneralAttackStatistics
 }
 
-// 对战战法统计
-struct BattleGeneralTacticStatistics {
-	//释放次数
-	1: i64 TriggerCnt
-	//伤害量
-	2: i64 DamageNum
-	//恢复量
-	3: i64 ResumeNum
+struct TacticStatistics {
+	//战法ID
+	i64 TacticId
+	//战法名称
+	string TacticName
+	//战法品质
+	i64 TacticQuality
+	//发动次数
+	i64 TriggerTimes
+	//杀敌
+	i64 KillSoliderNum
+	//救援
+	i64 ResumeSoliderNum
 }
 
 //============= 模拟对战 END ==============

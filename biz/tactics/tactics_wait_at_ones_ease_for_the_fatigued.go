@@ -82,6 +82,7 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 			ProduceGeneral: currentGeneral,
 			SufferGeneral:  pairGeneral,
 			ResumeNum:      resumeNum,
+			TacticId:       w.Id(),
 		})
 		// 并使其下次3次受到伤害分别降低（50%、37.5%、25%，受智力影响
 		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_WaitAtOnesEaseForTheFatigued_Prepare, &vo.EffectHolderParams{

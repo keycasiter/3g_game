@@ -84,6 +84,7 @@ func (q QingZhouSoldierTactic) Prepare() {
 				ProduceGeneral: general,
 				SufferGeneral:  general,
 				ResumeNum:      general.LossSoldierNum,
+				TacticId:       q.Id(),
 			})
 			//再恢复我军其他单体
 			for _, pairGeneral := range allPairGenerals {
@@ -95,6 +96,7 @@ func (q QingZhouSoldierTactic) Prepare() {
 						ProduceGeneral: triggerGeneral,
 						SufferGeneral:  pairGeneral,
 						ResumeNum:      resumeNum,
+						TacticId:       q.Id(),
 					})
 				}
 			}

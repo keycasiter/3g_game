@@ -134,6 +134,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 						ProduceGeneral: currentGeneral,
 						SufferGeneral:  viceGeneral,
 						ResumeNum:      resumeNum,
+						TacticId:       s.Id(),
 					})
 				}
 				return triggerResp

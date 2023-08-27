@@ -147,6 +147,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 							ProduceGeneral: currentGeneral,
 							SufferGeneral:  triggerGeneral,
 							ResumeNum:      resumeNum,
+							TacticId:       b.Id(),
 						})
 					}
 				}

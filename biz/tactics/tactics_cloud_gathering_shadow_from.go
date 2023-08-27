@@ -103,6 +103,7 @@ func (c CloudGatheringShadowFromTactic) Prepare() {
 								ProduceGeneral: triggerGeneral,
 								SufferGeneral:  revokeGeneral,
 								ResumeNum:      resumeNum,
+								TacticId:       c.Id(),
 							})
 						}
 					}

@@ -82,6 +82,7 @@ func (h HuJiaLingeringSoundTactic) Execute() {
 			ProduceGeneral: currentGeneral,
 			SufferGeneral:  pairGeneral,
 			ResumeNum:      resumeNum,
+			TacticId:       h.Id(),
 		})
 		//效果施加
 		if util.GenerateRate(0.5) {

@@ -59,6 +59,7 @@ func (j JiangdongLittleOverlordTactic) Prepare() {
 				ProduceGeneral: triggerGeneral,
 				SufferGeneral:  pairGeneral,
 				ResumeNum:      resumeNum,
+				TacticId:       j.Id(),
 			})
 		}
 

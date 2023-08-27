@@ -80,6 +80,7 @@ func (m MedicalPracticeTactic) Prepare() {
 							ProduceGeneral: currentGeneral,
 							SufferGeneral:  revokeGeneral,
 							ResumeNum:      resumeNum,
+							TacticId:       m.Id(),
 						})
 					}
 				}

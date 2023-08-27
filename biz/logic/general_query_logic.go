@@ -71,18 +71,18 @@ func (g *GeneralQueryLogic) Handle() (api.GeneralQueryResponse, error) {
 		abilityAttrPo := &vo.AbilityAttr{}
 		util.ParseJsonObj(g.Ctx, abilityAttrPo, general.AbilityAttr)
 		abilityAttr := api.AbilityAttr{
-			ForceBase:        cast.ToFloat64(abilityAttrPo.ForceBase),
-			ForceRate:        cast.ToFloat64(abilityAttrPo.ForceRate),
-			IntelligenceBase: cast.ToFloat64(abilityAttrPo.IntelligenceBase),
-			IntelligenceRate: cast.ToFloat64(abilityAttrPo.IntelligenceRate),
-			CharmBase:        cast.ToFloat64(abilityAttrPo.CharmBase),
-			CharmRate:        cast.ToFloat64(abilityAttrPo.CharmRate),
-			CommandBase:      cast.ToFloat64(abilityAttrPo.CommandBase),
-			CommandRate:      cast.ToFloat64(abilityAttrPo.CommandRate),
-			PoliticsBase:     cast.ToFloat64(abilityAttrPo.PoliticsBase),
-			PoliticsRate:     cast.ToFloat64(abilityAttrPo.PoliticsRate),
-			SpeedBase:        cast.ToFloat64(abilityAttrPo.SpeedBase),
-			SpeedRate:        cast.ToFloat64(abilityAttrPo.SpeedRate),
+			ForceBase:        abilityAttrPo.ForceBase,
+			ForceRate:        abilityAttrPo.ForceRate,
+			IntelligenceBase: abilityAttrPo.IntelligenceBase,
+			IntelligenceRate: abilityAttrPo.IntelligenceRate,
+			CharmBase:        abilityAttrPo.CharmBase,
+			CharmRate:        abilityAttrPo.CharmRate,
+			CommandBase:      abilityAttrPo.CommandBase,
+			CommandRate:      abilityAttrPo.CommandRate,
+			PoliticsBase:     abilityAttrPo.PoliticsBase,
+			PoliticsRate:     abilityAttrPo.PoliticsRate,
+			SpeedBase:        abilityAttrPo.SpeedBase,
+			SpeedRate:        abilityAttrPo.SpeedRate,
 		}
 
 		//兵种属性

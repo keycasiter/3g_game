@@ -497,15 +497,6 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	isEffect = true
 
 	defer func() {
-		//统计上报
-		TacticReport(tacticsParams,
-			attackGeneral.BaseInfo.UniqueId,
-			int64(param.TacticId),
-			1,
-			damage,
-			0,
-		)
-
 		// 「伤害开始」触发器
 		if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_DamageEnd]; okk {
 			for _, f := range funcs {
@@ -863,6 +854,14 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	attackGeneral.TacticAccumulateDamageMap[param.TacticId] = damageNum
 	attackGeneral.TacticAccumulateTriggerMap[param.TacticId] = damageNum
 	sufferGeneral.LossSoldierNum += damageNum
+	//统计上报
+	TacticReport(tacticsParams,
+		attackGeneral.BaseInfo.UniqueId,
+		int64(param.TacticId),
+		1,
+		damage,
+		0,
+	)
 
 	if effectName == "" {
 		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",

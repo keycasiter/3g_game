@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
@@ -172,7 +171,6 @@ func makeGeneralList(recTeam *po.RecTeam,
 			resList = append(resList, newGeneral)
 		}
 	}
-	fmt.Printf("resList: %s\n", util.ToJsonString(context.Background(), resList))
 
 	return resList
 }

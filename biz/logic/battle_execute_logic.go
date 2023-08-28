@@ -176,6 +176,10 @@ func (runCtx *BattleLogicContext) handleBuildingTechGroupAddition(team *vo.Battl
 		additionRate = team.BuildingTechGroupAddition.GroupQunXiongRate
 	}
 
+	if additionRate == 0 {
+		return
+	}
+
 	for _, general := range team.BattleGenerals {
 		//武力加成
 		general.BaseInfo.AbilityAttr.ForceBase = general.BaseInfo.AbilityAttr.ForceBase * (1 + additionRate)
@@ -198,34 +202,42 @@ func (runCtx *BattleLogicContext) handleBuildingTechGroupAddition(team *vo.Battl
 func (runCtx *BattleLogicContext) handleBuildingTechAttrAddition(team *vo.BattleTeam) {
 	for _, general := range team.BattleGenerals {
 		//武力加成
-		general.BaseInfo.AbilityAttr.ForceBase = general.BaseInfo.AbilityAttr.ForceBase +
-			team.BuildingTechAttrAddition.ForceAddition
+		if team.BuildingTechAttrAddition.ForceAddition > 0 {
+			general.BaseInfo.AbilityAttr.ForceBase = general.BaseInfo.AbilityAttr.ForceBase +
+				team.BuildingTechAttrAddition.ForceAddition
+			hlog.CtxInfof(runCtx.Ctx, "[%s]队获得【兵战-武】强化效果，【武力】属性提升了%d",
+				team.BattleGenerals[0].BaseInfo.Name,
+				int(team.BuildingTechAttrAddition.ForceAddition),
+			)
+		}
 		//智力加成
-		general.BaseInfo.AbilityAttr.IntelligenceBase = general.BaseInfo.AbilityAttr.IntelligenceBase +
-			team.BuildingTechAttrAddition.IntelligenceAddition
+		if team.BuildingTechAttrAddition.IntelligenceAddition > 0 {
+			general.BaseInfo.AbilityAttr.IntelligenceBase = general.BaseInfo.AbilityAttr.IntelligenceBase +
+				team.BuildingTechAttrAddition.IntelligenceAddition
+			hlog.CtxInfof(runCtx.Ctx, "[%s]队获得【兵战-谋】强化效果，【智力】属性提升了%d",
+				team.BattleGenerals[0].BaseInfo.Name,
+				int(team.BuildingTechAttrAddition.ForceAddition),
+			)
+		}
 		//统率加成
-		general.BaseInfo.AbilityAttr.CommandBase = general.BaseInfo.AbilityAttr.CommandBase +
-			team.BuildingTechAttrAddition.CommandAddition
+		if team.BuildingTechAttrAddition.CommandAddition > 0 {
+			general.BaseInfo.AbilityAttr.CommandBase = general.BaseInfo.AbilityAttr.CommandBase +
+				team.BuildingTechAttrAddition.CommandAddition
+			hlog.CtxInfof(runCtx.Ctx, "[%s]队获得【兵战-防】强化效果，【统率】属性提升了%d",
+				team.BattleGenerals[0].BaseInfo.Name,
+				int(team.BuildingTechAttrAddition.CommandAddition),
+			)
+		}
 		//速度加成
-		general.BaseInfo.AbilityAttr.SpeedBase = general.BaseInfo.AbilityAttr.SpeedBase +
-			team.BuildingTechAttrAddition.SpeedAddition
+		if team.BuildingTechAttrAddition.SpeedAddition > 0 {
+			general.BaseInfo.AbilityAttr.SpeedBase = general.BaseInfo.AbilityAttr.SpeedBase +
+				team.BuildingTechAttrAddition.SpeedAddition
+			hlog.CtxInfof(runCtx.Ctx, "[%s]队获得【兵战-速】强化效果，【速度】属性提升了%d",
+				team.BattleGenerals[0].BaseInfo.Name,
+				int(team.BuildingTechAttrAddition.SpeedAddition),
+			)
+		}
 	}
-	hlog.CtxInfof(runCtx.Ctx, "[%s]队获得【兵战-武】强化效果，【武力】属性提升了%d",
-		team.BattleGenerals[0].BaseInfo.Name,
-		int(team.BuildingTechAttrAddition.ForceAddition),
-	)
-	hlog.CtxInfof(runCtx.Ctx, "[%s]队获得【兵战-谋】强化效果，【智力】属性提升了%d",
-		team.BattleGenerals[0].BaseInfo.Name,
-		int(team.BuildingTechAttrAddition.ForceAddition),
-	)
-	hlog.CtxInfof(runCtx.Ctx, "[%s]队获得【兵战-防】强化效果，【统率】属性提升了%d",
-		team.BattleGenerals[0].BaseInfo.Name,
-		int(team.BuildingTechAttrAddition.CommandAddition),
-	)
-	hlog.CtxInfof(runCtx.Ctx, "[%s]队获得【兵战-速】强化效果，【速度】属性提升了%d",
-		team.BattleGenerals[0].BaseInfo.Name,
-		int(team.BuildingTechAttrAddition.SpeedAddition),
-	)
 }
 
 // 兵种适性处理

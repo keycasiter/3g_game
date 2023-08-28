@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/keycasiter/3g_game/biz/conf"
-	"github.com/keycasiter/3g_game/biz/dal"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -14,7 +14,7 @@ import (
 
 func TestGeneralQueryLogic_Handle(t *testing.T) {
 	conf.InitConfig()
-	dal.InitMysql()
+	mysql.InitMysql()
 
 	ctx := context.Background()
 	gender := enum.Gender_Female

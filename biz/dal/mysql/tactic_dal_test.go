@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/keycasiter/3g_game/biz/conf"
-	"github.com/keycasiter/3g_game/biz/dal"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
 	"testing"
@@ -12,7 +11,7 @@ import (
 
 func TestTacticDal_QueryTacticList(t *testing.T) {
 	conf.InitConfig()
-	dal.InitMysql()
+	InitMysql()
 	ctx := context.Background()
 
 	list, err := NewTactic().QueryTacticList(ctx, &vo.QueryTacticCondition{

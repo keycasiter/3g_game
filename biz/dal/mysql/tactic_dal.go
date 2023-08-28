@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/keycasiter/3g_game/biz/dal"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"strings"
@@ -23,7 +22,7 @@ func NewTactic() *TacticDal {
 
 func (g *TacticDal) QueryTacticList(ctx context.Context, condition *vo.QueryTacticCondition) ([]*po.Tactic, error) {
 	list := make([]*po.Tactic, 0)
-	conn := dal.DataBase.Model(&po.Tactic{})
+	conn := DataBase.Model(&po.Tactic{})
 
 	//条件查询
 	if condition.Id > 0 {

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/keycasiter/3g_game/biz/dal"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"strings"
@@ -23,7 +22,7 @@ func NewGeneralWarbook() *GeneralWarBookDal {
 
 func (g *GeneralWarBookDal) QueryGeneralWarbookList(ctx context.Context, condition *vo.QueryGeneralWarbookCondition) ([]*po.GeneralWarbook, error) {
 	list := make([]*po.GeneralWarbook, 0)
-	conn := dal.DataBase.Model(&po.GeneralWarbook{})
+	conn := DataBase.Model(&po.GeneralWarbook{})
 
 	//条件查询
 	if condition.Id > 0 {

@@ -6,8 +6,16 @@ Mysql:
   DbName: "3game"
 
 Redis:
+  Addr: "59.110.5.63:6379"
+  Password: "root123!@#"
+  DB: "0"
 
 Mongodb:
   Uri: "mongodb://127.0.0.1:27017/3g_game"
   Database: "3g_game"
   ConnectTimeout: 3
+
+Wexin:
+  AppId: "wx7a3c08a1bc4de9a3"
+  Secret: "66ea53ce2bc5a01d9acf1c3d740a660b"
+  GetUserOpenIdApiTemplateUrl : "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"

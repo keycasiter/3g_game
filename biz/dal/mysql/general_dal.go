@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/keycasiter/3g_game/biz/dal"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -24,7 +23,7 @@ func NewGeneral() *GeneralDal {
 
 func (g *GeneralDal) QueryGeneralList(ctx context.Context, condition *vo.QueryGeneralCondition) ([]*po.General, error) {
 	list := make([]*po.General, 0)
-	conn := dal.DataBase.Model(&po.General{})
+	conn := DataBase.Model(&po.General{})
 
 	//条件查询
 	if len(condition.Ids) > 0 {

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/keycasiter/3g_game/biz/conf"
-	"github.com/keycasiter/3g_game/biz/dal"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/util"
 	"testing"
@@ -12,7 +12,7 @@ import (
 
 func TestGeneralWarBookQueryLogic_Handle(t *testing.T) {
 	conf.InitConfig()
-	dal.InitMysql()
+	mysql.InitMysql()
 	ctx := context.Background()
 
 	resp, err := NewGeneralWarBookQueryLogic(ctx, api.GeneralWarBookQueryRequest{

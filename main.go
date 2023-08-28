@@ -5,7 +5,8 @@ package main
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/keycasiter/3g_game/biz/conf"
-	"github.com/keycasiter/3g_game/biz/dal"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
+	"github.com/keycasiter/3g_game/biz/dal/redis"
 )
 
 func main() {
@@ -15,7 +16,9 @@ func main() {
 	//初始化配置文件
 	conf.InitConfig()
 	//初始化mysql
-	dal.InitMysql()
+	mysql.InitMysql()
+	//初始化redis
+	redis.InitRedis()
 
 	register(h)
 	h.Spin()

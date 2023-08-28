@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/keycasiter/3g_game/biz/dal"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -24,7 +23,7 @@ func NewTeam() *TeamDal {
 
 func (g *TeamDal) QueryTeamList(ctx context.Context, condition *vo.QueryTeamCondition) ([]*po.Team, error) {
 	list := make([]*po.Team, 0)
-	conn := dal.DataBase.Model(&po.Team{})
+	conn := DataBase.Model(&po.Team{})
 
 	//条件查询
 	if condition.Id > 0 {

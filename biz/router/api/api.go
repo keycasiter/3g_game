@@ -43,5 +43,9 @@ func Register(r *server.Hertz) {
 			_tactic := _v1.Group("/tactic", _tacticMw()...)
 			_tactic.GET("/query", append(_tacticqueryMw(), api.TacticQuery)...)
 		}
+		{
+			_user := _v1.Group("/user", _userMw()...)
+			_user.GET("/get_user_wx_open_id", append(_getuserwxopenidMw(), api.GetUserWxOpenId)...)
+		}
 	}
 }

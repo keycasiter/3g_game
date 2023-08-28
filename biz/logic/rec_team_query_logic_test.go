@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/keycasiter/3g_game/biz/conf"
-	"github.com/keycasiter/3g_game/biz/dal"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
 	"testing"
 )
@@ -13,7 +13,7 @@ func TestRecTeamQueryLogic_Handle(t *testing.T) {
 	//初始化配置文件
 	conf.InitConfig()
 	//初始化mysql
-	dal.InitMysql()
+	mysql.InitMysql()
 
 	resp, err := NewRecTeamQueryLogic(context.Background(), api.RecTeamQueryRequest{
 		PageNo:   1,

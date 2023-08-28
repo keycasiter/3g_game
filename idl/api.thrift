@@ -296,7 +296,20 @@ struct RecTeamGeneral {
 }
 //============= 查询推荐阵容列表 END ==============
 
+//============= 获取用户微信openid BEGIN ==============
+struct GetUserWxOpenIdRequest{
+    1: string Code
+}
+
+struct GetUserWxOpenIdResponse{
+    1: common.Meta meta
+    2: string OpenId
+}
+
+//============= 获取用户微信openid END ==============
+
 service ApiService {
+    //**模拟对战**
     //模拟对战
     BattleExecuteResponse BattleExecute(1: BattleExecuteRequest request) (api.post="/v1/battle/execute");
     //查询战法列表
@@ -309,4 +322,8 @@ service ApiService {
     SpecialTechQueryResponse SpecialTechQuery(1:SpecialTechQueryRequest request)(api.get="/v1/special_tech/query");
     //推荐阵容列表
     RecTeamQueryResponse RecTeamQuery(1:RecTeamQueryRequest request)(api.get="/v1/rec_team/query");
+
+    //**微信**
+    //获取用户微信openId
+    GetUserWxOpenIdResponse GetUserWxOpenId(1:GetUserWxOpenIdRequest request)(api.get="/v1/user/get_user_wx_open_id");
 }

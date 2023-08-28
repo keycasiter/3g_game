@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/keycasiter/3g_game/biz/dal"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"strings"
@@ -23,7 +22,7 @@ func NewSpecialTech() *SpecialTechDal {
 
 func (g *SpecialTechDal) QuerySpecialTechList(ctx context.Context, condition *vo.QuerySpecialTechCondition) ([]*po.SpecialTech, error) {
 	list := make([]*po.SpecialTech, 0)
-	conn := dal.DataBase.Model(&po.SpecialTech{})
+	conn := DataBase.Model(&po.SpecialTech{})
 
 	//条件查询
 	if condition.Id > 0 {

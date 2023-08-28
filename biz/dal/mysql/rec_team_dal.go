@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/keycasiter/3g_game/biz/dal"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
@@ -22,7 +21,7 @@ func NewRecTeam() *RecTeamDal {
 
 func (g *RecTeamDal) QueryRecTeamList(ctx context.Context, condition *vo.QueryRecTeamCondition) ([]*po.RecTeam, error) {
 	list := make([]*po.RecTeam, 0)
-	conn := dal.DataBase.Model(&po.RecTeam{})
+	conn := DataBase.Model(&po.RecTeam{})
 
 	//条件查询
 	if condition.Name != "" {

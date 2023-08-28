@@ -1,4 +1,4 @@
-package dal
+package mysql
 
 import (
 	"context"
@@ -17,6 +17,7 @@ func InitMysql() {
 	ctx := context.Background()
 	config := conf.GetConfig()
 
+	hlog.CtxInfof(ctx, "Mysql初始化...")
 	// 参考 https://github.com/go-sql-driver/mysql#dsn-data-source-name 获取详情
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		config.Mysql.User,
@@ -33,8 +34,10 @@ func InitMysql() {
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
-		hlog.CtxErrorf(ctx, "gorm init err:%v", err)
+		hlog.CtxErrorf(ctx, "Mysql初始化失败... err:%v", err)
 		panic(err)
+	} else {
+		hlog.CtxInfof(ctx, "Mysql初始化成功...")
 	}
 }
 

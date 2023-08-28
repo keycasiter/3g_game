@@ -14,6 +14,7 @@ type config struct {
 	Mongodb *mongodb `yaml:"Mongodb"`
 	Redis   *redis   `yaml:"Redis"`
 	Mysql   *mysql   `yaml:"Mysql"`
+	Wexin   *wexin   `yaml:"Wexin"`
 }
 
 type mongodb struct {
@@ -23,6 +24,15 @@ type mongodb struct {
 }
 
 type redis struct {
+	Addr     string `yaml:"Addr"`
+	Password string `yaml:"Password"`
+	DB       string `yaml:"DB"`
+}
+
+type wexin struct {
+	AppId                       string `yaml:"AppId"`
+	Secret                      string `yaml:"Secret"`
+	GetUserOpenIdApiTemplateUrl string `yaml:"GetUserOpenIdApiTemplateUrl"`
 }
 
 type mysql struct {

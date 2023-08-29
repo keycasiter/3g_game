@@ -15,7 +15,11 @@ import (
 )
 
 type GetUserOpenIdResponse struct {
-	OpenId string `json:"openid"`
+	OpenId     string `json:"openid"`
+	SessionKey string `json:"session_key"`
+	UnionId    string `json:"unionid"`
+	ErrCode    int64  `json:"errcode"`
+	ErrMsg     string `json:"errmsg"`
 }
 
 // GetUserWxOpenId .

@@ -5,300 +5,155 @@ type General_Id int64
 const (
 	//未知武将
 	UnknownGeneral General_Id = iota
-	//SP荀彧
-	SP_XunYu
-	//典韦
+	SPXunYu
 	DianWei
-	//贾诩
 	JiaXu
-	//司马懿
 	SiMaYi
-	//曹操
 	CaoCao
-	//张辽
 	ZhangLiao
-	//SP刘晔
-	SP_LiuYe
-	//SP庞德
-	SP_PangDe
-	//SP郭嘉
-	SP_GuoJia
-	//许褚
+	SPLiuYe
+	SPPangDe
+	SPGuoJia
 	XuChu
-	//张郃
 	ZhangHe
-	//郝昭
 	HaoZhao
-	//曹仁
 	CaoRen
-	//程昱
 	ChengYu
-	//荀攸
 	XunYou
-	//徐晃
 	XuHuang
-	//夏侯惇
 	XiaHouDun
-	//庞德
 	PangDe
-	//钟会
 	ZhongHui
-	//满宠
 	ManChong
-	//王双
 	WangShuang
-	//王元姬
 	WangYuanJi
-	//曹纯
 	CaoChun
-	//于禁
 	YuJin
-	//乐进
-	YueJin
-	//邓艾
+	LeJin
 	DengAi
-	//夏侯渊
 	XiaHouYuan
-	//郭嘉
 	GuoJia
-	//张春华
 	ZhangChunHua
-	//刘晔
 	LiuYe
-	//文聘
 	WenPin
-	//曹彰
 	CaoZhang
-	//曹洪
 	CaoHong
-	//曹真
 	CaoZhen
-	//王朗
 	WangLang
-	//臧霸
 	ZangBa
-	//郭淮
 	GuoHuai
-	//李典
 	LiDian
-	//SP关羽
-	SP_GuanYu
-	//刘备
+	SPGuanYu
 	LiuBei
-	//庞统
 	PangTong
-	//马超
 	MaChao
-	//诸葛亮
 	ZhuGeLiang
-	//关羽
 	GuanYu
-	//SP诸葛亮
-	SP_ZhuGeLiang
-	//伊籍
+	SPZhuGeLiang
 	YiJi
-	//严颜
 	YanYan
-	//张苞
-	ZhangBao
-	//关兴
+	ShuGuoZhangBao
 	GuanXing
-	//关银屏
 	GuanYinPing
-	//马云禄
 	MaYunLu
-	//陈到
 	ChenDao
-	//姜维
 	JiangWei
-	//魏延
 	WeiYan
-	//黄忠
 	HuangZhong
-	//赵云
 	ZhaoYun
-	//张飞
 	ZhangFei
-	//王平
 	WangPing
-	//徐庶
 	XuShu
-	//张姬
 	ZhangJi
-	//黄月英
 	HuangYueYing
-	//法正
 	FaZheng
-	//黄权
 	HuangQuan
-	//周仓
 	ZhouCang
-	//刘封
 	LiuFeng
-	//关平
 	GuanPing
-	//马谡
 	MaSu
-	//廖化
 	LiaoHua
-	//马良
 	MaLiang
-	//沙摩柯
 	ShaMoKe
-	//SP吕蒙
-	SP_LvMeng
-	//孙尚香
+	SPLvMeng
 	SunShangXiang
-	//陆逊
 	LuXun
-	//SP周瑜
-	SP_ZhouYu
-	//马忠
+	SPZhouYu
 	MaZhong
-	//凌统
 	LingTong
-	//鲁肃
 	LuSu
-	//孙权
 	SunQuan
-	//甘宁
 	GanNing
-	//周泰
 	ZhouTai
-	//吕蒙
 	LvMeng
-	//太史慈
 	TaiShiCi
-	//孙坚
 	SunJian
-	//陆抗
 	LuKang
-	//周瑜
 	ZhouYu
-	//黄盖
 	HuangGai
-	//程普
 	ChengPu
-	//孙策
 	SunCe
-	//诸葛恪
 	ZhuGeKe
-	//陈武
 	ChenWu
-	//朱桓
 	ZhuHuan
-	//韩当
 	HanDang
-	//董袭
 	DongXi
-	//蒋钦
 	JiangQin
-	//丁奉
 	DingFeng
-	//潘璋
 	PanZhang
-	//徐盛
 	XuSheng
-	//SP朱儁
-	SP_ZhuJun
-	//SP袁绍
-	SP_YuanShao
-	//袁术
+	SPZhuJun
+	SPYuanShao
 	YuanShu
-	//孟获
 	MengHuo
-	//于吉
 	YuJi
-	//董卓
 	DongZhuo
-	//吕布
-	LvBu
-	//许攸
+	LüBu
 	XuYou
-	//朵思大王
 	DuoSiDaWang
-	//沮授
 	JuShou
-	//田丰
 	TianFeng
-	//吕玲绮
-	LvQiLing
-	//祝融夫人
+	LüLingQi
 	ZhuRongFuRen
-	//兀突骨
 	WuTuGu
-	//公孙瓒
 	GongSunZan
-	//袁绍
 	YuanShao
-	//张角
 	ZhangJiao
-	//张让
 	ZhangRang
-	//高览
 	GaoLan
-	//木鹿大王
 	MuLuDaWang
-	//李儒
 	LiRu
-	//高顺
 	GaoShun
-	//马腾
 	MaTeng
-	//文丑
 	WenChou
-	//华雄
 	HuaXiong
-	//颜良
 	YanLiang
-	//华佗
 	HuaTuo
-	//左慈
 	ZuoCi
-	//貂蝉
 	DiaoChan
-	//陈宫
 	ChenGong
-	//邹氏
 	ZouShi
-	//董白
 	DongBai
-	//蔡文姬
 	CaiWenJi
-	//胡车儿
 	HuCheEr
-	//逢纪
 	FengJi
-	//纪灵
 	JiLing
-	//张绣
 	ZhangXiu
-	//朱儁
 	ZhuJun
-	//孔融
 	KongRong
-	//郭汜
 	GuoSi
-	//韩遂
 	HanSui
-	//张燕
 	ZhangYan
-	//张曼成
 	ZhangManCheng
-	//李傕
 	LiJue
-	//审配
 	ShenPei
-	//皇甫嵩
-	HuangPuSong
-	//张梁
+	HuangFuSong
 	ZhangLiang
-	//张任
 	ZhangRen
-	//郭图
 	GuoTu
-	//管亥
 	GuanHai
-	//张宝
-	Qun_ZhangBao
+	ZhangBao
+	SPZhangBao
+	SPHuangFuSong
+	SPZhangLiang
 )

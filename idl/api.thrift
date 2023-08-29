@@ -318,6 +318,8 @@ struct UserInfoQueryResponse{
     1: common.Meta meta
     2: string NickName
     3: string AvatarUrl
+    4: string WxOpenId
+    5: i64 Level
 }
 
 //============= 用户信息查询 END ==============

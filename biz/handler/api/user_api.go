@@ -168,8 +168,12 @@ func UserInfoQuery(ctx context.Context, c *app.RequestContext) {
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
+
+	//组合resp
+	resp.WxOpenId = userInfo.WxOpenId
 	resp.NickName = userInfo.NickName
 	resp.AvatarUrl = userInfo.AvatarUrl
+	resp.Level = int64(userInfo.Level)
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

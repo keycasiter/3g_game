@@ -9496,6 +9496,8 @@ type UserInfoQueryResponse struct {
 	Meta      *common.Meta `thrift:"meta,1" form:"meta" json:"meta" query:"meta"`
 	NickName  string       `thrift:"NickName,2" form:"NickName" json:"NickName" query:"NickName"`
 	AvatarUrl string       `thrift:"AvatarUrl,3" form:"AvatarUrl" json:"AvatarUrl" query:"AvatarUrl"`
+	WxOpenId  string       `thrift:"WxOpenId,4" form:"WxOpenId" json:"WxOpenId" query:"WxOpenId"`
+	Level     int64        `thrift:"Level,5" form:"Level" json:"Level" query:"Level"`
 }
 
 func NewUserInfoQueryResponse() *UserInfoQueryResponse {
@@ -9519,10 +9521,20 @@ func (p *UserInfoQueryResponse) GetAvatarUrl() (v string) {
 	return p.AvatarUrl
 }
 
+func (p *UserInfoQueryResponse) GetWxOpenId() (v string) {
+	return p.WxOpenId
+}
+
+func (p *UserInfoQueryResponse) GetLevel() (v int64) {
+	return p.Level
+}
+
 var fieldIDToName_UserInfoQueryResponse = map[int16]string{
 	1: "meta",
 	2: "NickName",
 	3: "AvatarUrl",
+	4: "WxOpenId",
+	5: "Level",
 }
 
 func (p *UserInfoQueryResponse) IsSetMeta() bool {
@@ -9571,6 +9583,26 @@ func (p *UserInfoQueryResponse) Read(iprot thrift.TProtocol) (err error) {
 		case 3:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 4:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 5:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -9634,6 +9666,24 @@ func (p *UserInfoQueryResponse) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *UserInfoQueryResponse) ReadField4(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.WxOpenId = v
+	}
+	return nil
+}
+
+func (p *UserInfoQueryResponse) ReadField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.Level = v
+	}
+	return nil
+}
+
 func (p *UserInfoQueryResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("UserInfoQueryResponse"); err != nil {
@@ -9650,6 +9700,14 @@ func (p *UserInfoQueryResponse) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField3(oprot); err != nil {
 			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
 			goto WriteFieldError
 		}
 
@@ -9720,6 +9778,40 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *UserInfoQueryResponse) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("WxOpenId", thrift.STRING, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.WxOpenId); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *UserInfoQueryResponse) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Level", thrift.I64, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Level); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 
 func (p *UserInfoQueryResponse) String() string {

@@ -309,6 +309,19 @@ struct UserLoginResponse{
 
 //============= 用户登录 END ==============
 
+//============= 用户信息查询 BEGIN ==============
+struct UserInfoQueryRequest{
+    1: string Code
+}
+
+struct UserInfoQueryResponse{
+    1: common.Meta meta
+    2: string NickName
+    3: string AvatarUrl
+}
+
+//============= 用户信息查询 END ==============
+
 service ApiService {
     //**模拟对战**
     //模拟对战
@@ -327,4 +340,6 @@ service ApiService {
     //**微信**
     //用户登录接口
     UserLoginResponse UserLogin(1:UserLoginRequest request)(api.post="/v1/user/login");
+    //用户信息获取接口
+    UserInfoQueryResponse UserInfoQuery(1:UserInfoQueryRequest request)(api.get="/v1/user/query");
 }

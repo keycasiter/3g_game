@@ -110,3 +110,8 @@ func _userloginMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _userinfoqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

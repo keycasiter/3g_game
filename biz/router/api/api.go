@@ -46,6 +46,7 @@ func Register(r *server.Hertz) {
 		{
 			_user := _v1.Group("/user", _userMw()...)
 			_user.POST("/login", append(_userloginMw(), api.UserLogin)...)
+			_user.GET("/query", append(_userinfoqueryMw(), api.UserInfoQuery)...)
 		}
 	}
 }

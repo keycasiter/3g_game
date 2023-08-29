@@ -305,6 +305,9 @@ struct UserLoginRequest{
 
 struct UserLoginResponse{
     1: common.Meta meta
+    2: string NickName
+    3: string AvatarUrl
+    4: string WxOpenId
 }
 
 //============= 用户登录 END ==============

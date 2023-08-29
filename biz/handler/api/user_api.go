@@ -105,6 +105,11 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 		}
 	}
 
+	//组装resp
+	resp.WxOpenId = respObj.OpenId
+	resp.NickName = req.NickName
+	resp.AvatarUrl = req.AvatarUrl
+
 	c.JSON(hertzconsts.StatusOK, resp)
 }
 

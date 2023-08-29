@@ -105,3 +105,8 @@ func _getuserwxopenidMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _userloginMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

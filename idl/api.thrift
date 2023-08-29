@@ -296,17 +296,18 @@ struct RecTeamGeneral {
 }
 //============= 查询推荐阵容列表 END ==============
 
-//============= 获取用户微信openid BEGIN ==============
-struct GetUserWxOpenIdRequest{
+//============= 用户登录 BEGIN ==============
+struct UserLoginRequest{
     1: string Code
+    2: string NickName
+    3: string AvatarUrl
 }
 
-struct GetUserWxOpenIdResponse{
+struct UserLoginResponse{
     1: common.Meta meta
-    2: string OpenId
 }
 
-//============= 获取用户微信openid END ==============
+//============= 用户登录 END ==============
 
 service ApiService {
     //**模拟对战**
@@ -324,6 +325,6 @@ service ApiService {
     RecTeamQueryResponse RecTeamQuery(1:RecTeamQueryRequest request)(api.get="/v1/rec_team/query");
 
     //**微信**
-    //获取用户微信openId
-    GetUserWxOpenIdResponse GetUserWxOpenId(1:GetUserWxOpenIdRequest request)(api.get="/v1/user/get_user_wx_open_id");
+    //用户登录接口
+    UserLoginResponse UserLogin(1:UserLoginRequest request)(api.post="/v1/user/login");
 }

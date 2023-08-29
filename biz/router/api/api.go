@@ -45,7 +45,7 @@ func Register(r *server.Hertz) {
 		}
 		{
 			_user := _v1.Group("/user", _userMw()...)
-			_user.GET("/get_user_wx_open_id", append(_getuserwxopenidMw(), api.GetUserWxOpenId)...)
+			_user.POST("/login", append(_userloginMw(), api.UserLogin)...)
 		}
 	}
 }

@@ -8978,24 +8978,36 @@ func (p *RecTeamGeneral) String() string {
 }
 
 //============= 查询推荐阵容列表 END ==============
-//============= 获取用户微信openid BEGIN ==============
-type GetUserWxOpenIdRequest struct {
-	Code string `thrift:"Code,1" form:"Code" json:"Code" query:"Code"`
+//============= 用户登录 BEGIN ==============
+type UserLoginRequest struct {
+	Code      string `thrift:"Code,1" form:"Code" json:"Code" query:"Code"`
+	NickName  string `thrift:"NickName,2" form:"NickName" json:"NickName" query:"NickName"`
+	AvatarUrl string `thrift:"AvatarUrl,3" form:"AvatarUrl" json:"AvatarUrl" query:"AvatarUrl"`
 }
 
-func NewGetUserWxOpenIdRequest() *GetUserWxOpenIdRequest {
-	return &GetUserWxOpenIdRequest{}
+func NewUserLoginRequest() *UserLoginRequest {
+	return &UserLoginRequest{}
 }
 
-func (p *GetUserWxOpenIdRequest) GetCode() (v string) {
+func (p *UserLoginRequest) GetCode() (v string) {
 	return p.Code
 }
 
-var fieldIDToName_GetUserWxOpenIdRequest = map[int16]string{
-	1: "Code",
+func (p *UserLoginRequest) GetNickName() (v string) {
+	return p.NickName
 }
 
-func (p *GetUserWxOpenIdRequest) Read(iprot thrift.TProtocol) (err error) {
+func (p *UserLoginRequest) GetAvatarUrl() (v string) {
+	return p.AvatarUrl
+}
+
+var fieldIDToName_UserLoginRequest = map[int16]string{
+	1: "Code",
+	2: "NickName",
+	3: "AvatarUrl",
+}
+
+func (p *UserLoginRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -9024,6 +9036,26 @@ func (p *GetUserWxOpenIdRequest) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -9044,7 +9076,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_GetUserWxOpenIdRequest[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_UserLoginRequest[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -9054,7 +9086,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *GetUserWxOpenIdRequest) ReadField1(iprot thrift.TProtocol) error {
+func (p *UserLoginRequest) ReadField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -9063,14 +9095,40 @@ func (p *GetUserWxOpenIdRequest) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *GetUserWxOpenIdRequest) Write(oprot thrift.TProtocol) (err error) {
+func (p *UserLoginRequest) ReadField2(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.NickName = v
+	}
+	return nil
+}
+
+func (p *UserLoginRequest) ReadField3(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.AvatarUrl = v
+	}
+	return nil
+}
+
+func (p *UserLoginRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("GetUserWxOpenIdRequest"); err != nil {
+	if err = oprot.WriteStructBegin("UserLoginRequest"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 
@@ -9092,7 +9150,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *GetUserWxOpenIdRequest) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *UserLoginRequest) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("Code", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -9109,45 +9167,73 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *GetUserWxOpenIdRequest) String() string {
+func (p *UserLoginRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("NickName", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.NickName); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *UserLoginRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("AvatarUrl", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.AvatarUrl); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *UserLoginRequest) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("GetUserWxOpenIdRequest(%+v)", *p)
+	return fmt.Sprintf("UserLoginRequest(%+v)", *p)
 }
 
-type GetUserWxOpenIdResponse struct {
-	Meta   *common.Meta `thrift:"meta,1" form:"meta" json:"meta" query:"meta"`
-	OpenId string       `thrift:"OpenId,2" form:"OpenId" json:"OpenId" query:"OpenId"`
+type UserLoginResponse struct {
+	Meta *common.Meta `thrift:"meta,1" form:"meta" json:"meta" query:"meta"`
 }
 
-func NewGetUserWxOpenIdResponse() *GetUserWxOpenIdResponse {
-	return &GetUserWxOpenIdResponse{}
+func NewUserLoginResponse() *UserLoginResponse {
+	return &UserLoginResponse{}
 }
 
-var GetUserWxOpenIdResponse_Meta_DEFAULT *common.Meta
+var UserLoginResponse_Meta_DEFAULT *common.Meta
 
-func (p *GetUserWxOpenIdResponse) GetMeta() (v *common.Meta) {
+func (p *UserLoginResponse) GetMeta() (v *common.Meta) {
 	if !p.IsSetMeta() {
-		return GetUserWxOpenIdResponse_Meta_DEFAULT
+		return UserLoginResponse_Meta_DEFAULT
 	}
 	return p.Meta
 }
 
-func (p *GetUserWxOpenIdResponse) GetOpenId() (v string) {
-	return p.OpenId
-}
-
-var fieldIDToName_GetUserWxOpenIdResponse = map[int16]string{
+var fieldIDToName_UserLoginResponse = map[int16]string{
 	1: "meta",
-	2: "OpenId",
 }
 
-func (p *GetUserWxOpenIdResponse) IsSetMeta() bool {
+func (p *UserLoginResponse) IsSetMeta() bool {
 	return p.Meta != nil
 }
 
-func (p *GetUserWxOpenIdResponse) Read(iprot thrift.TProtocol) (err error) {
+func (p *UserLoginResponse) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -9176,16 +9262,6 @@ func (p *GetUserWxOpenIdResponse) Read(iprot thrift.TProtocol) (err error) {
 					goto SkipFieldError
 				}
 			}
-		case 2:
-			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField2(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else {
-				if err = iprot.Skip(fieldTypeId); err != nil {
-					goto SkipFieldError
-				}
-			}
 		default:
 			if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -9206,7 +9282,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_GetUserWxOpenIdResponse[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_UserLoginResponse[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -9216,7 +9292,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *GetUserWxOpenIdResponse) ReadField1(iprot thrift.TProtocol) error {
+func (p *UserLoginResponse) ReadField1(iprot thrift.TProtocol) error {
 	p.Meta = common.NewMeta()
 	if err := p.Meta.Read(iprot); err != nil {
 		return err
@@ -9224,27 +9300,14 @@ func (p *GetUserWxOpenIdResponse) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *GetUserWxOpenIdResponse) ReadField2(iprot thrift.TProtocol) error {
-	if v, err := iprot.ReadString(); err != nil {
-		return err
-	} else {
-		p.OpenId = v
-	}
-	return nil
-}
-
-func (p *GetUserWxOpenIdResponse) Write(oprot thrift.TProtocol) (err error) {
+func (p *UserLoginResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("GetUserWxOpenIdResponse"); err != nil {
+	if err = oprot.WriteStructBegin("UserLoginResponse"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
-			goto WriteFieldError
-		}
-		if err = p.writeField2(oprot); err != nil {
-			fieldId = 2
 			goto WriteFieldError
 		}
 
@@ -9266,7 +9329,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *GetUserWxOpenIdResponse) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *UserLoginResponse) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("meta", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -9283,31 +9346,14 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *GetUserWxOpenIdResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("OpenId", thrift.STRING, 2); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteString(p.OpenId); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
-}
-
-func (p *GetUserWxOpenIdResponse) String() string {
+func (p *UserLoginResponse) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("GetUserWxOpenIdResponse(%+v)", *p)
+	return fmt.Sprintf("UserLoginResponse(%+v)", *p)
 }
 
-//============= 获取用户微信openid END ==============
+//============= 用户登录 END ==============
 type ApiService interface {
 	//**模拟对战**
 	//模拟对战
@@ -9323,8 +9369,8 @@ type ApiService interface {
 	//推荐阵容列表
 	RecTeamQuery(ctx context.Context, request *RecTeamQueryRequest) (r *RecTeamQueryResponse, err error)
 	//**微信**
-	//获取用户微信openId
-	GetUserWxOpenId(ctx context.Context, request *GetUserWxOpenIdRequest) (r *GetUserWxOpenIdResponse, err error)
+	//用户登录接口
+	UserLogin(ctx context.Context, request *UserLoginRequest) (r *UserLoginResponse, err error)
 }
 
 type ApiServiceClient struct {
@@ -9407,11 +9453,11 @@ func (p *ApiServiceClient) RecTeamQuery(ctx context.Context, request *RecTeamQue
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *ApiServiceClient) GetUserWxOpenId(ctx context.Context, request *GetUserWxOpenIdRequest) (r *GetUserWxOpenIdResponse, err error) {
-	var _args ApiServiceGetUserWxOpenIdArgs
+func (p *ApiServiceClient) UserLogin(ctx context.Context, request *UserLoginRequest) (r *UserLoginResponse, err error) {
+	var _args ApiServiceUserLoginArgs
 	_args.Request = request
-	var _result ApiServiceGetUserWxOpenIdResult
-	if err = p.Client_().Call(ctx, "GetUserWxOpenId", &_args, &_result); err != nil {
+	var _result ApiServiceUserLoginResult
+	if err = p.Client_().Call(ctx, "UserLogin", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
@@ -9443,7 +9489,7 @@ func NewApiServiceProcessor(handler ApiService) *ApiServiceProcessor {
 	self.AddToProcessorMap("GeneralWarBookQuery", &apiServiceProcessorGeneralWarBookQuery{handler: handler})
 	self.AddToProcessorMap("SpecialTechQuery", &apiServiceProcessorSpecialTechQuery{handler: handler})
 	self.AddToProcessorMap("RecTeamQuery", &apiServiceProcessorRecTeamQuery{handler: handler})
-	self.AddToProcessorMap("GetUserWxOpenId", &apiServiceProcessorGetUserWxOpenId{handler: handler})
+	self.AddToProcessorMap("UserLogin", &apiServiceProcessorUserLogin{handler: handler})
 	return self
 }
 func (p *ApiServiceProcessor) Process(ctx context.Context, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -9752,16 +9798,16 @@ func (p *apiServiceProcessorRecTeamQuery) Process(ctx context.Context, seqId int
 	return true, err
 }
 
-type apiServiceProcessorGetUserWxOpenId struct {
+type apiServiceProcessorUserLogin struct {
 	handler ApiService
 }
 
-func (p *apiServiceProcessorGetUserWxOpenId) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
-	args := ApiServiceGetUserWxOpenIdArgs{}
+func (p *apiServiceProcessorUserLogin) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := ApiServiceUserLoginArgs{}
 	if err = args.Read(iprot); err != nil {
 		iprot.ReadMessageEnd()
 		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
-		oprot.WriteMessageBegin("GetUserWxOpenId", thrift.EXCEPTION, seqId)
+		oprot.WriteMessageBegin("UserLogin", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush(ctx)
@@ -9770,11 +9816,11 @@ func (p *apiServiceProcessorGetUserWxOpenId) Process(ctx context.Context, seqId 
 
 	iprot.ReadMessageEnd()
 	var err2 error
-	result := ApiServiceGetUserWxOpenIdResult{}
-	var retval *GetUserWxOpenIdResponse
-	if retval, err2 = p.handler.GetUserWxOpenId(ctx, args.Request); err2 != nil {
-		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing GetUserWxOpenId: "+err2.Error())
-		oprot.WriteMessageBegin("GetUserWxOpenId", thrift.EXCEPTION, seqId)
+	result := ApiServiceUserLoginResult{}
+	var retval *UserLoginResponse
+	if retval, err2 = p.handler.UserLogin(ctx, args.Request); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UserLogin: "+err2.Error())
+		oprot.WriteMessageBegin("UserLogin", thrift.EXCEPTION, seqId)
 		x.Write(oprot)
 		oprot.WriteMessageEnd()
 		oprot.Flush(ctx)
@@ -9782,7 +9828,7 @@ func (p *apiServiceProcessorGetUserWxOpenId) Process(ctx context.Context, seqId 
 	} else {
 		result.Success = retval
 	}
-	if err2 = oprot.WriteMessageBegin("GetUserWxOpenId", thrift.REPLY, seqId); err2 != nil {
+	if err2 = oprot.WriteMessageBegin("UserLogin", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -11552,32 +11598,32 @@ func (p *ApiServiceRecTeamQueryResult) String() string {
 	return fmt.Sprintf("ApiServiceRecTeamQueryResult(%+v)", *p)
 }
 
-type ApiServiceGetUserWxOpenIdArgs struct {
-	Request *GetUserWxOpenIdRequest `thrift:"request,1"`
+type ApiServiceUserLoginArgs struct {
+	Request *UserLoginRequest `thrift:"request,1"`
 }
 
-func NewApiServiceGetUserWxOpenIdArgs() *ApiServiceGetUserWxOpenIdArgs {
-	return &ApiServiceGetUserWxOpenIdArgs{}
+func NewApiServiceUserLoginArgs() *ApiServiceUserLoginArgs {
+	return &ApiServiceUserLoginArgs{}
 }
 
-var ApiServiceGetUserWxOpenIdArgs_Request_DEFAULT *GetUserWxOpenIdRequest
+var ApiServiceUserLoginArgs_Request_DEFAULT *UserLoginRequest
 
-func (p *ApiServiceGetUserWxOpenIdArgs) GetRequest() (v *GetUserWxOpenIdRequest) {
+func (p *ApiServiceUserLoginArgs) GetRequest() (v *UserLoginRequest) {
 	if !p.IsSetRequest() {
-		return ApiServiceGetUserWxOpenIdArgs_Request_DEFAULT
+		return ApiServiceUserLoginArgs_Request_DEFAULT
 	}
 	return p.Request
 }
 
-var fieldIDToName_ApiServiceGetUserWxOpenIdArgs = map[int16]string{
+var fieldIDToName_ApiServiceUserLoginArgs = map[int16]string{
 	1: "request",
 }
 
-func (p *ApiServiceGetUserWxOpenIdArgs) IsSetRequest() bool {
+func (p *ApiServiceUserLoginArgs) IsSetRequest() bool {
 	return p.Request != nil
 }
 
-func (p *ApiServiceGetUserWxOpenIdArgs) Read(iprot thrift.TProtocol) (err error) {
+func (p *ApiServiceUserLoginArgs) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -11626,7 +11672,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ApiServiceGetUserWxOpenIdArgs[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ApiServiceUserLoginArgs[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -11636,17 +11682,17 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *ApiServiceGetUserWxOpenIdArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.Request = NewGetUserWxOpenIdRequest()
+func (p *ApiServiceUserLoginArgs) ReadField1(iprot thrift.TProtocol) error {
+	p.Request = NewUserLoginRequest()
 	if err := p.Request.Read(iprot); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (p *ApiServiceGetUserWxOpenIdArgs) Write(oprot thrift.TProtocol) (err error) {
+func (p *ApiServiceUserLoginArgs) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("GetUserWxOpenId_args"); err != nil {
+	if err = oprot.WriteStructBegin("UserLogin_args"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -11673,7 +11719,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *ApiServiceGetUserWxOpenIdArgs) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *ApiServiceUserLoginArgs) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("request", thrift.STRUCT, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -11690,39 +11736,39 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *ApiServiceGetUserWxOpenIdArgs) String() string {
+func (p *ApiServiceUserLoginArgs) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ApiServiceGetUserWxOpenIdArgs(%+v)", *p)
+	return fmt.Sprintf("ApiServiceUserLoginArgs(%+v)", *p)
 }
 
-type ApiServiceGetUserWxOpenIdResult struct {
-	Success *GetUserWxOpenIdResponse `thrift:"success,0,optional"`
+type ApiServiceUserLoginResult struct {
+	Success *UserLoginResponse `thrift:"success,0,optional"`
 }
 
-func NewApiServiceGetUserWxOpenIdResult() *ApiServiceGetUserWxOpenIdResult {
-	return &ApiServiceGetUserWxOpenIdResult{}
+func NewApiServiceUserLoginResult() *ApiServiceUserLoginResult {
+	return &ApiServiceUserLoginResult{}
 }
 
-var ApiServiceGetUserWxOpenIdResult_Success_DEFAULT *GetUserWxOpenIdResponse
+var ApiServiceUserLoginResult_Success_DEFAULT *UserLoginResponse
 
-func (p *ApiServiceGetUserWxOpenIdResult) GetSuccess() (v *GetUserWxOpenIdResponse) {
+func (p *ApiServiceUserLoginResult) GetSuccess() (v *UserLoginResponse) {
 	if !p.IsSetSuccess() {
-		return ApiServiceGetUserWxOpenIdResult_Success_DEFAULT
+		return ApiServiceUserLoginResult_Success_DEFAULT
 	}
 	return p.Success
 }
 
-var fieldIDToName_ApiServiceGetUserWxOpenIdResult = map[int16]string{
+var fieldIDToName_ApiServiceUserLoginResult = map[int16]string{
 	0: "success",
 }
 
-func (p *ApiServiceGetUserWxOpenIdResult) IsSetSuccess() bool {
+func (p *ApiServiceUserLoginResult) IsSetSuccess() bool {
 	return p.Success != nil
 }
 
-func (p *ApiServiceGetUserWxOpenIdResult) Read(iprot thrift.TProtocol) (err error) {
+func (p *ApiServiceUserLoginResult) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -11771,7 +11817,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ApiServiceGetUserWxOpenIdResult[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ApiServiceUserLoginResult[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -11781,17 +11827,17 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *ApiServiceGetUserWxOpenIdResult) ReadField0(iprot thrift.TProtocol) error {
-	p.Success = NewGetUserWxOpenIdResponse()
+func (p *ApiServiceUserLoginResult) ReadField0(iprot thrift.TProtocol) error {
+	p.Success = NewUserLoginResponse()
 	if err := p.Success.Read(iprot); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (p *ApiServiceGetUserWxOpenIdResult) Write(oprot thrift.TProtocol) (err error) {
+func (p *ApiServiceUserLoginResult) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("GetUserWxOpenId_result"); err != nil {
+	if err = oprot.WriteStructBegin("UserLogin_result"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -11818,7 +11864,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *ApiServiceGetUserWxOpenIdResult) writeField0(oprot thrift.TProtocol) (err error) {
+func (p *ApiServiceUserLoginResult) writeField0(oprot thrift.TProtocol) (err error) {
 	if p.IsSetSuccess() {
 		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
 			goto WriteFieldBeginError
@@ -11837,9 +11883,9 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
 }
 
-func (p *ApiServiceGetUserWxOpenIdResult) String() string {
+func (p *ApiServiceUserLoginResult) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ApiServiceGetUserWxOpenIdResult(%+v)", *p)
+	return fmt.Sprintf("ApiServiceUserLoginResult(%+v)", *p)
 }

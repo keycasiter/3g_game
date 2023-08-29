@@ -60,6 +60,8 @@ func GetUserWxOpenId(ctx context.Context, c *app.RequestContext) {
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
+	hlog.CtxInfof(ctx, "GetUserWxOpenId Resp:%s", util.ToJsonString(ctx, respObj))
+
 	resp.OpenId = respObj.OpenId
 
 	hlog.CtxInfof(ctx, "Http Get URL:%s Resp:%s", requestUrl, util.ToJsonString(ctx, resp))

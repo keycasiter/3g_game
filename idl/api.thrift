@@ -308,6 +308,7 @@ struct UserLoginResponse{
     2: string NickName
     3: string AvatarUrl
     4: string WxOpenId
+    5: i64 Level
 }
 
 //============= 用户登录 END ==============

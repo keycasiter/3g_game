@@ -109,6 +109,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	resp.WxOpenId = respObj.OpenId
 	resp.NickName = req.NickName
 	resp.AvatarUrl = req.AvatarUrl
+	resp.Level = int64(consts.UserLevel_Common)
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

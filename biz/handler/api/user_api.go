@@ -32,6 +32,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.UserLoginRequest
 	var resp api.UserLoginResponse
+	resp.Meta = util.BuildSuccMeta()
 
 	err = c.BindAndValidate(&req)
 	if err != nil {
@@ -49,7 +50,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	urlResp, err := http.Get(requestUrl)
 	if err != nil {
 		hlog.CtxErrorf(ctx, "Http Get URL:%s err:%v", requestUrl, err)
-		resp.Meta = util.BuildFailedMeta(fmt.Sprintf("err:%v", err))
+		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("err:%v", err))
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
@@ -57,7 +58,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	body, err := ioutil.ReadAll(urlResp.Body)
 	if err != nil {
 		hlog.CtxErrorf(ctx, "Http Get URL:%s err:%v", requestUrl, err)
-		resp.Meta = util.BuildFailedMeta(fmt.Sprintf("err:%v", err))
+		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("err:%v", err))
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
@@ -65,14 +66,14 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	err = json.Unmarshal(body, respObj)
 	if err != nil {
 		hlog.CtxErrorf(ctx, "parse Object err:%v", err)
-		resp.Meta = util.BuildFailedMeta(fmt.Sprintf("parse Object err:%v", err))
+		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("parse Object err:%v", err))
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
 	hlog.CtxInfof(ctx, "GetUserWxOpenId Resp:%s", util.ToJsonString(ctx, respObj))
 	if respObj.OpenId == "" {
 		hlog.CtxErrorf(ctx, "openId is empty")
-		resp.Meta = util.BuildFailedMeta("微信openId为空")
+		resp.Meta = util.BuildFailMetaWithMsg("微信openId为空")
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
@@ -81,7 +82,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	isExist, err := mysql.NewUserInfo().CheckUserInfo(ctx, respObj.OpenId)
 	if err != nil {
 		hlog.CtxErrorf(ctx, "CheckUserInfo err:%v", err)
-		resp.Meta = util.BuildFailedMeta(fmt.Sprintf("检测用户失败 err:%v", err))
+		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("检测用户失败 err:%v", err))
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
@@ -98,7 +99,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 		})
 		if err != nil {
 			hlog.CtxErrorf(ctx, "CreateUserInfo err:%v", err)
-			resp.Meta = util.BuildFailedMeta(fmt.Sprintf("创建用户失败 err:%v", err))
+			resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("创建用户失败 err:%v", err))
 			c.JSON(hertzconsts.StatusOK, resp)
 			return
 		}

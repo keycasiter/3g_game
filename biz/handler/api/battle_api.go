@@ -29,6 +29,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.BattleExecuteRequest
 	resp := new(api.BattleExecuteResponse)
+	resp.Meta = util.BuildSuccMeta()
 
 	err = c.BindAndValidate(&req)
 	//日志打印
@@ -36,11 +37,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
-		resp.Meta = &common.Meta{
-			StatusCode: enum.ResponseCode_UnknownError,
-			StatusMsg:  "未知错误",
-		}
-
+		resp.Meta = util.BuildFailMetaWithMsg("未知错误")
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
@@ -48,11 +45,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	//参数校验
 	if err := checkParam(req); err != nil {
 		hlog.CtxWarnf(ctx, "BattleLogicContext Param Err:%v", err)
-		resp.Meta = &common.Meta{
-			StatusCode: enum.ResponseCode_ParamInvalid,
-			StatusMsg:  "参数错误:" + err.Error(),
-		}
-
+		resp.Meta = util.BuildFailMetaWithMsg("未知错误")
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
@@ -61,11 +54,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	serviceResp, err := logic.NewBattleLogicContext(ctx, buildBattleExecuteRequest(ctx, req)).Run()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
-		resp.Meta = &common.Meta{
-			StatusCode: enum.ResponseCode_UnknownError,
-			StatusMsg:  "未知错误",
-		}
-
+		resp.Meta = util.BuildFailMetaWithMsg("未知错误")
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}

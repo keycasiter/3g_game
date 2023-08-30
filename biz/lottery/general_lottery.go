@@ -192,11 +192,17 @@ func (g *GeneralLotteryContext) BuildResp() {
 
 	//整理resp
 	generalLotteryList := make([]*GeneralLotteryInfo, 0)
+	hit5LevGeneralNum := int64(0)
 	for _, general := range generals {
 		//命中次数
 		hitNum := int64(0)
 		if currentHitNum, ok := g.HitGeneralMap[consts.General_Id(general.Id)]; ok {
 			hitNum = currentHitNum
+
+			//5星将
+			if _, okk := g.General5LevMap[consts.General_Id(general.Id)]; okk {
+				hit5LevGeneralNum += currentHitNum
+			}
 		}
 		//配置概率
 		lotteryRate := float64(0)
@@ -214,5 +220,6 @@ func (g *GeneralLotteryContext) BuildResp() {
 	g.Resp = &GeneralLotteryResponse{
 		GeneralLotteryInfoList: generalLotteryList,
 		ProtectedMustHitNum:    g.ProtectedMustHitNum,
+		Hit5LevGeneralNum:      hit5LevGeneralNum,
 	}
 }

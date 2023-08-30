@@ -21,6 +21,8 @@ type GeneralLotteryResponse struct {
 	GeneralLotteryInfoList []*GeneralLotteryInfo
 	//保底统计
 	ProtectedMustHitNum int64
+	//五星武将出现率
+	Hit5LevGeneralNum int64
 }
 
 type GeneralLotteryInfo struct {

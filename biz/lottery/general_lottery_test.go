@@ -6,6 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/conf"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
+	"github.com/spf13/cast"
 	"sort"
 	"testing"
 )
@@ -14,11 +15,12 @@ func TestNewGeneralLotteryContext(t *testing.T) {
 	conf.InitConfig()
 	mysql.InitMysql()
 	ctx := context.Background()
+	rollTimes := int64(1000)
 
 	resp, err := NewGeneralLotteryContext(&GeneralLotteryRequest{
 		Ctx:            ctx,
 		GeneralLottery: consts.PK_DongRuLeiTing,
-		RollTimes:      500,
+		RollTimes:      rollTimes,
 		Uid:            "ssss",
 	}).Run()
 	if err != nil {
@@ -29,6 +31,8 @@ func TestNewGeneralLotteryContext(t *testing.T) {
 	sort.Sort(sort.Reverse(list))
 
 	fmt.Printf("保底次数:%d\n", resp.ProtectedMustHitNum)
+	fmt.Printf("出橙次数:%d\n", resp.Hit5LevGeneralNum)
+	fmt.Printf("出橙率:%.2f%%\n", cast.ToFloat64(rollTimes)/cast.ToFloat64(resp.Hit5LevGeneralNum))
 	for _, general := range list {
 		fmt.Printf("%s , 抽中次数:%d , 抽中占比:%.2f%% , 设置概率:%.2f%%\n", general.GeneralInfo.Name, general.HitNum, general.HitRate*100, general.LotteryRate*100)
 	}

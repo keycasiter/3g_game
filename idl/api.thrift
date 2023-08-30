@@ -330,6 +330,39 @@ struct UserInfoQueryResponse{
 
 //============= 用户信息查询 END ==============
 
+//============= 武将抽卡 BEGIN ==============
+struct GeneralLotteryRequest{
+    //抽取卡池枚举
+    1: i64 GeneralLotteryPool
+    //抽取次数
+    2: i64 RollTimes
+    //用户uid
+    3: string Uid
+}
+
+struct GeneralLotteryResponse{
+    1: common.Meta meta
+    //抽取的武将信息
+    2:list<GeneralLotteryInfo> GeneralLotteryInfoList
+    //保底统计
+    3:i64 ProtectedMustHitNum
+    //五星武将出现率
+    4:i64 Hit5LevGeneralNum
+}
+
+struct GeneralLotteryInfo {
+	//武将信息
+	1:MetadataGeneral GeneralInfo
+	//抽中次数
+	2:i64 HitNum
+	//本次抽中占比
+	3:double HitRate
+	//游戏设置概率
+	4:double LotteryRate
+}
+
+//============= 武将抽卡 END ==============
+
 service ApiService {
     //**模拟对战**
     //模拟对战
@@ -344,6 +377,10 @@ service ApiService {
     SpecialTechQueryResponse SpecialTechQuery(1:SpecialTechQueryRequest request)(api.get="/v1/special_tech/query");
     //推荐阵容列表
     RecTeamQueryResponse RecTeamQuery(1:RecTeamQueryRequest request)(api.get="/v1/rec_team/query");
+
+    //**抽卡**
+    //武将抽卡
+    GeneralLotteryResponse GeneralLottery(1:GeneralLotteryRequest request)(api.post="/v1/lottery/general");
 
     //**微信**
     //用户登录接口

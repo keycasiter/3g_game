@@ -1,13 +1,11 @@
-package lottery
+package vo
 
 import (
-	"context"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/po"
 )
 
 type GeneralLotteryRequest struct {
-	Ctx context.Context
 	//抽取卡池枚举
 	GeneralLottery consts.GeneralLotteryPool
 	//抽取次数

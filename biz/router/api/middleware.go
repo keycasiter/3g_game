@@ -115,3 +115,13 @@ func _userinfoqueryMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _lotteryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotteryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

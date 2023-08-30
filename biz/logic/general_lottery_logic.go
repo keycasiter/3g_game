@@ -1,6 +1,7 @@
-package lottery
+package logic
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -13,9 +14,10 @@ import (
 )
 
 //武将抽卡
-type GeneralLotteryContext struct {
-	Req   *GeneralLotteryRequest
-	Resp  *GeneralLotteryResponse
+type GeneralLotteryLogic struct {
+	Ctx   context.Context
+	Req   *vo.GeneralLotteryRequest
+	Resp  *vo.GeneralLotteryResponse
 	Funcs []func()
 	Err   error
 
@@ -36,8 +38,9 @@ type GeneralLotteryContext struct {
 	ProtectedMustHitNum int64
 }
 
-func NewGeneralLotteryContext(req *GeneralLotteryRequest) *GeneralLotteryContext {
-	ctx := &GeneralLotteryContext{
+func NewGeneralLotteryLogic(ctx context.Context, req *vo.GeneralLotteryRequest) *GeneralLotteryLogic {
+	g := &GeneralLotteryLogic{
+		Ctx:            ctx,
 		Req:            req,
 		GeneralPool:    map[consts.General_Id]float64{},
 		ChancePool:     map[int64]consts.General_Id{},
@@ -46,20 +49,20 @@ func NewGeneralLotteryContext(req *GeneralLotteryRequest) *GeneralLotteryContext
 		Chance5LevPool: map[int64]consts.General_Id{},
 	}
 	//组合方法
-	ctx.Funcs = []func(){
+	g.Funcs = []func(){
 		//获取卡池
-		ctx.GetPool,
+		g.GetPool,
 		//配置卡池
-		ctx.ConfigPool,
+		g.ConfigPool,
 		//抽取卡池
-		ctx.LotteryPool,
+		g.LotteryPool,
 		//组合结果
-		ctx.BuildResp,
+		g.BuildResp,
 	}
-	return ctx
+	return g
 }
 
-func (g *GeneralLotteryContext) Run() (*GeneralLotteryResponse, error) {
+func (g *GeneralLotteryLogic) Run() (*vo.GeneralLotteryResponse, error) {
 	for _, f := range g.Funcs {
 		f()
 		if g.Err != nil {
@@ -69,7 +72,7 @@ func (g *GeneralLotteryContext) Run() (*GeneralLotteryResponse, error) {
 	return g.Resp, nil
 }
 
-func (g *GeneralLotteryContext) GetPool() {
+func (g *GeneralLotteryLogic) GetPool() {
 	pool := consts.GetGeneralPool(g.Req.GeneralLottery)
 	if pool == nil {
 		g.Err = errors.New("卡池不存在")
@@ -79,7 +82,7 @@ func (g *GeneralLotteryContext) GetPool() {
 	}
 }
 
-func (g *GeneralLotteryContext) ConfigPool() {
+func (g *GeneralLotteryLogic) ConfigPool() {
 	//**全部武将配置池**
 	//概率分布下限边界
 	lowLimit := int64(0)
@@ -98,7 +101,7 @@ func (g *GeneralLotteryContext) ConfigPool() {
 		cursor += rangeScope
 	}
 	//hlog.CtxInfof(g.Req.Ctx,"ChancePool:%s",util.ToJsonString(g.Req.Ctx,g.ChancePool))
-	hlog.CtxInfof(g.Req.Ctx, "[ConfigPool] lowLimit:%d , upperLimit:%d ,ChancePool size:%d", lowLimit, cursor, len(g.ChancePool))
+	hlog.CtxInfof(g.Ctx, "[ConfigPool] lowLimit:%d , upperLimit:%d ,ChancePool size:%d", lowLimit, cursor, len(g.ChancePool))
 
 	//**五星武将配置池**
 	//概率分布下限边界
@@ -122,11 +125,11 @@ func (g *GeneralLotteryContext) ConfigPool() {
 		}
 		cursor5Lev += rangeScope
 	}
-	hlog.CtxInfof(g.Req.Ctx, "[Config5LevPool] lowLimit:%d , upperLimit5Lev:%d ,Chance5LevPool size:%d", lowLimit5Lev, cursor5Lev, len(g.Chance5LevPool))
+	hlog.CtxInfof(g.Ctx, "[Config5LevPool] lowLimit:%d , upperLimit5Lev:%d ,Chance5LevPool size:%d", lowLimit5Lev, cursor5Lev, len(g.Chance5LevPool))
 
 }
 
-func (g *GeneralLotteryContext) LotteryPool() {
+func (g *GeneralLotteryLogic) LotteryPool() {
 	for i := int64(0); i < g.Req.RollTimes; i++ {
 		//累计30抽不中走保底逻辑
 		if g.NotHit5LevGeneralNum == 30 {
@@ -142,7 +145,7 @@ func (g *GeneralLotteryContext) LotteryPool() {
 	}
 }
 
-func (g *GeneralLotteryContext) hitGeneralHandler(isMustHit5Lev bool) {
+func (g *GeneralLotteryLogic) hitGeneralHandler(isMustHit5Lev bool) {
 	randomUpperLimit := float64(len(g.ChancePool))
 	lotteryPool := g.ChancePool
 	if isMustHit5Lev {
@@ -172,26 +175,26 @@ func (g *GeneralLotteryContext) hitGeneralHandler(isMustHit5Lev bool) {
 	}
 }
 
-func (g *GeneralLotteryContext) BuildResp() {
+func (g *GeneralLotteryLogic) BuildResp() {
 	//查询武将信息
 	generalIds := make([]int64, 0)
 	for generalId, _ := range g.HitGeneralMap {
 		generalIds = append(generalIds, int64(generalId))
 	}
 
-	generals, err := mysql.NewGeneral().QueryGeneralList(g.Req.Ctx, &vo.QueryGeneralCondition{
+	generals, err := mysql.NewGeneral().QueryGeneralList(g.Ctx, &vo.QueryGeneralCondition{
 		Ids:    generalIds,
 		Offset: 0,
 		Limit:  len(generalIds),
 	})
 	if err != nil {
-		hlog.CtxErrorf(g.Req.Ctx, "QueryGeneralList err:%v", err)
+		hlog.CtxErrorf(g.Ctx, "QueryGeneralList err:%v", err)
 		g.Err = err
 		return
 	}
 
 	//整理resp
-	generalLotteryList := make([]*GeneralLotteryInfo, 0)
+	generalLotteryList := make([]*vo.GeneralLotteryInfo, 0)
 	hit5LevGeneralNum := int64(0)
 	for _, general := range generals {
 		//命中次数
@@ -210,14 +213,14 @@ func (g *GeneralLotteryContext) BuildResp() {
 			lotteryRate = currentLotteryRate
 		}
 
-		generalLotteryList = append(generalLotteryList, &GeneralLotteryInfo{
+		generalLotteryList = append(generalLotteryList, &vo.GeneralLotteryInfo{
 			GeneralInfo: general,
 			HitNum:      hitNum,
 			HitRate:     cast.ToFloat64(hitNum) / cast.ToFloat64(g.Req.RollTimes),
 			LotteryRate: lotteryRate,
 		})
 	}
-	g.Resp = &GeneralLotteryResponse{
+	g.Resp = &vo.GeneralLotteryResponse{
 		GeneralLotteryInfoList: generalLotteryList,
 		ProtectedMustHitNum:    g.ProtectedMustHitNum,
 		Hit5LevGeneralNum:      hit5LevGeneralNum,

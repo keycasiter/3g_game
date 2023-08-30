@@ -32,6 +32,10 @@ func Register(r *server.Hertz) {
 			_general_warbook.GET("/query", append(_generalwarbookqueryMw(), api.GeneralWarBookQuery)...)
 		}
 		{
+			_lottery := _v1.Group("/lottery", _lotteryMw()...)
+			_lottery.POST("/general", append(_generallotteryMw(), api.GeneralLottery)...)
+		}
+		{
 			_rec_team := _v1.Group("/rec_team", _rec_teamMw()...)
 			_rec_team.GET("/query", append(_recteamqueryMw(), api.RecTeamQuery)...)
 		}

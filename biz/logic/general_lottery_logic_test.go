@@ -1,4 +1,4 @@
-package lottery
+package logic
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/conf"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/spf13/cast"
 	"sort"
 	"testing"
@@ -17,7 +18,7 @@ func TestNewGeneralLotteryContext(t *testing.T) {
 	ctx := context.Background()
 	rollTimes := int64(1000)
 
-	resp, err := NewGeneralLotteryContext(&GeneralLotteryRequest{
+	resp, err := NewGeneralLotteryContext(&vo.GeneralLotteryRequest{
 		Ctx:            ctx,
 		GeneralLottery: consts.PK_DongRuLeiTing,
 		RollTimes:      rollTimes,
@@ -27,7 +28,7 @@ func TestNewGeneralLotteryContext(t *testing.T) {
 		fmt.Errorf("err:%v", err)
 		t.Fail()
 	}
-	var list GeneralLotteryInfoSortByHitNum = resp.GeneralLotteryInfoList
+	var list vo.GeneralLotteryInfoSortByHitNum = resp.GeneralLotteryInfoList
 	sort.Sort(sort.Reverse(list))
 
 	fmt.Printf("保底次数:%d\n", resp.ProtectedMustHitNum)

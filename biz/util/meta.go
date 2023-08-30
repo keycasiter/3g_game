@@ -25,3 +25,10 @@ func BuildFailMetaWithMsg(msg string) *common.Meta {
 		StatusMsg:  msg,
 	}
 }
+
+func BuildParamErrMeta() *common.Meta {
+	return &common.Meta{
+		StatusCode: enum.ResponseCode_ParamInvalid,
+		StatusMsg:  "参数错误",
+	}
+}

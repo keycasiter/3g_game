@@ -309,6 +309,7 @@ struct UserLoginResponse{
     3: string AvatarUrl
     4: string WxOpenId
     5: i64 Level
+    6: string Uid
 }
 
 //============= 用户登录 END ==============
@@ -324,6 +325,7 @@ struct UserInfoQueryResponse{
     3: string AvatarUrl
     4: string WxOpenId
     5: i64 Level
+    6: string Uid
 }
 
 //============= 用户信息查询 END ==============

@@ -87,9 +87,11 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	//不存在则注册
+	uid := util.GenerateUUID()
 	if !isExist {
 		nowTime := time.Now()
 		err := mysql.NewUserInfo().CreateUserInfo(ctx, &po.UserInfo{
+			Uid:       uid,
 			NickName:  req.NickName,
 			AvatarUrl: req.AvatarUrl,
 			WxOpenId:  respObj.OpenId,
@@ -106,6 +108,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//组装resp
+	resp.Uid = uid
 	resp.WxOpenId = respObj.OpenId
 	resp.NickName = req.NickName
 	resp.AvatarUrl = req.AvatarUrl
@@ -176,6 +179,7 @@ func UserInfoQuery(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//组合resp
+	resp.Uid = userInfo.Uid
 	resp.WxOpenId = userInfo.WxOpenId
 	resp.NickName = userInfo.NickName
 	resp.AvatarUrl = userInfo.AvatarUrl

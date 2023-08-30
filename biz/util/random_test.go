@@ -2,14 +2,13 @@ package util
 
 import (
 	"fmt"
-	"github.com/spf13/cast"
 	"math"
 	"testing"
 )
 
 func TestRandom(t *testing.T) {
 	for i := 0; i < 100; i++ {
-		fmt.Printf("%d\n", cast.ToInt64(math.Round(Random(3, 4))))
+		fmt.Printf("%.0f\n", math.Round(Random(0, 10000)))
 	}
 }
 

@@ -108,12 +108,12 @@ const (
 	MengHuo
 	YuJi
 	DongZhuo
-	LüBu
+	LvBu
 	XuYou
 	DuoSiDaWang
 	JuShou
 	TianFeng
-	LüLingQi
+	LvLingQi
 	ZhuRongFuRen
 	WuTuGu
 	GongSunZan
@@ -156,4 +156,122 @@ const (
 	SPZhangBao
 	SPHuangFuSong
 	SPZhangLiang
+	YangXiu
+	DengZhi
+	HuaXin
+	YuFan
+	ZhuRan
+	LvQian
+	LiuYao
 )
+
+var General5LevMap = map[General_Id]bool{
+	SPXunYu:        true,
+	DianWei:        true,
+	JiaXu:          true,
+	SiMaYi:         true,
+	CaoCao:         true,
+	ZhangLiao:      true,
+	SPLiuYe:        true,
+	SPPangDe:       true,
+	SPGuoJia:       true,
+	XuChu:          true,
+	ZhangHe:        true,
+	HaoZhao:        true,
+	CaoRen:         true,
+	ChengYu:        true,
+	XunYou:         true,
+	XuHuang:        true,
+	XiaHouDun:      true,
+	PangDe:         true,
+	ZhongHui:       true,
+	ManChong:       true,
+	WangShuang:     true,
+	WangYuanJi:     true,
+	CaoChun:        true,
+	YuJin:          true,
+	LeJin:          true,
+	DengAi:         true,
+	XiaHouYuan:     true,
+	GuoJia:         true,
+	ZhangChunHua:   true,
+	SPGuanYu:       true,
+	LiuBei:         true,
+	PangTong:       true,
+	MaChao:         true,
+	ZhuGeLiang:     true,
+	GuanYu:         true,
+	SPZhuGeLiang:   true,
+	YiJi:           true,
+	YanYan:         true,
+	ShuGuoZhangBao: true,
+	GuanXing:       true,
+	GuanYinPing:    true,
+	MaYunLu:        true,
+	ChenDao:        true,
+	JiangWei:       true,
+	WeiYan:         true,
+	HuangZhong:     true,
+	ZhaoYun:        true,
+	ZhangFei:       true,
+	WangPing:       true,
+	XuShu:          true,
+	ZhangJi:        true,
+	HuangYueYing:   true,
+	FaZheng:        true,
+	SPLvMeng:       true,
+	SunShangXiang:  true,
+	LuXun:          true,
+	SPZhouYu:       true,
+	MaZhong:        true,
+	LingTong:       true,
+	LuSu:           true,
+	SunQuan:        true,
+	GanNing:        true,
+	ZhouTai:        true,
+	LvMeng:         true,
+	TaiShiCi:       true,
+	SunJian:        true,
+	LuKang:         true,
+	ZhouYu:         true,
+	HuangGai:       true,
+	ChengPu:        true,
+	SunCe:          true,
+	ZhuGeKe:        true,
+	SPZhuJun:       true,
+	SPYuanShao:     true,
+	YuanShu:        true,
+	MengHuo:        true,
+	YuJi:           true,
+	DongZhuo:       true,
+	LvBu:           true,
+	XuYou:          true,
+	DuoSiDaWang:    true,
+	JuShou:         true,
+	TianFeng:       true,
+	LvLingQi:       true,
+	ZhuRongFuRen:   true,
+	WuTuGu:         true,
+	GongSunZan:     true,
+	YuanShao:       true,
+	ZhangJiao:      true,
+	ZhangRang:      true,
+	GaoLan:         true,
+	MuLuDaWang:     true,
+	LiRu:           true,
+	GaoShun:        true,
+	MaTeng:         true,
+	WenChou:        true,
+	HuaXiong:       true,
+	YanLiang:       true,
+	HuaTuo:         true,
+	ZuoCi:          true,
+	DiaoChan:       true,
+	ChenGong:       true,
+	ZouShi:         true,
+	DongBai:        true,
+	CaiWenJi:       true,
+	SPZhangBao:     true,
+	SPHuangFuSong:  true,
+	SPZhangLiang:   true,
+}

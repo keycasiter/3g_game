@@ -9,7 +9,7 @@ import (
 )
 
 //武将信息
-var CacheGeneralMap map[int64]*po.General
+var CacheGeneralMap = make(map[int64]*po.General, 0)
 
 func InitCache() {
 	ctx := context.Background()
@@ -19,7 +19,10 @@ func InitCache() {
 }
 
 func initGeneralCache(ctx context.Context) {
-	generals, err := mysql.NewGeneral().QueryGeneralList(ctx, &vo.QueryGeneralCondition{})
+	generals, err := mysql.NewGeneral().QueryGeneralList(ctx, &vo.QueryGeneralCondition{
+		Offset: 0,
+		Limit:  10000,
+	})
 	if err != nil {
 		panic(fmt.Sprintf("init cache [general] err:%v", err))
 	}

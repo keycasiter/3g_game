@@ -215,7 +215,7 @@ func (g GeneralLotteryPool) String() string {
 		return "PK动如雷霆"
 	//PK其疾如风
 	case PKQiJiRuFeng:
-		return "PKQiJiRuFeng"
+		return "PK其疾如风"
 	//PK其徐如林
 	case PKQiXuRuLin:
 		return "PK其徐如林"
@@ -230,7 +230,7 @@ func (g GeneralLotteryPool) String() string {
 		return "PK侵略如火"
 	//PK霸业奖励1
 	case PKBaYeJiangLi1:
-		return "PKBaYeJiangLi1"
+		return "PK霸业奖励1"
 	//PK霸业奖励2
 	case PKBaYeJiangLi2:
 		return "PK霸业奖励2"

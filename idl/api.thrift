@@ -331,7 +331,7 @@ struct UserInfoQueryResponse{
 //============= 用户信息查询 END ==============
 
 //============= 武将抽卡 BEGIN ==============
-struct GeneralLotteryRequest{
+struct GeneralLotteryDoRequest{
     //抽取卡池枚举
     1: i64 GeneralLotteryPool
     //抽取次数
@@ -340,17 +340,17 @@ struct GeneralLotteryRequest{
     3: string Uid
 }
 
-struct GeneralLotteryResponse{
+struct GeneralLotteryDoResponse{
     1: common.Meta meta
     //抽取的武将信息
-    2:list<GeneralLotteryInfo> GeneralLotteryInfoList
+    2:list<GeneralLotteryDoInfo> GeneralLotteryInfoList
     //保底统计
     3:i64 ProtectedMustHitNum
     //五星武将出现率
     4:i64 Hit5LevGeneralNum
 }
 
-struct GeneralLotteryInfo {
+struct GeneralLotteryDoInfo {
 	//武将信息
 	1:MetadataGeneral GeneralInfo
 	//抽中次数
@@ -359,6 +359,27 @@ struct GeneralLotteryInfo {
 	3:double HitRate
 	//游戏设置概率
 	4:double LotteryRate
+}
+
+//============= 武将抽卡 END ==============
+
+//============= 武将卡池查询 BEGIN ==============
+struct GeneralLotteryQueryRequest{
+}
+
+struct GeneralLotteryQueryResponse{
+    1: common.Meta meta
+    //卡池武将信息
+    2:list<GeneralLotteryQueryInfo> GeneralLotteryInfoList
+}
+
+struct GeneralLotteryQueryInfo {
+	//武将信息
+	1:list<MetadataGeneral> GeneralInfoList
+    //卡池枚举
+    2: i64 GeneralLotteryPool
+    //卡池名称
+    3: string GeneralLotteryPoolName
 }
 
 //============= 武将抽卡 END ==============
@@ -379,8 +400,10 @@ service ApiService {
     RecTeamQueryResponse RecTeamQuery(1:RecTeamQueryRequest request)(api.get="/v1/rec_team/query");
 
     //**抽卡**
+    //武将卡池查询
+    GeneralLotteryQueryResponse GeneralLotteryQuery(1:GeneralLotteryQueryRequest request)(api.get="/v1/lottery/general/query");
     //武将抽卡
-    GeneralLotteryResponse GeneralLottery(1:GeneralLotteryRequest request)(api.post="/v1/lottery/general");
+    GeneralLotteryDoResponse GeneralLotteryDo(1:GeneralLotteryDoRequest request)(api.post="/v1/lottery/general/do");
 
     //**微信**
     //用户登录接口

@@ -125,3 +125,18 @@ func _generallotteryMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _general0Mw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotterydoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotteryqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

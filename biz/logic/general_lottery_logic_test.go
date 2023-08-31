@@ -18,9 +18,8 @@ func TestNewGeneralLotteryContext(t *testing.T) {
 	ctx := context.Background()
 	rollTimes := int64(1000)
 
-	resp, err := NewGeneralLotteryContext(&vo.GeneralLotteryRequest{
-		Ctx:            ctx,
-		GeneralLottery: consts.PK_DongRuLeiTing,
+	resp, err := NewGeneralLotteryLogic(ctx, &vo.GeneralLotteryRequest{
+		GeneralLottery: consts.PKDongRuLeiTing,
 		RollTimes:      rollTimes,
 		Uid:            "ssss",
 	}).Run()

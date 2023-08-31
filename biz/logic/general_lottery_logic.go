@@ -77,6 +77,9 @@ func (g *GeneralLotteryLogic) GetPool() {
 	if pool == nil {
 		g.Err = errors.New("卡池不存在")
 	}
+	if len(pool) == 0 {
+		g.Err = errors.New("卡池为空")
+	}
 	for generalId, rate := range pool {
 		g.GeneralPool[generalId] = rate
 	}

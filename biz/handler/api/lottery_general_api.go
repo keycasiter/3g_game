@@ -26,6 +26,7 @@ func GeneralLotteryDo(ctx context.Context, c *app.RequestContext) {
 	resp.Meta = util.BuildSuccMeta()
 
 	err = c.BindAndValidate(&req)
+	hlog.CtxInfof(ctx, "GeneralLotteryDo Req:%s", util.ToJsonString(ctx, req))
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
@@ -36,8 +37,6 @@ func GeneralLotteryDo(ctx context.Context, c *app.RequestContext) {
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
-
-	hlog.CtxInfof(ctx, "GeneralLotteryDo Req:%s", util.ToJsonString(ctx, req))
 
 	logicResp, err := logic.NewGeneralLotteryLogic(ctx, &vo.GeneralLotteryRequest{
 		GeneralLottery: consts.GeneralLotteryPool(req.GeneralLotteryPool),
@@ -83,12 +82,11 @@ func GeneralLotteryQuery(ctx context.Context, c *app.RequestContext) {
 	resp.Meta = util.BuildSuccMeta()
 
 	err = c.BindAndValidate(&req)
+	hlog.CtxInfof(ctx, "GeneralLotteryQuery Req:%s", util.ToJsonString(ctx, req))
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
-
-	hlog.CtxInfof(ctx, "GeneralLotteryQuery Req:%s", util.ToJsonString(ctx, req))
 
 	//组合resp
 	generalLotteryInfoList := make([]*api.GeneralLotteryQueryInfo, 0)

@@ -12,6 +12,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
+	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -55,8 +56,9 @@ func GeneralLotteryDo(ctx context.Context, c *app.RequestContext) {
 	for _, info := range logicResp.GeneralLotteryInfoList {
 		generalLotteryInfoList = append(generalLotteryInfoList, &api.GeneralLotteryDoInfo{
 			GeneralInfo: &api.MetadataGeneral{
-				Id:   info.GeneralInfo.Id,
-				Name: info.GeneralInfo.Name,
+				Id:             info.GeneralInfo.Id,
+				Name:           info.GeneralInfo.Name,
+				GeneralQuality: enum.GeneralQuality(info.GeneralInfo.Quality),
 			},
 			HitNum:      info.HitNum,
 			HitRate:     info.HitRate,

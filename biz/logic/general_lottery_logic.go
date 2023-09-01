@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/dal/mysql"
+	"github.com/keycasiter/3g_game/biz/dal/cache"
+	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
@@ -180,26 +181,21 @@ func (g *GeneralLotteryLogic) hitGeneralHandler(isMustHit5Lev bool) {
 
 func (g *GeneralLotteryLogic) BuildResp() {
 	//查询武将信息
+	generalInfos := make([]*po.General, 0)
 	generalIds := make([]int64, 0)
 	for generalId, _ := range g.HitGeneralMap {
 		generalIds = append(generalIds, int64(generalId))
 	}
-
-	generals, err := mysql.NewGeneral().QueryGeneralList(g.Ctx, &vo.QueryGeneralCondition{
-		Ids:    generalIds,
-		Offset: 0,
-		Limit:  len(generalIds),
-	})
-	if err != nil {
-		hlog.CtxErrorf(g.Ctx, "QueryGeneralList err:%v", err)
-		g.Err = err
-		return
+	for _, generalId := range generalIds {
+		if generalInfo, ok := cache.CacheGeneralMap[generalId]; ok {
+			generalInfos = append(generalInfos, generalInfo)
+		}
 	}
 
 	//整理resp
 	generalLotteryList := make([]*vo.GeneralLotteryInfo, 0)
 	hit5LevGeneralNum := int64(0)
-	for _, general := range generals {
+	for _, general := range generalInfos {
 		//命中次数
 		hitNum := int64(0)
 		if currentHitNum, ok := g.HitGeneralMap[consts.General_Id(general.Id)]; ok {

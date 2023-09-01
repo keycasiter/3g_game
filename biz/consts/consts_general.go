@@ -163,6 +163,57 @@ const (
 	ZhuRan
 	LvQian
 	LiuYao
+	CaiYong
+	DongYun
+	GuYong
+	ZhuGeJin
+	FuShiRen
+	KanZe
+	ZhuGeZhan
+	SunQian
+	QuanCong
+	XiangChong
+	FeiShi
+	WuYi
+	CaoXiu
+	PanFeng
+	BianXi
+	XunYu
+	ZhangZhao
+	CaoZhi
+	CaoPi
+	DaQiao
+	XiaoQiao
+	ChenQun
+	SiMaHui
+	ZhenJi
+	LuZhi
+	ChenLin
+	LvFan
+	MiZhu
+	JianYong
+	LiYan
+	ZhongYao
+	ZhangLu
+	LiuBiao
+	BuLianShi
+	MaTie
+	FeiYi
+	DingYuan
+	WangYun
+	TaoQian
+	MiFang
+	HeJin
+	CheZhou
+	SongXian
+	BuZhi
+	XiaHouEn
+	MaoJie
+	LiuBa
+	PanJun
+	LiuChan
+	DongZhao
+	SunHao
 )
 
 var General5LevMap = map[General_Id]bool{
@@ -274,4 +325,14 @@ var General5LevMap = map[General_Id]bool{
 	SPZhangBao:     true,
 	SPHuangFuSong:  true,
 	SPZhangLiang:   true,
+	CaiYong:        true,
+	XunYu:          true,
+	ZhangZhao:      true,
+	CaoZhi:         true,
+	CaoPi:          true,
+	DaQiao:         true,
+	XiaoQiao:       true,
+	ChenQun:        true,
+	SiMaHui:        true,
+	ZhenJi:         true,
 }

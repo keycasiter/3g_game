@@ -93,17 +93,19 @@ func GeneralLotteryQuery(ctx context.Context, c *app.RequestContext) {
 	//组合resp
 	generalLotteryInfoList := make([]*api.GeneralLotteryQueryInfo, 0)
 	generalInfos := make([]*api.MetadataGeneral, 0)
-	for lotteryPoolId, generalPoolMap := range consts.GeneralLotteryPoolMap {
-		for generalId, _ := range generalPoolMap {
-			var general *po.General
-			//从缓存获取
-			if vo, ok := cache.CacheGeneralMap[int64(generalId)]; ok {
-				general = vo
+	for _, lotteryPoolId := range consts.GeneralLotteryPoolArr {
+		if generalMap, ok := consts.GeneralLotteryPoolMap[lotteryPoolId]; ok {
+			for generalId, _ := range generalMap {
+				var general *po.General
+				//从缓存获取
+				if vo, okk := cache.CacheGeneralMap[int64(generalId)]; okk {
+					general = vo
+				}
+				generalInfos = append(generalInfos, &api.MetadataGeneral{
+					Id:   int64(generalId),
+					Name: general.Name,
+				})
 			}
-			generalInfos = append(generalInfos, &api.MetadataGeneral{
-				Id:   int64(generalId),
-				Name: general.Name,
-			})
 		}
 
 		generalLotteryInfoList = append(generalLotteryInfoList, &api.GeneralLotteryQueryInfo{

@@ -98,25 +98,23 @@ func GeneralLotteryInfoQuery(ctx context.Context, c *app.RequestContext) {
 	//组合resp
 	generalLotteryInfoList := make([]*api.GeneralLotterInfoQueryInfo, 0)
 	generalInfos := make([]*api.MetadataGeneral, 0)
-	for _, lotteryPoolId := range consts.GeneralLotteryPoolArr {
-		if generalMap, ok := consts.GeneralLotteryPoolMap[lotteryPoolId]; ok {
-			for generalId, _ := range generalMap {
-				var general *po.General
-				//从缓存获取
-				if vo, okk := cache.CacheGeneralMap[int64(generalId)]; okk {
-					general = vo
-				}
-				generalInfos = append(generalInfos, &api.MetadataGeneral{
-					Id:   int64(generalId),
-					Name: general.Name,
-				})
+	generalPool := consts.GeneralLotteryPool(req.GeneralLotteryPool)
+	if generalMap, ok := consts.GeneralLotteryPoolMap[generalPool]; ok {
+		for generalId, _ := range generalMap {
+			var general *po.General
+			//从缓存获取
+			if vo, okk := cache.CacheGeneralMap[int64(generalId)]; okk {
+				general = vo
 			}
+			generalInfos = append(generalInfos, &api.MetadataGeneral{
+				Id:   int64(generalId),
+				Name: general.Name,
+			})
 		}
-
 		generalLotteryInfoList = append(generalLotteryInfoList, &api.GeneralLotterInfoQueryInfo{
 			GeneralInfoList:        generalInfos,
-			GeneralLotteryPool:     int64(lotteryPoolId),
-			GeneralLotteryPoolName: fmt.Sprintf("%v", lotteryPoolId),
+			GeneralLotteryPool:     int64(generalPool),
+			GeneralLotteryPoolName: fmt.Sprintf("%v", generalPool),
 		})
 	}
 	resp.GeneralLotteryPoolInfoList = generalLotteryInfoList

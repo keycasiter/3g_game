@@ -75,23 +75,23 @@ func GeneralLotteryDo(ctx context.Context, c *app.RequestContext) {
 	c.JSON(hertzconsts.StatusOK, resp)
 }
 
-// GeneralLotteryQuery .
-// @router /v1/lottery/general/query [GET]
-func GeneralLotteryQuery(ctx context.Context, c *app.RequestContext) {
+// GeneralLotteryInfoQuery .
+// @router /v1/lottery/general/info_query [GET]
+func GeneralLotteryInfoQuery(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req api.GeneralLotteryQueryRequest
-	var resp api.GeneralLotteryQueryResponse
+	var req api.GeneralLotteryInfoQueryRequest
+	var resp api.GeneralLotteryInfoQueryResponse
 	resp.Meta = util.BuildSuccMeta()
 
 	err = c.BindAndValidate(&req)
-	hlog.CtxInfof(ctx, "GeneralLotteryQuery Req:%s", util.ToJsonString(ctx, req))
+	hlog.CtxInfof(ctx, "GeneralLotteryInfoQuery Req:%s", util.ToJsonString(ctx, req))
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
 
 	//组合resp
-	generalLotteryInfoList := make([]*api.GeneralLotteryQueryInfo, 0)
+	generalLotteryInfoList := make([]*api.GeneralLotterInfoQueryInfo, 0)
 	generalInfos := make([]*api.MetadataGeneral, 0)
 	for _, lotteryPoolId := range consts.GeneralLotteryPoolArr {
 		if generalMap, ok := consts.GeneralLotteryPoolMap[lotteryPoolId]; ok {
@@ -108,15 +108,15 @@ func GeneralLotteryQuery(ctx context.Context, c *app.RequestContext) {
 			}
 		}
 
-		generalLotteryInfoList = append(generalLotteryInfoList, &api.GeneralLotteryQueryInfo{
+		generalLotteryInfoList = append(generalLotteryInfoList, &api.GeneralLotterInfoQueryInfo{
 			GeneralInfoList:        generalInfos,
 			GeneralLotteryPool:     int64(lotteryPoolId),
 			GeneralLotteryPoolName: fmt.Sprintf("%v", lotteryPoolId),
 		})
 	}
-	resp.GeneralLotteryInfoList = generalLotteryInfoList
+	resp.GeneralLotteryPoolInfoList = generalLotteryInfoList
 
-	hlog.CtxInfof(ctx, "GeneralLottery Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "GeneralLotteryInfoQuery Resp:%s", util.ToJsonString(ctx, resp))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }
@@ -150,6 +150,38 @@ func GeneralLotteryRateQuery(ctx context.Context, c *app.RequestContext) {
 	resp.GeneralLotteryRateInfoList = generalLotteryRateInfoList
 
 	hlog.CtxInfof(ctx, "GeneralLotteryRateQuery Resp:%s", util.ToJsonString(ctx, resp))
+
+	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+// GeneralLotteryInfoQuery .
+// @router /v1/lottery/general/pool_query [GET]
+func GeneralLotteryPoolInfoQuery(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.GeneralLotteryPoolQueryRequest
+	var resp api.GeneralLotteryPoolQueryResponse
+	resp.Meta = util.BuildSuccMeta()
+
+	err = c.BindAndValidate(&req)
+	hlog.CtxInfof(ctx, "GeneralLotteryPoolInfoQuery Req:%s", util.ToJsonString(ctx, req))
+	if err != nil {
+		c.String(hertzconsts.StatusBadRequest, err.Error())
+		return
+	}
+
+	//组合resp
+	generalLotteryPoolInfoList := make([]*api.GeneralLotterPoolQueryInfo, 0)
+	for _, lotteryPoolId := range consts.GeneralLotteryPoolArr {
+		if _, ok := consts.GeneralLotteryPoolMap[lotteryPoolId]; ok {
+			generalLotteryPoolInfoList = append(generalLotteryPoolInfoList, &api.GeneralLotterPoolQueryInfo{
+				GeneralLotteryPool:     int64(lotteryPoolId),
+				GeneralLotteryPoolName: fmt.Sprintf("%v", lotteryPoolId),
+			})
+		}
+	}
+	resp.GeneralLotteryPoolInfoList = generalLotteryPoolInfoList
+
+	hlog.CtxInfof(ctx, "GeneralLotteryPoolInfoQuery Resp:%s", util.ToJsonString(ctx, resp))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

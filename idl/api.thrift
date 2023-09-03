@@ -363,17 +363,20 @@ struct GeneralLotteryDoInfo {
 
 //============= 武将抽卡 END ==============
 
+
 //============= 武将卡池查询 BEGIN ==============
-struct GeneralLotteryQueryRequest{
+struct GeneralLotteryInfoQueryRequest{
+    //卡池枚举
+    1: i64 GeneralLotteryPool
 }
 
-struct GeneralLotteryQueryResponse{
+struct GeneralLotteryInfoQueryResponse{
     1: common.Meta meta
     //卡池武将信息
-    2:list<GeneralLotteryQueryInfo> GeneralLotteryInfoList
+    2:list<GeneralLotterInfoQueryInfo> GeneralLotteryPoolInfoList
 }
 
-struct GeneralLotteryQueryInfo {
+struct GeneralLotterInfoQueryInfo {
 	//武将信息
 	1:list<MetadataGeneral> GeneralInfoList
     //卡池枚举
@@ -382,7 +385,7 @@ struct GeneralLotteryQueryInfo {
     3: string GeneralLotteryPoolName
 }
 
-//============= 武将抽卡 END ==============
+//============= 武将卡池查询 END ==============
 
 //============= 武将概率查询 BEGIN ==============
 struct GeneralLotteryRateQueryRequest{
@@ -404,6 +407,25 @@ struct GeneralLotteryRateQueryInfo {
     3: string GeneralLotteryPoolName
 }
 
+//============= 武将概率查询 END ==============
+
+//============= 卡池查询 BEGIN ==============
+struct GeneralLotteryPoolQueryRequest{
+}
+
+struct GeneralLotteryPoolQueryResponse{
+    1: common.Meta meta
+    //卡池武将信息
+    2:list<GeneralLotterPoolQueryInfo> GeneralLotteryPoolInfoList
+}
+
+struct GeneralLotterPoolQueryInfo {
+    //卡池枚举
+    1: i64 GeneralLotteryPool
+    //卡池名称
+    2: string GeneralLotteryPoolName
+}
+
 //============= 武将抽卡 END ==============
 
 service ApiService {
@@ -422,8 +444,10 @@ service ApiService {
     RecTeamQueryResponse RecTeamQuery(1:RecTeamQueryRequest request)(api.get="/v1/rec_team/query");
 
     //**抽卡**
-    //武将卡池查询
-    GeneralLotteryQueryResponse GeneralLotteryQuery(1:GeneralLotteryQueryRequest request)(api.get="/v1/lottery/general/query");
+     //卡池查询
+    GeneralLotteryPoolQueryResponse GeneralLotteryPoolQuery(1:GeneralLotteryPoolQueryRequest request)(api.get="/v1/lottery/general/pool_query");
+    //卡池武将查询
+    GeneralLotteryInfoQueryResponse GeneralLotteryInfoQuery(1:GeneralLotteryInfoQueryRequest request)(api.get="/v1/lottery/general/info_query");
     //武将概率查询
     GeneralLotteryRateQueryResponse GeneralLotteryRateQuery(1:GeneralLotteryRateQueryRequest request)(api.get="/v1/lottery/general/rate_query");
     //武将抽卡

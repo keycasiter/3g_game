@@ -89,6 +89,11 @@ func GeneralLotteryInfoQuery(ctx context.Context, c *app.RequestContext) {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
+	if req.GeneralLotteryPool == 0 {
+		resp.Meta = util.BuildParamErrMeta()
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
 
 	//组合resp
 	generalLotteryInfoList := make([]*api.GeneralLotterInfoQueryInfo, 0)

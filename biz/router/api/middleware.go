@@ -140,3 +140,13 @@ func _generallotteryqueryMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _general_rateMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotteryratequeryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

@@ -384,6 +384,28 @@ struct GeneralLotteryQueryInfo {
 
 //============= 武将抽卡 END ==============
 
+//============= 武将概率查询 BEGIN ==============
+struct GeneralLotteryRateQueryRequest{
+    1: i64 GeneralId
+}
+
+struct GeneralLotteryRateQueryResponse{
+    1: common.Meta meta
+    //武将概率信息
+    2:list<GeneralLotteryRateQueryInfo> GeneralLotteryRateInfoList
+}
+
+struct GeneralLotteryRateQueryInfo {
+	//武将概率
+	1:double LotteryRate,
+    //卡池枚举
+    2: i64 GeneralLotteryPool
+    //卡池名称
+    3: string GeneralLotteryPoolName
+}
+
+//============= 武将抽卡 END ==============
+
 service ApiService {
     //**模拟对战**
     //模拟对战
@@ -402,6 +424,8 @@ service ApiService {
     //**抽卡**
     //武将卡池查询
     GeneralLotteryQueryResponse GeneralLotteryQuery(1:GeneralLotteryQueryRequest request)(api.get="/v1/lottery/general/query");
+    //武将概率查询
+    GeneralLotteryRateQueryResponse GeneralLotteryRateQuery(1:GeneralLotteryRateQueryRequest request)(api.get="/v1/lottery/general/rate_query");
     //武将抽卡
     GeneralLotteryDoResponse GeneralLotteryDo(1:GeneralLotteryDoRequest request)(api.post="/v1/lottery/general/do");
 

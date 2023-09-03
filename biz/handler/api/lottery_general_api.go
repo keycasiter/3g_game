@@ -120,3 +120,36 @@ func GeneralLotteryQuery(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }
+
+// GeneralLotteryRateQuery .
+// @router /v1/lottery/general/rate_query [GET]
+func GeneralLotteryRateQuery(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.GeneralLotteryRateQueryRequest
+	var resp api.GeneralLotteryRateQueryResponse
+	resp.Meta = util.BuildSuccMeta()
+
+	err = c.BindAndValidate(&req)
+	hlog.CtxInfof(ctx, "GeneralLotteryRateQuery Req:%s", util.ToJsonString(ctx, req))
+	if err != nil {
+		c.String(hertzconsts.StatusBadRequest, err.Error())
+		return
+	}
+
+	//组合resp
+	generalLotteryRateInfoList := make([]*api.GeneralLotteryRateQueryInfo, 0)
+	for lotteryPoolId, generalPool := range consts.GeneralLotteryPoolMap {
+		if rate, ok := generalPool[consts.General_Id(req.GeneralId)]; ok {
+			generalLotteryRateInfoList = append(generalLotteryRateInfoList, &api.GeneralLotteryRateQueryInfo{
+				LotteryRate:            rate,
+				GeneralLotteryPool:     int64(lotteryPoolId),
+				GeneralLotteryPoolName: fmt.Sprintf("%v", lotteryPoolId),
+			})
+		}
+	}
+	resp.GeneralLotteryRateInfoList = generalLotteryRateInfoList
+
+	hlog.CtxInfof(ctx, "GeneralLotteryRateQuery Resp:%s", util.ToJsonString(ctx, resp))
+
+	c.JSON(hertzconsts.StatusOK, resp)
+}

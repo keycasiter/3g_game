@@ -215,6 +215,7 @@ const (
 	DongZhao
 	SunHao
 	JiangWan
+	ZhangHong
 )
 
 var General5LevMap = map[General_Id]bool{
@@ -337,4 +338,5 @@ var General5LevMap = map[General_Id]bool{
 	SiMaHui:        true,
 	ZhenJi:         true,
 	JiangWan:       true,
+	ZhangHong:      true,
 }

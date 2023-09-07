@@ -107,8 +107,9 @@ func GeneralLotteryInfoQuery(ctx context.Context, c *app.RequestContext) {
 				general = vo
 			}
 			generalInfos = append(generalInfos, &api.MetadataGeneral{
-				Id:   int64(generalId),
-				Name: general.Name,
+				Id:             int64(generalId),
+				Name:           general.Name,
+				GeneralQuality: enum.GeneralQuality(general.Quality),
 			})
 		}
 		generalLotteryInfoList = append(generalLotteryInfoList, &api.GeneralLotterInfoQueryInfo{

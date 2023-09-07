@@ -59,6 +59,7 @@ func GeneralLotteryDo(ctx context.Context, c *app.RequestContext) {
 				Id:             info.GeneralInfo.Id,
 				Name:           info.GeneralInfo.Name,
 				GeneralQuality: enum.GeneralQuality(info.GeneralInfo.Quality),
+				AvatarUrl:      info.GeneralInfo.AvatarUrl,
 			},
 			HitNum:      info.HitNum,
 			HitRate:     info.HitRate,

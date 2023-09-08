@@ -15,6 +15,13 @@ type config struct {
 	Redis   *redis   `yaml:"Redis"`
 	Mysql   *mysql   `yaml:"Mysql"`
 	Wexin   *wexin   `yaml:"Wexin"`
+	Neo4j   *neo4j   `yaml:"Neo4j"`
+}
+
+type neo4j struct {
+	DbUri    string
+	UserName string
+	Password string
 }
 
 type mongodb struct {

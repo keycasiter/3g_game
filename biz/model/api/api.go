@@ -10339,6 +10339,8 @@ type GeneralLotteryDoResponse struct {
 	ProtectedMustHitNum int64 `thrift:"ProtectedMustHitNum,3" form:"ProtectedMustHitNum" json:"ProtectedMustHitNum" query:"ProtectedMustHitNum"`
 	//五星武将出现率
 	Hit5LevGeneralNum int64 `thrift:"Hit5LevGeneralNum,4" form:"Hit5LevGeneralNum" json:"Hit5LevGeneralNum" query:"Hit5LevGeneralNum"`
+	//连续不出橙次数累计
+	NotHitLev5Times int64 `thrift:"NotHitLev5Times,5" form:"NotHitLev5Times" json:"NotHitLev5Times" query:"NotHitLev5Times"`
 }
 
 func NewGeneralLotteryDoResponse() *GeneralLotteryDoResponse {
@@ -10366,11 +10368,16 @@ func (p *GeneralLotteryDoResponse) GetHit5LevGeneralNum() (v int64) {
 	return p.Hit5LevGeneralNum
 }
 
+func (p *GeneralLotteryDoResponse) GetNotHitLev5Times() (v int64) {
+	return p.NotHitLev5Times
+}
+
 var fieldIDToName_GeneralLotteryDoResponse = map[int16]string{
 	1: "meta",
 	2: "GeneralLotteryInfoList",
 	3: "ProtectedMustHitNum",
 	4: "Hit5LevGeneralNum",
+	5: "NotHitLev5Times",
 }
 
 func (p *GeneralLotteryDoResponse) IsSetMeta() bool {
@@ -10429,6 +10436,16 @@ func (p *GeneralLotteryDoResponse) Read(iprot thrift.TProtocol) (err error) {
 		case 4:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else {
+				if err = iprot.Skip(fieldTypeId); err != nil {
+					goto SkipFieldError
+				}
+			}
+		case 5:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else {
@@ -10512,6 +10529,15 @@ func (p *GeneralLotteryDoResponse) ReadField4(iprot thrift.TProtocol) error {
 	return nil
 }
 
+func (p *GeneralLotteryDoResponse) ReadField5(iprot thrift.TProtocol) error {
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		p.NotHitLev5Times = v
+	}
+	return nil
+}
+
 func (p *GeneralLotteryDoResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	if err = oprot.WriteStructBegin("GeneralLotteryDoResponse"); err != nil {
@@ -10532,6 +10558,10 @@ func (p *GeneralLotteryDoResponse) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
 			goto WriteFieldError
 		}
 
@@ -10627,6 +10657,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *GeneralLotteryDoResponse) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("NotHitLev5Times", thrift.I64, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.NotHitLev5Times); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
 }
 
 func (p *GeneralLotteryDoResponse) String() string {

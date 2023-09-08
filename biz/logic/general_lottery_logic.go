@@ -294,5 +294,6 @@ func (g *GeneralLotteryLogic) BuildResp() {
 		GeneralLotteryInfoList: generalLotteryList,
 		ProtectedMustHitNum:    g.ProtectedMustHitNum,
 		Hit5LevGeneralNum:      hit5LevGeneralNum,
+		NotHitLev5Times:        g.NotHit5LevGeneralNum,
 	}
 }

@@ -348,6 +348,8 @@ struct GeneralLotteryDoResponse{
     3:i64 ProtectedMustHitNum
     //五星武将出现率
     4:i64 Hit5LevGeneralNum
+    //连续不出橙次数累计
+    5:i64 NotHitLev5Times
 }
 
 struct GeneralLotteryDoInfo {
@@ -482,7 +484,7 @@ service ApiService {
 
     //**抽卡**
      //卡池查询
-    GeneralLotteryPoolQueryResponse GeneralLotteryPoolInfoQuery(1:GeneralLotteryPoolQueryRequest request)(api.get="/v1/lottery/general/pool_query");
+    GeneralLotteryPoolQueryResponse GeneralLotteryPoolQuery(1:GeneralLotteryPoolQueryRequest request)(api.get="/v1/lottery/general/pool_query");
     //卡池武将查询
     GeneralLotteryInfoQueryResponse GeneralLotteryInfoQuery(1:GeneralLotteryInfoQueryRequest request)(api.get="/v1/lottery/general/info_query");
     //武将概率查询

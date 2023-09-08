@@ -180,3 +180,8 @@ func _generallotteryuserdataresetMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _generallotterypoolinfoqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

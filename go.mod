@@ -1,13 +1,15 @@
 module github.com/keycasiter/3g_game
 
-go 1.17
+go 1.18
 
 require (
 	github.com/apache/thrift v0.13.0
 	github.com/cloudwego/hertz v0.4.1
+	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/jinzhu/copier v0.3.5
 	github.com/json-iterator/go v1.1.12
 	github.com/kr/pretty v0.3.1
+	github.com/neo4j/neo4j-go-driver/v5 v5.12.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/viper v1.9.0
@@ -23,7 +25,6 @@ require (
 	github.com/chenzhuoyu/base64x v0.0.0-20211019084208-fb5309c8db06 // indirect
 	github.com/cloudwego/netpoll v0.3.1 // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
-	github.com/go-redis/redis v6.15.9+incompatible // indirect
 	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.3 // indirect
@@ -41,6 +42,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/nyaruka/phonenumbers v1.0.55 // indirect
+	github.com/onsi/ginkgo v1.16.5 // indirect
+	github.com/onsi/gomega v1.16.0 // indirect
 	github.com/pelletier/go-toml v1.9.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rogpeppe/go-internal v1.9.0 // indirect

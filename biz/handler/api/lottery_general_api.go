@@ -71,6 +71,7 @@ func GeneralLotteryDo(ctx context.Context, c *app.RequestContext) {
 	resp.Hit5LevGeneralNum = logicResp.Hit5LevGeneralNum
 	resp.ProtectedMustHitNum = logicResp.ProtectedMustHitNum
 	resp.GeneralLotteryInfoList = generalLotteryInfoList
+	resp.NotHitLev5Times = logicResp.NotHitLev5Times
 
 	hlog.CtxInfof(ctx, "GeneralLotteryDo Resp:%s", util.ToJsonString(ctx, resp))
 

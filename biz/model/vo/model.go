@@ -21,6 +21,8 @@ type GeneralLotteryResponse struct {
 	ProtectedMustHitNum int64
 	//五星武将出现率
 	Hit5LevGeneralNum int64
+	//五星连续不中次数
+	NotHitLev5Times int64
 }
 
 type GeneralLotteryInfo struct {

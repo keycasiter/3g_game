@@ -7,11 +7,13 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/cache"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
 	"math"
+	"time"
 )
 
 //武将抽卡
@@ -51,6 +53,8 @@ func NewGeneralLotteryLogic(ctx context.Context, req *vo.GeneralLotteryRequest) 
 	}
 	//组合方法
 	g.Funcs = []func(){
+		//获取用户抽卡数据
+		g.FetchUserGeneralLotteryInfo,
 		//获取卡池
 		g.GetPool,
 		//配置卡池
@@ -71,6 +75,16 @@ func (g *GeneralLotteryLogic) Run() (*vo.GeneralLotteryResponse, error) {
 		}
 	}
 	return g.Resp, nil
+}
+
+func (g *GeneralLotteryLogic) FetchUserGeneralLotteryInfo() {
+	info, err := mysql.NewUserGeneralLotteryInfo().QueryUserGeneralLotteryInfo(g.Ctx, g.Req.Uid, int64(g.Req.GeneralLottery))
+	if err != nil {
+		hlog.CtxErrorf(g.Ctx, "QueryUserGeneralLotteryInfo err:%v", err)
+		g.Err = err
+		return
+	}
+	g.NotHit5LevGeneralNum = info.NotHitLev5Times
 }
 
 func (g *GeneralLotteryLogic) GetPool() {
@@ -143,6 +157,14 @@ func (g *GeneralLotteryLogic) LotteryPool() {
 			g.NotHit5LevGeneralNum = 0
 			//保底统计
 			g.ProtectedMustHitNum++
+
+			//同步抽卡记录
+			err := syncNotHit5LevDataToDB(g.Ctx, g.Req.Uid, int64(g.Req.GeneralLottery), 0)
+			if err != nil {
+				hlog.CtxErrorf(g.Ctx, "syncNotHit5LevDataToDB err:%v", err)
+				g.Err = err
+				return
+			}
 		} else {
 			g.hitGeneralHandler(false)
 		}
@@ -170,13 +192,62 @@ func (g *GeneralLotteryLogic) hitGeneralHandler(isMustHit5Lev bool) {
 			//非五星武将计数
 			if _, okkk := g.General5LevMap[generalId]; okkk {
 				g.NotHit5LevGeneralNum = 0
+				err := syncNotHit5LevDataToDB(g.Ctx, g.Req.Uid, int64(g.Req.GeneralLottery), 0)
+				if err != nil {
+					hlog.CtxErrorf(g.Ctx, "syncNotHit5LevDataToDB err:%v", err)
+					g.Err = err
+					return
+				}
 			} else {
 				g.NotHit5LevGeneralNum++
+				err := syncNotHit5LevDataToDB(g.Ctx, g.Req.Uid, int64(g.Req.GeneralLottery), g.NotHit5LevGeneralNum)
+				if err != nil {
+					hlog.CtxErrorf(g.Ctx, "syncNotHit5LevDataToDB err:%v", err)
+					g.Err = err
+					return
+				}
 			}
 			//hlog.CtxInfof(g.Req.Ctx, "[LotteryPool] random:%d , hit GeneralId:%d", random, int(generalId))
 			break
 		}
 	}
+}
+
+func syncNotHit5LevDataToDB(ctx context.Context, uid string, cardPoolId int64, num int64) error {
+	//查询用户卡池抽奖信息
+	info, err := mysql.NewUserGeneralLotteryInfo().QueryUserGeneralLotteryInfo(ctx, uid, cardPoolId)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "QueryUserGeneralLotteryInfo err:%v", err)
+		return err
+	}
+	//不存在
+	if info == nil || info.Uid == "" {
+		nowTime := time.Now()
+		err = mysql.NewUserGeneralLotteryInfo().CreateUserGeneralLotteryInfo(ctx, &po.UserGeneralLotteryInfo{
+			Uid:             uid,
+			CardPoolId:      cardPoolId,
+			NotHitLev5Times: num,
+			CreatedAt:       nowTime,
+			UpdatedAt:       nowTime,
+		})
+		if err != nil {
+			hlog.CtxErrorf(ctx, "CreateUserGeneralLotteryInfo err:%v", err)
+			return err
+		}
+	} else {
+		//存在
+		err = mysql.NewUserGeneralLotteryInfo().UpdateUserGeneralLotteryInfo(ctx, &po.UserGeneralLotteryInfo{
+			Uid:             uid,
+			CardPoolId:      cardPoolId,
+			NotHitLev5Times: num,
+		})
+		if err != nil {
+			hlog.CtxErrorf(ctx, "UpdateUserGeneralLotteryInfo err:%v", err)
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (g *GeneralLotteryLogic) BuildResp() {

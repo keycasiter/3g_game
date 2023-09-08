@@ -160,3 +160,23 @@ func _generallotterypoolqueryMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _generallotterydataresetMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotterydataqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotteryuserdataqueryMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotteryuserdataresetMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

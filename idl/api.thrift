@@ -428,6 +428,43 @@ struct GeneralLotterPoolQueryInfo {
 
 //============= 武将抽卡 END ==============
 
+//============= 用户卡池抽奖次数重置 BEGIN ==============
+struct GeneralLotteryUserDataResetRequest{
+    //用户id
+    1: string Uid
+    //卡池枚举
+    2: i64 GeneralLotteryPool
+}
+
+struct GeneralLotteryUserDataResetResponse{
+    1: common.Meta meta
+}
+
+//============= 用户卡池抽奖次数重置 END ==============
+
+//============= 用户卡池抽奖信息查询 BEGIN ==============
+struct GeneralLotteryUserDataQueryRequest{
+    //用户id
+    1: string Uid
+    //卡池枚举
+    2: i64 GeneralLotteryPool
+}
+
+struct GeneralLotteryUserDataQueryResponse{
+    1: common.Meta meta
+    2: GeneralLotteryUserDataQueryInfo GeneralLotteryDataQueryInfo
+}
+
+struct GeneralLotteryUserDataQueryInfo{
+    //用户id
+    1: string Uid
+    //卡池枚举
+    2: i64 GeneralLotteryPool
+    //连续未中五星次数
+    3: i64 NotHitLev5Times
+}
+//============= 用户卡池抽奖信息查询 END ==============
+
 service ApiService {
     //**模拟对战**
     //模拟对战
@@ -445,13 +482,17 @@ service ApiService {
 
     //**抽卡**
      //卡池查询
-    GeneralLotteryPoolQueryResponse GeneralLotteryPoolQuery(1:GeneralLotteryPoolQueryRequest request)(api.get="/v1/lottery/general/pool_query");
+    GeneralLotteryPoolQueryResponse GeneralLotteryPoolInfoQuery(1:GeneralLotteryPoolQueryRequest request)(api.get="/v1/lottery/general/pool_query");
     //卡池武将查询
     GeneralLotteryInfoQueryResponse GeneralLotteryInfoQuery(1:GeneralLotteryInfoQueryRequest request)(api.get="/v1/lottery/general/info_query");
     //武将概率查询
     GeneralLotteryRateQueryResponse GeneralLotteryRateQuery(1:GeneralLotteryRateQueryRequest request)(api.get="/v1/lottery/general/rate_query");
     //武将抽卡
     GeneralLotteryDoResponse GeneralLotteryDo(1:GeneralLotteryDoRequest request)(api.post="/v1/lottery/general/do");
+    //用户武将抽卡数据重置
+    GeneralLotteryUserDataResetResponse GeneralLotteryUserDataReset(1:GeneralLotteryUserDataResetRequest request)(api.post="/v1/lottery/general/user_data_reset");
+    //用户武将抽卡数据查询
+    GeneralLotteryUserDataQueryResponse GeneralLotteryUserDataQuery(1:GeneralLotteryUserDataQueryRequest request)(api.get="/v1/lottery/general/user_data_query");
 
     //**微信**
     //用户登录接口

@@ -10,6 +10,7 @@ import (
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/cache"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/logic"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/model/enum"
@@ -160,9 +161,9 @@ func GeneralLotteryRateQuery(ctx context.Context, c *app.RequestContext) {
 	c.JSON(hertzconsts.StatusOK, resp)
 }
 
-// GeneralLotteryInfoQuery .
+// GeneralLotteryPoolQuery .
 // @router /v1/lottery/general/pool_query [GET]
-func GeneralLotteryPoolInfoQuery(ctx context.Context, c *app.RequestContext) {
+func GeneralLotteryPoolQuery(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.GeneralLotteryPoolQueryRequest
 	var resp api.GeneralLotteryPoolQueryResponse
@@ -188,6 +189,89 @@ func GeneralLotteryPoolInfoQuery(ctx context.Context, c *app.RequestContext) {
 	resp.GeneralLotteryPoolInfoList = generalLotteryPoolInfoList
 
 	hlog.CtxInfof(ctx, "GeneralLotteryPoolInfoQuery Resp:%s", util.ToJsonString(ctx, resp))
+
+	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+// GeneralLotteryUserDataReset.
+// @router /v1/lottery/general/user_data_reset [POST]
+func GeneralLotteryUserDataReset(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.GeneralLotteryUserDataResetRequest
+	var resp api.GeneralLotteryUserDataResetResponse
+	resp.Meta = util.BuildSuccMeta()
+
+	err = c.BindAndValidate(&req)
+	hlog.CtxInfof(ctx, "GeneralLotteryUserDataReset Req:%s", util.ToJsonString(ctx, req))
+	if err != nil {
+		c.String(hertzconsts.StatusBadRequest, err.Error())
+		return
+	}
+	if req.Uid == "" || req.GeneralLotteryPool == 0 {
+		resp.Meta = util.BuildParamErrMeta()
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
+	userLotteryInfo, err := mysql.NewUserGeneralLotteryInfo().QueryUserGeneralLotteryInfo(ctx, req.Uid, req.GeneralLotteryPool)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "GeneralLotteryUserDataReset err:%v", err)
+		resp.Meta = util.BuildFailMeta()
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
+	if userLotteryInfo != nil && userLotteryInfo.Id != 0 {
+		err = mysql.NewUserGeneralLotteryInfo().UpdateUserGeneralLotteryInfo(ctx, &po.UserGeneralLotteryInfo{
+			Uid:             req.Uid,
+			CardPoolId:      req.GeneralLotteryPool,
+			NotHitLev5Times: 0,
+		})
+		if err != nil {
+			hlog.CtxErrorf(ctx, "GeneralLotteryUserDataReset err:%v", err)
+			resp.Meta = util.BuildFailMeta()
+			c.JSON(hertzconsts.StatusOK, resp)
+			return
+		}
+	}
+
+	hlog.CtxInfof(ctx, "GeneralLotteryUserDataReset Resp:%s", util.ToJsonString(ctx, resp))
+
+	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+// GeneralLotteryUserDataQuery.
+// @router /v1/lottery/general/user_data_query [GET]
+func GeneralLotteryUserDataQuery(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req api.GeneralLotteryUserDataQueryRequest
+	var resp api.GeneralLotteryUserDataQueryResponse
+	resp.Meta = util.BuildSuccMeta()
+
+	err = c.BindAndValidate(&req)
+	hlog.CtxInfof(ctx, "GeneralLotteryUserDataQuery Req:%s", util.ToJsonString(ctx, req))
+	if err != nil {
+		c.String(hertzconsts.StatusBadRequest, err.Error())
+		return
+	}
+	if req.Uid == "" || req.GeneralLotteryPool == 0 {
+		resp.Meta = util.BuildParamErrMeta()
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
+	userLotteryInfo, err := mysql.NewUserGeneralLotteryInfo().QueryUserGeneralLotteryInfo(ctx, req.Uid, req.GeneralLotteryPool)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "GeneralLotteryUserDataQuery err:%v", err)
+		resp.Meta = util.BuildFailMeta()
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
+	//组装resp
+	resp.GeneralLotteryDataQueryInfo = &api.GeneralLotteryUserDataQueryInfo{
+		Uid:                userLotteryInfo.Uid,
+		GeneralLotteryPool: userLotteryInfo.CardPoolId,
+		NotHitLev5Times:    userLotteryInfo.NotHitLev5Times,
+	}
+
+	hlog.CtxInfof(ctx, "GeneralLotteryUserDataQuery Resp:%s", util.ToJsonString(ctx, resp))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

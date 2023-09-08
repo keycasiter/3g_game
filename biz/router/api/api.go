@@ -37,8 +37,10 @@ func Register(r *server.Hertz) {
 				_general0 := _lottery.Group("/general", _general0Mw()...)
 				_general0.POST("/do", append(_generallotterydoMw(), api.GeneralLotteryDo)...)
 				_general0.GET("/info_query", append(_generallotteryinfoqueryMw(), api.GeneralLotteryInfoQuery)...)
-				_general0.GET("/pool_query", append(_generallotterypoolqueryMw(), api.GeneralLotteryPoolInfoQuery)...)
+				_general0.GET("/pool_query", append(_generallotterypoolqueryMw(), api.GeneralLotteryPoolQuery)...)
 				_general0.GET("/rate_query", append(_generallotteryratequeryMw(), api.GeneralLotteryRateQuery)...)
+				_general0.GET("/user_data_query", append(_generallotteryuserdataqueryMw(), api.GeneralLotteryUserDataQuery)...)
+				_general0.POST("/user_data_reset", append(_generallotteryuserdataresetMw(), api.GeneralLotteryUserDataReset)...)
 			}
 		}
 		{

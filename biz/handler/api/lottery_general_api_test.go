@@ -21,6 +21,6 @@ func TestGeneralLotteryQuery(t *testing.T) {
 	req := &app.RequestContext{}
 	req.Request.SetFormData(map[string]string{})
 
-	GeneralLotteryQuery(ctx, req)
+	GeneralLotteryInfoQuery(ctx, req)
 	fmt.Printf("resp:%s", req.Response.Body())
 }

@@ -35,6 +35,8 @@ type GeneralLotteryLogic struct {
 	Chance5LevPool map[int64]consts.General_Id
 	//命中武将 map<武将ID,命中次数>
 	HitGeneralMap map[consts.General_Id]int64
+	//命中武将 arr
+	HitGeneralArr []int64
 	//连续未命中五星武将次数
 	NotHit5LevGeneralNum int64
 	//保底次数
@@ -48,6 +50,7 @@ func NewGeneralLotteryLogic(ctx context.Context, req *vo.GeneralLotteryRequest) 
 		GeneralPool:    map[consts.General_Id]float64{},
 		ChancePool:     map[int64]consts.General_Id{},
 		HitGeneralMap:  map[consts.General_Id]int64{},
+		HitGeneralArr:  make([]int64, 0),
 		General5LevMap: map[consts.General_Id]float64{},
 		Chance5LevPool: map[int64]consts.General_Id{},
 	}
@@ -184,6 +187,7 @@ func (g *GeneralLotteryLogic) hitGeneralHandler(isMustHit5Lev bool) {
 		//生成随机数，按照等分池大小size来生成随机数进行命中
 		random := cast.ToInt64(fmt.Sprintf("%.0f", math.Round(util.Random(0, randomUpperLimit))))
 		if generalId, ok := lotteryPool[random]; ok {
+			g.HitGeneralArr = append(g.HitGeneralArr, int64(generalId))
 			if _, okk := g.HitGeneralMap[generalId]; okk {
 				g.HitGeneralMap[generalId]++
 			} else {
@@ -254,8 +258,8 @@ func (g *GeneralLotteryLogic) BuildResp() {
 	//查询武将信息
 	generalInfos := make([]*po.General, 0)
 	generalIds := make([]int64, 0)
-	for generalId, _ := range g.HitGeneralMap {
-		generalIds = append(generalIds, int64(generalId))
+	for _, generalId := range g.HitGeneralArr {
+		generalIds = append(generalIds, generalId)
 	}
 	for _, generalId := range generalIds {
 		if generalInfo, ok := cache.CacheGeneralMap[generalId]; ok {

@@ -84,6 +84,7 @@ func (f FearlessAndBraveFlyingSwallowTactic) Execute() {
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
 			TacticName:    f.Name(),
+			TacticId:      f.Id(),
 		})
 	}
 }

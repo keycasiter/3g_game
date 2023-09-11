@@ -80,6 +80,7 @@ func (d DrawTheBowBothOnTheLeftAndRightTactic) Execute() {
 		DamageType:    consts.DamageType_Weapon,
 		Damage:        dmg,
 		TacticName:    d.Name(),
+		TacticId:      d.Id(),
 	})
 
 	// 如果目标为骑兵则额外造成溃散状态，每回合持续造成伤害（伤害率90%，受武力影响），持续2回合
@@ -109,6 +110,7 @@ func (d DrawTheBowBothOnTheLeftAndRightTactic) Execute() {
 						DamageType:    consts.DamageType_Weapon,
 						Damage:        effectDmg,
 						TacticName:    d.Name(),
+						TacticId:      d.Id(),
 						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
 					})
 				}

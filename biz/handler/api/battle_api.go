@@ -219,7 +219,7 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 		if info, ok := generalInfoMap[general.BaseInfo.Id]; ok {
 			generalInfo = info
 		} else {
-			panic(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id))
+			panic(any(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id)))
 		}
 		//武将标签
 		generalTags := make([]consts.GeneralTag, 0)
@@ -290,7 +290,7 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 		if info, ok := generalInfoMap[general.BaseInfo.Id]; ok {
 			generalInfo = info
 		} else {
-			panic(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id))
+			panic(any(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id)))
 		}
 		//武将标签
 		generalTags := make([]consts.GeneralTag, 0)

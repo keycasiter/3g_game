@@ -123,6 +123,7 @@ func (m MachineStrategyVerticalAndHorizontalTactic) Execute() {
 								DamageType:    consts.DamageType_Strategy,
 								Damage:        dmg,
 								TacticName:    m.Name(),
+								TacticId:      m.Id(),
 								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 							})
 						}
@@ -154,6 +155,7 @@ func (m MachineStrategyVerticalAndHorizontalTactic) Execute() {
 								DamageType:    consts.DamageType_Strategy,
 								Damage:        dmg,
 								TacticName:    m.Name(),
+								TacticId:      m.Id(),
 								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Methysis),
 							})
 						}

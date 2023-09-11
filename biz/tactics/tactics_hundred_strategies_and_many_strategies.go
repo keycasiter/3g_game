@@ -48,6 +48,7 @@ func (h HundredStrategiesAndManyStrategiesTactic) Prepare() {
 				DamageType:     consts.DamageType_Strategy,
 				Damage:         dmg,
 				TacticName:     h.Name(),
+				TacticId:       h.Id(),
 				IsIgnoreDefend: true,
 			})
 		}

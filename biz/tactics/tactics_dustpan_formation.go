@@ -78,19 +78,20 @@ func (d DustpanFormationTactic) Prepare() {
 		pairGenerals := util.GetPairViceGenerals(d.tacticsParams)
 
 		//效果二选一随机
-		buffEffects := []consts.BuffEffectType{
-			consts.BuffEffectType_SufferWeaponDamageDeduce,
-			consts.BuffEffectType_SufferStrategyDamageDeduce,
+		buffEffects := []consts.BuffEffectType{}
+		if util.GenerateRate(0.5) {
+			buffEffects = append(buffEffects, consts.BuffEffectType_SufferWeaponDamageDeduce)
+			buffEffects = append(buffEffects, consts.BuffEffectType_SufferStrategyDamageDeduce)
+		} else {
+			buffEffects = append(buffEffects, consts.BuffEffectType_SufferStrategyDamageDeduce)
+			buffEffects = append(buffEffects, consts.BuffEffectType_SufferWeaponDamageDeduce)
 		}
 
+		idx := 0
 		for _, general := range pairGenerals {
-			buffEffect := consts.BuffEffectType_Unknow
-			hitIdx := util.GenerateHitOneIdx(len(buffEffects))
-			buffEffect = buffEffects[hitIdx]
-			buffEffects = append(buffEffects[:hitIdx], buffEffects[hitIdx+1:]...)
-
+			buffEffect := buffEffects[idx]
 			//施加效果
-			if util.BuffEffectWrapSet(ctx, general, buffEffects[0], &vo.EffectHolderParams{
+			if util.BuffEffectWrapSet(ctx, general, buffEffect, &vo.EffectHolderParams{
 				EffectRate:  0.18,
 				EffectRound: 3,
 				FromTactic:  d.Id(),
@@ -110,6 +111,7 @@ func (d DustpanFormationTactic) Prepare() {
 					return revokeResp
 				})
 			}
+			idx++
 		}
 
 		return triggerResp

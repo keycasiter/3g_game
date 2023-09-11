@@ -85,6 +85,7 @@ func (i IkkiTousenTactic) Execute() {
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
 			TacticName:    i.Name(),
+			TacticId:      i.Id(),
 		})
 	}
 }

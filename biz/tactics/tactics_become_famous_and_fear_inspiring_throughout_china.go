@@ -107,6 +107,7 @@ func (b BecomeFamousAndFearInspiringThroughoutChinaTactic) Execute() {
 					SufferGeneral: enemyGeneral,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
+					TacticId:      b.Id(),
 					TacticName:    b.Name(),
 				})
 

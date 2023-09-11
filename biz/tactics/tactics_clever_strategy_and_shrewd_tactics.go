@@ -91,6 +91,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 					Damage:        dmgNum,
 					DamageType:    consts.DamageType_Strategy,
 					TacticName:    c.Name(),
+					TacticId:      c.Id(),
 				})
 				if !isEffect {
 					triggerResp.IsTerminate = true

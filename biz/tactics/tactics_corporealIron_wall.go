@@ -43,9 +43,10 @@ func (c CorporealIronWallTactic) Prepare() {
 		//TODO （承担的兵刃伤害额外受自身统率影响降低）
 
 		util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_ShareResponsibilityFor, &vo.EffectHolderParams{
-			EffectRate:     shareRate,
-			FromTactic:     c.Id(),
-			ProduceGeneral: currentGeneral,
+			EffectRate:                      shareRate,
+			FromTactic:                      c.Id(),
+			ShareResponsibilityForByGeneral: currentGeneral,
+			ProduceGeneral:                  currentGeneral,
 		})
 
 		// 当友军兵力高于70%时，使其造成兵刃伤害和谋略伤害提高18%（受统率影响），若主将为孙权，造成伤害提高的基础值增加至30%

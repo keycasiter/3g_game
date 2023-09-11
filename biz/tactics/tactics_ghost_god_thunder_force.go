@@ -95,6 +95,7 @@ func (g GhostGodThunderForceTactic) Execute() {
 		DamageType:    consts.DamageType_Weapon,
 		Damage:        dmg,
 		TacticName:    g.Name(),
+		TacticId:      g.Id(),
 	})
 
 }

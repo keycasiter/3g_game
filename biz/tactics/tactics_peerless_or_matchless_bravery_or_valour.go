@@ -79,6 +79,7 @@ func (p PeerlessOrMatchlessBraveryOrValourTactic) Execute() {
 		DamageType:    consts.DamageType_Weapon,
 		Damage:        dmg,
 		TacticName:    p.Name(),
+		TacticId:      p.Id(),
 	})
 	if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Awe, &vo.EffectHolderParams{
 		EffectRound:    1,

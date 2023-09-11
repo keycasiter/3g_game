@@ -106,6 +106,7 @@ func (d DecisionMakingThroughOperationsResearchTactic) Execute() {
 					DamageType:    consts.DamageType_Strategy,
 					Damage:        dmg,
 					TacticName:    d.Name(),
+					TacticId:      d.Id(),
 				})
 			}
 		}

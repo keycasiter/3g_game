@@ -139,6 +139,7 @@ func (a AmbushOnAllSidesTactic) Execute() {
 					SufferGeneral:  triggerGeneral,
 					Damage:         dmg,
 					DamageType:     damageType,
+					TacticId:       a.Id(),
 					TacticName:     a.Name(),
 					EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
 					IsIgnoreDefend: true,

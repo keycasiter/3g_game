@@ -108,6 +108,7 @@ func (e EliminateItAndDrawFromItTactic) Execute() {
 					SufferGeneral: enemyGeneral,
 					Damage:        dmg,
 					DamageType:    consts.DamageType_Weapon,
+					TacticId:      e.Id(),
 					TacticName:    e.Name(),
 				})
 				//使其进入禁疗状态（无法恢复兵力），持续1回合

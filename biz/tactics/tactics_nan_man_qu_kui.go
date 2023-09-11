@@ -52,6 +52,7 @@ func (n NanManQuKuiTactic) Prepare() {
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
 					TacticName:    n.Name(),
+					TacticId:      n.Id(),
 				})
 			}
 		} else {

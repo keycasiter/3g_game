@@ -89,6 +89,7 @@ func (g GeneralBraveGirlTactic) Execute() {
 			SufferGeneral: general,
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
+			TacticId:      g.Id(),
 			TacticName:    g.Name(),
 		})
 		//虎嗔效果
@@ -127,6 +128,7 @@ func (g GeneralBraveGirlTactic) Execute() {
 						SufferGeneral: triggerGeneral,
 						DamageType:    consts.DamageType_Weapon,
 						Damage:        settleDmg,
+						TacticId:      g.Id(),
 						TacticName:    g.Name(),
 						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_TigerAnger),
 					})

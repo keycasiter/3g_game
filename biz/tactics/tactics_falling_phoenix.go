@@ -74,6 +74,7 @@ func (f FallingPhoenixTactic) Execute() {
 		DamageType:    consts.DamageType_Weapon,
 		Damage:        dmg,
 		TacticName:    f.Name(),
+		TacticId:      f.Id(),
 	})
 	//施加效果
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_NoStrategy, &vo.EffectHolderParams{

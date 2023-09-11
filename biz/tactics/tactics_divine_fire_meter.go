@@ -45,6 +45,7 @@ func (d DivineFireMeterTactic) Prepare() {
 					DamageType:    consts.DamageType_Strategy,
 					Damage:        dmg,
 					TacticName:    d.Name(),
+					TacticId:      d.Id(),
 				})
 				//自身为主将时，该次攻击有40%概率对目标施加灼烧状态（伤害率34%，受智力影响），持续1回合
 				if triggerGeneral.IsMaster {

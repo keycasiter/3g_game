@@ -280,6 +280,14 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 		effectType,
 	)
 
+	//分担伤害
+	if effectType == consts.BuffEffectType_ShareResponsibilityFor {
+		if effectParam.ShareResponsibilityForByGeneral == nil {
+			panic(any("分担伤害效果，分担者不能为空"))
+		}
+		general.ShareResponsibilityForByGeneral = effectParam.ShareResponsibilityForByGeneral
+	}
+
 	//增益属性处理
 	buffEffectIncr(ctx, general, effectType, effectParam.EffectValue)
 

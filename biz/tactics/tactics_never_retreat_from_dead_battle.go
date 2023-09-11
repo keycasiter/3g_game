@@ -98,6 +98,7 @@ func (n NeverRetreatFromDeadBattleTactic) costAccumulatePowerHandler(ctx context
 			DamageType:    consts.DamageType_Weapon,
 			Damage:        dmg,
 			TacticName:    n.Name(),
+			TacticId:      n.Id(),
 			EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_AccumulatePower),
 		})
 	}

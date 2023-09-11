@@ -84,6 +84,7 @@ func (f FocusingOnAllThingsTactic) Prepare() {
 						DamageType:    consts.DamageType_Strategy,
 						Damage:        dmg,
 						TacticName:    f.Name(),
+						TacticId:      f.Id(),
 					})
 				}
 			}

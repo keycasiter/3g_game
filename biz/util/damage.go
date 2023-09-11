@@ -482,7 +482,7 @@ type TacticDamageParam struct {
 // @return 实际伤害/原兵力/剩余兵力
 func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldierNum int64, isEffect bool) {
 	if param.TacticId == 0 {
-		panic("tacticId is nil")
+		panic(any("tacticId is nil"))
 	}
 
 	ctx := param.TacticsParams.Ctx
@@ -492,6 +492,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	damageType := param.DamageType
 	damage := param.Damage
 	tacticName := param.TacticName
+	tacticId := param.TacticId
 	effectName := param.EffectName
 	isIgnoreDefend := param.IsIgnoreDefend
 	isEffect = true
@@ -596,7 +597,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	//必填参数
 	if attackGeneral == nil || sufferGeneral == nil || damage <= 0 || damageType == consts.DamageType_None {
 		hlog.CtxErrorf(ctx, "damage params err")
-		panic("damage params err")
+		panic(any("damage params err"))
 	}
 
 	//触发器禁用开关
@@ -819,8 +820,10 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 			AttackGeneral:  attackGeneral,
 			SufferGeneral:  sufferGeneral.ShareResponsibilityForByGeneral,
 			Damage:         shareDmg,
+			TacticId:       tacticId,
 			TacticName:     tacticName,
 			IsIgnoreDefend: isIgnoreDefend,
+			DamageType:     damageType,
 		})
 	}
 

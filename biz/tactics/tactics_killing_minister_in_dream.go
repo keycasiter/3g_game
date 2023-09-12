@@ -38,27 +38,29 @@ func (k KillingMinisterInDreamTactic) Prepare() {
 			currentGeneral.BaseInfo.Name,
 			k.Name(),
 		)
+		//找到随机副将
+		viceGeneral := util.GetPairViceGeneral(k.tacticsParams)
+
 		//施加分担效果
 		if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_ShareResponsibilityFor, &vo.EffectHolderParams{
-			EffectRate: 0.2,
-			FromTactic: k.Id(),
+			EffectRate:                      0.2,
+			FromTactic:                      k.Id(),
+			ProduceGeneral:                  currentGeneral,
+			ShareResponsibilityForByGeneral: viceGeneral,
 		}).IsSuccess {
-			//找到随机副将
-			viceGeneral := util.GetPairViceGeneral(k.tacticsParams)
-			currentGeneral.ShareResponsibilityForByGeneral = viceGeneral
+			//注册消失效果
+			util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerResp := &vo.TacticsTriggerResult{}
+				triggerGeneral := params.CurrentGeneral
+				triggerRound := params.CurrentRound
+
+				if triggerRound == consts.Battle_Round_Third {
+					util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_ShareResponsibilityFor, k.Id())
+				}
+
+				return triggerResp
+			})
 		}
-		//注册消失效果
-		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
-			triggerRound := params.CurrentRound
-
-			if triggerRound == consts.Battle_Round_Third {
-				util.BuffEffectWrapRemove(ctx, triggerGeneral, consts.BuffEffectType_ShareResponsibilityFor, k.Id())
-			}
-
-			return triggerResp
-		})
 	}
 	//战斗第3回合起，自己行动时如果有负面状态，则获得25%概率反击状态（伤害率150%），直到战斗结束
 	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_KillingMinisterInDream_Prepare, &vo.EffectHolderParams{

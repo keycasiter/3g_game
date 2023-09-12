@@ -103,7 +103,7 @@ func GetPairMasterGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral 
 			return general
 		}
 	}
-	panic("can't find master general , data error")
+	panic(any("can't find master general , data error"))
 	return nil
 }
 
@@ -115,7 +115,7 @@ func GetEnemyMasterGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral
 			return general
 		}
 	}
-	panic("can't find master general , data error")
+	panic(any("can't find master general , data error"))
 	return nil
 }
 
@@ -127,9 +127,6 @@ func GetPairViceGenerals(tacticsParams *model.TacticsParams) []*vo.BattleGeneral
 		if !general.IsMaster {
 			viceGenerals = append(viceGenerals, general)
 		}
-	}
-	if len(viceGenerals) != 2 {
-		panic("vice general num is err , data error")
 	}
 	return viceGenerals
 }
@@ -261,7 +258,7 @@ func GetEnemyOneGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	if enemyGeneralArr[hitIdx] != nil {
 		return enemyGeneralArr[hitIdx]
 	}
-	panic("can't find any one general")
+	panic(any("can't find any one general"))
 	return nil
 }
 

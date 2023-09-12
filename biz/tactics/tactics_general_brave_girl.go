@@ -98,94 +98,95 @@ func (g GeneralBraveGirlTactic) Execute() {
 			triggerResp := &vo.TacticsTriggerResult{}
 
 			//虎嗔计数
-			util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_TigerAnger_Prepare, &vo.EffectHolderParams{
+			if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_TigerAnger_Prepare, &vo.EffectHolderParams{
 				EffectTimes:    1,
 				MaxEffectTimes: 3,
 				FromTactic:     g.Id(),
 				ProduceGeneral: currentGeneral,
-			})
-
-			//伤害结算
-			if effectParams, ok := util.DeBuffEffectOfTacticGet(triggerGeneral, consts.DebuffEffectType_TigerAnger_Prepare, g.Id()); ok {
-				//下1回合受到额外兵刃伤害（伤害率20%，目标每次受到伤害时，伤害率提高30%，最多叠加3次）
-				//若目标在虎嗔效果期间受到3次伤害时，立即结算虎嗔效果并额外造成1回合震慑，并使自己造成的兵刃伤害提升8%（兵刃伤害提升效果可叠加）
-				effectTimes := int64(0)
-				for _, param := range effectParams {
-					effectTimes += param.EffectTimes
-				}
-
-				if effectTimes == 3 {
-					//立即结算
-					//伤害提升计算
-					dmgRate := 0.2
-					if effectTimes > 0 {
-						dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectTimes))
+			}).IsSuccess {
+				//伤害结算
+				if effectParams, ok := util.DeBuffEffectOfTacticGet(triggerGeneral, consts.DebuffEffectType_TigerAnger_Prepare, g.Id()); ok {
+					//下1回合受到额外兵刃伤害（伤害率20%，目标每次受到伤害时，伤害率提高30%，最多叠加3次）
+					//若目标在虎嗔效果期间受到3次伤害时，立即结算虎嗔效果并额外造成1回合震慑，并使自己造成的兵刃伤害提升8%（兵刃伤害提升效果可叠加）
+					effectTimes := int64(0)
+					for _, param := range effectParams {
+						effectTimes += param.EffectTimes
 					}
-					settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
-					util.TacticDamage(&util.TacticDamageParam{
-						TacticsParams: g.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: triggerGeneral,
-						DamageType:    consts.DamageType_Weapon,
-						Damage:        settleDmg,
-						TacticId:      g.Id(),
-						TacticName:    g.Name(),
-						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_TigerAnger),
-					})
-					//施加震慑
-					if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_Awe, &vo.EffectHolderParams{
-						EffectRound:    1,
-						FromTactic:     g.Id(),
-						ProduceGeneral: currentGeneral,
-					}).IsSuccess {
-						//消失效果
-						util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-							revokeResp := &vo.TacticsTriggerResult{}
-							revokeGeneral := params.CurrentGeneral
 
-							util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
-								Ctx:        ctx,
-								General:    revokeGeneral,
-								EffectType: consts.DebuffEffectType_Awe,
-								TacticId:   g.Id(),
-							})
-
-							return revokeResp
+					if effectTimes == 3 {
+						//立即结算
+						//伤害提升计算
+						dmgRate := 0.2
+						if effectTimes > 0 {
+							dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectTimes))
+						}
+						settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
+						util.TacticDamage(&util.TacticDamageParam{
+							TacticsParams: g.tacticsParams,
+							AttackGeneral: currentGeneral,
+							SufferGeneral: triggerGeneral,
+							DamageType:    consts.DamageType_Weapon,
+							Damage:        settleDmg,
+							TacticId:      g.Id(),
+							TacticName:    g.Name(),
+							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_TigerAnger),
 						})
-					}
-					//并使自己造成的兵刃伤害提升8%（兵刃伤害提升效果可叠加）
-					util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{
-						EffectRate:     0.08,
-						FromTactic:     g.Id(),
-						ProduceGeneral: currentGeneral,
-					})
-				} else {
-					//下回合结算注册器
-					util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-						settleRound := params.CurrentRound
-						settleGeneral := params.CurrentGeneral
-						settleResp := &vo.TacticsTriggerResult{}
+						//施加震慑
+						if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_Awe, &vo.EffectHolderParams{
+							EffectRound:    1,
+							FromTactic:     g.Id(),
+							ProduceGeneral: currentGeneral,
+						}).IsSuccess {
+							//消失效果
+							util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+								revokeResp := &vo.TacticsTriggerResult{}
+								revokeGeneral := params.CurrentGeneral
 
-						if settleRound == currentRound+1 {
-							//伤害提升计算
-							dmgRate := 0.2
-							if effectTimes > 0 {
-								dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectTimes))
-							}
+								util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+									Ctx:        ctx,
+									General:    revokeGeneral,
+									EffectType: consts.DebuffEffectType_Awe,
+									TacticId:   g.Id(),
+								})
 
-							settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
-							util.TacticDamage(&util.TacticDamageParam{
-								TacticsParams: g.tacticsParams,
-								AttackGeneral: currentGeneral,
-								SufferGeneral: settleGeneral,
-								DamageType:    consts.DamageType_Weapon,
-								Damage:        settleDmg,
-								TacticName:    g.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_TigerAnger),
+								return revokeResp
 							})
 						}
-						return settleResp
-					})
+						//并使自己造成的兵刃伤害提升8%（兵刃伤害提升效果可叠加）
+						util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{
+							EffectRate:     0.08,
+							FromTactic:     g.Id(),
+							ProduceGeneral: currentGeneral,
+						})
+					} else {
+						//下回合结算注册器
+						util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+							settleRound := params.CurrentRound
+							settleGeneral := params.CurrentGeneral
+							settleResp := &vo.TacticsTriggerResult{}
+
+							if settleRound == currentRound+1 {
+								//伤害提升计算
+								dmgRate := 0.2
+								if effectTimes > 0 {
+									dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectTimes))
+								}
+
+								settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
+								util.TacticDamage(&util.TacticDamageParam{
+									TacticsParams: g.tacticsParams,
+									AttackGeneral: currentGeneral,
+									SufferGeneral: settleGeneral,
+									DamageType:    consts.DamageType_Weapon,
+									Damage:        settleDmg,
+									TacticId:      g.Id(),
+									TacticName:    g.Name(),
+									EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_TigerAnger),
+								})
+							}
+							return settleResp
+						})
+					}
 				}
 			}
 			return triggerResp

@@ -41,7 +41,7 @@ func (s SurroundingTheTeacherMustBePalaceTactic) Prepare() {
 	for _, enemyGeneral := range enemyGenerals {
 		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_SufferDebuffEffectEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
+			triggerGeneral := params.SufferDebuffEffectGeneral
 
 			if params.DebuffEffect == consts.DebuffEffectType_Defect ||
 				params.DebuffEffect == consts.DebuffEffectType_Escape {

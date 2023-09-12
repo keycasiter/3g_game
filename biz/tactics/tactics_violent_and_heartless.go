@@ -78,6 +78,7 @@ func (v ViolentAndHeartlessTactic) Execute() {
 			SufferGeneral: enemyGeneral,
 			Damage:        dmg,
 			DamageType:    consts.DamageType_Weapon,
+			TacticId:      v.Id(),
 			TacticName:    v.Name(),
 		})
 		//混乱状态

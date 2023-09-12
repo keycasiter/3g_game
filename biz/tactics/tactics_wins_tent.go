@@ -44,9 +44,10 @@ func (w WinsTentTactic) Prepare() {
 	//分担伤害
 	if !currentGeneral.IsMaster {
 		util.BuffEffectWrapSet(ctx, pairMasterGeneral, consts.BuffEffectType_ShareResponsibilityFor, &vo.EffectHolderParams{
-			EffectRate:     0.3,
-			FromTactic:     w.Id(),
-			ProduceGeneral: currentGeneral,
+			EffectRate:                      0.3,
+			FromTactic:                      w.Id(),
+			ProduceGeneral:                  currentGeneral,
+			ShareResponsibilityForByGeneral: currentGeneral,
 		})
 	}
 }

@@ -47,13 +47,14 @@ func (b BowWaistConcubineTactic) Prepare() {
 		//自身拥有功能性增益状态时额外对其造成兵刃伤害（伤害率20%x状态数）
 		buffEffectNum := util.BuffEffectContainsNum(currentGeneral)
 		if buffEffectNum > 0 {
-			extDmg := cast.ToInt64(cast.ToFloat64(buffEffectNum) * 0.2)
+			extDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * cast.ToFloat64(buffEffectNum) * 0.2)
 			util.TacticDamage(&util.TacticDamageParam{
 				TacticsParams: b.tacticsParams,
 				AttackGeneral: triggerGeneral,
 				SufferGeneral: enemyGeneral,
 				DamageType:    consts.DamageType_Weapon,
 				Damage:        extDmg,
+				TacticId:      b.Id(),
 				TacticName:    b.Name(),
 			})
 			//并提高18武力，最多叠加5次

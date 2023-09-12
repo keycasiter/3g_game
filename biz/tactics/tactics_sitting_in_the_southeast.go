@@ -52,7 +52,6 @@ func (s SittingIntheSoutheastTactic) Prepare() {
 				consts.BuffEffectType_MustHit,
 				consts.BuffEffectType_BreakFormation,
 			}
-			hitIdx := util.GenerateHitOneIdx(len(buffs))
 			if util.GenerateRate(0.75) {
 				if currentGeneral.IsMaster {
 					notContainBuffs := make([]consts.BuffEffectType, 0)
@@ -61,12 +60,16 @@ func (s SittingIntheSoutheastTactic) Prepare() {
 							notContainBuffs = append(notContainBuffs, buff)
 						}
 					}
-					util.BuffEffectWrapSet(ctx, currentGeneral, notContainBuffs[hitIdx], &vo.EffectHolderParams{
-						EffectRound:    2,
-						FromTactic:     s.Id(),
-						ProduceGeneral: triggerGeneral,
-					})
+					if len(notContainBuffs) > 0 {
+						notHitIdx := util.GenerateHitOneIdx(len(notContainBuffs))
+						util.BuffEffectWrapSet(ctx, currentGeneral, notContainBuffs[notHitIdx], &vo.EffectHolderParams{
+							EffectRound:    2,
+							FromTactic:     s.Id(),
+							ProduceGeneral: triggerGeneral,
+						})
+					}
 				} else {
+					hitIdx := util.GenerateHitOneIdx(len(buffs))
 					util.BuffEffectWrapSet(ctx, currentGeneral, buffs[hitIdx], &vo.EffectHolderParams{
 						EffectRound:    2,
 						FromTactic:     s.Id(),

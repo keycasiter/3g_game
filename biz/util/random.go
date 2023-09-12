@@ -88,7 +88,7 @@ func GenerateHitTwoOrThreeIdxMap(totalNum int) map[int64]bool {
 	m := make(map[int64]bool, 0)
 
 	if totalNum > 3 && totalNum < 0 {
-		panic("totalNum is err")
+		panic(any("totalNum is err"))
 	}
 
 	if totalNum == 1 { //1人

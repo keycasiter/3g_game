@@ -41,13 +41,13 @@ func JudgeBattleResult(team1 *vo.BattleTeam, team2 *vo.BattleTeam) consts.Battle
 //战法触发统计
 func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tacticId int64, triggerTimes int64, killSoliderNum int64, resumeSoliderNum int64) {
 	if generalUniqueId == "" {
-		panic("generalUniqueId is nil")
+		panic(any("generalUniqueId is nil"))
 	}
 	if tacticId == 0 {
-		panic("tacticId is nil")
+		panic(any("tacticId is nil"))
 	}
 	if triggerTimes == 0 {
-		panic("triggerTimes is nil")
+		panic(any("triggerTimes is nil"))
 	}
 
 	//按回合次数去重

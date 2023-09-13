@@ -101,6 +101,8 @@ func makeBattleResultStatistics(serviceResp *logic.BattleLogicContextResponse) *
 				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.TeamType),
 				ArmType:        enum.ArmType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.ArmType),
 				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+				SoliderNum:     makeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+				RemainNum:      makeRemainNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 			},
 			BattleResult:                int64(serviceResp.BattleResultStatistics.FightingTeam.BattleResult),
 			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
@@ -111,6 +113,8 @@ func makeBattleResultStatistics(serviceResp *logic.BattleLogicContextResponse) *
 				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.TeamType),
 				ArmType:        enum.ArmType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.ArmType),
 				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+				SoliderNum:     makeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+				RemainNum:      makeRemainNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 			},
 			BattleResult:                int64(serviceResp.BattleResultStatistics.EnemyTeam.BattleResult),
 			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
@@ -148,6 +152,22 @@ func makeGeneralBattleStatisticsList(statisticsList []*model.GeneralBattleStatis
 	return resList
 }
 
+func makeSoliderNum(battleGenerals []*vo.BattleGeneral) int64 {
+	teamSoliderNum := int64(0)
+	for _, general := range battleGenerals {
+		teamSoliderNum += (general.SoldierNum + general.LossSoldierNum)
+	}
+	return teamSoliderNum
+}
+
+func makeRemainNum(battleGenerals []*vo.BattleGeneral) int64 {
+	teamRemainNum := int64(0)
+	for _, general := range battleGenerals {
+		teamRemainNum += general.SoldierNum
+	}
+	return teamRemainNum
+}
+
 func makeBattleGenerals(battleGenerals []*vo.BattleGeneral) []*api.BattleGeneral {
 	resList := make([]*api.BattleGeneral, 0)
 	for _, general := range battleGenerals {
@@ -162,7 +182,8 @@ func makeBattleGenerals(battleGenerals []*vo.BattleGeneral) []*api.BattleGeneral
 				ArmsAttr:    makeArmsAttr(general),
 			},
 			IsMaster:   general.IsMaster,
-			SoldierNum: general.SoldierNum,
+			SoldierNum: general.SoldierNum + general.LossSoldierNum,
+			RemainNum:  general.SoldierNum,
 		})
 	}
 	return resList

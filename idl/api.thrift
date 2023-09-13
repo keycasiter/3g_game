@@ -27,6 +27,10 @@ struct BattleTeam {
 	4:BuildingTechAttrAddition BuildingTechAttrAddition
 	//协力科技-阵营加成
 	5:BuildingTechGroupAddition BuildingTechGroupAddition
+	//队伍总兵力
+	6:i64 SoliderNum
+	//队伍剩余兵力
+	7:i64 RemainNum
 }
 
 // 对战武将信息
@@ -47,6 +51,8 @@ struct BattleGeneral {
 	7: i64 SoldierNum
 	//兵种适性
     8: enum.ArmsAbility ArmsAbility
+    //剩余兵力
+    9: i64 RemainNum
 }
 
 // 武将对战加成

@@ -57,6 +57,8 @@ type BattleGeneral struct {
 	Addition *BattleGeneralAddition
 	//是否主将
 	IsMaster bool
+	//原始兵力
+	InitSoldierNum int64
 	//携带兵力
 	SoldierNum int64
 	//已损失兵力

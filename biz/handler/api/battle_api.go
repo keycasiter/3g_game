@@ -155,7 +155,7 @@ func makeGeneralBattleStatisticsList(statisticsList []*model.GeneralBattleStatis
 func makeSoliderNum(battleGenerals []*vo.BattleGeneral) int64 {
 	teamSoliderNum := int64(0)
 	for _, general := range battleGenerals {
-		teamSoliderNum += (general.SoldierNum + general.LossSoldierNum)
+		teamSoliderNum += general.InitSoldierNum
 	}
 	return teamSoliderNum
 }
@@ -182,7 +182,7 @@ func makeBattleGenerals(battleGenerals []*vo.BattleGeneral) []*api.BattleGeneral
 				ArmsAttr:    makeArmsAttr(general),
 			},
 			IsMaster:   general.IsMaster,
-			SoldierNum: general.SoldierNum + general.LossSoldierNum,
+			SoldierNum: general.InitSoldierNum,
 			RemainNum:  general.SoldierNum,
 		})
 	}
@@ -300,6 +300,8 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 			IsMaster: general.IsMaster,
 			//携带兵力，从参数获取
 			SoldierNum: general.SoldierNum,
+			//原始兵力，从参数获取
+			InitSoldierNum: general.SoldierNum,
 		})
 	}
 
@@ -371,6 +373,8 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 			IsMaster: general.IsMaster,
 			//携带兵力，从参数获取
 			SoldierNum: general.SoldierNum,
+			//原始兵力，从参数获取
+			InitSoldierNum: general.SoldierNum,
 		})
 	}
 

@@ -596,7 +596,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 
 	//必填参数
 	if attackGeneral == nil || sufferGeneral == nil || damage <= 0 || damageType == consts.DamageType_None {
-		hlog.CtxErrorf(ctx, "damage params err")
+		hlog.CtxErrorf(ctx, "damage params err , attackGeneral:%s , sufferGeneral:%s , damage:%d , damageType:%v", ToJsonString(ctx, attackGeneral), ToJsonString(ctx, sufferGeneral), damage, damageType)
 		panic(any("damage params err"))
 	}
 
@@ -799,34 +799,6 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		sufferGeneral.SufferExecuteStrategyAttackNum++
 	}
 
-	//伤害分担
-	if v, ok := BuffEffectGetAggrEffectRate(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
-		hlog.CtxInfof(ctx, "[%s]由于「%v」效果，本次攻击受到的伤害减少了%.2f%%",
-			sufferGeneral.BaseInfo.Name,
-			consts.BuffEffectType_ShareResponsibilityFor,
-			v*100,
-		)
-		//分担伤害
-		shareDmg := cast.ToInt64(cast.ToFloat64(damage) * v)
-		//被分担后的伤害
-		damage = cast.ToInt64(cast.ToFloat64(damage) * (1 - v))
-
-		hlog.CtxInfof(ctx, "[%s]执行「%v」效果",
-			sufferGeneral.ShareResponsibilityForByGeneral.BaseInfo.Name,
-			consts.BuffEffectType_ShareResponsibilityFor,
-		)
-		TacticDamage(&TacticDamageParam{
-			TacticsParams:  tacticsParams,
-			AttackGeneral:  attackGeneral,
-			SufferGeneral:  sufferGeneral.ShareResponsibilityForByGeneral,
-			Damage:         shareDmg,
-			TacticId:       tacticId,
-			TacticName:     tacticName,
-			IsIgnoreDefend: isIgnoreDefend,
-			DamageType:     damageType,
-		})
-	}
-
 	//伤害计算
 	if sufferGeneral.SoldierNum == 0 {
 		return 0, 0, 0, false
@@ -838,6 +810,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	} else {
 		damageNum = damage - cast.ToInt64(sufferGeneral.BaseInfo.AbilityAttr.CommandBase)
 	}
+
 	//兜底伤害为负的情况
 	if damageNum < 0 {
 		damageNum = 0
@@ -846,6 +819,36 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	soldierNum = sufferGeneral.SoldierNum
 	if damageNum >= soldierNum {
 		damageNum = soldierNum
+	}
+
+	//伤害分担
+	if v, ok := BuffEffectGetAggrEffectRate(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
+		hlog.CtxInfof(ctx, "[%s]由于「%v」效果，本次攻击受到的伤害减少了%.2f%%",
+			sufferGeneral.BaseInfo.Name,
+			consts.BuffEffectType_ShareResponsibilityFor,
+			v*100,
+		)
+		//分担伤害
+		shareDmg := cast.ToInt64(cast.ToFloat64(damageNum) * v)
+		//被分担后的伤害
+		damageNum = cast.ToInt64(cast.ToFloat64(damageNum) * (1 - v))
+
+		hlog.CtxInfof(ctx, "[%s]执行「%v」效果",
+			sufferGeneral.ShareResponsibilityForByGeneral.BaseInfo.Name,
+			consts.BuffEffectType_ShareResponsibilityFor,
+		)
+		if shareDmg > 0 {
+			TacticDamage(&TacticDamageParam{
+				TacticsParams:  tacticsParams,
+				AttackGeneral:  attackGeneral,
+				SufferGeneral:  sufferGeneral.ShareResponsibilityForByGeneral,
+				Damage:         shareDmg,
+				TacticId:       tacticId,
+				TacticName:     tacticName,
+				IsIgnoreDefend: isIgnoreDefend,
+				DamageType:     damageType,
+			})
+		}
 	}
 
 	//伤害结算

@@ -435,6 +435,7 @@ func (runCtx *BattleLogicContext) processBattleReportStatistics() {
 					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
 						TacticId:         tacticStatistics.TacticId,
 						TacticName:       tacticStatistics.TacticName,
+						TacticQuality:    tacticStatistics.TacticQuality,
 						TriggerTimes:     tacticStatistics.TriggerTimes,
 						KillSoliderNum:   tacticStatistics.KillSoliderNum,
 						ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
@@ -467,6 +468,7 @@ func (runCtx *BattleLogicContext) processBattleReportStatistics() {
 					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
 						TacticId:         tacticStatistics.TacticId,
 						TacticName:       tacticStatistics.TacticName,
+						TacticQuality:    tacticStatistics.TacticQuality,
 						TriggerTimes:     tacticStatistics.TriggerTimes,
 						KillSoliderNum:   tacticStatistics.KillSoliderNum,
 						ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,

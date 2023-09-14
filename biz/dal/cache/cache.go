@@ -11,11 +11,16 @@ import (
 //武将信息
 var CacheGeneralMap = make(map[int64]*po.General, 0)
 
+//战法信息
+var CacheTacticMap = make(map[int64]*po.Tactic, 0)
+
 func InitCache() {
 	ctx := context.Background()
 
 	//武将信息
 	initGeneralCache(ctx)
+	//战法信息
+	initTacticCache(ctx)
 }
 
 func initGeneralCache(ctx context.Context) {
@@ -24,9 +29,22 @@ func initGeneralCache(ctx context.Context) {
 		Limit:  10000,
 	})
 	if err != nil {
-		panic(fmt.Sprintf("init cache [general] err:%v", err))
+		panic(any(fmt.Sprintf("init cache [general] err:%v", err)))
 	}
 	for _, general := range generals {
 		CacheGeneralMap[general.Id] = general
+	}
+}
+
+func initTacticCache(ctx context.Context) {
+	tactics, err := mysql.NewTactic().QueryTacticList(ctx, &vo.QueryTacticCondition{
+		Offset: 0,
+		Limit:  10000,
+	})
+	if err != nil {
+		panic(any(fmt.Sprintf("init cache [tactic] err:%v", err)))
+	}
+	for _, tactic := range tactics {
+		CacheTacticMap[tactic.Id] = tactic
 	}
 }

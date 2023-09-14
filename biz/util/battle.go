@@ -3,7 +3,6 @@ package util
 import (
 	"fmt"
 	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
@@ -101,14 +100,9 @@ func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tac
 		}
 	} else {
 		m := make(map[int64]*model.TacticStatistics, 0)
-		tactic, okk := cache.CacheTacticMap[tacticId]
-		if !okk {
-			panic(any(fmt.Sprintf("tacticId:%d is not found", tacticId)))
-		}
 		m[tacticId] = &model.TacticStatistics{
 			TacticId:         tacticId,
-			TacticName:       tactic.Name,
-			TacticQuality:    int64(tactic.Quality),
+			TacticName:       fmt.Sprintf("%v", consts.TacticId(tacticId)),
 			TriggerTimes:     triggerTimes,
 			KillSoliderNum:   killSoliderNum,
 			ResumeSoliderNum: resumeSoliderNum,

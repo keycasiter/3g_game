@@ -434,10 +434,14 @@ func (runCtx *BattleLogicContext) processBattleReportStatistics() {
 		if tacticStatisticsMap, ok := runCtx.TacticsParams.BattleTacticStatisticsMap[general.BaseInfo.UniqueId]; ok {
 			for _, tactic := range general.EquipTactics {
 				if tacticStatistics, okk := tacticStatisticsMap[int64(tactic.Id)]; okk {
+					tacticInfo, exist := cache.CacheTacticMap[int64(tactic.Id)]
+					if !exist {
+						panic(any(fmt.Sprintf("tacticId:%d is not found", tacticInfo.Id)))
+					}
 					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
 						TacticId:         tacticStatistics.TacticId,
 						TacticName:       tacticStatistics.TacticName,
-						TacticQuality:    tacticStatistics.TacticQuality,
+						TacticQuality:    int64(tacticInfo.Quality),
 						TriggerTimes:     tacticStatistics.TriggerTimes,
 						KillSoliderNum:   tacticStatistics.KillSoliderNum,
 						ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,

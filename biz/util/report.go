@@ -16,10 +16,10 @@ type AppendBattleReportReq struct {
 func AppendBattleReport(req *AppendBattleReportReq) {
 	//1.参数校验
 	if req.TacticsParams == nil {
-		panic("AppendBattleReport TacticsParams is nil")
+		panic(any("AppendBattleReport TacticsParams is nil"))
 	}
 	if req.TacticsParams.BattleProcessStatisticsMap == nil {
-		panic("AppendBattleReport TacticsParams BattleReports is nil")
+		panic(any("AppendBattleReport TacticsParams BattleReports is nil"))
 	}
 
 	//2.追加战报处理

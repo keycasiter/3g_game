@@ -94,6 +94,7 @@ func (j JinFanArmyTactic) Prepare() {
 									SufferGeneral: revokeGeneral,
 									DamageType:    consts.DamageType_Weapon,
 									Damage:        dmg,
+									TacticId:      j.Id(),
 									TacticName:    j.Name(),
 									EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
 								})

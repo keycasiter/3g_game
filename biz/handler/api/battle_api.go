@@ -200,11 +200,11 @@ func makeAbilityAttr(general *vo.BattleGeneral) *api.AbilityAttr {
 
 func makeArmsAttr(general *vo.BattleGeneral) *api.ArmsAttr {
 	return &api.ArmsAttr{
-		Cavalry:   enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Cavalry)),
-		Mauler:    enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Mauler)),
-		Archers:   enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Archers)),
-		Spearman:  enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Spearman)),
-		Apparatus: enum.ArmsAbility(cast.ToInt64(general.BaseInfo.ArmsAttr.Apparatus)),
+		Cavalry:   util.ArmsAbilityToEnum(general.BaseInfo.ArmsAttr.Cavalry),
+		Mauler:    util.ArmsAbilityToEnum(general.BaseInfo.ArmsAttr.Mauler),
+		Archers:   util.ArmsAbilityToEnum(general.BaseInfo.ArmsAttr.Archers),
+		Spearman:  util.ArmsAbilityToEnum(general.BaseInfo.ArmsAttr.Spearman),
+		Apparatus: util.ArmsAbilityToEnum(general.BaseInfo.ArmsAttr.Apparatus),
 	}
 }
 

@@ -3,6 +3,7 @@ package util
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/enum"
+	"github.com/keycasiter/3g_game/biz/model/po"
 )
 
 //兵种类型转义
@@ -50,6 +51,32 @@ func ArmsAbilityToEnum(armsAbility consts.ArmsAbility) enum.ArmsAbility {
 		return enum.ArmsAbility_C
 	}
 	return enum.ArmsAbility_Unknow
+}
+
+//兵种适性转义
+func ArmsAbilityToConst(armsAbility string) consts.ArmsAbility {
+	switch armsAbility {
+	case "S":
+		return consts.ArmsAbility_S
+	case "A":
+		return consts.ArmsAbility_A
+	case "B":
+		return consts.ArmsAbility_B
+	case "C":
+		return consts.ArmsAbility_C
+	}
+	return consts.ArmsAbility_Unknow
+}
+
+//兵种全适性转义
+func ArmsAbilityStrToObject(armsAbilityPoStr *po.ArmsAttrStr) *po.ArmsAttr {
+	return &po.ArmsAttr{
+		Cavalry:   ArmsAbilityToConst(armsAbilityPoStr.Cavalry),
+		Mauler:    ArmsAbilityToConst(armsAbilityPoStr.Mauler),
+		Archers:   ArmsAbilityToConst(armsAbilityPoStr.Archers),
+		Spearman:  ArmsAbilityToConst(armsAbilityPoStr.Spearman),
+		Apparatus: ArmsAbilityToConst(armsAbilityPoStr.Apparatus),
+	}
 }
 
 //兵种适性属性加成转义

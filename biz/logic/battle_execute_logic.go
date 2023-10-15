@@ -6,6 +6,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/cache"
+	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
@@ -506,7 +507,7 @@ func (runCtx *BattleLogicContext) processBattleReportStatistics() {
 			BattleTeam: &vo.BattleTeam{
 				TeamType:       runCtx.Req.FightingTeam.TeamType,
 				ArmType:        runCtx.Req.FightingTeam.ArmType,
-				BattleGenerals: runCtx.Req.FightingTeam.BattleGenerals,
+				BattleGenerals: runCtx.makeGeneralInfos(runCtx.Req.FightingTeam.BattleGenerals),
 			},
 			BattleResult:                util.JudgeBattleResult(runCtx.Req.FightingTeam, runCtx.Req.EnemyTeam),
 			GeneralBattleStatisticsList: fightingGeneralsStatisticsList,
@@ -516,7 +517,7 @@ func (runCtx *BattleLogicContext) processBattleReportStatistics() {
 			BattleTeam: &vo.BattleTeam{
 				TeamType:       runCtx.Req.EnemyTeam.TeamType,
 				ArmType:        runCtx.Req.EnemyTeam.ArmType,
-				BattleGenerals: runCtx.Req.EnemyTeam.BattleGenerals,
+				BattleGenerals: runCtx.makeGeneralInfos(runCtx.Req.EnemyTeam.BattleGenerals),
 			},
 			BattleResult:                util.JudgeBattleResult(runCtx.Req.EnemyTeam, runCtx.Req.FightingTeam),
 			GeneralBattleStatisticsList: enemyGeneralsStatisticsList,
@@ -526,6 +527,19 @@ func (runCtx *BattleLogicContext) processBattleReportStatistics() {
 	battleProcessStatistics := make(map[consts.BattlePhase]map[consts.BattleRound][]string, 0)
 
 	runCtx.Resp.BattleProcessStatistics = battleProcessStatistics
+}
+
+func (runCtx *BattleLogicContext) makeGeneralInfos(battleGenerals []*vo.BattleGeneral) []*vo.BattleGeneral {
+	//补充武将信息
+	for _, battleGeneral := range battleGenerals {
+		if generalInfo, ok := cache.CacheGeneralMap[battleGeneral.BaseInfo.Id]; ok {
+			battleGeneral.BaseInfo.AvatarUri = generalInfo.AvatarUrl
+			armsAttrStrPo := &po.ArmsAttrStr{}
+			util.ParseJsonObj(runCtx.Ctx, &armsAttrStrPo, generalInfo.ArmAttr)
+			battleGeneral.BaseInfo.ArmsAttr = util.ArmsAbilityStrToObject(armsAttrStrPo)
+		}
+	}
+	return battleGenerals
 }
 
 // 对战对阵阶段处理

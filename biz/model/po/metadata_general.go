@@ -63,6 +63,15 @@ type ArmsAttr struct {
 	Apparatus consts.ArmsAbility
 }
 
+// 兵种属性
+type ArmsAttrStr struct {
+	Cavalry   string `json:"cavalry"`
+	Mauler    string `json:"mauler"`
+	Archers   string `json:"archers"`
+	Spearman  string `json:"spearman"`
+	Apparatus string `json:"apparatus"`
+}
+
 // 战法资料
 type Tactics struct {
 	Id            consts.TacticId      `json:"id"`

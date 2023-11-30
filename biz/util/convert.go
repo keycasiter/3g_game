@@ -2,6 +2,7 @@ package util
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/spf13/cast"
 	"strconv"
@@ -23,4 +24,11 @@ func StringToIntArray(str string) []int64 {
 		intArr = append(intArr, cast.ToInt64(i))
 	}
 	return intArr
+}
+
+func StructToMap(obj interface{}) map[string]interface{} {
+	jsonBytes, _ := json.Marshal(obj)
+	data := make(map[string]interface{})
+	json.Unmarshal(jsonBytes, &data)
+	return data
 }

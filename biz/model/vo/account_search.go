@@ -1,5 +1,6 @@
 package vo
 
+// ################################## GetSgzGameZoneItemList ######################################
 type GetSgzGameZoneItemListReq struct {
 	GameId     int64 `json:"gameId"`
 	Fcid       int64 `json:"fcid"`
@@ -45,7 +46,7 @@ type GetSgzGameZoneItemListRespResultGoodsInfo struct {
 	//赛季服
 	SeasonServerName string `json:"seasonServerName"`
 	//价格
-	Price int64 `json:"price"`
+	Price float64 `json:"price"`
 	//商品Url链接
 	DetailUrl string `json:"detailUrl"`
 }
@@ -54,4 +55,135 @@ type GetSgzGameZoneItemListRespResult struct {
 	TotalCnt    int64                                       `json:"totalCnt"`
 	HasNextPage bool                                        `json:"hasNextPage"`
 	GoodsList   []GetSgzGameZoneItemListRespResultGoodsInfo `json:"goodsList"`
+}
+
+//################################## AccountItemInfo ######################################
+
+type AccountItemInfo struct {
+	ApiData ApiData `json:"apiData"`
+}
+
+type ApiData struct {
+	//基础信息
+	ItemBaseInfo ItemBaseInfo `json:"itemBaseInfo"`
+	//商品质量
+	ItemQuality ItemQuality `json:"itemQuality"`
+	//商品卖点
+	SellPointTags []string `json:"sellPointTags"`
+	//商品卖点2
+	SecondSellPointTags []string `json:"secondSellPointTags"`
+	//综合属性
+	MultiplePropertyInfo MultiplePropertyInfo `json:"multiplePropertyInfo"`
+	//灵犀角色信息
+	ItemLingxiRoleDetail ItemLingxiRoleDetail `json:"itemLingxiRoleDetail"`
+}
+
+type ItemLingxiRoleDetail struct {
+	S3RoleCustomizeInfo S3RoleCustomizeInfo `json:"s3RoleCustomizeInfo"`
+}
+
+type S3RoleCustomizeInfo struct {
+	//武将信息
+	Heros []Heros `json:"heros"`
+	//非事件战法
+	Skills []Skills `json:"skills"`
+	//事件战法
+	EventSkills []EventSkills `json:"eventSkills"`
+	//库藏
+	Storage Storage `json:"storage"`
+	//资产
+	Currencies []Currencies `json:"currencies"`
+}
+
+type Currencies struct {
+	CurrencyName string `json:"currencyName"`
+	Amount       int64  `json:"amount"`
+}
+
+type Skills struct {
+	SkillId int64  `json:"skillId"`
+	Name    string `json:"name"`
+}
+
+type EventSkills struct {
+	SkillId int64  `json:"skillId"`
+	Name    string `json:"name"`
+}
+
+type Storage struct {
+	//装备等
+	Equipments []Equipments `json:"equipments"`
+	//材料
+	Materials []Materials `json:"materials"`
+}
+
+type Materials struct {
+	Id     int64  `json:"id"`
+	Name   string `json:"name"`
+	Star   int64  `json:"star"`
+	Amount int64  `json:"amount"`
+}
+
+type Equipments struct {
+	Id            int64    `json:"id"`
+	Name          string   `json:"name"`
+	Star          int64    `json:"star"`
+	AttrDesc      string   `json:"attrDesc"`
+	SkillDesc     string   `json:"skillDesc"`
+	SkillDescList []string `json:"skillDescList"`
+}
+
+type Heros struct {
+	//武将ID
+	Id      int64  `json:"id"`
+	HeroId  int64  `json:"heroId"`
+	Name    string `json:"name"`
+	Star    int64  `json:"star"`
+	IsAwake bool   `json:"isAwake"`
+	//阵营
+	Camp int64 `json:"camp"`
+	//进阶
+	Stage int64 `json:"stage"`
+	//典藏/SP
+	Prefix          string `json:"prefix"`
+	SeasonTag       string `json:"seasonTag"`
+	IsUnlockTalent  bool   `json:"isUnlockTalent"`
+	IsUnlockTalent3 bool   `json:"isUnlockTalent3"`
+}
+
+type MultiplePropertyInfo struct {
+	//资产等信息
+	DigestInfo DigestInfo `json:"digestInfo"`
+	//角色、出生服、赛季服等信息
+	GamePropertyInfo string `json:"gamePropertyInfo"`
+}
+
+type DigestInfo struct {
+	DigestGroupNodeList []DigestGroupNodeList `json:"digestGroupNodeList"`
+}
+
+type DigestGroupNodeList struct {
+	GroupName   string        `json:"groupName"`
+	GroupValues []GroupValues `json:"GroupValues"`
+	DisplayType string        `json:"displayType"`
+}
+
+type GroupValues struct {
+	GroupKey string   `json:"groupKey"`
+	Values   []Values `json:"values"`
+}
+
+type Values struct {
+	Value string `json:"value"`
+}
+
+type ItemQuality struct {
+	FavoriteNum int64 `json:"favoriteNum"`
+}
+
+type ItemBaseInfo struct {
+	ItemId     string  `json:"itemId"`
+	Title      string  `json:"title"`
+	SellPrice  float64 `json:"sellPrice"`
+	ServerName string  `json:"serverName"`
 }

@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
+	"regexp"
+	"strings"
 	"testing"
 )
 
@@ -47,12 +48,39 @@ func TestSearchAccount(t *testing.T) {
 }
 
 func TestParseHtml(t *testing.T) {
-	doc, err := goquery.NewDocument("https://m.jiaoyimao.com/jg1009207/1700896292454925.html?spm=gcmall.goods_listpage.detail.0")
+	httpRes, err := util.HttpGet(context.Background(), "https://m.jiaoyimao.com/jg1009207/1701412803136059.html", nil, nil)
 	if err != nil {
 		t.Errorf("err:%v", err)
 		t.Failed()
 	}
-	for _, node := range doc.Nodes {
-		fmt.Printf(node.Data)
+	//fmt.Printf("httpRes:\n%s", httpRes)
+	reg, err := regexp.Compile("window.__INITIAL_STATE__ =.*\\n")
+	if err != nil {
+		t.Errorf("err:%v", err)
+		t.Failed()
+	}
+	jsonStr := reg.FindString(httpRes)
+	jsonStr = strings.ReplaceAll(jsonStr, "window.__INITIAL_STATE__ =", "")
+	//fmt.Printf("jsonStr:\n%s", jsonStr)
+
+	data := &vo.AccountItemInfo{}
+	err = json.Unmarshal([]byte(jsonStr), data)
+	if err != nil {
+		t.Errorf("err:%v", err)
+		t.Failed()
+	}
+	for _, hero := range data.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
+		fmt.Printf("%d=%s\n", hero.HeroId, hero.Name)
+	}
+}
+
+func TestAccountSearchLogic(t *testing.T) {
+	ctx := context.Background()
+	err := NewAccountSearchContext(ctx, &vo.GetSgzGameZoneItemListReq{
+		PriceRange: util.ToJsonString(ctx, []string{"500", "1000"}),
+	}).Process()
+	if err != nil {
+		t.Errorf("err:%v", err)
+		t.Failed()
 	}
 }

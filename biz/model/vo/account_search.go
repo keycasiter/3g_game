@@ -7,12 +7,13 @@ type GetSgzGameZoneItemListReq struct {
 	Cid        int64 `json:"cid"`
 	PlatformId int64 `json:"platformId"`
 	//排序
-	Sort          string `json:"sort"`
+	Sort string `json:"sort"`
+	//检索条件 {"stage":"5","hero":"10014"}
 	ExtConditions string `json:"extConditions"`
 	StdCatId      int64  `json:"stdCatId"`
 	JymCatId      int64  `json:"jymCatId"`
 	//
-	FilterLowQuality string `json:"filterLowQuality"`
+	FilterLowQuality bool `json:"filterLowQuality"`
 	//关键字
 	Keyword string `json:"keyword"`
 	//价格区间 ["5000","12000"]
@@ -22,28 +23,35 @@ type GetSgzGameZoneItemListReq struct {
 	Page int64 `json:"page"`
 }
 
+type ExtConditions struct {
+	//进阶次数
+	Stage string `json:"stage"`
+	//武将ID
+	Hero string `json:"hero"`
+}
+
 type GetSgzGameZoneItemListResp struct {
-	success bool                             `json:"success"`
-	result  GetSgzGameZoneItemListRespResult `json:"result"`
+	Success bool                             `json:"success"`
+	Result  GetSgzGameZoneItemListRespResult `json:"result"`
 }
 
 type GetSgzGameZoneItemListRespResultGoodsInfo struct {
 	//商品ID
-	goodsId int64 `json:"goodsId"`
+	GoodsId int64 `json:"goodsId"`
 	//商品标题
-	realTitle string `json:"realTitle"`
+	RealTitle string `json:"realTitle"`
 	//当前所在服
-	serverName string `json:"serverName"`
+	ServerName string `json:"serverName"`
 	//赛季服
-	seasonServerName string `json:"seasonServerName"`
+	SeasonServerName string `json:"seasonServerName"`
 	//价格
-	price int64 `json:"price"`
+	Price int64 `json:"price"`
 	//商品Url链接
-	detailUrl string `json:"detailUrl"`
+	DetailUrl string `json:"detailUrl"`
 }
 
 type GetSgzGameZoneItemListRespResult struct {
-	totalCnt    int64                                       `json:"totalCnt"`
-	hasNextPage bool                                        `json:"hasNextPage"`
-	goodsList   []GetSgzGameZoneItemListRespResultGoodsInfo `json:"goodsList"`
+	TotalCnt    int64                                       `json:"totalCnt"`
+	HasNextPage bool                                        `json:"hasNextPage"`
+	GoodsList   []GetSgzGameZoneItemListRespResultGoodsInfo `json:"goodsList"`
 }

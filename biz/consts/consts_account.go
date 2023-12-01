@@ -1,6 +1,11 @@
 package consts
 
 // GetSgzGameZoneItemListReq 默认值
+
+const (
+	Url_GetSgzGameZoneItemList = "https://m.jiaoyimao.com/api2/sgzItemList2022/getSgzGameZoneItemList"
+)
+
 const (
 	GameId           = 1009207
 	FcId             = 10103

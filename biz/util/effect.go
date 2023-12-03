@@ -684,7 +684,10 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 	//被施加负面效果开始
 	if funcs, okk := general.TacticsTriggerMap[consts.BattleAction_SufferDebuffEffect]; okk {
 		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{}
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   effectParam.EffectRound,
+				CurrentGeneral: general,
+			}
 			resp := f(params)
 			if resp.IsTerminate {
 				return &EffectWrapSetResp{

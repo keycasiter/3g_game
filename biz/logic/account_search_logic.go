@@ -20,19 +20,23 @@ import (
 type AccountSearchContext struct {
 	ctx context.Context
 
-	req   *vo.GetSgzGameZoneItemListReq
+	req   *vo.AccountSearchReq
 	err   error
 	funcs []func()
 
-	//中间变量
+	//****中间变量****
+	//查询到的所有商品列表信息
 	GoodsInfoList []vo.GetSgzGameZoneItemListRespResultGoodsInfo
+	//查询到的所有商品详情信息
+	GoodsInfoItemMap map[string]*vo.AccountItemInfo
 }
 
-func NewAccountSearchContext(ctx context.Context, req *vo.GetSgzGameZoneItemListReq) *AccountSearchContext {
+func NewAccountSearchContext(ctx context.Context, req *vo.AccountSearchReq) *AccountSearchContext {
 	runCtx := &AccountSearchContext{
-		ctx:           ctx,
-		req:           req,
-		GoodsInfoList: make([]vo.GetSgzGameZoneItemListRespResultGoodsInfo, 0),
+		ctx:              ctx,
+		req:              req,
+		GoodsInfoList:    make([]vo.GetSgzGameZoneItemListRespResultGoodsInfo, 0),
+		GoodsInfoItemMap: make(map[string]*vo.AccountItemInfo, 0),
 	}
 	runCtx.funcs = []func(){
 		//1.查询符合条件的账号列表
@@ -60,7 +64,7 @@ func (runCtx *AccountSearchContext) Process() error {
 
 func (runCtx *AccountSearchContext) searchAccountList() {
 	//翻页查询
-	for i := 0; i < 3; i++ {
+	for i := 0; i < runCtx.req.PageSize; i++ {
 		hlog.CtxInfof(runCtx.ctx, "翻页查询第%d页", i+1)
 		req := runCtx.buildGetSgzGameZoneItemListReq(cast.ToInt64(i + 1))
 
@@ -83,6 +87,12 @@ func (runCtx *AccountSearchContext) searchAccountList() {
 			return
 		}
 		runCtx.GoodsInfoList = append(runCtx.GoodsInfoList, resp.Result.GoodsList...)
+
+		//当前页面不足15个，不需要再翻页了，交易猫默认一页15条
+		if len(resp.Result.GoodsList) < 15 {
+			hlog.CtxInfof(runCtx.ctx, "翻页查询第%d页，本页商品数量：%d，不需要继续翻页", i+1, len(resp.Result.GoodsList))
+			break
+		}
 	}
 }
 
@@ -99,16 +109,22 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 		FilterLowQuality: consts.FilterLowQuality,
 		Page:             pageNo,
 	}
-	if len(strings.Trim(runCtx.req.Keyword, " ")) > 0 {
-		req.Keyword = runCtx.req.Keyword
+	//指定特技等
+	if len(runCtx.req.MustSpecialTech) > 0 {
+		req.Keyword = util.ToJsonString(runCtx.ctx, runCtx.req.MustSpecialTech)
 	} else {
 		req.Keyword = util.ToJsonString(runCtx.ctx, []string{})
 	}
-	if len(strings.Trim(runCtx.req.ExtConditions, " ")) > 0 {
-		req.ExtConditions = runCtx.req.ExtConditions
+	//指定英雄
+	if len(runCtx.req.DefiniteHeros) > 0 {
+		req.ExtConditions = util.ToJsonString(runCtx.ctx, &vo.ExtConditions{
+			Stage: runCtx.req.DefiniteStage,
+			Hero:  runCtx.buildHeros(),
+		})
 	} else {
 		req.ExtConditions = util.ToJsonString(runCtx.ctx, []string{})
 	}
+	//价格范围
 	if len(strings.Trim(runCtx.req.PriceRange, " ")) > 0 {
 		req.PriceRange = runCtx.req.PriceRange
 	} else {
@@ -117,13 +133,22 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 	return req
 }
 
-func (runCtx *AccountSearchContext) searchAccountDetail() {
-	heroMap := make(map[int64]string, 0)
+func (runCtx *AccountSearchContext) buildHeros() string {
+	heroIds := ""
+	for i, heroId := range runCtx.req.DefiniteHeros {
+		heroIds += heroId
+		if i < len(runCtx.req.DefiniteHeros) {
+			heroIds += ","
+		}
+	}
+	return heroIds
+}
 
+func (runCtx *AccountSearchContext) searchAccountDetail() {
 	for i, goodsItem := range runCtx.GoodsInfoList {
 		hlog.CtxInfof(runCtx.ctx, "商品查询进度：%d/%d", i+1, len(runCtx.GoodsInfoList))
 		//防止被限流
-		time.Sleep(2 * time.Second)
+		time.Sleep(1 * time.Second)
 
 		err := retry.Do(func() error {
 			httpRes, err := util.HttpGet(runCtx.ctx, goodsItem.DetailUrl, nil, nil)
@@ -149,25 +174,190 @@ func (runCtx *AccountSearchContext) searchAccountDetail() {
 				return err
 			}
 
-			for _, hero := range data.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
-				heroMap[hero.HeroId] = hero.Name
-			}
+			//整理商品详情结果
+			runCtx.GoodsInfoItemMap[goodsItem.DetailUrl] = data
 			return nil
 		}, retry.Attempts(3), retry.Delay(1*time.Second))
 		if err != nil {
 			hlog.CtxErrorf(runCtx.ctx, "url:%s, retry err:%v", goodsItem.DetailUrl, err)
 		}
 	}
+}
 
-	for i, s := range heroMap {
-		fmt.Printf("%d=%s\n", i, s)
+//过滤商品结果
+func (runCtx *AccountSearchContext) filterAccount() {
+	//整理指定武将
+	definiteHeroMap := make(map[string]bool, 0)
+	for _, heroId := range runCtx.req.DefiniteHeros {
+		definiteHeroMap[heroId] = true
+	}
+	//整理账号全部武将
+
+	//指定武将是否要求觉醒
+	if runCtx.req.IsDefiniteHeroMustAwake {
+		newHolder := make(map[string]*vo.AccountItemInfo, 0)
+		//遍历账号
+		for goodsItemUrl, accountItemInfo := range runCtx.GoodsInfoItemMap {
+			//遍历账号所有武将
+			isMatch := true
+			for _, heroInfo := range accountItemInfo.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
+				//指定武将开三兵书
+				if _, ok := definiteHeroMap[cast.ToString(heroInfo.HeroId)]; ok {
+					if !heroInfo.IsAwake {
+						hlog.CtxInfof(runCtx.ctx, "商品：%s，武将未觉醒：%s ,跳过", goodsItemUrl, heroInfo.Name)
+						isMatch = false
+						break
+					}
+				}
+			}
+			//符合条件存储
+			if isMatch {
+				newHolder[goodsItemUrl] = accountItemInfo
+			}
+		}
+		runCtx.GoodsInfoItemMap = newHolder
+	}
+	//指定武将是否开三兵书
+	if runCtx.req.IsDefiniteHeroMustTalent3 {
+		newHolder := make(map[string]*vo.AccountItemInfo, 0)
+		//遍历账号
+		for goodsItemUrl, accountItemInfo := range runCtx.GoodsInfoItemMap {
+			isMatch := true
+			//遍历账号所有武将
+			for _, heroInfo := range accountItemInfo.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
+				//指定武将开三兵书
+				if _, ok := definiteHeroMap[cast.ToString(heroInfo.HeroId)]; ok {
+					if !heroInfo.IsUnlockTalent3 {
+						hlog.CtxInfof(runCtx.ctx, "商品：%s，武将三兵书未开：%s ,跳过", goodsItemUrl, heroInfo.Name)
+						isMatch = false
+						break
+					}
+				}
+			}
+			//符合条件存储
+			if isMatch {
+				newHolder[goodsItemUrl] = accountItemInfo
+			}
+		}
+		runCtx.GoodsInfoItemMap = newHolder
+	}
+
+	//指定战法
+	if len(runCtx.req.MustTactic) > 0 {
+		//整理战法map
+		tacticMap := make(map[string]bool, 0)
+		for _, tacticName := range runCtx.req.MustTactic {
+			tacticMap[tacticName] = true
+		}
+		//符合条件的账号
+		newHolder := make(map[string]*vo.AccountItemInfo, 0)
+		//遍历账号
+		for goodsItemUrl, accountItemInfo := range runCtx.GoodsInfoItemMap {
+			//当前账号所有战法
+			currentAccountAllTacticMap := make(map[string]bool, 0)
+			//遍历账号所有战法
+			for _, skillInfo := range accountItemInfo.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Skills {
+				if strings.Trim(skillInfo.Name, " ") == "" {
+					continue
+				}
+				currentAccountAllTacticMap[skillInfo.Name] = true
+			}
+
+			//匹配指定战法是否满足条件
+			isMatch := true
+			for tacticName, _ := range tacticMap {
+				if _, ok := currentAccountAllTacticMap[tacticName]; !ok {
+					//不满足要求，直接跳过
+					hlog.CtxInfof(runCtx.ctx, "商品：%s，战法不存在：%s ,跳过", goodsItemUrl, tacticName)
+					isMatch = false
+					break
+				}
+			}
+
+			if isMatch {
+				//符合条件存储
+				newHolder[goodsItemUrl] = accountItemInfo
+			}
+		}
+		runCtx.GoodsInfoItemMap = newHolder
+	}
+
+	//指定特技
+	if len(runCtx.req.MustSpecialTech) > 0 {
+		//整理特技map
+		specialTechMap := make(map[string]bool, 0)
+		for _, techName := range runCtx.req.MustSpecialTech {
+			specialTechMap[techName] = true
+		}
+		//符合条件的账号
+		newHolder := make(map[string]*vo.AccountItemInfo, 0)
+		//遍历账号
+		for goodsItemUrl, accountItemInfo := range runCtx.GoodsInfoItemMap {
+			//当前账号所有特技
+			currentAccountAllTechMap := make(map[string]bool, 0)
+			//遍历账号所有特技
+			for _, equipment := range accountItemInfo.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Storage.Equipments {
+				//只看5星装备即可,没特技跳过
+				if equipment.Star != 5 || strings.Trim(equipment.SkillDesc, " ") == "" {
+					continue
+				}
+				//指定特技
+				for _, skillName := range equipment.SkillDescList {
+					currentAccountAllTechMap[skillName] = true
+				}
+			}
+
+			//匹配指定特技是否满足条件
+			isMatch := true
+			for techName, _ := range specialTechMap {
+				if _, ok := currentAccountAllTechMap[techName]; !ok {
+					//不满足特技要求，直接跳过
+					hlog.CtxInfof(runCtx.ctx, "商品：%s，特级不存在：%s ,跳过", goodsItemUrl, techName)
+					isMatch = false
+					break
+				}
+			}
+
+			if isMatch {
+				//符合条件存储
+				newHolder[goodsItemUrl] = accountItemInfo
+			}
+		}
+		runCtx.GoodsInfoItemMap = newHolder
 	}
 }
 
-func (runCtx *AccountSearchContext) filterAccount() {
-
-}
-
 func (runCtx *AccountSearchContext) buildResp() {
-
+	//总结
+	fmt.Println("######################## 总结 #########################")
+	fmt.Printf("符合条件数量:%d\n", len(runCtx.GoodsInfoItemMap))
+	fmt.Println("######################## 商品链接 #########################")
+	for goodsDetailUrl, goodsItemInfo := range runCtx.GoodsInfoItemMap {
+		fmt.Printf("%s , 标价:%.2f\n", goodsDetailUrl, goodsItemInfo.ApiData.ItemBaseInfo.SellPrice)
+	}
+	//打印结果
+	for detailUrl, detailItem := range runCtx.GoodsInfoItemMap {
+		fmt.Println("#################################################")
+		fmt.Printf("商品ID:%s\n", detailItem.ApiData.ItemBaseInfo.ItemId)
+		fmt.Printf("商品链接:%s\n", detailUrl)
+		fmt.Printf("标题:%s\n", detailItem.ApiData.ItemBaseInfo.Title)
+		fmt.Printf("卖家标价:%.2f\n", detailItem.ApiData.ItemBaseInfo.SellPrice)
+		fmt.Printf("区服:%s\n", detailItem.ApiData.ItemBaseInfo.ServerName)
+		fmt.Printf("收藏人数:%d\n", detailItem.ApiData.ItemQuality.FavoriteNum)
+		fmt.Printf("卖点:%s\n", util.ToJsonString(runCtx.ctx, detailItem.ApiData.SellPointTags)+" "+util.ToJsonString(runCtx.ctx, detailItem.ApiData.SecondSellPointTags))
+		fmt.Printf("武将情况:\n")
+		for _, hero := range detailItem.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
+			fmt.Printf("%s ,红度:%d,是否觉醒：%v , 三兵书是否解锁:%v\n", hero.Name, hero.Stage, hero.IsAwake, hero.IsUnlockTalent3)
+		}
+		fmt.Printf("特技情况:\n")
+		techNames := ""
+		for _, equipment := range detailItem.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Storage.Equipments {
+			if equipment.Star == 5 && strings.Trim(equipment.SkillDesc, " ") != "" {
+				for _, techName := range equipment.SkillDescList {
+					techNames += techName + " "
+				}
+			}
+		}
+		fmt.Println(techNames)
+	}
 }

@@ -24,6 +24,48 @@ type GetSgzGameZoneItemListReq struct {
 	Page int64 `json:"page"`
 }
 
+type AccountSearchReq struct {
+	//检索条件 {"stage":"5","hero":"10014"}
+	DefiniteHeros []string
+	//红度要求
+	DefiniteStage string
+	//关键字
+	Keyword string
+	//价格区间 ["5000","12000"]
+	PriceRange string
+	//查询商品列表页数
+	PageSize int
+	//指定武将是否必须觉醒
+	IsDefiniteHeroMustAwake bool
+	//指定武将是否必须开三兵书
+	IsDefiniteHeroMustTalent3 bool
+	//特技要求
+	MustSpecialTech []string
+	//指定战法
+	MustTactic []string
+	//检测的商品链接
+	CheckGoodsUrl string
+}
+
+type AccountCheckReq struct {
+	//检索条件 {"stage":"5","hero":"10014"}
+	DefiniteHeros []string
+	//红度要求
+	DefiniteStage string
+	//价格区间 ["5000","12000"]
+	PriceRange string
+	//指定武将是否必须觉醒
+	IsDefiniteHeroMustAwake bool
+	//指定武将是否必须开三兵书
+	IsDefiniteHeroMustTalent3 bool
+	//特技要求
+	MustSpecialTech []string
+	//指定战法
+	MustTactic []string
+	//检测的商品链接
+	CheckGoodsUrl string
+}
+
 type ExtConditions struct {
 	//进阶次数
 	Stage string `json:"stage"`

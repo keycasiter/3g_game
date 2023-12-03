@@ -20,6 +20,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/kr/pretty"
 	"github.com/spf13/cast"
 )
 
@@ -65,7 +66,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(hertzconsts.StatusOK, resp)
 	//日志打印
-	//pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
+	pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
 }
 
 func buildResponse(resp *api.BattleExecuteResponse, serviceResp *logic.BattleLogicContextResponse) {

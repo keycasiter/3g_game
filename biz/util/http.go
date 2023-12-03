@@ -7,22 +7,19 @@ import (
 	"github.com/spf13/cast"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
-func HttpGet(ctx context.Context, url string, headers map[string]interface{}, params map[string]interface{}) (string, error) {
+func HttpGet(ctx context.Context, requestUrl string, headers map[string]interface{}, params map[string]interface{}) (string, error) {
 	path := ""
 	paramsStr := ""
 	for k, v := range params {
 		if paramsStr != "" {
 			paramsStr += "&"
 		}
-		paramsStr += fmt.Sprintf("%s=%s", k, cast.ToString(v))
+		paramsStr += fmt.Sprintf("%s=%s", k, url.QueryEscape(cast.ToString(v)))
 	}
-	if len(paramsStr) > 0 {
-		path = fmt.Sprintf("%s?%s", url, paramsStr)
-	} else {
-		path = fmt.Sprintf("%s?%s", url, paramsStr)
-	}
+	path = fmt.Sprintf("%s?%s", requestUrl, paramsStr)
 
 	client := &http.Client{}
 	req, err := http.NewRequest(http.MethodGet, path, nil)

@@ -94,14 +94,14 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//bfq := "10204,10101,10102"
 	//herosArr = append(herosArr, strings.Split(bfq, ",")...)
 	//麒麟弓
-	qlg := "10068,10064,10017"
-	herosArr = append(herosArr, strings.Split(qlg, ",")...)
+	//qlg := "10068,10064,10017"
+	//herosArr = append(herosArr, strings.Split(qlg, ",")...)
 	//SP群弓
-	//spqg := "10203,10206,10115"
-	//herosArr = append(herosArr, strings.Split(spqg, ",")...)
+	spqg := "10203,10206,10115"
+	herosArr = append(herosArr, strings.Split(spqg, ",")...)
 	//太尉盾
-	//twd := "10033,10014,10122"
-	//herosArr = append(herosArr, strings.Split(twd, ",")...)
+	twd := "10033,10014,10122"
+	herosArr = append(herosArr, strings.Split(twd, ",")...)
 	//周太凌
 	//ztl := "10031,10022,10088"
 	//herosArr = append(herosArr, strings.Split(ztl, ",")...)
@@ -109,17 +109,21 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//sxd := "10044,10043,10030"
 	//herosArr = append(herosArr, strings.Split(sxd, ",")...)
 	//渊骑
-	yq := "10056,10014,10024"
-	herosArr = append(herosArr, strings.Split(yq, ",")...)
+	//yq := "10056,10014,10024"
+	//herosArr = append(herosArr, strings.Split(yq, ",")...)
 
 	ctx := context.Background()
 	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{
-		//间隔区间
-		PriceRange: util.ToJsonString(ctx, []string{"1000", "2500"}),
+		//区段
+		Keyword: "1000区段",
+		//价格区间
+		PriceRange: util.ToJsonString(ctx, []string{"4500", "5500"}),
 		//指定英雄
 		DefiniteHeros: herosArr,
 		//红度
-		DefiniteStage: "3",
+		DefiniteStage: "",
+		//总红度
+		DefiniteTotalStage: "15",
 		//当前查询页数，每页最多15个
 		PageSize: 100,
 		//指定武将是否必须觉醒
@@ -127,7 +131,7 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 		//指定武将是否必须开三兵书
 		IsDefiniteHeroMustTalent3: false,
 		//指定特技
-		MustSpecialTech: []string{"援助"},
+		//MustSpecialTech: []string{"援助"},
 		//指定战法
 		MustTactic: []string{
 			//常用必备战法
@@ -151,16 +155,16 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 			//进阶战法
 			"抚辑军民", "三势阵", "草船借箭", "裸衣血战",
 			//太尉
-			//"士别三日", "熯天炽地", "锋矢阵", "刮骨疗毒", "藤甲兵", "魅惑",
+			"士别三日", "熯天炽地", "锋矢阵", "刮骨疗毒", "藤甲兵", "魅惑",
 			//父女
 			//"据水断桥", "箕形阵", "青州兵", "横扫千军", "威谋靡亢", "盛气凌敌",
 			//麒麟
-			"夺魂挟魄", "杯蛇鬼车", "太平道法", "无当飞军", "八门金锁阵", "婴城自守",
+			//"夺魂挟魄", "杯蛇鬼车", "太平道法", "无当飞军", "八门金锁阵",
+			//"婴城自守",
 			//突击骑
 			"虎豹骑", "铁骑驱驰", "当锋摧决", "三势阵", "一骑当千", "百骑劫营",
 			//SP群弓
-			//"焰逐风飞", "白马义从", "折冲御侮",
-			//"掣刀斫敌",
+			"焰逐风飞", "白马义从", "折冲御侮", "掣刀斫敌",
 		},
 	}).Process()
 	if err != nil {

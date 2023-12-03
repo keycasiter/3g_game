@@ -24,12 +24,20 @@ type GetSgzGameZoneItemListReq struct {
 	Page int64 `json:"page"`
 }
 
+//https://m.jiaoyimao.com/api2/sgzItemList2022/getSgzGameZoneItemList?gameId=1009207&fcid=10103&osId=3&sort=composite_sorting_score
+//&extConditions={"stage_sum":"10","stage":"2","hero":"10014,10016","equip_skill":"28025,28041"}
+//&stdCatId=1844450&jymCatId=1844455&filterLowQuality=false
+//&keyword=2000区段+1000区段&enforcePlat=3&cid=1844455&page=1&platformId=3
 type AccountSearchReq struct {
-	//检索条件 {"stage":"5","hero":"10014"}
+	//检索条件 {"hero":"10014,10005"}
 	DefiniteHeros []string
+	//特技要求 {"equip_skill":"28025,28041"}
+	DefiniteSkill []string
 	//红度要求
 	DefiniteStage string
-	//关键字
+	//总红度要求 {"stage_sum":"10"}
+	DefiniteTotalStage string
+	//关键字  keyword=2000区段
 	Keyword string
 	//价格区间 ["5000","12000"]
 	PriceRange string
@@ -71,6 +79,10 @@ type ExtConditions struct {
 	Stage string `json:"stage"`
 	//武将ID
 	Hero string `json:"hero"`
+	//总进阶次数
+	StageSum string `json:"stage_sum"`
+	//特技
+	EquipSkill string `json:"equip_skill"`
 }
 
 type GetSgzGameZoneItemListResp struct {

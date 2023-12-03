@@ -108,23 +108,28 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 		StdCatId:         consts.StdCatId,
 		JymCatId:         consts.JymCatId,
 		FilterLowQuality: consts.FilterLowQuality,
+		Keyword:          runCtx.req.Keyword,
 		Page:             pageNo,
 	}
 	//指定特技等
+	extConditions := &vo.ExtConditions{}
 	if len(runCtx.req.MustSpecialTech) > 0 {
-		req.Keyword = util.ToJsonString(runCtx.ctx, runCtx.req.MustSpecialTech)
-	} else {
-		req.Keyword = util.ToJsonString(runCtx.ctx, []string{})
+		extConditions.EquipSkill = runCtx.buildSpecialTech()
 	}
 	//指定英雄
 	if len(runCtx.req.DefiniteHeros) > 0 {
-		req.ExtConditions = util.ToJsonString(runCtx.ctx, &vo.ExtConditions{
-			Stage: runCtx.req.DefiniteStage,
-			Hero:  runCtx.buildHeros(),
-		})
-	} else {
-		req.ExtConditions = util.ToJsonString(runCtx.ctx, []string{})
+		extConditions.Hero = runCtx.buildHeros()
 	}
+	//指定红度
+	if runCtx.req.DefiniteStage != "" {
+		extConditions.Stage = runCtx.req.DefiniteStage
+	}
+	//指定总红度
+	if runCtx.req.DefiniteTotalStage != "" {
+		extConditions.StageSum = runCtx.req.DefiniteTotalStage
+	}
+
+	req.ExtConditions = util.ToJsonString(runCtx.ctx, extConditions)
 	//价格范围
 	if len(strings.Trim(runCtx.req.PriceRange, " ")) > 0 {
 		req.PriceRange = runCtx.req.PriceRange
@@ -143,6 +148,17 @@ func (runCtx *AccountSearchContext) buildHeros() string {
 		}
 	}
 	return heroIds
+}
+
+func (runCtx *AccountSearchContext) buildSpecialTech() string {
+	skillIds := ""
+	for i, skillId := range runCtx.req.DefiniteSkill {
+		skillIds += skillId
+		if i < len(runCtx.req.DefiniteHeros) {
+			skillIds += ","
+		}
+	}
+	return skillIds
 }
 
 func (runCtx *AccountSearchContext) searchAccountDetail() {
@@ -269,7 +285,7 @@ func (runCtx *AccountSearchContext) filterAccount() {
 			for tacticName, _ := range tacticMap {
 				if _, ok := currentAccountAllTacticMap[tacticName]; !ok {
 					//不满足要求，直接跳过
-					hlog.CtxInfof(runCtx.ctx, "商品：%s，战法不存在：%s ,跳过", goodsItemUrl, tacticName)
+					hlog.CtxInfof(runCtx.ctx, "商品：%s, 标价:%.2f ,战法不存在：%s ,跳过", goodsItemUrl, accountItemInfo.ApiData.ItemBaseInfo.SellPrice, tacticName)
 					isMatch = false
 					break
 				}

@@ -12,6 +12,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
 	"regexp"
+	"sort"
 	"strings"
 	"time"
 )
@@ -148,7 +149,7 @@ func (runCtx *AccountSearchContext) searchAccountDetail() {
 	for i, goodsItem := range runCtx.GoodsInfoList {
 		hlog.CtxInfof(runCtx.ctx, "商品查询进度：%d/%d", i+1, len(runCtx.GoodsInfoList))
 		//防止被限流
-		time.Sleep(1 * time.Second)
+		time.Sleep(500 * time.Millisecond)
 
 		err := retry.Do(func() error {
 			httpRes, err := util.HttpGet(runCtx.ctx, goodsItem.DetailUrl, nil, nil)
@@ -338,18 +339,29 @@ func (runCtx *AccountSearchContext) buildResp() {
 	//打印结果
 	for detailUrl, detailItem := range runCtx.GoodsInfoItemMap {
 		fmt.Println("#################################################")
-		fmt.Printf("商品ID:%s\n", detailItem.ApiData.ItemBaseInfo.ItemId)
-		fmt.Printf("商品链接:%s\n", detailUrl)
-		fmt.Printf("标题:%s\n", detailItem.ApiData.ItemBaseInfo.Title)
-		fmt.Printf("卖家标价:%.2f\n", detailItem.ApiData.ItemBaseInfo.SellPrice)
-		fmt.Printf("区服:%s\n", detailItem.ApiData.ItemBaseInfo.ServerName)
-		fmt.Printf("收藏人数:%d\n", detailItem.ApiData.ItemQuality.FavoriteNum)
-		fmt.Printf("卖点:%s\n", util.ToJsonString(runCtx.ctx, detailItem.ApiData.SellPointTags)+" "+util.ToJsonString(runCtx.ctx, detailItem.ApiData.SecondSellPointTags))
-		fmt.Printf("武将情况:\n")
-		for _, hero := range detailItem.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
-			fmt.Printf("%s ,红度:%d,是否觉醒：%v , 三兵书是否解锁:%v\n", hero.Name, hero.Stage, hero.IsAwake, hero.IsUnlockTalent3)
+		//fmt.Printf("商品ID:%s\n", detailItem.ApiData.ItemBaseInfo.ItemId)
+		fmt.Printf("【商品链接】%s\n", detailUrl)
+		fmt.Printf("【标题】%s\n", detailItem.ApiData.ItemBaseInfo.Title)
+		fmt.Printf("【卖家标价】%.2f\n", detailItem.ApiData.ItemBaseInfo.SellPrice)
+		fmt.Printf("【区服】%s\n", detailItem.ApiData.ItemBaseInfo.ServerName)
+		fmt.Printf("【收藏人数】%d\n", detailItem.ApiData.ItemQuality.FavoriteNum)
+		fmt.Printf("【卖点】%s\n", util.ToJsonString(runCtx.ctx, detailItem.ApiData.SellPointTags)+" "+util.ToJsonString(runCtx.ctx, detailItem.ApiData.SecondSellPointTags))
+
+		fmt.Printf("\n【检测如下战法均存在】\n")
+		tacticNames := ""
+		for _, tacticName := range runCtx.req.MustTactic {
+			tacticNames += tacticName + ","
 		}
-		fmt.Printf("特技情况:\n")
+		fmt.Printf(tacticNames)
+
+		fmt.Printf("\n【检测如下指定武将均存在】\n")
+		heroNames := ""
+		for _, heroId := range runCtx.req.DefiniteHeros {
+			heroNames += consts.HeroMap[heroId] + ","
+		}
+		fmt.Printf(heroNames)
+
+		fmt.Printf("\n【特技情况】\n")
 		techNames := ""
 		for _, equipment := range detailItem.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Storage.Equipments {
 			if equipment.Star == 5 && strings.Trim(equipment.SkillDesc, " ") != "" {
@@ -359,5 +371,18 @@ func (runCtx *AccountSearchContext) buildResp() {
 			}
 		}
 		fmt.Println(techNames)
+
+		fmt.Printf("【账号武将情况】\n")
+		//按红度排序
+		sort.Slice(detailItem.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros, func(i, j int) bool {
+			if detailItem.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros[i].Stage >
+				detailItem.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros[j].Stage {
+				return true
+			}
+			return false
+		})
+		for _, hero := range detailItem.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
+			fmt.Printf("%s ,红度:%d,觉醒：%v , 三兵书:%v\n", hero.Name, hero.Stage, util.BoolToString(hero.IsAwake), util.BoolToString(hero.IsUnlockTalent3))
+		}
 	}
 }

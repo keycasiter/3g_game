@@ -32,3 +32,10 @@ func StructToMap(obj interface{}) map[string]interface{} {
 	json.Unmarshal(jsonBytes, &data)
 	return data
 }
+
+func BoolToString(obj bool) string {
+	if obj {
+		return "是"
+	}
+	return "否"
+}

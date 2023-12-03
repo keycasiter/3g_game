@@ -32,7 +32,7 @@ func TestNewAccountCheckLogic(t *testing.T) {
 
 	ctx := context.Background()
 	err := NewAccountCheckLogic(ctx, &vo.AccountCheckReq{
-		CheckGoodsUrl: "https://m.jiaoyimao.com/jg1009207/1701502596052080.html?shareFrom=CopyUrl",
+		CheckGoodsUrl: "https://m.jiaoyimao.com/jg1009207/1701602891730957.html",
 		//间隔区间
 		PriceRange: util.ToJsonString(ctx, []string{"500", "1000"}),
 		//指定英雄

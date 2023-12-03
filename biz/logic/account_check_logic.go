@@ -3,8 +3,10 @@ package logic
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/avast/retry-go"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
@@ -81,23 +83,53 @@ func (runCtx *AccountCheckContext) getAccountDetail() {
 		hlog.CtxErrorf(runCtx.ctx, "url:%s, retry err:%v", runCtx.req.CheckGoodsUrl, err)
 	}
 }
-
 func (runCtx *AccountCheckContext) checkAccountDetail() {
+	fmt.Printf("【检测账号】%s\n", runCtx.req.CheckGoodsUrl)
+	fmt.Printf("【标题】%s\n", runCtx.goodsDetail.ApiData.ItemBaseInfo.Title)
+	fmt.Printf("【卖家标价】%.2f\n", runCtx.goodsDetail.ApiData.ItemBaseInfo.SellPrice)
+	fmt.Printf("【区服】%s\n", runCtx.goodsDetail.ApiData.ItemBaseInfo.ServerName)
+	fmt.Printf("【收藏人数】%d\n", runCtx.goodsDetail.ApiData.ItemQuality.FavoriteNum)
+	fmt.Printf("【卖点】%s\n", util.ToJsonString(runCtx.ctx, runCtx.goodsDetail.ApiData.SellPointTags)+" "+util.ToJsonString(runCtx.ctx, runCtx.goodsDetail.ApiData.SecondSellPointTags))
+
 	//整理指定武将
 	definiteHeroMap := make(map[string]bool, 0)
 	for _, heroId := range runCtx.req.DefiniteHeros {
 		definiteHeroMap[heroId] = true
 	}
-	//整理账号全部武将
+	fmt.Printf("【指定检测武将】:\n")
+	for _, heroId := range runCtx.req.DefiniteHeros {
+		fmt.Printf("%s,", consts.HeroMap[heroId])
+	}
+	fmt.Printf("\n【指定检测战法】:\n")
+	for _, tacticName := range runCtx.req.MustTactic {
+		fmt.Printf("%s,", tacticName)
+	}
+	//fmt.Printf("指定武将数：%s\n", util.ToJsonString(runCtx.ctx,definiteHeroMap))
+	//指定武将是否存在
+	if len(runCtx.req.DefiniteHeros) > 0 {
+		currentAllHeros := make(map[string]vo.Heros, 0)
+		//遍历账号所有武将
+		for _, heroInfo := range runCtx.goodsDetail.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
+			currentAllHeros[cast.ToString(heroInfo.HeroId)] = heroInfo
+		}
+		fmt.Printf("\n【武将不存在】\n")
+		for heroId, _ := range definiteHeroMap {
+			//指定武将是否存在
+			if _, ok := currentAllHeros[heroId]; !ok {
+				fmt.Printf("%s,", consts.HeroMap[heroId])
+			}
+		}
+	}
 
 	//指定武将是否要求觉醒
 	if runCtx.req.IsDefiniteHeroMustAwake {
 		//遍历账号所有武将
+		fmt.Printf("\n【武将未觉醒】\n")
 		for _, heroInfo := range runCtx.goodsDetail.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
-			//指定武将开三兵书
+			//指定武将是否觉醒
 			if _, ok := definiteHeroMap[cast.ToString(heroInfo.HeroId)]; ok {
 				if !heroInfo.IsAwake {
-					hlog.CtxInfof(runCtx.ctx, "武将未觉醒：%s ,检测失败", heroInfo.Name)
+					fmt.Printf("%s,", heroInfo.Name)
 				}
 			}
 		}
@@ -105,11 +137,12 @@ func (runCtx *AccountCheckContext) checkAccountDetail() {
 	//指定武将是否开三兵书
 	if runCtx.req.IsDefiniteHeroMustTalent3 {
 		//遍历账号所有武将
+		fmt.Printf("\n【武将未开第三兵书】\n")
 		for _, heroInfo := range runCtx.goodsDetail.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Heros {
 			//指定武将开三兵书
 			if _, ok := definiteHeroMap[cast.ToString(heroInfo.HeroId)]; ok {
 				if !heroInfo.IsUnlockTalent3 {
-					hlog.CtxInfof(runCtx.ctx, "武将三兵书未开：%s ,检测失败", heroInfo.Name)
+					fmt.Printf("%s,", heroInfo.Name)
 				}
 			}
 		}
@@ -134,10 +167,11 @@ func (runCtx *AccountCheckContext) checkAccountDetail() {
 		}
 
 		//匹配指定战法是否满足条件
+		fmt.Printf("\n【战法不存在】\n")
 		for tacticName, _ := range tacticMap {
 			if _, ok := currentAccountAllTacticMap[tacticName]; !ok {
 				//不满足要求，直接跳过
-				hlog.CtxInfof(runCtx.ctx, "战法不存在：%s ,检测失败", tacticName)
+				fmt.Printf("%s,", tacticName)
 			}
 		}
 	}
@@ -164,10 +198,11 @@ func (runCtx *AccountCheckContext) checkAccountDetail() {
 		}
 
 		//匹配指定特技是否满足条件
+		fmt.Printf("\n【特技不存在】\n")
 		for techName, _ := range specialTechMap {
 			if _, ok := currentAccountAllTechMap[techName]; !ok {
 				//不满足特技要求，直接跳过
-				hlog.CtxInfof(runCtx.ctx, "特技不存在：%s ,检测失败", techName)
+				fmt.Printf("%s,", techName)
 			}
 		}
 	}

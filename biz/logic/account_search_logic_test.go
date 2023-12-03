@@ -89,22 +89,22 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 
 	//关关张
 	ggz := "10010,10097,10013"
-	herosArr = append(herosArr, ggz)
+	herosArr = append(herosArr, strings.Split(ggz, ",")...)
 	//北伐
-	//bfq := "10204,10101,10102"
-	//herosArr = append(herosArr, bfq)
+	bfq := "10204,10101,10102"
+	herosArr = append(herosArr, strings.Split(bfq, ",")...)
 	//麒麟弓
 	qlg := "10068,10064,10017"
-	herosArr = append(herosArr, qlg)
+	herosArr = append(herosArr, strings.Split(qlg, ",")...)
 	//SP群弓
-	//spqg := "10203,10206,10115"
-	//herosArr = append(herosArr, spqg)
+	spqg := "10203,10206,10115"
+	herosArr = append(herosArr, strings.Split(spqg, ",")...)
 	//太尉盾
 	twd := "10033,10014,10122"
-	herosArr = append(herosArr, twd)
+	herosArr = append(herosArr, strings.Split(twd, ",")...)
 	//周太凌
 	ztl := "10031,10022,10088"
-	herosArr = append(herosArr, ztl)
+	herosArr = append(herosArr, strings.Split(ztl, ",")...)
 
 	ctx := context.Background()
 	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{
@@ -124,6 +124,11 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 		MustSpecialTech: []string{"援助", "踩踏"},
 		//指定战法
 		MustTactic: []string{
+			//常用必备战法
+			"所向披靡", "破阵摧坚", "百骑劫营", "暂避其锋", "兵无常势", "陷阵营", "西凉铁骑", "伪书相间", "用武通神", "万箭齐发",
+			"象兵", "锦帆军", "破军威胜", "速乘其利", "竭力佐谋", "火炽原燎", "裸衣血战",
+			//进阶战法
+			"击其惰归", "掣刀斫敌", "刚勇无前", "婴城自守",
 			//事件战法
 			"抚辑军民", "三势阵", "草船借箭",
 			//太尉
@@ -135,7 +140,7 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 			//突击骑
 			"虎豹骑", "铁骑驱驰", "当锋摧决", "三势阵", "一骑当千",
 			//SP群弓
-			//"焰逐风飞", "白马义从", "折冲御侮",
+			"焰逐风飞", "白马义从", "折冲御侮",
 		},
 	}).Process()
 	if err != nil {

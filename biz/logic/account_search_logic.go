@@ -201,7 +201,7 @@ func (runCtx *AccountSearchContext) searchAccountDetail() {
 	}
 }
 
-//过滤商品结果
+// 过滤商品结果
 func (runCtx *AccountSearchContext) filterAccount() {
 	//整理指定武将
 	definiteHeroMap := make(map[string]bool, 0)
@@ -285,7 +285,9 @@ func (runCtx *AccountSearchContext) filterAccount() {
 			for tacticName, _ := range tacticMap {
 				if _, ok := currentAccountAllTacticMap[tacticName]; !ok {
 					//不满足要求，直接跳过
-					hlog.CtxInfof(runCtx.ctx, "商品：%s, 标价:%.2f ,战法不存在：%s ,跳过", goodsItemUrl, accountItemInfo.ApiData.ItemBaseInfo.SellPrice, tacticName)
+					hlog.CtxInfof(runCtx.ctx, "商品：%s, 区服:%s , 标价:%.2f , 战法不存在：%s ,跳过", goodsItemUrl,
+						accountItemInfo.ApiData.ItemBaseInfo.ServerName,
+						accountItemInfo.ApiData.ItemBaseInfo.SellPrice, tacticName)
 					isMatch = false
 					break
 				}

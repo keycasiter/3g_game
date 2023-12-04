@@ -12,11 +12,11 @@ func TestNewAccountCheckLogic(t *testing.T) {
 	herosArr := make([]string, 0)
 
 	//关关张
-	ggz := "10010,10097,10013"
-	herosArr = append(herosArr, strings.Split(ggz, ",")...)
+	//ggz := "10010,10097,10013"
+	//herosArr = append(herosArr, strings.Split(ggz, ",")...)
 	//北伐
-	bfq := "10204,10101,10102"
-	herosArr = append(herosArr, strings.Split(bfq, ",")...)
+	//bfq := "10204,10101,10102"
+	//herosArr = append(herosArr, strings.Split(bfq, ",")...)
 	//麒麟弓
 	qlg := "10068,10064,10017"
 	herosArr = append(herosArr, strings.Split(qlg, ",")...)
@@ -27,12 +27,12 @@ func TestNewAccountCheckLogic(t *testing.T) {
 	twd := "10033,10014,10122"
 	herosArr = append(herosArr, strings.Split(twd, ",")...)
 	//周太凌
-	ztl := "10031,10022,10088"
-	herosArr = append(herosArr, strings.Split(ztl, ",")...)
+	//ztl := "10031,10022,10088"
+	//herosArr = append(herosArr, strings.Split(ztl, ",")...)
 
 	ctx := context.Background()
 	err := NewAccountCheckLogic(ctx, &vo.AccountCheckReq{
-		CheckGoodsUrl: "https://m.jiaoyimao.com/jg1009207/1701602891730957.html",
+		CheckGoodsUrl: "https://m.jiaoyimao.com/jg1009207/1701333213121829.html",
 		//间隔区间
 		PriceRange: util.ToJsonString(ctx, []string{"500", "1000"}),
 		//指定英雄

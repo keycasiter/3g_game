@@ -83,13 +83,13 @@ func TestAccountSearchLogic(t *testing.T) {
 	}
 }
 
-//指定武将
+// 指定武将
 func TestAccountSearchLogicForHero(t *testing.T) {
 	herosArr := make([]string, 0)
 
 	//关关张
-	ggz := "10010,10097,10013"
-	herosArr = append(herosArr, strings.Split(ggz, ",")...)
+	//ggz := "10010,10097,10013"
+	//herosArr = append(herosArr, strings.Split(ggz, ",")...)
 	//北伐
 	//bfq := "10204,10101,10102"
 	//herosArr = append(herosArr, strings.Split(bfq, ",")...)
@@ -103,61 +103,55 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	twd := "10033,10014,10122"
 	herosArr = append(herosArr, strings.Split(twd, ",")...)
 	//周太凌
-	ztl := "10031,10022,10088"
-	herosArr = append(herosArr, strings.Split(ztl, ",")...)
+	//ztl := "10031,10022,10088"
+	//herosArr = append(herosArr, strings.Split(ztl, ",")...)
 	//三仙
 	//sxd := "10044,10043,10030"
 	//herosArr = append(herosArr, strings.Split(sxd, ",")...)
 	//渊骑
-	yq := "10056,10014,10024"
-	herosArr = append(herosArr, strings.Split(yq, ",")...)
+	//yq := "10056,10014,10024"
+	//herosArr = append(herosArr, strings.Split(yq, ",")...)
 
 	ctx := context.Background()
 	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{
 		//区段
-		//Keyword: "",
+		Keyword: "4000区段",
 		//价格区间
-		PriceRange: util.ToJsonString(ctx, []string{"500", "1500"}),
+		PriceRange: util.ToJsonString(ctx, []string{"1300", "2000"}),
 		//指定英雄
 		DefiniteHeros: herosArr,
 		//红度
 		DefiniteStage: "",
 		//总红度
-		DefiniteTotalStage: "",
-		//是否可跨服、公开
-		CrossServerAndPublic: true,
-		//五星将数量
-		FiveStarHeroNum: "50",
-		//S战法数量
-		SskillNum: "60",
+		DefiniteTotalStage: "6",
 		//当前查询页数，每页最多15个
-		PageSize: 100,
+		PageSize: 3,
 		//指定武将是否必须觉醒
-		IsDefiniteHeroMustAwake: true,
+		IsDefiniteHeroMustAwake: false,
 		//指定武将是否必须开三兵书
-		IsDefiniteHeroMustTalent3: true,
+		IsDefiniteHeroMustTalent3: false,
 		//指定特技
 		//MustSpecialTech: []string{"援助"},
 		//指定战法
 		MustTactic: []string{
 			//常用必备战法
-			//"所向披靡",
-			//"破阵摧坚",
-			//"百骑劫营",
-			//"暂避其锋",
-			//"兵无常势",
-			//"陷阵营",
-			//"西凉铁骑",
-			//"伪书相间",
-			//"用武通神",
-			//"万箭齐发",
-			//"象兵",
-			//"锦帆军",
-			//"破军威胜",
-			//"速乘其利",
-			//"竭力佐谋",
-			//"火炽原燎",
-			//"裸衣血战",
+			"所向披靡",
+			"破阵摧坚",
+			"百骑劫营",
+			"暂避其锋",
+			"兵无常势",
+			"陷阵营",
+			"西凉铁骑",
+			"伪书相间",
+			"用武通神",
+			"万箭齐发",
+			"象兵",
+			"锦帆军",
+			"破军威胜",
+			"速乘其利",
+			"竭力佐谋",
+			"火炽原燎",
+			"裸衣血战",
 			//进阶战法
 			"抚辑军民", "三势阵", "草船借箭", "裸衣血战",
 			//太尉

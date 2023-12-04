@@ -51,8 +51,12 @@ type AccountSearchReq struct {
 	MustSpecialTech []string
 	//指定战法
 	MustTactic []string
-	//检测的商品链接
-	CheckGoodsUrl string
+	//可跨服、公示
+	CrossServerAndPublic bool
+	//五星武将数量
+	FiveStarHeroNum string
+	//S战法数量
+	SskillNum string
 }
 
 type AccountCheckReq struct {
@@ -83,6 +87,12 @@ type ExtConditions struct {
 	StageSum string `json:"stage_sum"`
 	//特技
 	EquipSkill string `json:"equip_skill"`
+	//五星武将数量
+	FiveStarHeroNum string `json:"five_star_hero"`
+	//S战法数量
+	SskillNum string `json:"s_skill"`
+	//可跨服，非公示
+	CrossServerAndPublic string `json:"fastCondition"`
 }
 
 type GetSgzGameZoneItemListResp struct {

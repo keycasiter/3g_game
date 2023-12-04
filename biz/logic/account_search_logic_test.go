@@ -88,14 +88,14 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	herosArr := make([]string, 0)
 
 	//关关张
-	//ggz := "10010,10097,10013"
-	//herosArr = append(herosArr, strings.Split(ggz, ",")...)
+	ggz := "10010,10097,10013"
+	herosArr = append(herosArr, strings.Split(ggz, ",")...)
 	//北伐
 	//bfq := "10204,10101,10102"
 	//herosArr = append(herosArr, strings.Split(bfq, ",")...)
 	//麒麟弓
-	//qlg := "10068,10064,10017"
-	//herosArr = append(herosArr, strings.Split(qlg, ",")...)
+	qlg := "10068,10064,10017"
+	herosArr = append(herosArr, strings.Split(qlg, ",")...)
 	//SP群弓
 	spqg := "10203,10206,10115"
 	herosArr = append(herosArr, strings.Split(spqg, ",")...)
@@ -103,33 +103,39 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	twd := "10033,10014,10122"
 	herosArr = append(herosArr, strings.Split(twd, ",")...)
 	//周太凌
-	//ztl := "10031,10022,10088"
-	//herosArr = append(herosArr, strings.Split(ztl, ",")...)
+	ztl := "10031,10022,10088"
+	herosArr = append(herosArr, strings.Split(ztl, ",")...)
 	//三仙
 	//sxd := "10044,10043,10030"
 	//herosArr = append(herosArr, strings.Split(sxd, ",")...)
 	//渊骑
-	//yq := "10056,10014,10024"
-	//herosArr = append(herosArr, strings.Split(yq, ",")...)
+	yq := "10056,10014,10024"
+	herosArr = append(herosArr, strings.Split(yq, ",")...)
 
 	ctx := context.Background()
 	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{
 		//区段
-		Keyword: "1000区段",
+		//Keyword: "",
 		//价格区间
-		PriceRange: util.ToJsonString(ctx, []string{"4500", "5500"}),
+		PriceRange: util.ToJsonString(ctx, []string{"500", "1500"}),
 		//指定英雄
 		DefiniteHeros: herosArr,
 		//红度
 		DefiniteStage: "",
 		//总红度
-		DefiniteTotalStage: "15",
+		DefiniteTotalStage: "",
+		//是否可跨服、公开
+		CrossServerAndPublic: true,
+		//五星将数量
+		FiveStarHeroNum: "50",
+		//S战法数量
+		SskillNum: "60",
 		//当前查询页数，每页最多15个
 		PageSize: 100,
 		//指定武将是否必须觉醒
-		IsDefiniteHeroMustAwake: false,
+		IsDefiniteHeroMustAwake: true,
 		//指定武将是否必须开三兵书
-		IsDefiniteHeroMustTalent3: false,
+		IsDefiniteHeroMustTalent3: true,
 		//指定特技
 		//MustSpecialTech: []string{"援助"},
 		//指定战法
@@ -157,10 +163,10 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 			//太尉
 			"士别三日", "熯天炽地", "锋矢阵", "刮骨疗毒", "藤甲兵", "魅惑",
 			//父女
-			//"据水断桥", "箕形阵", "青州兵", "横扫千军", "威谋靡亢", "盛气凌敌",
+			"据水断桥", "箕形阵", "青州兵", "横扫千军", "威谋靡亢", "盛气凌敌",
 			//麒麟
-			//"夺魂挟魄", "杯蛇鬼车", "太平道法", "无当飞军", "八门金锁阵",
-			//"婴城自守",
+			"夺魂挟魄", "杯蛇鬼车", "太平道法", "无当飞军", "八门金锁阵",
+			"婴城自守",
 			//突击骑
 			"虎豹骑", "铁骑驱驰", "当锋摧决", "三势阵", "一骑当千", "百骑劫营",
 			//SP群弓

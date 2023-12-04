@@ -3,7 +3,6 @@ package logic
 import (
 	"context"
 	"github.com/keycasiter/3g_game/biz/model/vo"
-	"github.com/keycasiter/3g_game/biz/util"
 	"strings"
 	"testing"
 )
@@ -32,9 +31,9 @@ func TestNewAccountCheckLogic(t *testing.T) {
 
 	ctx := context.Background()
 	err := NewAccountCheckLogic(ctx, &vo.AccountCheckReq{
-		CheckGoodsUrl: "https://m.jiaoyimao.com/jg1009207/1701602891730957.html",
+		CheckGoodsUrl: "https://m.jiaoyimao.com/item/1701607650805177.html?shareFrom=kouling&shareFrom=CopyUrl",
 		//间隔区间
-		PriceRange: util.ToJsonString(ctx, []string{"500", "1000"}),
+		//PriceRange: util.ToJsonString(ctx, []string{"500", "1000"}),
 		//指定英雄
 		DefiniteHeros: herosArr,
 		//红度

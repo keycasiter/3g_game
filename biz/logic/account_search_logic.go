@@ -128,6 +128,18 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 	if runCtx.req.DefiniteTotalStage != "" {
 		extConditions.StageSum = runCtx.req.DefiniteTotalStage
 	}
+	//可跨服，公示
+	if runCtx.req.CrossServerAndPublic {
+		extConditions.CrossServerAndPublic = "1,2"
+	}
+	//五星武将数量
+	if runCtx.req.FiveStarHeroNum != "" {
+		extConditions.FiveStarHeroNum = runCtx.req.FiveStarHeroNum
+	}
+	//S战法数量
+	if runCtx.req.SskillNum != "" {
+		extConditions.SskillNum = runCtx.req.SskillNum
+	}
 
 	req.ExtConditions = util.ToJsonString(runCtx.ctx, extConditions)
 	//价格范围

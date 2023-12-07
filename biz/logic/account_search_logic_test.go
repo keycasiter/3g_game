@@ -93,7 +93,7 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//北伐
 	//bfq := "10204,10101,10102"
 	//herosArr = append(herosArr, strings.Split(bfq, ",")...)
-	//麒麟弓
+	////麒麟弓
 	//qlg := "10068,10064,10017"
 	//herosArr = append(herosArr, strings.Split(qlg, ",")...)
 	//SP群弓
@@ -106,8 +106,8 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//ztl := "10031,10022,10088"
 	//herosArr = append(herosArr, strings.Split(ztl, ",")...)
 	//三仙
-	//sxd := "10044,10043,10030"
-	//herosArr = append(herosArr, strings.Split(sxd, ",")...)
+	sxd := "10044,10043,10030"
+	herosArr = append(herosArr, strings.Split(sxd, ",")...)
 	//三吕 吕黄郭
 	//lhg := "10011,10039,10024"
 	//herosArr = append(herosArr, strings.Split(lhg, ",")...)
@@ -118,21 +118,24 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//yq := "10056,10014,10024"
 	//herosArr = append(herosArr, strings.Split(yq, ",")...)
 	//富贵
-	//fgq := "10209,10034,10208"
-	//herosArr = append(herosArr, strings.Split(fgq, ",")...)
+	fgq := "10209,10034,10208"
+	herosArr = append(herosArr, strings.Split(fgq, ",")...)
+	//周瑜、鲁肃
+	diy := "10016,10047"
+	herosArr = append(herosArr, strings.Split(diy, ",")...)
 
 	ctx := context.Background()
 	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{
 		//区段
-		Keyword: "",
+		Keyword: "4000区段",
 		//价格区间
-		PriceRange: util.ToJsonString(ctx, []string{"260", "266"}),
+		PriceRange: util.ToJsonString(ctx, []string{"3000", "7000"}),
 		//指定英雄
 		DefiniteHeros: herosArr,
 		//红度
 		DefiniteStage: "",
 		//总红度
-		DefiniteTotalStage: "",
+		DefiniteTotalStage: "15",
 		//当前查询页数，每页最多15个
 		PageSize: 1,
 		//指定武将是否必须觉醒

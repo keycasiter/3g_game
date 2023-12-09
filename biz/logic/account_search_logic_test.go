@@ -94,8 +94,8 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//bfq := "10204,10101,10102"
 	//herosArr = append(herosArr, strings.Split(bfq, ",")...)
 	//麒麟弓
-	qlg := "10068,10064,10017"
-	herosArr = append(herosArr, strings.Split(qlg, ",")...)
+	//qlg := "10068,10064,10017"
+	//herosArr = append(herosArr, strings.Split(qlg, ",")...)
 	//SP群弓
 	spqg := "10203,10206,10115"
 	herosArr = append(herosArr, strings.Split(spqg, ",")...)
@@ -106,24 +106,27 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//ztl := "10031,10022,10088"
 	//herosArr = append(herosArr, strings.Split(ztl, ",")...)
 	//三仙
-	//sxd := "10044,10043,10030"
-	//herosArr = append(herosArr, strings.Split(sxd, ",")...)
+	sxd := "10044,10043,10030"
+	herosArr = append(herosArr, strings.Split(sxd, ",")...)
 	//渊骑
 	//yq := "10056,10014,10024"
 	//herosArr = append(herosArr, strings.Split(yq, ",")...)
+	//狗关
+	ggq := "10211,10209,10050"
+	herosArr = append(herosArr, strings.Split(ggq, ",")...)
 
 	ctx := context.Background()
 	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{
 		//区段
-		Keyword: "4000区段",
+		Keyword: "2000区段",
 		//价格区间
-		PriceRange: util.ToJsonString(ctx, []string{"1300", "2000"}),
+		PriceRange: util.ToJsonString(ctx, []string{"1000", "1800"}),
 		//指定英雄
 		DefiniteHeros: herosArr,
 		//红度
 		DefiniteStage: "",
 		//总红度
-		DefiniteTotalStage: "6",
+		DefiniteTotalStage: "",
 		//当前查询页数，每页最多15个
 		PageSize: 3,
 		//指定武将是否必须觉醒

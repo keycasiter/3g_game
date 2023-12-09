@@ -206,4 +206,15 @@ func (runCtx *AccountCheckContext) checkAccountDetail() {
 			}
 		}
 	}
+
+	fmt.Printf("\n【特技情况】\n")
+	techNames := ""
+	for _, equipment := range runCtx.goodsDetail.ApiData.ItemLingxiRoleDetail.S3RoleCustomizeInfo.Storage.Equipments {
+		if equipment.Star == 5 && strings.Trim(equipment.SkillDesc, " ") != "" {
+			for _, techName := range equipment.SkillDescList {
+				techNames += techName + " "
+			}
+		}
+	}
+	fmt.Println(techNames)
 }

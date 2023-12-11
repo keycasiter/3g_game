@@ -87,30 +87,36 @@ func TestAccountSearchLogic(t *testing.T) {
 func TestAccountSearchLogicForHero(t *testing.T) {
 	herosArr := make([]string, 0)
 
+	//敦敦盾
+	//ddd := "10035,10014,10122"
+	//herosArr = append(herosArr, strings.Split(ddd, ",")...)
 	//关关张
-	//ggz := "10010,10097,10013"
-	//herosArr = append(herosArr, strings.Split(ggz, ",")...)
+	ggz := "10010,10097,10013"
+	herosArr = append(herosArr, strings.Split(ggz, ",")...)
 	//北伐
 	//bfq := "10204,10101,10102"
 	//herosArr = append(herosArr, strings.Split(bfq, ",")...)
 	//麒麟弓
-	qlg := "10068,10064,10017"
-	herosArr = append(herosArr, strings.Split(qlg, ",")...)
+	//qlg := "10068,10064,10017"
+	//herosArr = append(herosArr, strings.Split(qlg, ",")...)
 	//SP群弓
-	spqg := "10203,10206,10115"
-	herosArr = append(herosArr, strings.Split(spqg, ",")...)
+	//spqg := "10203,10206,10115"
+	//herosArr = append(herosArr, strings.Split(spqg, ",")...)
 	//太尉盾
-	twd := "10033,10014,10122"
-	herosArr = append(herosArr, strings.Split(twd, ",")...)
+	//twd := "10033,10014,10122"
+	//herosArr = append(herosArr, strings.Split(twd, ",")...)
 	//周太凌
 	//ztl := "10031,10022,10088"
 	//herosArr = append(herosArr, strings.Split(ztl, ",")...)
+	//香香骑
+	//xxq := "10031,10095,10088"
+	//herosArr = append(herosArr, strings.Split(xxq, ",")...)
 	//三仙
-	sxd := "10044,10043,10030"
-	herosArr = append(herosArr, strings.Split(sxd, ",")...)
+	//sxd := "10044,10043,10030"
+	//herosArr = append(herosArr, strings.Split(sxd, ",")...)
 	//三吕 吕黄郭
-	//lhg := "10011,10039,10024"
-	//herosArr = append(herosArr, strings.Split(lhg, ",")...)
+	lhg := "10011,10039,10024"
+	herosArr = append(herosArr, strings.Split(lhg, ",")...)
 	//虎臣
 	//huchen := "10032,10022,10031"
 	//herosArr = append(herosArr, strings.Split(huchen, ",")...)
@@ -118,33 +124,47 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//yq := "10056,10014,10024"
 	//herosArr = append(herosArr, strings.Split(yq, ",")...)
 	//狗关
-	ggq := "10211,10209,10050"
-	herosArr = append(herosArr, strings.Split(ggq, ",")...)
+	//ggq := "10211,10209,10050"
+	//herosArr = append(herosArr, strings.Split(ggq, ",")...)
+	//皇冠枪
+	//hgq := "10211,10209,10214"
+	//herosArr = append(herosArr, strings.Split(hgq, ",")...)
 	//富贵
-	fgq := "10209,10034,10208"
-	herosArr = append(herosArr, strings.Split(fgq, ",")...)
+	//fgq := "10209,10034,10208"
+	//herosArr = append(herosArr, strings.Split(fgq, ",")...)
 	//周瑜、鲁肃
-	diy := "10016,10047"
-	herosArr = append(herosArr, strings.Split(diy, ",")...)
+	//diy := "10016,10047"
+	//herosArr = append(herosArr, strings.Split(diy, ",")...)
+	//程普/张角/法正
+	//cp_zj_fz := "10044,10050,10038"
+	//herosArr = append(herosArr, strings.Split(cp_zj_fz, ",")...)
+	//陆逊
+	lx := "10018"
+	herosArr = append(herosArr, strings.Split(lx, ",")...)
+	//程普/张角/左慈
+	cp_zj_zc := "10044,10050,10030"
+	herosArr = append(herosArr, strings.Split(cp_zj_zc, ",")...)
 
 	ctx := context.Background()
 	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{
 		//区段
-		Keyword: "4000区段",
+		Keyword: "3000区段",
 		//价格区间
-		PriceRange: util.ToJsonString(ctx, []string{"1300", "2000"}),
+		PriceRange: util.ToJsonString(ctx, []string{"5000", "15000"}),
 		//指定英雄
 		DefiniteHeros: herosArr,
 		//红度
-		DefiniteStage: "",
+		DefiniteStage: "4",
 		//总红度
-		DefiniteTotalStage: "6",
+		DefiniteTotalStage: "",
 		//当前查询页数，每页最多15个
-		PageSize: 3,
+		PageSize: 1,
 		//指定武将是否必须觉醒
 		IsDefiniteHeroMustAwake: false,
 		//指定武将是否必须开三兵书
 		IsDefiniteHeroMustTalent3: false,
+		//可以跨服，公开
+		CrossServerAndPublic: true,
 		//指定特技
 		//MustSpecialTech: []string{"援助"},
 		//指定战法

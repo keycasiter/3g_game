@@ -91,8 +91,11 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//ddd := "10035,10014,10122"
 	//herosArr = append(herosArr, strings.Split(ddd, ",")...)
 	//关关张
-	ggz := "10010,10097,10013"
-	herosArr = append(herosArr, strings.Split(ggz, ",")...)
+	//ggz := "10010,10097,10013"
+	//herosArr = append(herosArr, strings.Split(ggz, ",")...)
+	//等风
+	//dfq := "10066,10097,10068"
+	//herosArr = append(herosArr, strings.Split(dfq, ",")...)
 	//北伐
 	//bfq := "10204,10101,10102"
 	//herosArr = append(herosArr, strings.Split(bfq, ",")...)
@@ -115,8 +118,8 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//sxd := "10044,10043,10030"
 	//herosArr = append(herosArr, strings.Split(sxd, ",")...)
 	//三吕 吕黄郭
-	lhg := "10011,10039,10024"
-	herosArr = append(herosArr, strings.Split(lhg, ",")...)
+	//lhg := "10011,10039,10024"
+	//herosArr = append(herosArr, strings.Split(lhg, ",")...)
 	//虎臣
 	//huchen := "10032,10022,10031"
 	//herosArr = append(herosArr, strings.Split(huchen, ",")...)
@@ -139,18 +142,30 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//cp_zj_fz := "10044,10050,10038"
 	//herosArr = append(herosArr, strings.Split(cp_zj_fz, ",")...)
 	//陆逊
-	lx := "10018"
-	herosArr = append(herosArr, strings.Split(lx, ",")...)
+	//lx := "10018"
+	//herosArr = append(herosArr, strings.Split(lx, ",")...)
 	//程普/张角/左慈
-	cp_zj_zc := "10044,10050,10030"
-	herosArr = append(herosArr, strings.Split(cp_zj_zc, ",")...)
+	//cp_zj_zc := "10044,10050,10030"
+	//herosArr = append(herosArr, strings.Split(cp_zj_zc, ",")...)
+	//庞统、司马懿
+	//pt_smy := "10064,10033"
+	//herosArr = append(herosArr, strings.Split(pt_smy, ",")...)
+
+	//都督弓 周瑜、鲁肃、陆逊
+	//ddg := "10016,10047,10018"
+	//herosArr = append(herosArr, strings.Split(ddg,",")...)
+	//关兴、张角
+	zdy := "10101,10044"
+	herosArr = append(herosArr, strings.Split(zdy, ",")...)
 
 	ctx := context.Background()
 	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{
+		//阵容
+		LineUp: []string{"北伐枪", "三仙盾", "山河盾", "群弓"},
 		//区段
-		Keyword: "3000区段",
+		Keyword: "",
 		//价格区间
-		PriceRange: util.ToJsonString(ctx, []string{"5000", "15000"}),
+		PriceRange: util.ToJsonString(ctx, []string{"2000", "5000"}),
 		//指定英雄
 		DefiniteHeros: herosArr,
 		//红度
@@ -158,49 +173,51 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 		//总红度
 		DefiniteTotalStage: "",
 		//当前查询页数，每页最多15个
-		PageSize: 1,
+		PageNum: 10,
 		//指定武将是否必须觉醒
 		IsDefiniteHeroMustAwake: false,
 		//指定武将是否必须开三兵书
 		IsDefiniteHeroMustTalent3: false,
 		//可以跨服，公开
-		CrossServerAndPublic: true,
+		CrossServerAndPublic: false,
 		//指定特技
 		//MustSpecialTech: []string{"援助"},
 		//指定战法
 		MustTactic: []string{
 			//常用必备战法
-			"所向披靡",
-			"破阵摧坚",
-			"百骑劫营",
-			"暂避其锋",
-			"兵无常势",
-			"陷阵营",
-			"西凉铁骑",
-			"伪书相间",
-			"用武通神",
-			"万箭齐发",
-			"象兵",
-			"锦帆军",
-			"破军威胜",
-			"速乘其利",
-			"竭力佐谋",
-			"火炽原燎",
-			"裸衣血战",
-			"飞熊军",
-			//进阶战法
-			"抚辑军民", "三势阵", "草船借箭", "裸衣血战",
-			//太尉
-			"士别三日", "熯天炽地", "锋矢阵", "刮骨疗毒", "藤甲兵", "魅惑",
-			//父女
-			"据水断桥", "箕形阵", "青州兵", "横扫千军", "威谋靡亢", "盛气凌敌",
-			//麒麟
-			"夺魂挟魄", "杯蛇鬼车", "太平道法", "无当飞军", "八门金锁阵",
-			"婴城自守",
-			//突击骑
-			"虎豹骑", "铁骑驱驰", "当锋摧决", "三势阵", "一骑当千", "百骑劫营",
-			//SP群弓
-			"焰逐风飞", "白马义从", "折冲御侮", "掣刀斫敌",
+			//"所向披靡",
+			//"破阵摧坚",
+			//"百骑劫营",
+			//"暂避其锋",
+			//"兵无常势",
+			//"陷阵营",
+			//"西凉铁骑",
+			//"伪书相间",
+			//"用武通神",
+			//"万箭齐发",
+			//"象兵",
+			//"锦帆军",
+			//"破军威胜",
+			//"速乘其利",
+			//"竭力佐谋",
+			//"火炽原燎",
+			//"裸衣血战",
+			//"飞熊军",
+			////进阶战法
+			//"抚辑军民", "三势阵", "草船借箭", "裸衣血战",
+			////太尉
+			//"士别三日", "熯天炽地", "锋矢阵", "刮骨疗毒", "藤甲兵", "魅惑",
+			////父女
+			//"据水断桥", "箕形阵", "青州兵", "横扫千军", "威谋靡亢", "盛气凌敌",
+			////麒麟
+			//"夺魂挟魄", "杯蛇鬼车", "太平道法", "无当飞军", "八门金锁阵",
+			//"婴城自守",
+			////突击骑
+			//"虎豹骑", "铁骑驱驰", "当锋摧决", "三势阵", "一骑当千", "百骑劫营",
+			////SP群弓
+			//"焰逐风飞", "白马义从", "折冲御侮", "掣刀斫敌",
+			"上兵伐谋",
+			//"非攻制胜",
 		},
 	}).Process()
 	if err != nil {

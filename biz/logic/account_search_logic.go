@@ -65,7 +65,7 @@ func (runCtx *AccountSearchContext) Process() error {
 
 func (runCtx *AccountSearchContext) searchAccountList() {
 	//翻页查询
-	for i := 0; i < runCtx.req.PageSize; i++ {
+	for i := 0; i < runCtx.req.PageNum; i++ {
 		hlog.CtxInfof(runCtx.ctx, "翻页查询第%d页", i+1)
 		req := runCtx.buildGetSgzGameZoneItemListReq(cast.ToInt64(i + 1))
 
@@ -127,6 +127,17 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 	//指定总红度
 	if runCtx.req.DefiniteTotalStage != "" {
 		extConditions.StageSum = runCtx.req.DefiniteTotalStage
+	}
+	//指定阵容
+	if len(runCtx.req.LineUp) > 0 {
+		lineUp := ""
+		for i, team := range runCtx.req.LineUp {
+			lineUp += team
+			if i < len(lineUp) {
+				lineUp += ","
+			}
+		}
+		extConditions.LineUp = lineUp
 	}
 	//可跨服，公示
 	if runCtx.req.CrossServerAndPublic {

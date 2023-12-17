@@ -29,6 +29,8 @@ type GetSgzGameZoneItemListReq struct {
 //&stdCatId=1844450&jymCatId=1844455&filterLowQuality=false
 //&keyword=2000区段+1000区段&enforcePlat=3&cid=1844455&page=1&platformId=3
 type AccountSearchReq struct {
+	//阵容
+	LineUp []string
 	//检索条件 {"hero":"10014,10005"}
 	DefiniteHeros []string
 	//特技要求 {"equip_skill":"28025,28041"}
@@ -41,6 +43,8 @@ type AccountSearchReq struct {
 	Keyword string
 	//价格区间 ["5000","12000"]
 	PriceRange string
+	//翻页数量
+	PageNum int
 	//查询商品列表页数
 	PageSize int
 	//指定武将是否必须觉醒
@@ -79,6 +83,8 @@ type AccountCheckReq struct {
 }
 
 type ExtConditions struct {
+	//指定阵容
+	LineUp string `json:"lineup"`
 	//进阶次数
 	Stage string `json:"stage"`
 	//武将ID

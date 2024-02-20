@@ -1,4 +1,4 @@
-package logic
+package account_search
 
 import (
 	"context"
@@ -91,8 +91,8 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//ddd := "10035,10014,10122"
 	//herosArr = append(herosArr, strings.Split(ddd, ",")...)
 	//关关张
-	ggz := "10010,10097,10013"
-	herosArr = append(herosArr, strings.Split(ggz, ",")...)
+	//ggz := "10010,10097,10013"
+	//herosArr = append(herosArr, strings.Split(ggz, ",")...)
 	//北伐
 	//bfq := "10204,10101,10102"
 	//herosArr = append(herosArr, strings.Split(bfq, ",")...)
@@ -115,8 +115,8 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//sxd := "10044,10043,10030"
 	//herosArr = append(herosArr, strings.Split(sxd, ",")...)
 	//三吕 吕黄郭
-	lhg := "10011,10039,10024"
-	herosArr = append(herosArr, strings.Split(lhg, ",")...)
+	//lhg := "10011,10039,10024"
+	//herosArr = append(herosArr, strings.Split(lhg, ",")...)
 	//虎臣
 	//huchen := "10032,10022,10031"
 	//herosArr = append(herosArr, strings.Split(huchen, ",")...)
@@ -139,10 +139,10 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//cp_zj_fz := "10044,10050,10038"
 	//herosArr = append(herosArr, strings.Split(cp_zj_fz, ",")...)
 	//陆逊
-	lx := "10018"
-	herosArr = append(herosArr, strings.Split(lx, ",")...)
+	//lx := "10018"
+	//herosArr = append(herosArr, strings.Split(lx, ",")...)
 	//程普/张角/左慈
-	cp_zj_zc := "10044,10050,10030"
+	cp_zj_zc := "10064,10033"
 	herosArr = append(herosArr, strings.Split(cp_zj_zc, ",")...)
 
 	ctx := context.Background()
@@ -150,7 +150,7 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 		//区段
 		Keyword: "3000区段",
 		//价格区间
-		PriceRange: util.ToJsonString(ctx, []string{"5000", "15000"}),
+		PriceRange: util.ToJsonString(ctx, []string{"1000", "7000"}),
 		//指定英雄
 		DefiniteHeros: herosArr,
 		//红度

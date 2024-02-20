@@ -3,8 +3,8 @@ module github.com/keycasiter/3g_game
 go 1.18
 
 require (
-	github.com/PuerkitoBio/goquery v1.8.1
 	github.com/apache/thrift v0.13.0
+	github.com/avast/retry-go v3.0.0+incompatible
 	github.com/bytedance/gopkg v0.0.0-20220413063733-65bf48ffb3a7
 	github.com/cloudwego/hertz v0.4.1
 	github.com/go-redis/redis v6.15.9+incompatible
@@ -21,8 +21,6 @@ require (
 )
 
 require (
-	github.com/andybalholm/cascadia v1.3.1 // indirect
-	github.com/avast/retry-go v3.0.0+incompatible // indirect
 	github.com/bytedance/go-tagexpr/v2 v2.9.2 // indirect
 	github.com/bytedance/sonic v1.5.0 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20211019084208-fb5309c8db06 // indirect

@@ -11,7 +11,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
-	"github.com/keycasiter/3g_game/biz/logic"
+	"github.com/keycasiter/3g_game/biz/logic/lottery"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/model/po"
@@ -40,7 +40,7 @@ func GeneralLotteryDo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	logicResp, err := logic.NewGeneralLotteryLogic(ctx, &vo.GeneralLotteryRequest{
+	logicResp, err := lottery.NewGeneralLotteryLogic(ctx, &vo.GeneralLotteryRequest{
 		GeneralLottery: consts.GeneralLotteryPool(req.GeneralLotteryPool),
 		RollTimes:      req.RollTimes,
 		Uid:            req.Uid,

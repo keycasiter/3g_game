@@ -1,4 +1,4 @@
-package logic
+package account_search
 
 import (
 	"context"

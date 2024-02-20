@@ -1,4 +1,4 @@
-package logic
+package lottery
 
 import (
 	"context"
@@ -16,7 +16,7 @@ import (
 	"time"
 )
 
-//武将抽卡
+// 武将抽卡
 type GeneralLotteryLogic struct {
 	Ctx   context.Context
 	Req   *vo.GeneralLotteryRequest

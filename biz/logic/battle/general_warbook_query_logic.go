@@ -1,4 +1,4 @@
-package logic
+package battle
 
 import (
 	"context"

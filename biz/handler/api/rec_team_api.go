@@ -7,7 +7,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
-	"github.com/keycasiter/3g_game/biz/logic"
+	"github.com/keycasiter/3g_game/biz/logic/battle"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/util"
 )
@@ -25,7 +25,7 @@ func RecTeamQuery(ctx context.Context, c *app.RequestContext) {
 
 	hlog.CtxInfof(ctx, "RecTeamQuery Req:%s", util.ToJsonString(ctx, req))
 
-	resp, err := logic.NewRecTeamQueryLogic(ctx, req).Handle()
+	resp, err := battle.NewRecTeamQueryLogic(ctx, req).Handle()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "RecTeamQueryLogic handle err:%v", err)
 		c.JSON(hertzconsts.StatusOK, resp)

@@ -12,7 +12,7 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
-	"github.com/keycasiter/3g_game/biz/logic"
+	"github.com/keycasiter/3g_game/biz/logic/battle"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/model/common"
 	"github.com/keycasiter/3g_game/biz/model/enum"
@@ -52,7 +52,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//逻辑执行
-	serviceResp, err := logic.NewBattleLogicContext(ctx, buildBattleExecuteRequest(ctx, req)).Run()
+	serviceResp, err := battle.NewBattleLogicContext(ctx, buildBattleExecuteRequest(ctx, req)).Run()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
 		resp.Meta = util.BuildFailMetaWithMsg("未知错误")
@@ -69,7 +69,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
 }
 
-func buildResponse(resp *api.BattleExecuteResponse, serviceResp *logic.BattleLogicContextResponse) {
+func buildResponse(resp *api.BattleExecuteResponse, serviceResp *battle.BattleLogicContextResponse) {
 	resp.Meta = &common.Meta{
 		StatusCode: enum.ResponseCode_Success,
 		StatusMsg:  "成功",
@@ -80,8 +80,8 @@ func buildResponse(resp *api.BattleExecuteResponse, serviceResp *logic.BattleLog
 	resp.BattleResultStatistics = makeBattleResultStatistics(serviceResp)
 }
 
-//战报数据
-func makeBattleProcessStatistics(serviceResp *logic.BattleLogicContextResponse) map[int64]map[int64][]string {
+// 战报数据
+func makeBattleProcessStatistics(serviceResp *battle.BattleLogicContextResponse) map[int64]map[int64][]string {
 	battleProcessStatistics := make(map[int64]map[int64][]string, 0)
 	for battlePhase, battleRoundStatisticsMap := range serviceResp.BattleProcessStatistics {
 		m := make(map[int64][]string, 0)
@@ -93,8 +93,8 @@ func makeBattleProcessStatistics(serviceResp *logic.BattleLogicContextResponse) 
 	return battleProcessStatistics
 }
 
-//对战统计数据
-func makeBattleResultStatistics(serviceResp *logic.BattleLogicContextResponse) *api.BattleResultStatistics {
+// 对战统计数据
+func makeBattleResultStatistics(serviceResp *battle.BattleLogicContextResponse) *api.BattleResultStatistics {
 	return &api.BattleResultStatistics{
 		//我军
 		FightingTeam: &api.TeamBattleStatistics{
@@ -209,7 +209,7 @@ func makeArmsAttr(general *vo.BattleGeneral) *api.ArmsAttr {
 	}
 }
 
-func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest) *logic.BattleLogicContextRequest {
+func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest) *battle.BattleLogicContextRequest {
 	//查询武将信息
 	generalIds := make([]int64, 0)
 	for _, general := range req.FightingTeam.BattleGenerals {
@@ -380,7 +380,7 @@ func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest
 	}
 
 	//组装
-	serviceReq := &logic.BattleLogicContextRequest{
+	serviceReq := &battle.BattleLogicContextRequest{
 		//我方
 		FightingTeam: &vo.BattleTeam{
 			TeamType:                  consts.TeamType(req.FightingTeam.TeamType),

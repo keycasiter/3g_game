@@ -1,4 +1,4 @@
-package logic
+package jym
 
 import (
 	"context"
@@ -91,7 +91,7 @@ func (runCtx *AccountSearchContext) searchAccountList() {
 
 		//当前页面不足15个，不需要再翻页了，交易猫默认一页15条
 		if len(resp.Result.GoodsList) < 15 {
-			hlog.CtxInfof(runCtx.ctx, "翻页查询第%d页，本页商品数量：%d，不需要继续翻页", i+1, len(resp.Result.GoodsList))
+			hlog.CtxInfof(runCtx.ctx, "总数量：%d,翻页查询第%d页，本页商品数量：%d，不需要继续翻页", resp.Result.TotalCnt, i+1, len(resp.Result.GoodsList))
 			break
 		}
 	}

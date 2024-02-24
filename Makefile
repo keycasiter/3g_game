@@ -9,3 +9,4 @@ dbmodel:
 	code_gen dbmodel --prefix github.com/keycasiter/3g_game --ddlPath tactic.sql --dbFunc
 	code_gen dbmodel --prefix github.com/keycasiter/3g_game --ddlPath team.sql --dbFunc
 	code_gen dbmodel --prefix github.com/keycasiter/3g_game --ddlPath warbook.sql --dbFunc
+	code_gen dbmodel --prefix github.com/keycasiter/3g_game --ddlPath jym_goods.sql --dbFunc

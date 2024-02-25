@@ -44,10 +44,6 @@ func NewAccountSyncContext(ctx context.Context, req *vo.AccountSearchReq) *Accou
 	runCtx.funcs = []func(){
 		//1.查询符合条件的账号列表
 		runCtx.searchAccountList,
-		//2.获取账号详情信息
-		runCtx.searchAccountDetail,
-		//3.保存数据
-		runCtx.saveAccountInfo,
 	}
 	return runCtx
 }
@@ -63,25 +59,61 @@ func (runCtx *AccountSyncContext) Process() error {
 	return nil
 }
 
+//计算一共多少页
+func (runCtx *AccountSyncContext) getTotalPage() int64 {
+	req := runCtx.buildGetSgzGameZoneItemListReq(cast.ToInt64(1))
+
+	httpResp, err := util.HttpGet(runCtx.ctx, consts.Url_GetSgzGameZoneItemList, nil, util.StructToMap(req))
+	if err != nil {
+		hlog.CtxErrorf(runCtx.ctx, "url:%s , HttpGet err:%v", consts.Url_GetSgzGameZoneItemList, err)
+		runCtx.err = err
+		return 0
+	}
+	resp := &vo.GetSgzGameZoneItemListResp{}
+	err = json.Unmarshal([]byte(httpResp), resp)
+	if err != nil {
+		//一般是限流导致，重试
+		hlog.CtxErrorf(runCtx.ctx, "Unmarshal err:%v", err)
+		return 0
+	}
+	if !resp.Success {
+		hlog.CtxErrorf(runCtx.ctx, "resp result is failed")
+		runCtx.err = errors.New(fmt.Sprintf("url:%s , resp result is failed", consts.Url_GetSgzGameZoneItemList))
+		return 0
+	}
+	runCtx.GoodsInfoList = append(runCtx.GoodsInfoList, resp.Result.GoodsList...)
+	return resp.Result.TotalCnt
+}
 func (runCtx *AccountSyncContext) searchAccountList() {
+	//页数统计
+	totalSize := runCtx.getTotalPage()
+	totalPageSize := int(totalSize / 30)
+	hlog.CtxInfof(runCtx.ctx, "总数：%d ,按每页30个，页面数量估算：%d", totalSize, totalPageSize)
+
+	for i := 0; i < totalPageSize; i++ {
+
+	}
+
 	//翻页查询
-	for i := 0; i < 100000; i++ {
+	for i := 0; i < totalPageSize+10; i++ {
 		pageNo := i + 1
 		hlog.CtxInfof(runCtx.ctx, "翻页查询第%d页", pageNo)
 		req := runCtx.buildGetSgzGameZoneItemListReq(cast.ToInt64(pageNo))
 
 		httpResp, err := util.HttpGet(runCtx.ctx, consts.Url_GetSgzGameZoneItemList, nil, util.StructToMap(req))
 		if err != nil {
+			//重试
 			hlog.CtxErrorf(runCtx.ctx, "url:%s , HttpGet err:%v", consts.Url_GetSgzGameZoneItemList, err)
-			runCtx.err = err
-			return
+			i--
+			continue
 		}
 		resp := &vo.GetSgzGameZoneItemListResp{}
 		err = json.Unmarshal([]byte(httpResp), resp)
 		if err != nil {
+			//一般是限流导致，重试
 			hlog.CtxErrorf(runCtx.ctx, "Unmarshal err:%v", err)
-			runCtx.err = err
-			return
+			i--
+			continue
 		}
 		if !resp.Success {
 			hlog.CtxErrorf(runCtx.ctx, "resp result is failed")
@@ -91,10 +123,15 @@ func (runCtx *AccountSyncContext) searchAccountList() {
 		runCtx.GoodsInfoList = append(runCtx.GoodsInfoList, resp.Result.GoodsList...)
 		hlog.CtxInfof(runCtx.ctx, "翻页查询第%d页 , 商品总数：%d", pageNo, resp.Result.TotalCnt)
 		//当前页面不足15个，不需要再翻页了，交易猫默认一页15条
-		if len(resp.Result.GoodsList) < 15 {
+		if len(resp.Result.GoodsList) == 0 {
 			hlog.CtxInfof(runCtx.ctx, "翻页查询第%d页，本页商品数量：%d，不需要继续翻页", i+1, len(resp.Result.GoodsList))
 			break
 		}
+
+		//2.获取账号详情信息
+		runCtx.searchAccountDetail()
+		//3.保存数据
+		runCtx.saveAccountInfo()
 	}
 }
 
@@ -232,4 +269,5 @@ func (runCtx *AccountSyncContext) saveAccountInfo() {
 			return
 		}
 	}
+	runCtx.GoodsInfoList = make([]vo.GetSgzGameZoneItemListRespResultGoodsInfo, 0)
 }

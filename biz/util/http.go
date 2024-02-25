@@ -4,11 +4,28 @@ import (
 	"context"
 	"fmt"
 	"github.com/bytedance/gopkg/util/logger"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/spf13/cast"
 	"io/ioutil"
+	"math/rand"
 	"net/http"
 	"net/url"
+	"time"
 )
+
+type ProxyMode int
+
+const (
+	ProxyMode_NoProxy   = 1
+	ProxyMode_KuaiDaili = 2
+	ProxyMode_Fixed     = 3
+)
+
+var UseProxyMode = ProxyMode_Fixed
+var cnt = 0
+
+var username, password string
+var ips []string
 
 func HttpGet(ctx context.Context, requestUrl string, headers map[string]interface{}, params map[string]interface{}) (string, error) {
 	path := ""
@@ -21,7 +38,50 @@ func HttpGet(ctx context.Context, requestUrl string, headers map[string]interfac
 	}
 	path = fmt.Sprintf("%s?%s", requestUrl, paramsStr)
 
-	client := &http.Client{}
+	var client *http.Client
+
+	switch UseProxyMode {
+	case ProxyMode_NoProxy:
+		client = &http.Client{}
+	case ProxyMode_KuaiDaili:
+		username, password, ips = UseDps()
+		// 代理服务器
+		proxy_raw := ips[rand.Intn(len(ips))]
+		hlog.CtxInfof(ctx, "[proxy] %s", proxy_raw)
+		proxy_str := fmt.Sprintf("http://%s:%s@%s", username, password, proxy_raw)
+		proxy, err := url.Parse(proxy_str)
+
+		if err != nil {
+			logger.CtxErrorf(ctx, "url Parse error:%v", err)
+			return "", err
+		}
+		client = &http.Client{
+			Transport: &http.Transport{
+				Proxy: http.ProxyURL(proxy),
+			},
+			Timeout: 5 * time.Second,
+		}
+	case ProxyMode_Fixed:
+		// 代理服务器
+		ips := []string{
+			"http://223.240.209.149:9999",
+		}
+		proxy_raw := ips[rand.Intn(len(ips))]
+		hlog.CtxInfof(ctx, "[proxy] %s", proxy_raw)
+		proxy_str := fmt.Sprintf("http://%s:%s@%s", username, password, proxy_raw)
+		proxy, err := url.Parse(proxy_str)
+		if err != nil {
+			logger.CtxErrorf(ctx, "url Parse error:%v", err)
+			return "", err
+		}
+		client = &http.Client{
+			Transport: &http.Transport{
+				Proxy: http.ProxyURL(proxy),
+			},
+			Timeout: 5 * time.Second,
+		}
+	}
+
 	req, err := http.NewRequest(http.MethodGet, path, nil)
 	if err != nil {
 		logger.CtxErrorf(ctx, "http NewRequest error:%v", err)

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/model/po"
+	"gorm.io/gorm/clause"
 )
 
 func (JymGoodsDal) TableName() string {
@@ -18,7 +19,9 @@ func NewJymGoods() *JymGoodsDal {
 }
 
 func (g *JymGoodsDal) BatchSaveJymGoods(ctx context.Context, pos []*po.JymGoods) error {
-	err := DataBase.Model(&po.JymGoods{}).CreateInBatches(pos, 10).Error
+	err := DataBase.Model(&po.JymGoods{}).Clauses(clause.OnConflict{
+		UpdateAll: true,
+	}).CreateInBatches(pos, 10).Error
 	if err != nil {
 		hlog.CtxErrorf(ctx, "batchSaveJymGoods CreateInBatches err:%v", err)
 		return err

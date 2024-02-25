@@ -7,7 +7,7 @@ import (
 )
 
 func TestHttpGet(t *testing.T) {
-	params := make(map[string]string)
+	params := make(map[string]interface{})
 
 	resp, err := HttpGet(context.Background(), "https://m.jiaoyimao.com/api2/sgzItemList2022/getSgzGameZoneItemList", nil, params)
 	if err != nil {

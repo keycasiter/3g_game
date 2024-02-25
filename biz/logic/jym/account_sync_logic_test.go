@@ -2,11 +2,21 @@ package jym
 
 import (
 	"context"
+	"github.com/keycasiter/3g_game/biz/conf"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"testing"
 )
 
 func TestNewAccountSyncContext(t *testing.T) {
+	//userName, pwd, ips := util.UseDps()
+	//util.UseProxy = true
+	//util.ProxyUserName = userName
+	//util.ProxyPassword = pwd
+	//util.ProxyIpPool = ips
+	conf.InitConfig()
+	mysql.InitMysql()
+
 	ctx := context.Background()
 	err := NewAccountSyncContext(ctx, &vo.AccountSearchReq{
 		//区段

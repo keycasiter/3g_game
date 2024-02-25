@@ -19,7 +19,7 @@ func TestStructToMap(t *testing.T) {
 		ExtConditions:    "",
 		StdCatId:         0,
 		JymCatId:         0,
-		FilterLowQuality: "",
+		FilterLowQuality: true,
 		Keyword:          "",
 		PriceRange:       "",
 		Page:             0,

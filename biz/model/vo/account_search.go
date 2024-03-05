@@ -252,8 +252,16 @@ type ItemQuality struct {
 }
 
 type ItemBaseInfo struct {
-	ItemId     string  `json:"itemId"`
-	Title      string  `json:"title"`
-	SellPrice  float64 `json:"sellPrice"`
-	ServerName string  `json:"serverName"`
+	ItemId             string       `json:"itemId"`
+	Title              string       `json:"title"`
+	SellPrice          float64      `json:"sellPrice"`
+	ServerName         string       `json:"serverName"`
+	StatusName         string       `json:"statusName"`
+	OsTypeName         string       `json:"osTypeName"`
+	FirstCategoryInfo  CategoryInfo `json:"firstCategoryInfo"`
+	SecondCategoryInfo CategoryInfo `json:"secondCategoryInfo"`
+}
+
+type CategoryInfo struct {
+	CategoryName string `json:"categoryName"`
 }

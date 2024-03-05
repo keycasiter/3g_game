@@ -21,7 +21,7 @@ const (
 	ProxyMode_Fixed     = 3
 )
 
-var UseProxyMode = ProxyMode_Fixed
+var UseProxyMode = ProxyMode_KuaiDaili
 var cnt = 0
 
 var username, password string

@@ -215,7 +215,7 @@ func (runCtx *AccountSyncContext) searchAccountDetail() {
 	for i, goodsItem := range runCtx.GoodsInfoList {
 		hlog.CtxInfof(runCtx.ctx, "商品查询进度：%d/%d", i+1, len(runCtx.GoodsInfoList))
 		//防止被限流
-		time.Sleep(500 * time.Millisecond)
+		//time.Sleep(500 * time.Millisecond)
 
 		err := retry.Do(func() error {
 			httpRes, err := util.HttpGet(runCtx.ctx, goodsItem.DetailUrl, nil, nil)
@@ -254,10 +254,16 @@ func (runCtx *AccountSyncContext) searchAccountDetail() {
 func (runCtx *AccountSyncContext) saveAccountInfo() {
 	goods := make([]*po.JymGoods, 0)
 	for url, itemInfo := range runCtx.GoodsInfoItemMap {
-		goods = append(goods, &po.JymGoods{
+		goodItemInfo := &po.JymGoods{
 			GoodsUrl:    url,
 			GoodsDetail: util.ToJsonString(runCtx.ctx, itemInfo),
-		})
+			Status:      1,
+		}
+		if strings.Contains(itemInfo.ApiData.ItemBaseInfo.StatusName, "商品已经销售完毕") {
+			goodItemInfo.Status = 2
+		}
+
+		goods = append(goods, goodItemInfo)
 	}
 	goodsNew := funk.Chunk(goods, 100)
 

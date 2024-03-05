@@ -61,7 +61,7 @@ func TestParseHtml(t *testing.T) {
 	}
 	jsonStr := reg.FindString(httpRes)
 	jsonStr = strings.ReplaceAll(jsonStr, "window.__INITIAL_STATE__ =", "")
-	//fmt.Printf("jsonStr:\n%s", jsonStr)
+	fmt.Printf("jsonStr:\n%s", jsonStr)
 
 	data := &vo.AccountItemInfo{}
 	err = json.Unmarshal([]byte(jsonStr), data)

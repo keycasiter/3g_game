@@ -90,9 +90,7 @@ func (runCtx *AccountSyncContext) searchAccountList() {
 	totalPageSize := int(totalSize / 30)
 	hlog.CtxInfof(runCtx.ctx, "总数：%d ,按每页30个，页面数量估算：%d", totalSize, totalPageSize)
 
-	for i := 0; i < totalPageSize; i++ {
-
-	}
+	//qps控制在5，按总数量拆分
 
 	//翻页查询
 	for i := 0; i < totalPageSize+10; i++ {
@@ -101,6 +99,7 @@ func (runCtx *AccountSyncContext) searchAccountList() {
 		req := runCtx.buildGetSgzGameZoneItemListReq(cast.ToInt64(pageNo))
 
 		httpResp, err := util.HttpGet(runCtx.ctx, consts.Url_GetSgzGameZoneItemList, nil, util.StructToMap(req))
+		//hlog.CtxInfof(runCtx.ctx,"httpResp:%s",util.ToJsonString(runCtx.ctx,httpResp))
 		if err != nil {
 			//重试
 			hlog.CtxErrorf(runCtx.ctx, "url:%s , HttpGet err:%v", consts.Url_GetSgzGameZoneItemList, err)
@@ -212,6 +211,10 @@ func (runCtx *AccountSyncContext) buildSpecialTech() string {
 }
 
 func (runCtx *AccountSyncContext) searchAccountDetail() {
+	hlog.CtxInfof(runCtx.ctx, "[要搜索商品详情]：%v", len(runCtx.GoodsInfoList))
+	for _, info := range runCtx.GoodsInfoList {
+		hlog.CtxInfof(runCtx.ctx, "[url]:%v", info.DetailUrl)
+	}
 	for i, goodsItem := range runCtx.GoodsInfoList {
 		hlog.CtxInfof(runCtx.ctx, "商品查询进度：%d/%d", i+1, len(runCtx.GoodsInfoList))
 		//防止被限流
@@ -243,6 +246,7 @@ func (runCtx *AccountSyncContext) searchAccountDetail() {
 
 			//整理商品详情结果
 			runCtx.GoodsInfoItemMap[goodsItem.DetailUrl] = data
+			hlog.CtxInfof(runCtx.ctx, "已查询商品详情数量：%v", len(runCtx.GoodsInfoItemMap))
 			return nil
 		}, retry.Attempts(3), retry.Delay(1*time.Second))
 		if err != nil {
@@ -252,12 +256,15 @@ func (runCtx *AccountSyncContext) searchAccountDetail() {
 }
 
 func (runCtx *AccountSyncContext) saveAccountInfo() {
+	now := time.Now()
 	goods := make([]*po.JymGoods, 0)
 	for url, itemInfo := range runCtx.GoodsInfoItemMap {
 		goodItemInfo := &po.JymGoods{
 			GoodsUrl:    url,
 			GoodsDetail: util.ToJsonString(runCtx.ctx, itemInfo),
 			Status:      1,
+			CreateTime:  now,
+			UpdateTime:  now,
 		}
 		if strings.Contains(itemInfo.ApiData.ItemBaseInfo.StatusName, "商品已经销售完毕") {
 			goodItemInfo.Status = 2
@@ -275,5 +282,7 @@ func (runCtx *AccountSyncContext) saveAccountInfo() {
 			return
 		}
 	}
+
 	runCtx.GoodsInfoList = make([]vo.GetSgzGameZoneItemListRespResultGoodsInfo, 0)
+	runCtx.GoodsInfoItemMap = make(map[string]*vo.AccountItemInfo, 0)
 }

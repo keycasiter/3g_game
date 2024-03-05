@@ -3,6 +3,7 @@ package util
 import (
 	"context"
 	"fmt"
+	"github.com/avast/retry-go"
 	"github.com/bytedance/gopkg/util/logger"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/spf13/cast"
@@ -44,23 +45,42 @@ func HttpGet(ctx context.Context, requestUrl string, headers map[string]interfac
 	case ProxyMode_NoProxy:
 		client = &http.Client{}
 	case ProxyMode_KuaiDaili:
-		username, password, ips = UseDps()
-		// 代理服务器
-		proxy_raw := ips[rand.Intn(len(ips))]
-		hlog.CtxInfof(ctx, "[proxy] %s", proxy_raw)
+		var username, password string
+		var ips []string
+		var err error
+
+		retry.Do(func() error {
+			username, password, ips, err = UseTps()
+			if err != nil {
+				return err
+			}
+			return nil
+		}, retry.Attempts(5), retry.Delay(2*time.Second))
+		hlog.CtxInfof(ctx, "username:%v , password:%v , ips:%v", username, password, ips)
+		// 隧道服务器
+		proxy_raw := ips[0]
 		proxy_str := fmt.Sprintf("http://%s:%s@%s", username, password, proxy_raw)
 		proxy, err := url.Parse(proxy_str)
-
 		if err != nil {
-			logger.CtxErrorf(ctx, "url Parse error:%v", err)
+			hlog.Errorf("proxy parse err:%v", err)
+		}
+
+		// 请求目标网页
+		client := &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxy)}}
+		req, _ := http.NewRequest(http.MethodGet, path, nil)
+		// 添加请求头
+		req.Header.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36")
+		req.Header.Add("Accept", "*/*")
+		req.Header.Add("authority", "m.jiaoyimao.com")
+		// 发送请求
+		resp, err := client.Do(req)
+		if err != nil {
+			logger.CtxErrorf(ctx, "http request error:%v", err)
 			return "", err
 		}
-		client = &http.Client{
-			Transport: &http.Transport{
-				Proxy: http.ProxyURL(proxy),
-			},
-			Timeout: 5 * time.Second,
-		}
+		defer resp.Body.Close()
+		body, _ := ioutil.ReadAll(resp.Body)
+		return string(body), nil
 	case ProxyMode_Fixed:
 		// 代理服务器
 		ips := []string{

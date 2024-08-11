@@ -9,7 +9,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/logic/lottery"
 	api "github.com/keycasiter/3g_game/biz/model/api"
@@ -105,10 +104,6 @@ func GeneralLotteryInfoQuery(ctx context.Context, c *app.RequestContext) {
 	if generalMap, ok := consts.GeneralLotteryPoolMap[generalPool]; ok {
 		for generalId, _ := range generalMap {
 			var general *po.General
-			//从缓存获取
-			if vo, okk := cache.CacheGeneralMap[int64(generalId)]; okk {
-				general = vo
-			}
 			generalInfos = append(generalInfos, &api.MetadataGeneral{
 				Id:             int64(generalId),
 				Name:           general.Name,

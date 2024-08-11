@@ -13,7 +13,7 @@ import (
 )
 
 // req
-type BattleLogicContextRequest struct {
+type BattleLogicV2ContextRequest struct {
 	/** 队伍信息 **/
 	// 出战队伍信息
 	FightingTeam *vo.BattleTeam
@@ -22,7 +22,7 @@ type BattleLogicContextRequest struct {
 }
 
 // resp
-type BattleLogicContextResponse struct {
+type BattleLogicV2ContextResponse struct {
 	//对战数据统计
 	BattleResultStatistics *model.BattleResultStatistics
 	//对战过程数据
@@ -32,14 +32,14 @@ type BattleLogicContextResponse struct {
 //resp
 
 // 对战上下文环境
-type BattleLogicContext struct {
+type BattleLogicV2Context struct {
 	/** DSL数据 **/
 	//上下文
 	Ctx context.Context
 	// 入参
-	Req *BattleLogicContextRequest
+	Req *BattleLogicV2ContextRequest
 	// 出参
-	Resp *BattleLogicContextResponse
+	Resp *BattleLogicV2ContextResponse
 	// 执行方法
 	Funcs []func()
 	// 执行错误
@@ -54,11 +54,11 @@ type BattleLogicContext struct {
 	/**对战数据统计**/
 }
 
-func NewBattleLogicContext(ctx context.Context, req *BattleLogicContextRequest) *BattleLogicContext {
-	runCtx := &BattleLogicContext{
+func NewBattleLogicV2Context(ctx context.Context, req *BattleLogicV2ContextRequest) *BattleLogicV2Context {
+	runCtx := &BattleLogicV2Context{
 		Ctx:  ctx,
 		Req:  req,
-		Resp: &BattleLogicContextResponse{},
+		Resp: &BattleLogicV2ContextResponse{},
 	}
 
 	//注入方法执行顺序
@@ -69,7 +69,7 @@ func NewBattleLogicContext(ctx context.Context, req *BattleLogicContextRequest) 
 		runCtx.buildBattleRoundParams,
 		//对战准备阶段处理
 		runCtx.processBattlePreparePhase,
-		//对战对阵阶段处理
+		//对战对阵阶段处理（1-8回合）
 		runCtx.processBattleFightingPhase,
 		//对战战报统计数据处理
 		runCtx.processBattleReportStatistics,
@@ -78,23 +78,23 @@ func NewBattleLogicContext(ctx context.Context, req *BattleLogicContextRequest) 
 	return runCtx
 }
 
-func (runCtx *BattleLogicContext) Run() (*BattleLogicContextResponse, error) {
+func (runCtx *BattleLogicV2Context) Run() (*BattleLogicV2ContextResponse, error) {
 	for _, f := range runCtx.Funcs {
 		f()
 		if runCtx.RunErr != nil {
-			hlog.CtxErrorf(runCtx.Ctx, "BattleLogicContext Func=%v Run err:%v", f, runCtx.RunErr)
+			hlog.CtxErrorf(runCtx.Ctx, "BattleLogicV2Context Func=%v Run err:%v", f, runCtx.RunErr)
 			return nil, runCtx.RunErr
 		}
 	}
 	return runCtx.Resp, nil
 }
 
-func (runCtx *BattleLogicContext) initMetadata() {
+func (runCtx *BattleLogicV2Context) initMetadata() {
 
 }
 
 // 属性加点处理
-func (runCtx *BattleLogicContext) handleAbilityAttrAddition(general *vo.BattleGeneral) {
+func (runCtx *BattleLogicV2Context) handleAbilityAttrAddition(general *vo.BattleGeneral) {
 	//武力加成
 	general.BaseInfo.AbilityAttr.ForceBase =
 		general.BaseInfo.AbilityAttr.ForceBase + general.Addition.AbilityAttr.ForceBase
@@ -111,7 +111,7 @@ func (runCtx *BattleLogicContext) handleAbilityAttrAddition(general *vo.BattleGe
 }
 
 // 武将等级处理
-func (runCtx *BattleLogicContext) handleGeneralLevel(general *vo.BattleGeneral) {
+func (runCtx *BattleLogicV2Context) handleGeneralLevel(general *vo.BattleGeneral) {
 	//武力加成
 	general.BaseInfo.AbilityAttr.ForceBase =
 		general.BaseInfo.AbilityAttr.ForceBase +
@@ -131,7 +131,7 @@ func (runCtx *BattleLogicContext) handleGeneralLevel(general *vo.BattleGeneral) 
 }
 
 // 武将标签处理
-func (runCtx *BattleLogicContext) handleGeneralTag(general *vo.BattleGeneral) {
+func (runCtx *BattleLogicV2Context) handleGeneralTag(general *vo.BattleGeneral) {
 	//仙人：属性提高30%
 	for _, generalTag := range general.BaseInfo.GeneralTag {
 		switch consts.GeneralTag(generalTag) {
@@ -152,7 +152,7 @@ func (runCtx *BattleLogicContext) handleGeneralTag(general *vo.BattleGeneral) {
 }
 
 // 建筑科技-阵营加成处理
-func (runCtx *BattleLogicContext) handleBuildingTechGroupAddition(team *vo.BattleTeam) {
+func (runCtx *BattleLogicV2Context) handleBuildingTechGroupAddition(team *vo.BattleTeam) {
 	//判断是否同阵营
 	group := consts.Group_Unknow
 	for _, general := range team.BattleGenerals {
@@ -199,7 +199,7 @@ func (runCtx *BattleLogicContext) handleBuildingTechGroupAddition(team *vo.Battl
 }
 
 // 建筑科技-属性加成处理
-func (runCtx *BattleLogicContext) handleBuildingTechAttrAddition(team *vo.BattleTeam) {
+func (runCtx *BattleLogicV2Context) handleBuildingTechAttrAddition(team *vo.BattleTeam) {
 	for _, general := range team.BattleGenerals {
 		//武力加成
 		if team.BuildingTechAttrAddition.ForceAddition > 0 {
@@ -241,7 +241,7 @@ func (runCtx *BattleLogicContext) handleBuildingTechAttrAddition(team *vo.Battle
 }
 
 // 兵种适性处理
-func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, general *vo.BattleGeneral) {
+func (runCtx *BattleLogicV2Context) handleArmAbility(teamArmType consts.ArmType, general *vo.BattleGeneral) {
 	armsAbility := consts.ArmsAbility_Unknow
 	switch teamArmType {
 	//骑兵
@@ -275,7 +275,7 @@ func (runCtx *BattleLogicContext) handleArmAbility(teamArmType consts.ArmType, g
 }
 
 // 对战准备阶段处理
-func (runCtx *BattleLogicContext) processBattlePreparePhase() {
+func (runCtx *BattleLogicV2Context) processBattlePreparePhase() {
 	tacticsParams := runCtx.TacticsParams
 
 	//对战阶段
@@ -287,16 +287,23 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 
 	//我方武将加成处理
 	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
-		//武将加成
-		runCtx.handleGeneralAddition(runCtx.Req.FightingTeam, general)
-		//队伍加成
-		runCtx.handleTeamAddition(runCtx.Req.FightingTeam)
+		hlog.CtxInfof(runCtx.Ctx, "处理武将加成：%v", general.BaseInfo.Name)
+		//剧本特殊效果加成
+
+		//部队士气加成
+
+		//兵种适性加成
+
+		//城池建筑加成
+
+		//装备加成
+
+		//战法加成
 	}
 
 	//敌方武将加成处理
 	for _, general := range runCtx.Req.EnemyTeam.BattleGenerals {
-		runCtx.handleGeneralAddition(runCtx.Req.EnemyTeam, general)
-		runCtx.handleTeamAddition(runCtx.Req.EnemyTeam)
+		hlog.CtxInfof(runCtx.Ctx, "处理武将加成：%v", general.BaseInfo.Name)
 	}
 
 	//兵书处理：一兵书效果
@@ -321,6 +328,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+					hlog.CtxInfof(runCtx.Ctx, "【战法】%v，触发概率%v%，没有生效", tactic.Name, tacticHandler.GetTriggerRate())
 					continue
 				}
 				//统计上报
@@ -340,6 +348,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+					hlog.CtxInfof(runCtx.Ctx, "【战法】%v，触发概率%v%，没有生效", tactic.Name, tacticHandler.GetTriggerRate())
 					continue
 				}
 				//统计上报
@@ -359,6 +368,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+					hlog.CtxInfof(runCtx.Ctx, "【战法】%v，触发概率%v%，没有生效", tactic.Name, tacticHandler.GetTriggerRate())
 					continue
 				}
 				//统计上报
@@ -378,6 +388,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 				tacticHandler := handler.Init(tacticsParams)
 				//发动率判断
 				if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+					hlog.CtxInfof(runCtx.Ctx, "【战法】%v，触发概率%v%，没有生效", tactic.Name, tacticHandler.GetTriggerRate())
 					continue
 				}
 				//统计上报
@@ -396,7 +407,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 
 }
 
-func (runCtx *BattleLogicContext) handleGeneralAddition(team *vo.BattleTeam, general *vo.BattleGeneral) {
+func (runCtx *BattleLogicV2Context) handleGeneralAddition(team *vo.BattleTeam, general *vo.BattleGeneral) {
 	//1.国土效果
 	//TODO 部队兵力不足可携带兵力上限的65%，国土效果不生效
 	//2.士气加成
@@ -417,7 +428,7 @@ func (runCtx *BattleLogicContext) handleGeneralAddition(team *vo.BattleTeam, gen
 	//兵书加成
 }
 
-func (runCtx *BattleLogicContext) handleTeamAddition(team *vo.BattleTeam) {
+func (runCtx *BattleLogicV2Context) handleTeamAddition(team *vo.BattleTeam) {
 	//1.兵战-科技加成
 	runCtx.handleBuildingTechAttrAddition(team)
 	//2.协力-科技加成
@@ -426,7 +437,7 @@ func (runCtx *BattleLogicContext) handleTeamAddition(team *vo.BattleTeam) {
 }
 
 // 对战战报统计数据处理
-func (runCtx *BattleLogicContext) processBattleReportStatistics() {
+func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 	//我军
 	fightingGeneralsStatisticsList := make([]*model.GeneralBattleStatistics, 0)
 	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
@@ -519,13 +530,13 @@ func (runCtx *BattleLogicContext) processBattleReportStatistics() {
 	runCtx.Resp.BattleProcessStatistics = battleProcessStatistics
 }
 
-func (runCtx *BattleLogicContext) makeGeneralInfos(battleGenerals []*vo.BattleGeneral) []*vo.BattleGeneral {
+func (runCtx *BattleLogicV2Context) makeGeneralInfos(battleGenerals []*vo.BattleGeneral) []*vo.BattleGeneral {
 	//补充武将信息
 	return battleGenerals
 }
 
 // 对战对阵阶段处理
-func (runCtx *BattleLogicContext) processBattleFightingPhase() {
+func (runCtx *BattleLogicV2Context) processBattleFightingPhase() {
 	//对战阶段
 	runCtx.TacticsParams.CurrentPhase = consts.Battle_Phase_Fighting
 
@@ -556,7 +567,7 @@ func (runCtx *BattleLogicContext) processBattleFightingPhase() {
 }
 
 // 每回合对战处理
-func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts.BattleRound) {
+func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound consts.BattleRound) {
 	tacticsParams := runCtx.TacticsParams
 
 	//判断先攻战法生效
@@ -861,7 +872,7 @@ exitFlag:
 }
 
 // 战法执行前置处理器
-func (runCtx BattleLogicContext) TacticPreProcessor(tacticsParams *model.TacticsParams) bool {
+func (runCtx BattleLogicV2Context) TacticPreProcessor(tacticsParams *model.TacticsParams) bool {
 	//兵力校验
 	if tacticsParams.CurrentGeneral.SoldierNum == 0 {
 		return false
@@ -871,7 +882,7 @@ func (runCtx BattleLogicContext) TacticPreProcessor(tacticsParams *model.Tactics
 }
 
 // 武将回合执行前置处理器
-func (runCtx BattleLogicContext) TacticPostProcessor(tacticsParams *model.TacticsParams) bool {
+func (runCtx BattleLogicV2Context) TacticPostProcessor(tacticsParams *model.TacticsParams) bool {
 	//主将校验
 	masterGeneralCnt := 0
 	for _, general := range tacticsParams.AllGeneralMap {
@@ -887,7 +898,7 @@ func (runCtx BattleLogicContext) TacticPostProcessor(tacticsParams *model.Tactic
 }
 
 // 武将回合执行前置处理器
-func (runCtx BattleLogicContext) GeneralRoundPreProcessor(tacticsParams *model.TacticsParams) bool {
+func (runCtx BattleLogicV2Context) GeneralRoundPreProcessor(tacticsParams *model.TacticsParams) bool {
 	//兵力为0直接退出
 	if tacticsParams.CurrentGeneral.SoldierNum == 0 {
 		return false
@@ -896,10 +907,10 @@ func (runCtx BattleLogicContext) GeneralRoundPreProcessor(tacticsParams *model.T
 }
 
 // 战法执行后置处理器
-func (runCtx BattleLogicContext) GeneralRoundPostProcessor(tacticsParams *model.TacticsParams) {
+func (runCtx BattleLogicV2Context) GeneralRoundPostProcessor(tacticsParams *model.TacticsParams) {
 }
 
-func (runCtx *BattleLogicContext) buildBattleRoundParams() {
+func (runCtx *BattleLogicV2Context) buildBattleRoundParams() {
 	tacticsParams := &model.TacticsParams{}
 	tacticsParams.CurrentRound = consts.Battle_Round_Unknow
 

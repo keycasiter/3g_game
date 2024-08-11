@@ -1321,8 +1321,12 @@ var ArmTacticsMap = make(map[TacticId]bool, 0)
 // 准备回合的战法
 var ActivePrepareTacticsMap = make(map[TacticId]bool, 0)
 
+// 灼烧类战法
+var FireTacticsMap = make(map[TacticId]bool, 0)
+
 func init() {
 	initTacticsMap()
+	initFireTacticsMap()
 }
 
 func initTacticsMap() {
@@ -1596,4 +1600,9 @@ func initTacticsMap() {
 	AssaultTacticsMap[TakeAdvantageOfQuickly] = true
 	AssaultTacticsMap[TakeCareOfYourselfFirst] = true
 	AssaultTacticsMap[TigerAndLeopardCavalry] = true
+}
+
+func initFireTacticsMap() {
+	FireTacticsMap[FireJointVenture] = true
+	FireTacticsMap[BlazingWildfire] = true
 }

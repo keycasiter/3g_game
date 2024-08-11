@@ -497,6 +497,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	isIgnoreDefend := param.IsIgnoreDefend
 	isEffect = true
 
+	//触发器
 	defer func() {
 		// 「伤害开始」触发器
 		if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_DamageEnd]; okk {
@@ -605,11 +606,22 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 		return
 	}
 
+	//** 特殊战法效果 **
 	//虎痴效果
 	if effectParams, ok := BuffEffectGet(attackGeneral, consts.BuffEffectType_TigerIdiot_Locked); ok {
 		if len(effectParams) > 0 {
 			effectParam := effectParams[0]
 			sufferGeneral = effectParam.LockingTarget
+		}
+	}
+	//藤甲兵效果
+	if effectParams, ok := DeBuffEffectGet(sufferGeneral, consts.DebuffEffectType_Firing_TengJia); ok {
+		if consts.FireTacticsMap[tacticId] {
+			effectRate := float64(0)
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+			damage = int64(float64(damage) * effectRate)
 		}
 	}
 
@@ -773,6 +785,7 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
 		}
 	}
+
 	//伤害提升：兵刃/谋略
 	switch param.DamageType {
 	case consts.DamageType_Weapon:
@@ -803,12 +816,19 @@ func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldie
 	if sufferGeneral.SoldierNum == 0 {
 		return 0, 0, 0, false
 	}
-	//伤害计算公式：攻击者伤害值 - 防御者统率值 = 实际伤害
+
 	//是否无视防御
 	if isIgnoreDefend {
 		damageNum = damage
 	} else {
-		damageNum = damage - cast.ToInt64(sufferGeneral.BaseInfo.AbilityAttr.CommandBase)
+		switch param.DamageType {
+		//兵刃伤害，统率影响防御
+		case consts.DamageType_Weapon:
+			damageNum = damage - cast.ToInt64(sufferGeneral.BaseInfo.AbilityAttr.CommandBase)
+		//谋略伤害，智力影响防御
+		case consts.DamageType_Strategy:
+			damageNum = damage - cast.ToInt64(sufferGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+		}
 	}
 
 	//兜底伤害为负的情况

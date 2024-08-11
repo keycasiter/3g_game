@@ -33,7 +33,7 @@ func (t TengjiaSoldierTactic) Prepare() {
 		t.Name(),
 	)
 
-	//将盾兵进阶为刀枪不如的藤甲兵：
+	//将盾兵进阶为刀枪不入的藤甲兵：
 	//我军全体受到兵刃伤害降低24%（受统率影响）
 	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
 	for _, pairGeneral := range pairGenerals {

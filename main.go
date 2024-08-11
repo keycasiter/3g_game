@@ -5,7 +5,6 @@ package main
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/keycasiter/3g_game/biz/conf"
-	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/dal/redis"
 )
@@ -20,8 +19,6 @@ func main() {
 	mysql.InitMysql()
 	//初始化redis
 	redis.InitRedis()
-	//初始化缓存
-	cache.InitCache()
 
 	register(h)
 	h.Spin()

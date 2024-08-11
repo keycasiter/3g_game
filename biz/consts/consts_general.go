@@ -3,6 +3,7 @@ package consts
 type General_Id int64
 
 const (
+	//!!严格按照数据库ID保持枚举顺序!!
 	//未知武将
 	UnknownGeneral General_Id = iota
 	SPXunYu

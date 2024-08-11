@@ -172,14 +172,14 @@ func (s SeizeTheSoulTactic) Execute() {
 	}
 
 	//提升武力
-	if util.BuffEffectWrapSet(ctx, enemyGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
 		EffectValue:    effectValue,
 		EffectRound:    2,
 		EffectTimes:    1,
 		MaxEffectTimes: 2,
 		FromTactic:     s.Id(),
 	}).IsSuccess {
-		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeResp := &vo.TacticsTriggerResult{}
 			revokeGeneral := params.CurrentGeneral
 
@@ -195,14 +195,14 @@ func (s SeizeTheSoulTactic) Execute() {
 	}
 
 	//提升智力
-	if util.BuffEffectWrapSet(ctx, enemyGeneral, consts.BuffEffectType_IncrIntelligence, &vo.EffectHolderParams{
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrIntelligence, &vo.EffectHolderParams{
 		EffectValue:    effectValue,
 		EffectRound:    2,
 		EffectTimes:    1,
 		MaxEffectTimes: 2,
 		FromTactic:     s.Id(),
 	}).IsSuccess {
-		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeResp := &vo.TacticsTriggerResult{}
 			revokeGeneral := params.CurrentGeneral
 
@@ -217,14 +217,14 @@ func (s SeizeTheSoulTactic) Execute() {
 		})
 	}
 	//提升统率
-	if util.BuffEffectWrapSet(ctx, enemyGeneral, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{
 		EffectValue:    effectValue,
 		EffectRound:    2,
 		EffectTimes:    1,
 		MaxEffectTimes: 2,
 		FromTactic:     s.Id(),
 	}).IsSuccess {
-		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeResp := &vo.TacticsTriggerResult{}
 			revokeGeneral := params.CurrentGeneral
 
@@ -239,14 +239,14 @@ func (s SeizeTheSoulTactic) Execute() {
 		})
 	}
 	//提升速度
-	if util.BuffEffectWrapSet(ctx, enemyGeneral, consts.BuffEffectType_IncrSpeed, &vo.EffectHolderParams{
+	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_IncrSpeed, &vo.EffectHolderParams{
 		EffectValue:    effectValue,
 		EffectRound:    2,
 		EffectTimes:    1,
 		MaxEffectTimes: 2,
 		FromTactic:     s.Id(),
 	}).IsSuccess {
-		util.TacticsTriggerWrapRegister(enemyGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			revokeResp := &vo.TacticsTriggerResult{}
 			revokeGeneral := params.CurrentGeneral
 

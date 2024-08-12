@@ -274,7 +274,7 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 			effectParam,
 		}
 	}
-	hlog.CtxInfof(ctx, "[%s]的【%v】「%v」效果已施加",
+	hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已施加",
 		general.BaseInfo.Name,
 		effectParam.FromTactic,
 		effectType,

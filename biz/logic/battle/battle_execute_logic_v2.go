@@ -284,6 +284,7 @@ func (runCtx *BattleLogicV2Context) processBattlePreparePhase() {
 	/********************************************************/
 	/*** 以下不受武将速度影响来执行，根据我方先/敌方后的顺序执行即可 ***/
 	/********************************************************/
+	hlog.CtxInfof(runCtx.Ctx, "<<<<<<<<<<<<<【准备阶段】>>>>>>>>>>>>>")
 
 	//我方武将加成处理
 	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
@@ -539,6 +540,8 @@ func (runCtx *BattleLogicV2Context) makeGeneralInfos(battleGenerals []*vo.Battle
 func (runCtx *BattleLogicV2Context) processBattleFightingPhase() {
 	//对战阶段
 	runCtx.TacticsParams.CurrentPhase = consts.Battle_Phase_Fighting
+
+	hlog.CtxInfof(runCtx.Ctx, "<<<<<<<<<<<<<【对战阶段】>>>>>>>>>>>>>")
 
 	//最多8回合
 	currentRound := consts.Battle_Round_Unknow

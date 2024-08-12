@@ -1,6 +1,8 @@
 package tactics
 
 import (
+	"fmt"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
@@ -35,6 +37,27 @@ func (b BowWaistConcubineTactic) Prepare() {
 		//找到敌军单体
 		enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, b.tacticsParams)
 		dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.22)
+
+		//自身拥有功能性增益状态时额外对其造成兵刃伤害（伤害率20%x状态数）
+		buffEffectNum := util.BuffEffectContainsNum(currentGeneral)
+		if buffEffectNum > 0 {
+			buffEffectDesc := ""
+			for buffEffectType, _ := range currentGeneral.BuffEffectHolderMap {
+				buffEffectDesc += fmt.Sprintf("[%v]", buffEffectType)
+			}
+			extDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * cast.ToFloat64(buffEffectNum) * 0.2)
+			hlog.CtxInfof(ctx, "功能性增益状态数:%v , 功能性增益状态:%v , 造成额外伤害:%v", buffEffectNum, buffEffectDesc, extDmg)
+			dmg += extDmg
+
+			//并提高18武力，最多叠加5次
+			util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
+				EffectValue:    18,
+				EffectTimes:    1,
+				MaxEffectTimes: 5,
+				FromTactic:     b.Id(),
+			})
+		}
+
 		util.TacticDamage(&util.TacticDamageParam{
 			TacticsParams: b.tacticsParams,
 			AttackGeneral: triggerGeneral,
@@ -44,27 +67,7 @@ func (b BowWaistConcubineTactic) Prepare() {
 			TacticName:    b.Name(),
 			TacticId:      b.Id(),
 		})
-		//自身拥有功能性增益状态时额外对其造成兵刃伤害（伤害率20%x状态数）
-		buffEffectNum := util.BuffEffectContainsNum(currentGeneral)
-		if buffEffectNum > 0 {
-			extDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * cast.ToFloat64(buffEffectNum) * 0.2)
-			util.TacticDamage(&util.TacticDamageParam{
-				TacticsParams: b.tacticsParams,
-				AttackGeneral: triggerGeneral,
-				SufferGeneral: enemyGeneral,
-				DamageType:    consts.DamageType_Weapon,
-				Damage:        extDmg,
-				TacticId:      b.Id(),
-				TacticName:    b.Name(),
-			})
-			//并提高18武力，最多叠加5次
-			util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
-				EffectValue:    18,
-				EffectTimes:    1,
-				MaxEffectTimes: 5,
-				FromTactic:     b.Id(),
-			})
-		}
+
 		return triggerResp
 	})
 }

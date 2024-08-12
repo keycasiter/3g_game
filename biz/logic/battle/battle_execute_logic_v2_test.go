@@ -411,14 +411,21 @@ func TestBattleLogicV2Context_Run_Many(t *testing.T) {
 		FightingTeam: &vo.BattleTeam{
 			TeamType:       consts.TeamType_Fighting,
 			ArmType:        consts.ArmType_Archers,
-			BattleGenerals: team.TaiWeiDun,
+			BattleGenerals: team.GuanGuanZhang,
 		},
 		//对战队伍
 		EnemyTeam: &vo.BattleTeam{
 			TeamType:       consts.TeamType_Enemy,
 			ArmType:        consts.ArmType_Archers,
-			BattleGenerals: team.QiLinGong,
+			BattleGenerals: team.XiangxiangWuQi,
 		},
+	}
+	//############ 配置队伍是敌是友 ###########
+	for _, general := range req.FightingTeam.BattleGenerals {
+		general.BaseInfo.GeneralBattleType = consts.GeneralBattleType_Fighting
+	}
+	for _, general := range req.EnemyTeam.BattleGenerals {
+		general.BaseInfo.GeneralBattleType = consts.GeneralBattleType_Enemy
 	}
 
 	//############ 2.从数据库拉取阵容武将属性补充 ###########
@@ -446,21 +453,21 @@ func TestBattleLogicV2Context_Run_Many(t *testing.T) {
 			general.BaseInfo.UniqueId = cast.ToString(generalDb.Id)
 
 			//属性
-			abilityAttr := &po.AbilityAttr{}
-			util.ParseJsonObj(ctx, &abilityAttr, generalDb.AbilityAttr)
+			abilityAttr := &po.AbilityAttrString{}
+			util.ParseJsonObj(ctx, abilityAttr, generalDb.AbilityAttr)
 			general.BaseInfo.AbilityAttr = &po.AbilityAttr{
-				ForceBase:        abilityAttr.ForceBase,
-				ForceRate:        abilityAttr.ForceRate,
-				IntelligenceBase: abilityAttr.IntelligenceBase,
-				IntelligenceRate: abilityAttr.IntelligenceRate,
-				CharmBase:        abilityAttr.CharmBase,
-				CharmRate:        abilityAttr.CharmRate,
-				CommandBase:      abilityAttr.CommandBase,
-				CommandRate:      abilityAttr.CommandRate,
-				PoliticsBase:     abilityAttr.PoliticsBase,
-				PoliticsRate:     abilityAttr.PoliticsRate,
-				SpeedBase:        abilityAttr.SpeedBase,
-				SpeedRate:        abilityAttr.SpeedRate,
+				ForceBase:        cast.ToFloat64(abilityAttr.ForceBase),
+				ForceRate:        cast.ToFloat64(abilityAttr.ForceRate),
+				IntelligenceBase: cast.ToFloat64(abilityAttr.IntelligenceBase),
+				IntelligenceRate: cast.ToFloat64(abilityAttr.IntelligenceRate),
+				CharmBase:        cast.ToFloat64(abilityAttr.CharmBase),
+				CharmRate:        cast.ToFloat64(abilityAttr.CharmRate),
+				CommandBase:      cast.ToFloat64(abilityAttr.CommandBase),
+				CommandRate:      cast.ToFloat64(abilityAttr.CommandRate),
+				PoliticsBase:     cast.ToFloat64(abilityAttr.PoliticsBase),
+				PoliticsRate:     cast.ToFloat64(abilityAttr.PoliticsRate),
+				SpeedBase:        cast.ToFloat64(abilityAttr.SpeedBase),
+				SpeedRate:        cast.ToFloat64(abilityAttr.SpeedRate),
 			}
 
 			//兵种适性
@@ -484,5 +491,6 @@ func TestBattleLogicV2Context_Run_Many(t *testing.T) {
 		hlog.CtxErrorf(ctx, "run err:%v", err)
 		return
 	}
+	fmt.Printf("%v", resp)
 	pretty.Logf("resp:%v", util.ToJsonString(ctx, resp))
 }

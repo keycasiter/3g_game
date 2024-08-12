@@ -6,7 +6,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
 
-//通用加点
+// 通用加点
 var addition = &vo.BattleGeneralAddition{
 	AbilityAttr: po.AbilityAttr{
 		ForceBase:        0,
@@ -173,12 +173,219 @@ var (
 	}
 	//富贵骑
 	//群弓
+	QunGong = []*vo.BattleGeneral{
+		//SP袁绍
+		{
+			IsMaster: true,
+			BaseInfo: &po.MetadataGeneral{
+				Id: int64(consts.SPYuanShao),
+			},
+			EquipTactics: []*po.Tactics{
+				{
+					Id:   consts.HighWoodenPaddlesConnectedToTheCamp,
+					Name: "高橹连营",
+				},
+				{
+					Id:   consts.SleepOnTheBrushwoodAndTasteTheGall,
+					Name: "卧薪尝胆",
+				},
+				{
+					Id:   consts.PullingSwordsAndChoppingEnemies,
+					Name: "掣刀斫敌",
+				},
+			},
+			Addition:   addition,
+			SoldierNum: 10000,
+		},
+		//SP朱儁
+		{
+			BaseInfo: &po.MetadataGeneral{
+				Id: int64(consts.SPZhuJun),
+			},
+			EquipTactics: []*po.Tactics{
+				{
+					Id:   consts.SurroundingTheTeacherMustBePalace,
+					Name: "围师必阙",
+				},
+				{
+					Id:   consts.ToBurnBarracks,
+					Name: "焚辎营垒",
+				},
+				{
+					Id:   consts.SeizeTheOpportunityToWin,
+					Name: "临机制胜",
+				},
+			},
+			Addition:   addition,
+			SoldierNum: 10000,
+		},
+		//沮授
+		{
+			BaseInfo: &po.MetadataGeneral{
+				Id: int64(consts.JuShou),
+			},
+			EquipTactics: []*po.Tactics{
+				{
+					Id:   consts.SuperviseLeadAndSeizureArmy,
+					Name: "监统震军",
+				},
+				{
+					Id:   consts.EightGateGoldenLockArray,
+					Name: "八门金锁阵",
+				},
+				{
+					Id:   consts.WuDangFlyArmy,
+					Name: "无当飞军",
+				},
+			},
+			Addition:   addition,
+			SoldierNum: 10000,
+		},
+	}
 	//香香吴骑
+	XiangxiangWuQi = []*vo.BattleGeneral{
+		//周泰
+		{
+			IsMaster: true,
+			BaseInfo: &po.MetadataGeneral{
+				Id: int64(consts.ZhouTai),
+			},
+			EquipTactics: []*po.Tactics{
+				{
+					Id:   consts.CorporealIronWall,
+					Name: "肉身铁壁",
+				},
+				{
+					Id:   consts.IronHorseDrive,
+					Name: "铁骑驱驰",
+				},
+				{
+					Id:   consts.TigerAndLeopardCavalry,
+					Name: "虎豹骑",
+				},
+			},
+			Addition:   addition,
+			SoldierNum: 10000,
+		},
+		//孙尚香
+		{
+			BaseInfo: &po.MetadataGeneral{
+				Id: int64(consts.SunShangXiang),
+			},
+			EquipTactics: []*po.Tactics{
+				{
+					Id:   consts.BowWaistConcubine,
+					Name: "弓腰姬",
+				},
+				{
+					Id:   consts.NakedBloodBattle,
+					Name: "裸衣血战",
+				},
+				{
+					Id:   consts.TigerCrouchingAndEagleSoaring,
+					Name: "虎踞鹰扬",
+				},
+			},
+			Addition:   addition,
+			SoldierNum: 10000,
+		},
+		//凌统
+		{
+			BaseInfo: &po.MetadataGeneral{
+				Id: int64(consts.LingTong),
+			},
+			EquipTactics: []*po.Tactics{
+				{
+					Id:   consts.CountryPersonGeneralStyle,
+					Name: "国士将风",
+				},
+				{
+					Id:   consts.BreakingThroughTheArmyAndWinningVictories,
+					Name: "破军威胜",
+				},
+				{
+					Id:   consts.AvoidTheSolidAndStrikeTheWeak,
+					Name: "避实击虚",
+				},
+			},
+			Addition:   addition,
+			SoldierNum: 10000,
+		},
+	}
 	//荣光枪
 	//社稷弓
 	//北伐枪
 	//关关赵
 	//关关张
+	GuanGuanZhang = []*vo.BattleGeneral{
+		//关羽
+		{
+			IsMaster: true,
+			BaseInfo: &po.MetadataGeneral{
+				Id: int64(consts.GuanYu),
+			},
+			EquipTactics: []*po.Tactics{
+				{
+					Id:   consts.BecomeFamousAndFearInspiringThroughoutChina,
+					Name: "威震华夏",
+				},
+				{
+					Id:   consts.DustpanFormation,
+					Name: "箕形阵",
+				},
+				{
+					Id:   consts.IntenseAndPowerful,
+					Name: "威谋靡亢",
+				},
+			},
+			Addition:   addition,
+			SoldierNum: 10000,
+		},
+		//关银屏
+		{
+			BaseInfo: &po.MetadataGeneral{
+				Id: int64(consts.GuanYinPing),
+			},
+			EquipTactics: []*po.Tactics{
+				{
+					Id:   consts.BowWaistConcubine,
+					Name: "弓腰姬",
+				},
+				{
+					Id:   consts.BrokenBridgeByWater,
+					Name: "据水断桥",
+				},
+				{
+					Id:   consts.OverwhelmingTheEnemyWithVigour,
+					Name: "盛气凌敌",
+				},
+			},
+			Addition:   addition,
+			SoldierNum: 10000,
+		},
+		//张飞
+		{
+			BaseInfo: &po.MetadataGeneral{
+				Id: int64(consts.ZhangFei),
+			},
+			EquipTactics: []*po.Tactics{
+				{
+					Id:   consts.YanPeopleRoar,
+					Name: "燕人咆哮",
+				},
+				{
+					Id:   consts.QingZhouSoldier,
+					Name: "青州兵",
+				},
+				{
+					Id:   consts.SweepAwayTheMillionsOfEnemyTroops,
+					Name: "横扫千军",
+				},
+			},
+			Addition:   addition,
+			SoldierNum: 10000,
+		},
+	}
 	//吴枪
 	//姬关枪
 	//诗诗盾

@@ -28,8 +28,8 @@ type ResumeParams struct {
 // @resumeNum 恢复兵力
 func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSoldierNum int64) {
 	//参数校验
-	if param.ResumeNum < 0 {
-		panic("resumeNum < 0")
+	if param.ResumeNum == 0 {
+		return param.ResumeNum, param.SufferGeneral.SoldierNum, param.SufferGeneral.SoldierNum
 	}
 	if param.ProduceGeneral == nil {
 		panic("ProduceGeneral is nil")

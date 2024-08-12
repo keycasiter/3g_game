@@ -11,7 +11,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/team"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/kr/pretty"
 	"github.com/spf13/cast"
 	"testing"
 )
@@ -411,7 +410,7 @@ func TestBattleLogicV2Context_Run_Many(t *testing.T) {
 		FightingTeam: &vo.BattleTeam{
 			TeamType:       consts.TeamType_Fighting,
 			ArmType:        consts.ArmType_Archers,
-			BattleGenerals: team.GuanGuanZhang,
+			BattleGenerals: team.TaiWeiDun,
 		},
 		//对战队伍
 		EnemyTeam: &vo.BattleTeam{
@@ -492,5 +491,28 @@ func TestBattleLogicV2Context_Run_Many(t *testing.T) {
 		return
 	}
 	fmt.Printf("%v", resp)
-	pretty.Logf("resp:%v", util.ToJsonString(ctx, resp))
+	fmt.Printf("我方结果：%+v\n", resp.BattleResultStatistics.FightingTeam.BattleResult)
+	for idx, general := range resp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList {
+		fmt.Printf("武将[%v]\n", req.FightingTeam.BattleGenerals[idx].BaseInfo.Name)
+		for _, tactics := range general.TacticStatisticsList {
+			fmt.Printf("战法[%v]触发[%v]杀敌[%v]恢复[%v]\n",
+				tactics.TacticName,
+				tactics.TriggerTimes,
+				tactics.KillSoliderNum,
+				tactics.ResumeSoliderNum,
+			)
+		}
+	}
+	fmt.Printf("敌方结果：%v\n", resp.BattleResultStatistics.EnemyTeam.BattleResult)
+	for idx, general := range resp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList {
+		fmt.Printf("武将[%v]\n", req.EnemyTeam.BattleGenerals[idx].BaseInfo.Name)
+		for _, tactics := range general.TacticStatisticsList {
+			fmt.Printf("战法[%v]触发[%v]杀敌[%v]恢复[%v]\n",
+				tactics.TacticName,
+				tactics.TriggerTimes,
+				tactics.KillSoliderNum,
+				tactics.ResumeSoliderNum,
+			)
+		}
+	}
 }

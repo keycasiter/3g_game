@@ -27,6 +27,21 @@ var cnt = 0
 
 var username, password string
 var ips []string
+var err error
+
+func Init() {
+	err := retry.Do(func() error {
+		username, password, ips, err = UseTps()
+		if err != nil {
+			return err
+		}
+		return nil
+	}, retry.Attempts(5), retry.Delay(2*time.Second))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("username:%v , password:%v , ips:%v", username, password, ips)
+}
 
 func HttpGet(ctx context.Context, requestUrl string, headers map[string]interface{}, params map[string]interface{}) (string, error) {
 	path := ""
@@ -38,6 +53,7 @@ func HttpGet(ctx context.Context, requestUrl string, headers map[string]interfac
 		paramsStr += fmt.Sprintf("%s=%s", k, url.QueryEscape(cast.ToString(v)))
 	}
 	path = fmt.Sprintf("%s?%s", requestUrl, paramsStr)
+	hlog.CtxInfof(ctx, "path=%s", path)
 
 	var client *http.Client
 
@@ -45,18 +61,6 @@ func HttpGet(ctx context.Context, requestUrl string, headers map[string]interfac
 	case ProxyMode_NoProxy:
 		client = &http.Client{}
 	case ProxyMode_KuaiDaili:
-		var username, password string
-		var ips []string
-		var err error
-
-		retry.Do(func() error {
-			username, password, ips, err = UseTps()
-			if err != nil {
-				return err
-			}
-			return nil
-		}, retry.Attempts(5), retry.Delay(2*time.Second))
-		hlog.CtxInfof(ctx, "username:%v , password:%v , ips:%v", username, password, ips)
 		// 隧道服务器
 		proxy_raw := ips[0]
 		proxy_str := fmt.Sprintf("http://%s:%s@%s", username, password, proxy_raw)

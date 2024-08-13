@@ -4,6 +4,8 @@ import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/dal/mysql"
+	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
@@ -90,7 +92,65 @@ func (runCtx *BattleLogicV2Context) Run() (*BattleLogicV2ContextResponse, error)
 }
 
 func (runCtx *BattleLogicV2Context) initMetadata() {
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] initMetadata...")
+	//从数据库拉取阵容武将属性补充
+	runCtx.fillGeneralDataByGeneralId()
+}
 
+func (runCtx *BattleLogicV2Context) fillGeneralDataByGeneralId() {
+	allGenerals := append(runCtx.Req.FightingTeam.BattleGenerals, runCtx.Req.EnemyTeam.BattleGenerals...)
+	allGeneralIds := make([]int64, 0)
+	for _, general := range allGenerals {
+		allGeneralIds = append(allGeneralIds, general.BaseInfo.Id)
+	}
+	generalList, err := mysql.NewGeneral().QueryGeneralList(runCtx.Ctx, &vo.QueryGeneralCondition{
+		Ids: allGeneralIds,
+	})
+	if err != nil {
+		hlog.CtxErrorf(runCtx.Ctx, "run err:%v", err)
+		return
+	}
+	generalMap := make(map[int64]*po.General, 0)
+	for _, general := range generalList {
+		generalMap[general.Id] = general
+	}
+	for _, general := range allGenerals {
+		if generalDb, ok := generalMap[general.BaseInfo.Id]; ok {
+			general.BaseInfo.Id = generalDb.Id
+			general.BaseInfo.Name = generalDb.Name
+			general.BaseInfo.Group = consts.Group(generalDb.Group)
+			general.BaseInfo.UniqueId = cast.ToString(generalDb.Id)
+
+			//属性
+			abilityAttr := &po.AbilityAttrString{}
+			util.ParseJsonObj(runCtx.Ctx, abilityAttr, generalDb.AbilityAttr)
+			general.BaseInfo.AbilityAttr = &po.AbilityAttr{
+				ForceBase:        cast.ToFloat64(abilityAttr.ForceBase),
+				ForceRate:        cast.ToFloat64(abilityAttr.ForceRate),
+				IntelligenceBase: cast.ToFloat64(abilityAttr.IntelligenceBase),
+				IntelligenceRate: cast.ToFloat64(abilityAttr.IntelligenceRate),
+				CharmBase:        cast.ToFloat64(abilityAttr.CharmBase),
+				CharmRate:        cast.ToFloat64(abilityAttr.CharmRate),
+				CommandBase:      cast.ToFloat64(abilityAttr.CommandBase),
+				CommandRate:      cast.ToFloat64(abilityAttr.CommandRate),
+				PoliticsBase:     cast.ToFloat64(abilityAttr.PoliticsBase),
+				PoliticsRate:     cast.ToFloat64(abilityAttr.PoliticsRate),
+				SpeedBase:        cast.ToFloat64(abilityAttr.SpeedBase),
+				SpeedRate:        cast.ToFloat64(abilityAttr.SpeedRate),
+			}
+
+			//兵种适性
+			armsAttr := &po.ArmsAttr{}
+			util.ParseJsonObj(runCtx.Ctx, &armsAttr, generalDb.ArmAttr)
+			general.BaseInfo.ArmsAttr = &po.ArmsAttr{
+				Cavalry:   armsAttr.Cavalry,
+				Mauler:    armsAttr.Mauler,
+				Archers:   armsAttr.Archers,
+				Spearman:  armsAttr.Spearman,
+				Apparatus: armsAttr.Apparatus,
+			}
+		}
+	}
 }
 
 // 属性加点处理
@@ -276,6 +336,8 @@ func (runCtx *BattleLogicV2Context) handleArmAbility(teamArmType consts.ArmType,
 
 // 对战准备阶段处理
 func (runCtx *BattleLogicV2Context) processBattlePreparePhase() {
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] processBattlePreparePhase...")
+
 	tacticsParams := runCtx.TacticsParams
 
 	//对战阶段
@@ -288,33 +350,30 @@ func (runCtx *BattleLogicV2Context) processBattlePreparePhase() {
 
 	//我方武将加成处理
 	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
-		hlog.CtxInfof(runCtx.Ctx, "处理武将加成：%v", general.BaseInfo.Name)
-		//剧本特殊效果加成
-
-		//部队士气加成
-
-		//兵种适性加成
-
-		//城池建筑加成
-
-		//装备加成
-
-		//战法加成
+		runCtx.handleGeneralAddition(runCtx.Req.FightingTeam, general)
 	}
+	//我方阵容加成处理
+	runCtx.handleTeamAddition(runCtx.Req.FightingTeam)
 
 	//敌方武将加成处理
 	for _, general := range runCtx.Req.EnemyTeam.BattleGenerals {
-		hlog.CtxInfof(runCtx.Ctx, "处理武将加成：%v", general.BaseInfo.Name)
+		runCtx.handleGeneralAddition(runCtx.Req.EnemyTeam, general)
 	}
+	//敌方阵容加成处理
+	runCtx.handleTeamAddition(runCtx.Req.EnemyTeam)
 
-	//兵书处理：一兵书效果
+	//准备阶段战法处理
+	runCtx.handlePreparePhaseTactic(tacticsParams)
+}
 
+func (runCtx *BattleLogicV2Context) handlePreparePhaseTactic(tacticsParams *model.TacticsParams) {
 	/****************************/
 	/*** 以下受武将速度影响来执行 ***/
 	/****************************/
+
+	//速度从快到慢给武将排序
 	tacticsParams.AllGeneralArr = util.MakeGeneralsOrderBySpeed(tacticsParams.AllGeneralArr)
 
-	//战法参数准备
 	for _, currentGeneral := range tacticsParams.AllGeneralArr {
 		//设置战法轮次属性
 		runCtx.TacticsParams.CurrentRound = consts.Battle_Round_Prepare
@@ -405,40 +464,52 @@ func (runCtx *BattleLogicV2Context) processBattlePreparePhase() {
 			}
 		}
 	}
-
 }
 
 func (runCtx *BattleLogicV2Context) handleGeneralAddition(team *vo.BattleTeam, general *vo.BattleGeneral) {
-	//1.国土效果
-	//TODO 部队兵力不足可携带兵力上限的65%，国土效果不生效
-	//2.士气加成
-	//TODO 士气满不影响任何东西，不满100，则降低伤害，其余不影响；
-	//看了下战报分析了下，每减少0.1士气，降低伤害比例是0.07%，如果0士气则降低70%伤害，其余不影响
-	//3.兵种适性加成
+	//剧本特殊效果加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 剧本特殊效果加成")
+	//士气加成 (看了下战报分析了下，每减少0.1士气，降低伤害比例是0.07%，如果0士气则降低70%伤害，其余不影响)
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 士气加成")
+	//兵种适性加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 兵种适性加成")
 	runCtx.handleArmAbility(team.ArmType, general)
-	//4.武将标签的加成
+	//武将标签加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 武将标签加成")
 	runCtx.handleGeneralTag(general)
 	//武将加点加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 武将加点加成")
 	runCtx.handleAbilityAttrAddition(general)
 	//武将等级加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 武将等级加成")
 	runCtx.handleGeneralLevel(general)
-	//城池建筑加成
-	//缘分加成
-	//装备加成
-	//特技加成
-	//兵书加成
+	//城池建筑加成 TODO
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 城池建筑加成")
+	//缘分加成 TODO
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 缘分加成")
+	//装备加成 TODO
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 装备加成")
+	//特技加成 TODO
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 特技加成")
+	//兵书加成 TODO
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 兵书加成")
 }
 
 func (runCtx *BattleLogicV2Context) handleTeamAddition(team *vo.BattleTeam) {
-	//1.兵战-科技加成
+	//兵战-科技加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleTeamAddition 兵战-科技加成")
 	runCtx.handleBuildingTechAttrAddition(team)
-	//2.协力-科技加成
+	//协力-科技加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleTeamAddition 协力-科技加成")
 	runCtx.handleBuildingTechGroupAddition(team)
-	//3.兵种-科技加成 TODO
+	//兵种-科技加成 TODO
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleTeamAddition 兵种-科技加成")
 }
 
 // 对战战报统计数据处理
 func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] processBattleReportStatistics...")
+
 	//我军
 	fightingGeneralsStatisticsList := make([]*model.GeneralBattleStatistics, 0)
 	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
@@ -538,6 +609,8 @@ func (runCtx *BattleLogicV2Context) makeGeneralInfos(battleGenerals []*vo.Battle
 
 // 对战对阵阶段处理
 func (runCtx *BattleLogicV2Context) processBattleFightingPhase() {
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] processBattleFightingPhase...")
+
 	//对战阶段
 	runCtx.TacticsParams.CurrentPhase = consts.Battle_Phase_Fighting
 
@@ -914,6 +987,8 @@ func (runCtx BattleLogicV2Context) GeneralRoundPostProcessor(tacticsParams *mode
 }
 
 func (runCtx *BattleLogicV2Context) buildBattleRoundParams() {
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] buildBattleRoundParams...")
+
 	tacticsParams := &model.TacticsParams{}
 	tacticsParams.CurrentRound = consts.Battle_Round_Unknow
 

@@ -281,12 +281,6 @@ func (g *GeneralLotteryLogic) BuildResp() {
 		if currentLotteryRate, ok := g.GeneralPool[consts.General_Id(general.Id)]; ok {
 			lotteryRate = currentLotteryRate
 		}
-		//去重
-		if duplicateGeneral[general.Id] {
-			continue
-		} else {
-			duplicateGeneral[general.Id] = true
-		}
 
 		generalLotteryList = append(generalLotteryList, &vo.GeneralLotteryInfo{
 			GeneralInfo: general,
@@ -295,8 +289,17 @@ func (g *GeneralLotteryLogic) BuildResp() {
 			LotteryRate: lotteryRate,
 		})
 	}
+	//去重
+	finalGeneralLotteryList := make([]*vo.GeneralLotteryInfo, 0)
+	for _, lotteryInfo := range generalLotteryList {
+		if duplicateGeneral[lotteryInfo.GeneralInfo.Id] {
+			continue
+		}
+		finalGeneralLotteryList = append(finalGeneralLotteryList, lotteryInfo)
+	}
+
 	g.Resp = &vo.GeneralLotteryResponse{
-		GeneralLotteryInfoList: generalLotteryList,
+		GeneralLotteryInfoList: finalGeneralLotteryList,
 		ProtectedMustHitNum:    g.ProtectedMustHitNum,
 		Hit5LevGeneralNum:      hit5LevGeneralNum,
 		NotHitLev5Times:        g.NotHit5LevGeneralNum,

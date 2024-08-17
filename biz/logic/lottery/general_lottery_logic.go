@@ -263,6 +263,7 @@ func (g *GeneralLotteryLogic) BuildResp() {
 
 	//整理resp
 	generalLotteryList := make([]*vo.GeneralLotteryInfo, 0)
+	duplicateGeneral := make(map[int64]bool, 0)
 	hit5LevGeneralNum := int64(0)
 	for _, general := range generalInfos {
 		//命中次数
@@ -279,6 +280,12 @@ func (g *GeneralLotteryLogic) BuildResp() {
 		lotteryRate := float64(0)
 		if currentLotteryRate, ok := g.GeneralPool[consts.General_Id(general.Id)]; ok {
 			lotteryRate = currentLotteryRate
+		}
+		//去重
+		if duplicateGeneral[general.Id] {
+			continue
+		} else {
+			duplicateGeneral[general.Id] = true
 		}
 
 		generalLotteryList = append(generalLotteryList, &vo.GeneralLotteryInfo{

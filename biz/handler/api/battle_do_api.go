@@ -24,11 +24,27 @@ import (
 	"github.com/spf13/cast"
 )
 
+// @title 三战配将侯小程序
+// @version 1.0
+// @description 三战配将侯小程序
+
+// @contact.name 3g_game
+// @contact.url keycasiter@qq.com
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host 3game.tech
+// @BasePath /
+// @schemes http
+
 // BattleDo @Summary 发起模拟对战
 // @Description 发起模拟对战
-// @Tags 对战
+// @Tags 模拟对战
 // @Accept json
 // @Produce json
+// @@Success 0
+// @Failure
 // @Router /v1/battle/do [POST]
 func BattleDo(ctx context.Context, c *app.RequestContext) {
 	var err error

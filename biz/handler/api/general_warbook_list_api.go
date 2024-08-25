@@ -14,7 +14,7 @@ import (
 
 // GeneralWarBookList @Summary 查询武将信息列表
 // @Description 查询武将信息列表
-// @Tags 武将
+// @Tags 模拟对战
 // @Accept json
 // @Produce json
 // @Router /v1/war_book/list [GET]

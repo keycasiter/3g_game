@@ -14,7 +14,7 @@ import (
 
 // BattleExecute @Summary 发起模拟对战
 // @Description 发起模拟对战
-// @Tags 对战
+// @Tags 模拟对战
 // @Accept json
 // @Produce json
 // @Router /v1/battle/do [POST]

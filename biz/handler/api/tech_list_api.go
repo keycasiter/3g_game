@@ -14,7 +14,7 @@ import (
 
 // SpecialTechList @Summary 查询特技列表
 // @Description 查询特技列表
-// @Tags 特技
+// @Tags 模拟对战
 // @Accept json
 // @Produce json
 // @Router /v1/special_tech/list [GET]

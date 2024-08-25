@@ -14,7 +14,7 @@ import (
 
 // RecWarBookList @Summary 查询推荐兵书
 // @Description 查询推荐兵书
-// @Tags 推荐
+// @Tags 模拟对战
 // @Accept json
 // @Produce json
 // @Router /v1/rec_warbook/list [GET]

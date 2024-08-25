@@ -14,7 +14,7 @@ import (
 
 // TacticList @Summary 查询战法列表
 // @Description 查询战法列表
-// @Tags 战法
+// @Tags 模拟对战
 // @Accept json
 // @Produce json
 // @Router /v1/tactic/list [GET]

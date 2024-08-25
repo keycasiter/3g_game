@@ -14,7 +14,7 @@ import (
 
 // RecSpecialTechList @Summary 查询推荐阵容
 // @Description 查询推荐阵容
-// @Tags 推荐
+// @Tags 模拟对战
 // @Accept json
 // @Produce json
 // @Router /v1/rec_team/list [GET]

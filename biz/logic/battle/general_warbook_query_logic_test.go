@@ -15,7 +15,7 @@ func TestGeneralWarBookQueryLogic_Handle(t *testing.T) {
 	mysql.InitMysql()
 	ctx := context.Background()
 
-	resp, err := NewGeneralWarBookQueryLogic(ctx, api.GeneralWarBookQueryRequest{
+	resp, err := NewGeneralWarBookListLogic(ctx, api.GeneralWarBookListRequest{
 		GeneralId: 1,
 	}).Handle()
 	if err != nil {

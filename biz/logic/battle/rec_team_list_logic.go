@@ -11,27 +11,27 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-type RecTeamQueryLogic struct {
+type RecTeamListLogic struct {
 	Ctx  context.Context
-	Req  api.RecTeamQueryRequest
-	Resp api.RecTeamQueryResponse
+	Req  api.RecTeamListRequest
+	Resp api.RecTeamListResponse
 }
 
-func NewRecTeamQueryLogic(ctx context.Context, req api.RecTeamQueryRequest) *RecTeamQueryLogic {
-	return &RecTeamQueryLogic{
+func NewRecTeamListLogic(ctx context.Context, req api.RecTeamListRequest) *RecTeamListLogic {
+	return &RecTeamListLogic{
 		Ctx: ctx,
 		Req: req,
-		Resp: api.RecTeamQueryResponse{
+		Resp: api.RecTeamListResponse{
 			Meta: util.BuildSuccMeta(),
 		},
 	}
 }
 
-func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
+func (g *RecTeamListLogic) Handle() (api.RecTeamListResponse, error) {
 	//推荐队伍查询
 	recTeamlist, err := mysql.NewRecTeam().QueryRecTeamList(g.Ctx, &vo.QueryRecTeamCondition{
 		Name:   g.Req.Name,
-		Group:  g.Req.Group,
+		Group:  int64(g.Req.Group),
 		Offset: util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize),
 		Limit:  int(g.Req.PageSize),
 	})
@@ -49,7 +49,7 @@ func (g *RecTeamQueryLogic) Handle() (api.RecTeamQueryResponse, error) {
 		generalIds = append(generalIds, util.StringToIntArray(recTeam.GeneralIds)...)
 	}
 	//武将信息查询
-	generalQueryResp, err := NewGeneralQueryLogic(g.Ctx, api.GeneralQueryRequest{
+	generalQueryResp, err := NewGeneralListLogic(g.Ctx, api.GeneralListRequest{
 		PageNo:   0,
 		PageSize: int64(len(generalIds)),
 		Ids:      generalIds,

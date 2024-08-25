@@ -12,27 +12,31 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-// SpecialTechQuery .
-// @router /v1/special_tech/query [GET]
-func SpecialTechQuery(ctx context.Context, c *app.RequestContext) {
+// GeneralWarBookList @Summary 查询武将信息列表
+// @Description 查询武将信息列表
+// @Tags 武将
+// @Accept json
+// @Produce json
+// @Router /v1/war_book/list [GET]
+func GeneralWarBookList(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req api.SpecialTechQueryRequest
+	var req api.GeneralWarBookListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
 
-	hlog.CtxInfof(ctx, "SpecialTechQuery Req:%s", util.ToJsonString(ctx, req))
+	hlog.CtxInfof(ctx, "GeneralWarBookQuery Req:%s", util.ToJsonString(ctx, req))
 
-	resp, err := battle.NewSpecialTechQueryLogic(ctx, req).Handle()
+	resp, err := battle.NewGeneralWarBookListLogic(ctx, req).Handle()
 	if err != nil {
-		hlog.CtxErrorf(ctx, "SpecialTechQueryLogic handle err:%v", err)
+		hlog.CtxErrorf(ctx, "GeneralWarBookQueryLogic handle err:%v", err)
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
 
-	hlog.CtxInfof(ctx, "SpecialTechQuery Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "GeneralWarBookQuery Resp:%s", util.ToJsonString(ctx, resp))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

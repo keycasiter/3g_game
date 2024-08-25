@@ -12,11 +12,15 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-// GeneralQuery .
-// @router /v1/general/query [GET]
-func GeneralQuery(ctx context.Context, c *app.RequestContext) {
+// GeneralList @Summary 查询武将信息列表
+// @Description 查询武将信息列表
+// @Tags 武将
+// @Accept json
+// @Produce json
+// @Router /v1/general/list [GET]
+func GeneralList(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req api.GeneralQueryRequest
+	var req api.GeneralListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
@@ -24,7 +28,7 @@ func GeneralQuery(ctx context.Context, c *app.RequestContext) {
 	}
 	hlog.CtxInfof(ctx, "GeneralQuery Req:%s", util.ToJsonString(ctx, req))
 
-	resp, err := battle.NewGeneralQueryLogic(ctx, req).Handle()
+	resp, err := battle.NewGeneralListLogic(ctx, req).Handle()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "GeneralQueryLogic handle err:%v", err)
 		c.JSON(hertzconsts.StatusOK, resp)

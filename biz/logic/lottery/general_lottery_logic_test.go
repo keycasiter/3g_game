@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/keycasiter/3g_game/biz/conf"
 	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/spf13/cast"
@@ -16,7 +15,7 @@ import (
 func TestNewGeneralLotteryContext(t *testing.T) {
 	conf.InitConfig()
 	mysql.InitMysql()
-	cache.InitCache()
+	//cache.InitCache()
 	ctx := context.Background()
 	rollTimes := int64(1000)
 

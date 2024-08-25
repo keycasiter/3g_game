@@ -19,6 +19,6 @@ func TestGeneralQuery(t *testing.T) {
 	req := &app.RequestContext{}
 	req.Request.SetFormData(map[string]string{})
 
-	GeneralQuery(ctx, req)
+	GeneralList(ctx, req)
 	fmt.Printf("resp:%s", req.Response.Body())
 }

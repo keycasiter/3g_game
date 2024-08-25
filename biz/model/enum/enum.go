@@ -968,3 +968,60 @@ func (p *EquipType) Value() (driver.Value, error) {
 	}
 	return int64(*p), nil
 }
+
+type BattleResult int64
+
+const (
+	BattleResult_Win              BattleResult = 1
+	BattleResult_Lose             BattleResult = 2
+	BattleResult_Draw             BattleResult = 3
+	BattleResult_Advantage_Draw   BattleResult = 4
+	BattleResult_Inferiority_Draw BattleResult = 5
+)
+
+func (p BattleResult) String() string {
+	switch p {
+	case BattleResult_Win:
+		return "Win"
+	case BattleResult_Lose:
+		return "Lose"
+	case BattleResult_Draw:
+		return "Draw"
+	case BattleResult_Advantage_Draw:
+		return "Advantage_Draw"
+	case BattleResult_Inferiority_Draw:
+		return "Inferiority_Draw"
+	}
+	return "<UNSET>"
+}
+
+func BattleResultFromString(s string) (BattleResult, error) {
+	switch s {
+	case "Win":
+		return BattleResult_Win, nil
+	case "Lose":
+		return BattleResult_Lose, nil
+	case "Draw":
+		return BattleResult_Draw, nil
+	case "Advantage_Draw":
+		return BattleResult_Advantage_Draw, nil
+	case "Inferiority_Draw":
+		return BattleResult_Inferiority_Draw, nil
+	}
+	return BattleResult(0), fmt.Errorf("not a valid BattleResult string")
+}
+
+func BattleResultPtr(v BattleResult) *BattleResult { return &v }
+func (p *BattleResult) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = BattleResult(result.Int64)
+	return
+}
+
+func (p *BattleResult) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}

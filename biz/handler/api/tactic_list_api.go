@@ -12,27 +12,32 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-// SpecialTechQuery .
-// @router /v1/rec_team/query [GET]
-func RecTeamQuery(ctx context.Context, c *app.RequestContext) {
+// TacticList @Summary 查询战法列表
+// @Description 查询战法列表
+// @Tags 战法
+// @Accept json
+// @Produce json
+// @Router /v1/tactic/list [GET]
+func TacticList(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req api.RecTeamQueryRequest
+	var req api.TacticListRequest
+
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
 
-	hlog.CtxInfof(ctx, "RecTeamQuery Req:%s", util.ToJsonString(ctx, req))
+	hlog.CtxInfof(ctx, "TacticList Req:%s", util.ToJsonString(ctx, req))
 
-	resp, err := battle.NewRecTeamQueryLogic(ctx, req).Handle()
+	resp, err := battle.NewTacticListLogic(ctx, req).Handle()
 	if err != nil {
-		hlog.CtxErrorf(ctx, "RecTeamQueryLogic handle err:%v", err)
+		hlog.CtxErrorf(ctx, "TacticListLogic handle err:%v", err)
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
 
-	hlog.CtxInfof(ctx, "RecTeamQuery Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "TacticList Resp:%s", util.ToJsonString(ctx, resp))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

@@ -24,12 +24,16 @@ import (
 	"github.com/spf13/cast"
 )
 
-// BattleExecute .模拟对战
-// @router /v1/battle/execute [POST]
-func BattleExecute(ctx context.Context, c *app.RequestContext) {
+// BattleDo @Summary 发起模拟对战
+// @Description 发起模拟对战
+// @Tags 对战
+// @Accept json
+// @Produce json
+// @Router /v1/battle/do [POST]
+func BattleDo(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req api.BattleExecuteRequest
-	resp := new(api.BattleExecuteResponse)
+	var req api.BattleDoRequest
+	resp := new(api.BattleDoResponse)
 	resp.Meta = util.BuildSuccMeta()
 
 	err = c.BindAndValidate(&req)
@@ -52,7 +56,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//逻辑执行
-	serviceResp, err := battle.NewBattleLogicContext(ctx, buildBattleExecuteRequest(ctx, req)).Run()
+	serviceResp, err := battle.NewBattleLogicContext(ctx, buildBattleDoRequest(ctx, req)).Run()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
 		resp.Meta = util.BuildFailMetaWithMsg("未知错误")
@@ -69,7 +73,7 @@ func BattleExecute(ctx context.Context, c *app.RequestContext) {
 	pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
 }
 
-func buildResponse(resp *api.BattleExecuteResponse, serviceResp *battle.BattleLogicContextResponse) {
+func buildResponse(resp *api.BattleDoResponse, serviceResp *battle.BattleLogicContextResponse) {
 	resp.Meta = &common.Meta{
 		StatusCode: enum.ResponseCode_Success,
 		StatusMsg:  "成功",
@@ -209,7 +213,7 @@ func makeArmsAttr(general *vo.BattleGeneral) *api.ArmsAttr {
 	}
 }
 
-func buildBattleExecuteRequest(ctx context.Context, req api.BattleExecuteRequest) *battle.BattleLogicContextRequest {
+func buildBattleDoRequest(ctx context.Context, req api.BattleDoRequest) *battle.BattleLogicContextRequest {
 	//查询武将信息
 	generalIds := make([]int64, 0)
 	for _, general := range req.FightingTeam.BattleGenerals {
@@ -459,7 +463,7 @@ func buildAbilityAttr(ctx context.Context, generalInfo *po.General) *po.AbilityA
 	}
 }
 
-func checkParam(req api.BattleExecuteRequest) error {
+func checkParam(req api.BattleDoRequest) error {
 	//队伍
 	if req.FightingTeam == nil {
 		return errors.New("我军队伍不能为空")

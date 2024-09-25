@@ -149,3 +149,11 @@ enum EquipType {
 	Horse = 3
 	Treasure = 4
 }
+
+// 装备等级
+enum EquipLevel {
+	S = 1
+	A = 2
+	B = 3
+	C = 4
+}

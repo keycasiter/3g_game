@@ -31,6 +31,9 @@ func (g *SpecialTechDal) QuerySpecialTechList(ctx context.Context, condition *vo
 	if condition.Type > 0 {
 		conn.Where("type = ?", condition.Type)
 	}
+	if condition.Level > 0 {
+		conn.Where("level = ?", condition.Level)
+	}
 	if strings.Trim(condition.Name, " ") != "" {
 		conn.Where("name like ?", fmt.Sprintf("%%%s%%", condition.Name))
 	}

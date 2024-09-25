@@ -45,9 +45,10 @@ func (s *SpecialTechQueryLogic) Handle() (api.SpecialTechQueryResponse, error) {
 	resList := make([]*api.SpecialTech, 0)
 	for _, tech := range list {
 		resList = append(resList, &api.SpecialTech{
-			Id:   tech.Id,
-			Name: tech.Name,
-			Type: enum.EquipType(tech.Type),
+			Id:    tech.Id,
+			Name:  tech.Name,
+			Type:  enum.EquipType(tech.Type),
+			Level: enum.EquipLevel(tech.Level),
 		})
 	}
 

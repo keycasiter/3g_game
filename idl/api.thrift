@@ -260,6 +260,7 @@ struct SpecialTechQueryRequest{
     1: string Name
     2: i64 Id
     3: enum.EquipType Type
+    4: enum.EquipLevel Level
 
     100: i64 PageNo,
     101: i64 PageSize
@@ -275,6 +276,7 @@ struct SpecialTech {
     1: i64 Id
     2: string Name
     3: enum.EquipType Type
+    4: enum.EquipLevel Level
 }
 //============= 查询特技列表 END ==============
 

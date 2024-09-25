@@ -13,23 +13,23 @@ import (
 	"strings"
 )
 
-type GeneralWarBookQueryLogic struct {
+type GeneralWarBookListLogic struct {
 	Ctx  context.Context
-	Req  api.GeneralWarBookQueryRequest
-	Resp api.GeneralWarBookQueryResponse
+	Req  api.GeneralWarBookListRequest
+	Resp api.GeneralWarBookListResponse
 }
 
-func NewGeneralWarBookQueryLogic(ctx context.Context, req api.GeneralWarBookQueryRequest) *GeneralWarBookQueryLogic {
-	return &GeneralWarBookQueryLogic{
+func NewGeneralWarBookListLogic(ctx context.Context, req api.GeneralWarBookListRequest) *GeneralWarBookListLogic {
+	return &GeneralWarBookListLogic{
 		Ctx: ctx,
 		Req: req,
-		Resp: api.GeneralWarBookQueryResponse{
+		Resp: api.GeneralWarBookListResponse{
 			Meta: util.BuildSuccMeta(),
 		},
 	}
 }
 
-func (g *GeneralWarBookQueryLogic) Handle() (api.GeneralWarBookQueryResponse, error) {
+func (g *GeneralWarBookListLogic) Handle() (api.GeneralWarBookListResponse, error) {
 	//查询武将战法
 	generalWarbookList, err := mysql.NewGeneralWarbook().QueryGeneralWarbookList(g.Ctx, &vo.QueryGeneralWarbookCondition{
 		GeneralID: g.Req.GeneralId,

@@ -18,7 +18,7 @@ func TestGeneralQueryLogic_Handle(t *testing.T) {
 
 	ctx := context.Background()
 	gender := enum.Gender_Female
-	resp, err := NewGeneralQueryLogic(ctx, api.GeneralQueryRequest{
+	resp, err := NewGeneralListLogic(ctx, api.GeneralListRequest{
 		Gender:   &gender,
 		PageNo:   0,
 		PageSize: 1,

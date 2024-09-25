@@ -1,6 +1,10 @@
 # 3g_game
 🎮 三国志战略版配将小程序
 
+# swag
+https://gitee.com/xvwen/hertz-swag
+https://github.com/swaggo/swag/blob/master/README_zh-CN.md
+
 # 📁 工程结构
 &emsp;&emsp;没有过于复杂的架构设计，也不需要，简单的单体服务。
 

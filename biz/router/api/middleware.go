@@ -185,3 +185,93 @@ func _generallotterypoolinfoqueryMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _battledoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _battlelistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generalwarbooklistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotterylistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _rec_special_techMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _recspecialtechlistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _rec_tacticMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _rectacticlistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _recteamlistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _rec_warbookMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _recwarbooklistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _specialtechlistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _tacticlistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotteryinfolistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotterypoollistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _generallotteryratelistMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _userinfodetailMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

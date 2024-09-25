@@ -1,0 +1,164 @@
+info:
+  contact: {}
+paths:
+  /v1/battle/do:
+    post:
+      consumes:
+      - application/json
+      description: 发起模拟对战
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 对战
+  /v1/general/list:
+    get:
+      consumes:
+      - application/json
+      description: 查询武将信息列表
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 武将
+  /v1/lottery/general/do:
+    post:
+      consumes:
+      - application/json
+      description: 发起模拟抽卡
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 模拟抽卡
+  /v1/lottery/general/info_query:
+    get:
+      consumes:
+      - application/json
+      description: 卡池武将查询
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 模拟抽卡
+  /v1/lottery/general/list:
+    get:
+      consumes:
+      - application/json
+      description: 抽卡记录查询
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 模拟抽卡
+  /v1/lottery/general/pool_query:
+    get:
+      consumes:
+      - application/json
+      description: 武将概率查询
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 模拟抽卡
+  /v1/lottery/general/rate_query:
+    get:
+      consumes:
+      - application/json
+      description: 武将概率查询
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 模拟抽卡
+  /v1/lottery/general/user_data_query:
+    get:
+      consumes:
+      - application/json
+      description: 用户武将抽卡数据查询
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 模拟抽卡
+  /v1/lottery/general/user_data_reset:
+    post:
+      consumes:
+      - application/json
+      description: 用户武将抽卡数据重置
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 模拟抽卡
+  /v1/rec_team/list:
+    get:
+      consumes:
+      - application/json
+      description: 查询推荐阵容
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 推荐
+  /v1/rec_warbook/list:
+    get:
+      consumes:
+      - application/json
+      description: 查询推荐兵书
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 推荐
+  /v1/special_tech/list:
+    get:
+      consumes:
+      - application/json
+      description: 查询特技列表
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 特技
+  /v1/tactic/list:
+    get:
+      consumes:
+      - application/json
+      description: 查询战法列表
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 战法
+  /v1/user/detail:
+    get:
+      consumes:
+      - application/json
+      description: 查询用户信息详情
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 用户
+  /v1/user/login:
+    post:
+      consumes:
+      - application/json
+      description: 用户登录
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 用户
+  /v1/war_book/list:
+    get:
+      consumes:
+      - application/json
+      description: 查询武将信息列表
+      produces:
+      - application/json
+      responses: {}
+      tags:
+      - 武将
+swagger: "2.0"

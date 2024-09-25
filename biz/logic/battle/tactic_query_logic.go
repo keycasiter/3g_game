@@ -10,23 +10,23 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-type TacticQueryLogic struct {
+type TacticListLogic struct {
 	Ctx  context.Context
-	Req  api.TacticQueryRequest
-	Resp api.TacticQueryResponse
+	Req  api.TacticListRequest
+	Resp api.TacticListResponse
 }
 
-func NewTacticQueryLogic(ctx context.Context, req api.TacticQueryRequest) *TacticQueryLogic {
-	return &TacticQueryLogic{
+func NewTacticListLogic(ctx context.Context, req api.TacticListRequest) *TacticListLogic {
+	return &TacticListLogic{
 		Ctx: ctx,
 		Req: req,
-		Resp: api.TacticQueryResponse{
+		Resp: api.TacticListResponse{
 			Meta: util.BuildSuccMeta(),
 		},
 	}
 }
 
-func (g *TacticQueryLogic) Handle() (api.TacticQueryResponse, error) {
+func (g *TacticListLogic) Handle() (api.TacticListResponse, error) {
 	//查询战法列表
 	sources := make([]int32, 0)
 	for _, source := range g.Req.Sources {

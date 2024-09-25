@@ -10,23 +10,23 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-type SpecialTechQueryLogic struct {
+type SpecialTechListLogic struct {
 	Ctx  context.Context
-	Req  api.SpecialTechQueryRequest
-	Resp api.SpecialTechQueryResponse
+	Req  api.SpecialTechListRequest
+	Resp api.SpecialTechListResponse
 }
 
-func NewSpecialTechQueryLogic(ctx context.Context, req api.SpecialTechQueryRequest) *SpecialTechQueryLogic {
-	return &SpecialTechQueryLogic{
+func NewSpecialTechListLogic(ctx context.Context, req api.SpecialTechListRequest) *SpecialTechListLogic {
+	return &SpecialTechListLogic{
 		Ctx: ctx,
 		Req: req,
-		Resp: api.SpecialTechQueryResponse{
+		Resp: api.SpecialTechListResponse{
 			Meta: util.BuildSuccMeta(),
 		},
 	}
 }
 
-func (s *SpecialTechQueryLogic) Handle() (api.SpecialTechQueryResponse, error) {
+func (s *SpecialTechListLogic) Handle() (api.SpecialTechListResponse, error) {
 	//查询特技列表
 	list, err := mysql.NewSpecialTech().QuerySpecialTechList(s.Ctx, &vo.QuerySpecialTechCondition{
 		Id:     s.Req.Id,

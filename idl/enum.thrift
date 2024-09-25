@@ -157,3 +157,9 @@ enum EquipLevel {
 	B = 3
 	C = 4
 }
+
+enum BattleResult{
+	Win = 1
+	Lose = 2
+	Draw = 3
+}

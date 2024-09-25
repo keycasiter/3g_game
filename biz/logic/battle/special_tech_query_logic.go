@@ -32,6 +32,7 @@ func (s *SpecialTechListLogic) Handle() (api.SpecialTechListResponse, error) {
 		Id:     s.Req.Id,
 		Name:   s.Req.Name,
 		Type:   int(s.Req.Type),
+		Level:  int(s.Req.Level),
 		Offset: util.PageNoToOffset(s.Req.PageNo, s.Req.PageSize),
 		Limit:  int(s.Req.PageSize),
 	})

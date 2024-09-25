@@ -124,7 +124,7 @@ func (b BlazingWildfireTactic) Execute() {
 							b.Name(),
 							consts.DebuffEffectType_Firing,
 						)
-						dmgNum := cast.ToInt64(0.56 * triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+						dmgNum := cast.ToInt64(0.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
 						util.TacticDamage(&util.TacticDamageParam{
 							TacticsParams: b.tacticsParams,
 							AttackGeneral: currentGeneral,
@@ -135,7 +135,7 @@ func (b BlazingWildfireTactic) Execute() {
 							TacticId:      b.Id(),
 						})
 					}
-					//注册中毒效果消失
+					//注册灼烧效果消失
 					if util.DeBuffEffectOfTacticIsDeplete(triggerGeneral, consts.DebuffEffectType_Firing, b.Id()) {
 						util.DebuffEffectWrapRemove(ctx, triggerGeneral, consts.DebuffEffectType_Firing, b.Id())
 					}

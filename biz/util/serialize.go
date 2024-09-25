@@ -2,13 +2,14 @@ package util
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	jsoniter "github.com/json-iterator/go"
 	"github.com/spf13/cast"
 )
 
 func ToJsonString(ctx context.Context, obj interface{}) string {
-	byt, err := jsoniter.Marshal(obj)
+	byt, err := json.Marshal(obj)
 	if err != nil {
 		hlog.CtxErrorf(ctx, "json Marshal err:%v", err)
 		return ""

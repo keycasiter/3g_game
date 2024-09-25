@@ -6,7 +6,7 @@ include "idl/enum.thrift"
 
 //============= 模拟对战 BEGIN ==============
 
-struct BattleExecuteRequest {
+struct BattleDoRequest {
 	/** 队伍信息 **/
 	// 出战队伍信息
 	1:BattleTeam FightingTeam
@@ -31,6 +31,8 @@ struct BattleTeam {
 	6:i64 SoliderNum
 	//队伍剩余兵力
 	7:i64 RemainNum
+	//队伍名称
+	8:string Name
 }
 
 // 对战武将信息
@@ -108,6 +110,8 @@ struct Tactics {
 	3:enum.TacticsSource TacticsSource
 	4:enum.TacticsType   Type
 	5:enum.TacticQuality Quality
+	6:double TriggerRate
+	7:string Desc
 }
 
 // 兵种属性
@@ -135,7 +139,7 @@ struct BuildingTechGroupAddition {
 	4: string GroupQunXiongRate
 }
 
-struct BattleExecuteResponse {
+struct BattleDoResponse {
   1: common.Meta meta
   //对战数据统计
   2: BattleResultStatistics BattleResultStatistics
@@ -189,9 +193,34 @@ struct TacticStatistics {
 
 //============= 模拟对战 END ==============
 
+//============= 模拟对战列表 BEGIN ==============
+struct BattleListRequest{
+   1: string  Uid      // 用户ID
+
+   100: i64 PageNo,
+   101: i64 PageSize
+}
+
+struct BattleListResponse{
+    1: common.Meta Meta
+    //对战记录列表
+    2: list<BattleRecordInfo> TacticList
+}
+
+struct BattleRecordInfo {
+    //对战结果
+    1: enum.BattleResult BattleResult
+	// 出战队伍信息
+	2:BattleTeam FightingTeam
+	// 对战队伍信息
+	3:BattleTeam EnemyTeam
+}
+
+//============= 模拟对战列表 END ==============
+
 //============= 查询战法列表 BEGIN ==============
-struct TacticQueryRequest{
-   1: i64  Id      // 主键ID
+struct TacticListRequest{
+   1: i64  Id      // 战法ID
    2: string Name    // 战法名称
    3: enum.TacticQuality  Quality // 战法品质
    4: enum.TacticsSource  Source  // 战法来源
@@ -202,7 +231,7 @@ struct TacticQueryRequest{
    101: i64 PageSize
 }
 
-struct TacticQueryResponse{
+struct TacticListResponse{
     1: common.Meta Meta
     //战法信息列表
     2: list<Tactics> TacticList
@@ -210,7 +239,7 @@ struct TacticQueryResponse{
 //============= 查询战法列表 END ==============
 
 //============= 查询武将列表 BEGIN ==============
-struct GeneralQueryRequest{
+struct GeneralListRequest{
      1: optional i64  Id               // 武将ID
      2: optional string Name             // 姓名
      3: optional enum.Gender   Gender           // 性别
@@ -226,7 +255,7 @@ struct GeneralQueryRequest{
      101: i64 PageSize
 }
 
-struct GeneralQueryResponse{
+struct GeneralListResponse{
     1: common.Meta Meta
     //武将信息列表
     2: list<BattleGeneral> GeneralList
@@ -234,14 +263,14 @@ struct GeneralQueryResponse{
 //============= 查询武将列表 END ==============
 
 //============= 查询兵书列表 BEGIN ==============
-struct GeneralWarBookQueryRequest{
+struct GeneralWarBookListRequest{
     //武将ID
     1: i64 GeneralId
     //兵书类型
     2: enum.WarbookType WarbookType
 }
 
-struct GeneralWarBookQueryResponse{
+struct GeneralWarBookListResponse{
     1: common.Meta Meta
     //兵书信息列表<map<兵书类型,map<层级,兵书list>>>
     2: map<i64,map<i64,list<WarBook>>> WarBookMapList
@@ -252,20 +281,22 @@ struct WarBook {
     2: string Name
     3: i64 Type
     4: i64 Level
+    5: string Desc
 }
 //============= 查询兵书列表 END ==============
 
 //============= 查询特技列表 BEGIN ==============
-struct SpecialTechQueryRequest{
+struct SpecialTechListRequest{
     1: string Name
     2: i64 Id
     3: enum.EquipType Type
+    4: enum.EquipLevel Level
 
     100: i64 PageNo,
     101: i64 PageSize
 }
 
-struct SpecialTechQueryResponse{
+struct SpecialTechListResponse{
     1: common.Meta meta
     //特技信息列表
     2: list<SpecialTech> SpecialTechList
@@ -275,19 +306,21 @@ struct SpecialTech {
     1: i64 Id
     2: string Name
     3: enum.EquipType Type
+    4: enum.EquipLevel Level
 }
 //============= 查询特技列表 END ==============
 
 //============= 查询推荐阵容列表 BEGIN ==============
-struct RecTeamQueryRequest{
+struct RecTeamListRequest{
     1: string Name
-    2: i64 Group
+    2: enum.Group Group
+    3: enum.ArmType ArmType
 
     100: i64 PageNo,
     101: i64 PageSize
 }
 
-struct RecTeamQueryResponse{
+struct RecTeamListResponse{
     1: common.Meta meta
     //武将信息列表
     2: list<RecTeamGeneral> RecTeamGeneralList
@@ -301,6 +334,46 @@ struct RecTeamGeneral {
     5: i64 ArmType
 }
 //============= 查询推荐阵容列表 END ==============
+
+//============= 查询推荐战法列表 BEGIN ==============
+struct RecTacticListRequest{
+    1: i64 GeneralId
+
+    100: i64 PageNo,
+    101: i64 PageSize
+}
+
+struct RecTacticListResponse{
+    1: common.Meta meta
+    //战法信息列表
+    2: list<Tactics> RecTacticList
+}
+
+//============= 查询推荐战法列表 END ==============
+
+//============= 查询推荐兵书列表 BEGIN ==============
+struct RecWarBookListRequest{
+    1: i64 GeneralId
+}
+
+struct RecWarBookListResponse{
+    1: common.Meta meta
+    //兵书信息列表<map<兵书类型,map<层级,兵书list>>>
+    2: map<i64,map<i64,list<WarBook>>> WarBookMapList
+}
+//============= 查询推荐兵书列表 END ==============
+
+//============= 查询推荐特技列表 BEGIN ==============
+struct RecSpecialTechListRequest{
+    1: i64 GeneralId
+}
+
+struct RecSpecialTechListResponse{
+    1: common.Meta meta
+    //特技信息列表
+    2: list<SpecialTech> SpecialTechList
+}
+//============= 查询推荐特技列表 END ==============
 
 //============= 用户登录 BEGIN ==============
 struct UserLoginRequest{
@@ -321,17 +394,53 @@ struct UserLoginResponse{
 //============= 用户登录 END ==============
 
 //============= 用户信息查询 BEGIN ==============
-struct UserInfoQueryRequest{
+struct UserInfoDetailRequest{
     1: string Code
 }
 
-struct UserInfoQueryResponse{
+struct UserInfoDetailResponse{
     1: common.Meta meta
+    2: UserInfo UserInfo //用户信息
+    3: BattleStatisticsInfo BattleStatisticsInfo //模拟对战信息
+    4: LotteryStatisticsInfo LotteryStatisticsInfo //模拟抽卡信息
+}
+
+struct UserInfo {
+    1: string Uid
     2: string NickName
     3: string AvatarUrl
     4: string WxOpenId
     5: i64 Level
-    6: string Uid
+}
+
+struct BattleStatisticsInfo{
+    1: list<GeneralRecord> HighFreqGeneralList //高频使用武将列表
+    2: list<TacticsRecord> HighFreqTacticsList //高频使用战法列表
+    3: list<TeamRecord> HighFreqTeamList //高频使用队伍列表
+
+    50:double WinRate //胜率
+}
+
+struct GeneralRecord{
+    1: MetadataGeneral General //武将
+    2: i64 Times //次数
+}
+
+struct TacticsRecord{
+    1: Tactics Tactics //战法
+    2: i64 Times //场次
+}
+
+struct TeamRecord{
+    1: BattleTeam BattleTeam //阵容
+    2: i64 Times //场次
+}
+
+struct LotteryStatisticsInfo{
+    1: list<GeneralRecord> HighFreqGeneralList //高频抽中武将列表
+    2: list<string> HighFreqCardPoolList //高频抽取卡池列表
+
+    50:double Lev5HitRate //五星率
 }
 
 //============= 用户信息查询 END ==============
@@ -371,14 +480,27 @@ struct GeneralLotteryDoInfo {
 
 //============= 武将抽卡 END ==============
 
+//============= 武将抽卡记录 BEGIN ==============
+struct GeneralLotteryListRequest{
+    //用户uid
+    1: string Uid
+}
+
+struct GeneralLotteryListResponse{
+    1: common.Meta meta
+    //高频抽取的武将信息
+    2:list<GeneralLotteryDoInfo> HighFreqGeneralLotteryInfoList
+}
+
+//============= 武将抽卡记录 END ==============
 
 //============= 武将卡池查询 BEGIN ==============
-struct GeneralLotteryInfoQueryRequest{
+struct GeneralLotteryInfoListRequest{
     //卡池枚举
     1: i64 GeneralLotteryPool
 }
 
-struct GeneralLotteryInfoQueryResponse{
+struct GeneralLotteryInfoListResponse{
     1: common.Meta meta
     //卡池武将信息
     2:list<GeneralLotterInfoQueryInfo> GeneralLotteryPoolInfoList
@@ -396,17 +518,17 @@ struct GeneralLotterInfoQueryInfo {
 //============= 武将卡池查询 END ==============
 
 //============= 武将概率查询 BEGIN ==============
-struct GeneralLotteryRateQueryRequest{
+struct GeneralLotteryRateListRequest{
     1: i64 GeneralId
 }
 
-struct GeneralLotteryRateQueryResponse{
+struct GeneralLotteryRateListResponse{
     1: common.Meta meta
     //武将概率信息
-    2:list<GeneralLotteryRateQueryInfo> GeneralLotteryRateInfoList
+    2:list<GeneralLotteryRateListInfo> GeneralLotteryRateInfoList
 }
 
-struct GeneralLotteryRateQueryInfo {
+struct GeneralLotteryRateListInfo {
 	//武将概率
 	1:double LotteryRate,
     //卡池枚举
@@ -418,10 +540,10 @@ struct GeneralLotteryRateQueryInfo {
 //============= 武将概率查询 END ==============
 
 //============= 卡池查询 BEGIN ==============
-struct GeneralLotteryPoolQueryRequest{
+struct GeneralLotteryPoolListRequest{
 }
 
-struct GeneralLotteryPoolQueryResponse{
+struct GeneralLotteryPoolListResponse{
     1: common.Meta meta
     //卡池武将信息
     2:list<GeneralLotterPoolQueryInfo> GeneralLotteryPoolInfoList
@@ -476,27 +598,42 @@ struct GeneralLotteryUserDataQueryInfo{
 service ApiService {
     //**模拟对战**
     //模拟对战
-    BattleExecuteResponse BattleExecute(1: BattleExecuteRequest request) (api.post="/v1/battle/execute");
+    BattleDoResponse BattleDo(1: BattleDoRequest request) (api.post="/v1/battle/do");
+    //模拟对战列表
+    BattleListResponse BattleList(1: BattleListRequest request) (api.get="/v1/battle/list");
+
+    //**信息查询**
     //查询战法列表
-    TacticQueryResponse TacticQuery(1:TacticQueryRequest request)(api.get="/v1/tactic/query");
+    TacticListResponse TacticList(1:TacticListRequest request)(api.get="/v1/tactic/list");
     //查询武将列表
-    GeneralQueryResponse GeneralQuery(1:GeneralQueryRequest request)(api.get="/v1/general/query");
+    GeneralListResponse GeneralList(1:GeneralListRequest request)(api.get="/v1/general/list");
     //查询兵书列表
-    GeneralWarBookQueryResponse GeneralWarBookQuery(1:GeneralWarBookQueryRequest request)(api.get="/v1/general_warbook/query");
+    GeneralWarBookListResponse GeneralWarBookList(1:GeneralWarBookListRequest request)(api.get="/v1/general_warbook/list");
     //查询特技列表
-    SpecialTechQueryResponse SpecialTechQuery(1:SpecialTechQueryRequest request)(api.get="/v1/special_tech/query");
+    SpecialTechListResponse SpecialTechList(1:SpecialTechListRequest request)(api.get="/v1/special_tech/list");
+
+    //**推荐**
     //推荐阵容列表
-    RecTeamQueryResponse RecTeamQuery(1:RecTeamQueryRequest request)(api.get="/v1/rec_team/query");
+    RecTeamListResponse RecTeamList(1:RecTeamListRequest request)(api.get="/v1/rec_team/list");
+    //武将推荐战法列表
+    RecTacticListResponse RecTacticList(1:RecTacticListRequest request)(api.get="/v1/rec_tactic/list");
+    //武将推荐兵书列表
+    RecWarBookListResponse RecWarBookList(1:RecWarBookListRequest request)(api.get="/v1/rec_warbook/list");
+    //武将推荐特技列表
+    RecSpecialTechListResponse RecSpecialTechList(1:RecSpecialTechListRequest request)(api.get="/v1/rec_special_tech/list");
 
     //**抽卡**
      //卡池查询
-    GeneralLotteryPoolQueryResponse GeneralLotteryPoolQuery(1:GeneralLotteryPoolQueryRequest request)(api.get="/v1/lottery/general/pool_query");
+    GeneralLotteryPoolListResponse GeneralLotteryPoolList(1:GeneralLotteryPoolListRequest request)(api.get="/v1/lottery/general/pool_list");
     //卡池武将查询
-    GeneralLotteryInfoQueryResponse GeneralLotteryInfoQuery(1:GeneralLotteryInfoQueryRequest request)(api.get="/v1/lottery/general/info_query");
+    GeneralLotteryInfoListResponse GeneralLotteryInfoList(1:GeneralLotteryInfoListRequest request)(api.get="/v1/lottery/general/info_list");
     //武将概率查询
-    GeneralLotteryRateQueryResponse GeneralLotteryRateQuery(1:GeneralLotteryRateQueryRequest request)(api.get="/v1/lottery/general/rate_query");
+    GeneralLotteryRateListResponse GeneralLotteryRateList(1:GeneralLotteryRateListRequest request)(api.get="/v1/lottery/general/rate_list");
     //武将抽卡
     GeneralLotteryDoResponse GeneralLotteryDo(1:GeneralLotteryDoRequest request)(api.post="/v1/lottery/general/do");
+    //武将抽卡列表
+    GeneralLotteryListResponse GeneralLotteryList(1:GeneralLotteryListRequest request)(api.get="/v1/lottery/general/list");
+
     //用户武将抽卡数据重置
     GeneralLotteryUserDataResetResponse GeneralLotteryUserDataReset(1:GeneralLotteryUserDataResetRequest request)(api.post="/v1/lottery/general/user_data_reset");
     //用户武将抽卡数据查询
@@ -506,5 +643,5 @@ service ApiService {
     //用户登录接口
     UserLoginResponse UserLogin(1:UserLoginRequest request)(api.post="/v1/user/login");
     //用户信息获取接口
-    UserInfoQueryResponse UserInfoQuery(1:UserInfoQueryRequest request)(api.get="/v1/user/query");
+    UserInfoDetailResponse UserInfoDetail(1:UserInfoDetailRequest request)(api.get="/v1/user/detail");
 }

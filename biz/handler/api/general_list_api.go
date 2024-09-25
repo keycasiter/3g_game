@@ -12,27 +12,30 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-// SpecialTechQuery .
-// @router /v1/rec_team/query [GET]
-func RecTeamQuery(ctx context.Context, c *app.RequestContext) {
+// GeneralList @Summary 查询武将信息列表
+// @Description 查询武将信息列表
+// @Tags 模拟对战
+// @Accept json
+// @Produce json
+// @Router /v1/general/list [GET]
+func GeneralList(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req api.RecTeamQueryRequest
+	var req api.GeneralListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
+	hlog.CtxInfof(ctx, "GeneralQuery Req:%s", util.ToJsonString(ctx, req))
 
-	hlog.CtxInfof(ctx, "RecTeamQuery Req:%s", util.ToJsonString(ctx, req))
-
-	resp, err := battle.NewRecTeamQueryLogic(ctx, req).Handle()
+	resp, err := battle.NewGeneralListLogic(ctx, req).Handle()
 	if err != nil {
-		hlog.CtxErrorf(ctx, "RecTeamQueryLogic handle err:%v", err)
+		hlog.CtxErrorf(ctx, "GeneralQueryLogic handle err:%v", err)
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
 
-	hlog.CtxInfof(ctx, "RecTeamQuery Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "GeneralQuery Resp:%s", util.ToJsonString(ctx, resp))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

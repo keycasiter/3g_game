@@ -12,27 +12,31 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-// WarBookQuery .
-// @router /v1/general_warbook/query [GET]
-func GeneralWarBookQuery(ctx context.Context, c *app.RequestContext) {
+// RecTeamList @Summary 查询推荐阵容
+// @Description 查询推荐阵容
+// @Tags 模拟对战
+// @Accept json
+// @Produce json
+// @Router /v1/rec_team/list [GET]
+func RecTeamList(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req api.GeneralWarBookQueryRequest
+	var req api.RecTeamListRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(hertzconsts.StatusBadRequest, err.Error())
 		return
 	}
 
-	hlog.CtxInfof(ctx, "GeneralWarBookQuery Req:%s", util.ToJsonString(ctx, req))
+	hlog.CtxInfof(ctx, "RecTeamList Req:%s", util.ToJsonString(ctx, req))
 
-	resp, err := battle.NewGeneralWarBookQueryLogic(ctx, req).Handle()
+	resp, err := battle.NewRecTeamListLogic(ctx, req).Handle()
 	if err != nil {
-		hlog.CtxErrorf(ctx, "GeneralWarBookQueryLogic handle err:%v", err)
+		hlog.CtxErrorf(ctx, "RecTeamListLogic handle err:%v", err)
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
 
-	hlog.CtxInfof(ctx, "GeneralWarBookQuery Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "RecTeamList Resp:%s", util.ToJsonString(ctx, resp))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

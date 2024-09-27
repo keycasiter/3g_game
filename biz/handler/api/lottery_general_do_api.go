@@ -70,7 +70,7 @@ func GeneralLotteryDo(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp.Hit5LevGeneralNum = logicResp.Hit5LevGeneralNum
-	resp.Hit5LevGeneralRate = cast.ToFloat64(req.RollTimes) / cast.ToFloat64(resp.Hit5LevGeneralNum)
+	resp.Hit5LevGeneralRate = cast.ToFloat64(resp.Hit5LevGeneralNum) / cast.ToFloat64(req.RollTimes)
 	resp.ProtectedMustHitNum = logicResp.ProtectedMustHitNum
 	resp.GeneralLotteryInfoList = generalLotteryInfoList
 	resp.NotHitLev5Times = logicResp.NotHitLev5Times

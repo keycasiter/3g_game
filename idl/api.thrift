@@ -461,10 +461,12 @@ struct GeneralLotteryDoResponse{
     2:list<GeneralLotteryDoInfo> GeneralLotteryInfoList
     //保底统计
     3:i64 ProtectedMustHitNum
-    //五星武将出现率
+    //五星武将出现数
     4:i64 Hit5LevGeneralNum
+    //五星武将出现率
+    5:double Hit5LevGeneralRate
     //连续不出橙次数累计
-    5:i64 NotHitLev5Times
+    6:i64 NotHitLev5Times
 }
 
 struct GeneralLotteryDoInfo {

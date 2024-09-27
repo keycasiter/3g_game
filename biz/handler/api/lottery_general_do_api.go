@@ -13,6 +13,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // GeneralLotteryDo @Summary 发起模拟抽卡
@@ -69,6 +70,7 @@ func GeneralLotteryDo(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp.Hit5LevGeneralNum = logicResp.Hit5LevGeneralNum
+	resp.Hit5LevGeneralRate = cast.ToFloat64(req.RollTimes) / cast.ToFloat64(resp.Hit5LevGeneralNum)
 	resp.ProtectedMustHitNum = logicResp.ProtectedMustHitNum
 	resp.GeneralLotteryInfoList = generalLotteryInfoList
 	resp.NotHitLev5Times = logicResp.NotHitLev5Times

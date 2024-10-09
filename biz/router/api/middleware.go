@@ -185,3 +185,18 @@ func _generallotterypoolinfoqueryMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _jymMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _accountMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _accountsearchMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

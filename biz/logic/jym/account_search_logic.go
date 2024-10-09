@@ -5,23 +5,27 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/avast/retry-go"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/model/vo"
-	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 	"regexp"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/avast/retry-go"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/jinzhu/copier"
+	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/jym"
+	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 账号查找逻辑
 type AccountSearchContext struct {
 	ctx context.Context
 
-	req   *vo.AccountSearchReq
+	req   *jym.AccountSearchRequest
+	resp  *jym.AccountSearchResponse
 	err   error
 	funcs []func()
 
@@ -32,7 +36,7 @@ type AccountSearchContext struct {
 	GoodsInfoItemMap map[string]*vo.AccountItemInfo
 }
 
-func NewAccountSearchContext(ctx context.Context, req *vo.AccountSearchReq) *AccountSearchContext {
+func NewAccountSearchContext(ctx context.Context, req *jym.AccountSearchRequest, resp *jym.AccountSearchResponse) *AccountSearchContext {
 	runCtx := &AccountSearchContext{
 		ctx:              ctx,
 		req:              req,
@@ -65,7 +69,7 @@ func (runCtx *AccountSearchContext) Process() error {
 
 func (runCtx *AccountSearchContext) searchAccountList() {
 	//翻页查询
-	for i := 0; i < runCtx.req.PageNum; i++ {
+	for i := 0; i < int(runCtx.req.PageNum); i++ {
 		hlog.CtxInfof(runCtx.ctx, "翻页查询第%d页", i+1)
 		req := runCtx.buildGetSgzGameZoneItemListReq(cast.ToInt64(i + 1))
 
@@ -113,11 +117,11 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 	}
 	//指定特技等
 	extConditions := &vo.ExtConditions{}
-	if len(runCtx.req.MustSpecialTech) > 0 {
+	if len(runCtx.req.MustSpecialTechList) > 0 {
 		extConditions.EquipSkill = runCtx.buildSpecialTech()
 	}
 	//指定英雄
-	if len(runCtx.req.DefiniteHeros) > 0 {
+	if len(runCtx.req.DefiniteHeroList) > 0 {
 		extConditions.Hero = runCtx.buildHeros()
 	}
 	//指定红度
@@ -129,9 +133,9 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 		extConditions.StageSum = runCtx.req.DefiniteTotalStage
 	}
 	//指定阵容
-	if len(runCtx.req.LineUp) > 0 {
+	if len(runCtx.req.LineUpList) > 0 {
 		lineUp := ""
-		for i, team := range runCtx.req.LineUp {
+		for i, team := range runCtx.req.LineUpList {
 			lineUp += team
 			if i < len(lineUp) {
 				lineUp += ","
@@ -164,9 +168,9 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 
 func (runCtx *AccountSearchContext) buildHeros() string {
 	heroIds := ""
-	for i, heroId := range runCtx.req.DefiniteHeros {
+	for i, heroId := range runCtx.req.DefiniteHeroList {
 		heroIds += heroId
-		if i < len(runCtx.req.DefiniteHeros) {
+		if i < len(runCtx.req.DefiniteHeroList) {
 			heroIds += ","
 		}
 	}
@@ -175,9 +179,9 @@ func (runCtx *AccountSearchContext) buildHeros() string {
 
 func (runCtx *AccountSearchContext) buildSpecialTech() string {
 	skillIds := ""
-	for i, skillId := range runCtx.req.DefiniteSkill {
+	for i, skillId := range runCtx.req.DefiniteSkillList {
 		skillIds += skillId
-		if i < len(runCtx.req.DefiniteHeros) {
+		if i < len(runCtx.req.DefiniteHeroList) {
 			skillIds += ","
 		}
 	}
@@ -228,7 +232,7 @@ func (runCtx *AccountSearchContext) searchAccountDetail() {
 func (runCtx *AccountSearchContext) filterAccount() {
 	//整理指定武将
 	definiteHeroMap := make(map[string]bool, 0)
-	for _, heroId := range runCtx.req.DefiniteHeros {
+	for _, heroId := range runCtx.req.DefiniteHeroList {
 		definiteHeroMap[heroId] = true
 	}
 	//整理账号全部武将
@@ -283,10 +287,10 @@ func (runCtx *AccountSearchContext) filterAccount() {
 	}
 
 	//指定战法
-	if len(runCtx.req.MustTactic) > 0 {
+	if len(runCtx.req.MustTacticList) > 0 {
 		//整理战法map
 		tacticMap := make(map[string]bool, 0)
-		for _, tacticName := range runCtx.req.MustTactic {
+		for _, tacticName := range runCtx.req.MustTacticList {
 			tacticMap[tacticName] = true
 		}
 		//符合条件的账号
@@ -325,10 +329,10 @@ func (runCtx *AccountSearchContext) filterAccount() {
 	}
 
 	//指定特技
-	if len(runCtx.req.MustSpecialTech) > 0 {
+	if len(runCtx.req.MustSpecialTechList) > 0 {
 		//整理特技map
 		specialTechMap := make(map[string]bool, 0)
-		for _, techName := range runCtx.req.MustSpecialTech {
+		for _, techName := range runCtx.req.MustSpecialTechList {
 			specialTechMap[techName] = true
 		}
 		//符合条件的账号
@@ -370,6 +374,15 @@ func (runCtx *AccountSearchContext) filterAccount() {
 }
 
 func (runCtx *AccountSearchContext) buildResp() {
+	list := make([]*jym.ApiData, 0)
+	for _, info := range runCtx.GoodsInfoItemMap {
+		vo := &jym.ApiData{}
+		copier.Copy(vo, info)
+		list = append(list, vo)
+	}
+	runCtx.resp.ApiDatas = list
+}
+func (runCtx *AccountSearchContext) buildRespPrint() {
 	//总结
 	fmt.Println("######################## 总结 #########################")
 	fmt.Printf("符合条件数量:%d\n", len(runCtx.GoodsInfoItemMap))
@@ -390,14 +403,14 @@ func (runCtx *AccountSearchContext) buildResp() {
 
 		fmt.Printf("\n【检测如下战法均存在】\n")
 		tacticNames := ""
-		for _, tacticName := range runCtx.req.MustTactic {
+		for _, tacticName := range runCtx.req.MustTacticList {
 			tacticNames += tacticName + ","
 		}
 		fmt.Printf(tacticNames)
 
 		fmt.Printf("\n【检测如下指定武将均存在】\n")
 		heroNames := ""
-		for _, heroId := range runCtx.req.DefiniteHeros {
+		for _, heroId := range runCtx.req.DefiniteHeroList {
 			heroNames += consts.HeroMap[heroId] + ","
 		}
 		fmt.Printf(heroNames)

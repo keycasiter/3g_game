@@ -3,6 +3,7 @@ namespace go api
 
 include "idl/common.thrift"
 include "idl/enum.thrift"
+include "idl/jym.thrift"
 
 //============= 模拟对战 BEGIN ==============
 
@@ -507,4 +508,8 @@ service ApiService {
     UserLoginResponse UserLogin(1:UserLoginRequest request)(api.post="/v1/user/login");
     //用户信息获取接口
     UserInfoQueryResponse UserInfoQuery(1:UserInfoQueryRequest request)(api.get="/v1/user/query");
+
+    //**jym**
+    //账户商品搜索
+     jym.AccountSearchResponse AccountSearch(1:jym.AccountSearchRequest request)(api.get="/jym/account/search");
 }

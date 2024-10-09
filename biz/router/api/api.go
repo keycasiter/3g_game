@@ -18,6 +18,13 @@ func Register(r *server.Hertz) {
 
 	root := r.Group("/", rootMw()...)
 	{
+		_jym := root.Group("/jym", _jymMw()...)
+		{
+			_account := _jym.Group("/account", _accountMw()...)
+			_account.GET("/search", append(_accountsearchMw(), api.AccountSearch)...)
+		}
+	}
+	{
 		_v1 := root.Group("/v1", _v1Mw()...)
 		{
 			_battle := _v1.Group("/battle", _battleMw()...)

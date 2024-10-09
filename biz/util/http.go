@@ -3,15 +3,16 @@ package util
 import (
 	"context"
 	"fmt"
-	"github.com/avast/retry-go"
-	"github.com/bytedance/gopkg/util/logger"
-	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/spf13/cast"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/avast/retry-go"
+	"github.com/bytedance/gopkg/util/logger"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/spf13/cast"
 )
 
 type ProxyMode int
@@ -22,7 +23,7 @@ const (
 	ProxyMode_Fixed     = 3
 )
 
-var UseProxyMode = ProxyMode_KuaiDaili
+var UseProxyMode = ProxyMode_NoProxy
 var cnt = 0
 
 var username, password string

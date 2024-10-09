@@ -40,6 +40,7 @@ func NewAccountSearchContext(ctx context.Context, req *jym.AccountSearchRequest,
 	runCtx := &AccountSearchContext{
 		ctx:              ctx,
 		req:              req,
+		resp:             resp,
 		GoodsInfoList:    make([]vo.GetSgzGameZoneItemListRespResultGoodsInfo, 0),
 		GoodsInfoItemMap: make(map[string]*vo.AccountItemInfo, 0),
 	}

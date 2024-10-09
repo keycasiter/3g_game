@@ -378,7 +378,7 @@ func (runCtx *AccountSearchContext) buildResp() {
 	list := make([]*jym.ApiData, 0)
 	for _, info := range runCtx.GoodsInfoItemMap {
 		vo := &jym.ApiData{}
-		copier.Copy(vo, info)
+		copier.Copy(vo, info.ApiData)
 		list = append(list, vo)
 	}
 	runCtx.resp.ApiDatas = list

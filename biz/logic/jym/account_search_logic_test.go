@@ -4,12 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/model/vo"
-	"github.com/keycasiter/3g_game/biz/util"
 	"regexp"
 	"strings"
 	"testing"
+
+	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/jym"
+	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 func TestSearchAccount(t *testing.T) {
@@ -76,7 +78,7 @@ func TestParseHtml(t *testing.T) {
 
 func TestAccountSearchLogic(t *testing.T) {
 	ctx := context.Background()
-	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{}).Process()
+	err := NewAccountSearchContext(ctx, &jym.AccountSearchRequest{}, nil).Process()
 	if err != nil {
 		t.Errorf("err:%v", err)
 		t.Failed()
@@ -89,9 +91,7 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 	//herosArr = append(herosArr, strings.Split(cp_zj_zc, ",")...)
 
 	ctx := context.Background()
-	err := NewAccountSearchContext(ctx, &vo.AccountSearchReq{
-		//区段
-		Keyword: "3000区段",
+	err := NewAccountSearchContext(ctx, &jym.AccountSearchRequest{
 		//价格区间
 		//PriceRange: util.ToJsonString(ctx, []string{"1000", "7000"}),
 		//指定英雄
@@ -100,6 +100,10 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 		DefiniteStage: "",
 		//总红度
 		DefiniteTotalStage: "",
+		//区段
+		Keyword: "3000区段",
+		//翻页数量
+		PageNum: 10,
 		//当前查询页数，每页最多15个
 		PageSize: 1,
 		//指定武将是否必须觉醒
@@ -108,44 +112,7 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 		IsDefiniteHeroMustTalent3: false,
 		//可以跨服，公开
 		CrossServerAndPublic: false,
-		//指定特技
-		//MustSpecialTech: []string{"援助"},
-		//指定战法
-		//MustTactic: []string{
-		//	//常用必备战法
-		//	"所向披靡",
-		//	"破阵摧坚",
-		//	"百骑劫营",
-		//	"暂避其锋",
-		//	"兵无常势",
-		//	"陷阵营",
-		//	"西凉铁骑",
-		//	"伪书相间",
-		//	"用武通神",
-		//	"万箭齐发",
-		//	"象兵",
-		//	"锦帆军",
-		//	"破军威胜",
-		//	"速乘其利",
-		//	"竭力佐谋",
-		//	"火炽原燎",
-		//	"裸衣血战",
-		//	"飞熊军",
-		//	//进阶战法
-		//	"抚辑军民", "三势阵", "草船借箭", "裸衣血战",
-		//	//太尉
-		//	"士别三日", "熯天炽地", "锋矢阵", "刮骨疗毒", "藤甲兵", "魅惑",
-		//	//父女
-		//	"据水断桥", "箕形阵", "青州兵", "横扫千军", "威谋靡亢", "盛气凌敌",
-		//	//麒麟
-		//	"夺魂挟魄", "杯蛇鬼车", "太平道法", "无当飞军", "八门金锁阵",
-		//	"婴城自守",
-		//	//突击骑
-		//	"虎豹骑", "铁骑驱驰", "当锋摧决", "三势阵", "一骑当千", "百骑劫营",
-		//	//SP群弓
-		//	"焰逐风飞", "白马义从", "折冲御侮", "掣刀斫敌",
-		//},
-	}).Process()
+	}, nil).Process()
 	if err != nil {
 		t.Errorf("err:%v", err)
 		t.Failed()

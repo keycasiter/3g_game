@@ -4,12 +4,17 @@ package main
 
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
+	"github.com/hertz-contrib/swagger"
 	handler "github.com/keycasiter/3g_game/biz/handler"
+	_ "github.com/keycasiter/3g_game/docs"
+	"github.com/swaggo/files"
 )
 
 // customizeRegister registers customize routers.
 func customizedRegister(r *server.Hertz) {
 	r.GET("/ping", handler.Ping)
 
+	url := swagger.URL("http://0.0.0.0:80/swagger/doc.json") // The url pointing to API definition
+	r.GET("/swagger/*any", swagger.WrapHandler(swaggerFiles.Handler, url))
 	// your code ...
 }

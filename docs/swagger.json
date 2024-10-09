@@ -1,0 +1,248 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/v1/battle/do": {
+            "post": {
+                "description": "发起模拟对战",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "对战"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/general/list": {
+            "get": {
+                "description": "查询武将信息列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "武将"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/lottery/general/do": {
+            "post": {
+                "description": "发起模拟抽卡",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "模拟抽卡"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/lottery/general/info_query": {
+            "get": {
+                "description": "卡池武将查询",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "模拟抽卡"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/lottery/general/list": {
+            "get": {
+                "description": "抽卡记录查询",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "模拟抽卡"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/lottery/general/pool_query": {
+            "get": {
+                "description": "武将概率查询",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "模拟抽卡"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/lottery/general/rate_query": {
+            "get": {
+                "description": "武将概率查询",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "模拟抽卡"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/lottery/general/user_data_query": {
+            "get": {
+                "description": "用户武将抽卡数据查询",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "模拟抽卡"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/lottery/general/user_data_reset": {
+            "post": {
+                "description": "用户武将抽卡数据重置",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "模拟抽卡"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/rec_team/list": {
+            "get": {
+                "description": "查询推荐阵容",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "推荐"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/rec_warbook/list": {
+            "get": {
+                "description": "查询推荐兵书",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "推荐"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/special_tech/list": {
+            "get": {
+                "description": "查询特技列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "特技"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/tactic/list": {
+            "get": {
+                "description": "查询战法列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "战法"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/user/detail": {
+            "get": {
+                "description": "查询用户信息详情",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/user/login": {
+            "post": {
+                "description": "用户登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "responses": {}
+            }
+        },
+        "/v1/war_book/list": {
+            "get": {
+                "description": "查询武将信息列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "武将"
+                ],
+                "responses": {}
+            }
+        }
+    }
+}

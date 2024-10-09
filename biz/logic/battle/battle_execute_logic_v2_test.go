@@ -11,7 +11,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/team"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/kr/pretty"
 	"github.com/spf13/cast"
 	"testing"
 )
@@ -410,14 +409,14 @@ func TestBattleLogicV2Context_Run_Many(t *testing.T) {
 		//出战队伍
 		FightingTeam: &vo.BattleTeam{
 			TeamType:       consts.TeamType_Fighting,
-			ArmType:        consts.ArmType_Archers,
-			BattleGenerals: team.GuanGuanZhang,
+			ArmType:        consts.ArmType_Mauler,
+			BattleGenerals: team.TaiWeiDun,
 		},
 		//对战队伍
 		EnemyTeam: &vo.BattleTeam{
 			TeamType:       consts.TeamType_Enemy,
-			ArmType:        consts.ArmType_Archers,
-			BattleGenerals: team.XiangxiangWuQi,
+			ArmType:        consts.ArmType_Spearman,
+			BattleGenerals: team.GuanGuanZhang,
 		},
 	}
 	//############ 配置队伍是敌是友 ###########
@@ -426,61 +425,6 @@ func TestBattleLogicV2Context_Run_Many(t *testing.T) {
 	}
 	for _, general := range req.EnemyTeam.BattleGenerals {
 		general.BaseInfo.GeneralBattleType = consts.GeneralBattleType_Enemy
-	}
-
-	//############ 2.从数据库拉取阵容武将属性补充 ###########
-	allGenerals := append(req.FightingTeam.BattleGenerals, req.EnemyTeam.BattleGenerals...)
-	allGeneralIds := make([]int64, 0)
-	for _, general := range allGenerals {
-		allGeneralIds = append(allGeneralIds, general.BaseInfo.Id)
-	}
-	generalList, err := mysql.NewGeneral().QueryGeneralList(ctx, &vo.QueryGeneralCondition{
-		Ids: allGeneralIds,
-	})
-	if err != nil {
-		hlog.CtxErrorf(ctx, "run err:%v", err)
-		return
-	}
-	generalMap := make(map[int64]*po.General, 0)
-	for _, general := range generalList {
-		generalMap[general.Id] = general
-	}
-	for _, general := range allGenerals {
-		if generalDb, ok := generalMap[general.BaseInfo.Id]; ok {
-			general.BaseInfo.Id = generalDb.Id
-			general.BaseInfo.Name = generalDb.Name
-			general.BaseInfo.Group = consts.Group(generalDb.Group)
-			general.BaseInfo.UniqueId = cast.ToString(generalDb.Id)
-
-			//属性
-			abilityAttr := &po.AbilityAttrString{}
-			util.ParseJsonObj(ctx, abilityAttr, generalDb.AbilityAttr)
-			general.BaseInfo.AbilityAttr = &po.AbilityAttr{
-				ForceBase:        cast.ToFloat64(abilityAttr.ForceBase),
-				ForceRate:        cast.ToFloat64(abilityAttr.ForceRate),
-				IntelligenceBase: cast.ToFloat64(abilityAttr.IntelligenceBase),
-				IntelligenceRate: cast.ToFloat64(abilityAttr.IntelligenceRate),
-				CharmBase:        cast.ToFloat64(abilityAttr.CharmBase),
-				CharmRate:        cast.ToFloat64(abilityAttr.CharmRate),
-				CommandBase:      cast.ToFloat64(abilityAttr.CommandBase),
-				CommandRate:      cast.ToFloat64(abilityAttr.CommandRate),
-				PoliticsBase:     cast.ToFloat64(abilityAttr.PoliticsBase),
-				PoliticsRate:     cast.ToFloat64(abilityAttr.PoliticsRate),
-				SpeedBase:        cast.ToFloat64(abilityAttr.SpeedBase),
-				SpeedRate:        cast.ToFloat64(abilityAttr.SpeedRate),
-			}
-
-			//兵种适性
-			armsAttr := &po.ArmsAttr{}
-			util.ParseJsonObj(ctx, &armsAttr, generalDb.ArmAttr)
-			general.BaseInfo.ArmsAttr = &po.ArmsAttr{
-				Cavalry:   armsAttr.Cavalry,
-				Mauler:    armsAttr.Mauler,
-				Archers:   armsAttr.Archers,
-				Spearman:  armsAttr.Spearman,
-				Apparatus: armsAttr.Apparatus,
-			}
-		}
 	}
 
 	//模拟对战
@@ -492,5 +436,28 @@ func TestBattleLogicV2Context_Run_Many(t *testing.T) {
 		return
 	}
 	fmt.Printf("%v", resp)
-	pretty.Logf("resp:%v", util.ToJsonString(ctx, resp))
+	fmt.Printf("我方结果：%+v\n", resp.BattleResultStatistics.FightingTeam.BattleResult)
+	for idx, general := range resp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList {
+		fmt.Printf("武将[%v]\n", req.FightingTeam.BattleGenerals[idx].BaseInfo.Name)
+		for _, tactics := range general.TacticStatisticsList {
+			fmt.Printf("战法[%v]触发[%v]杀敌[%v]恢复[%v]\n",
+				tactics.TacticName,
+				tactics.TriggerTimes,
+				tactics.KillSoliderNum,
+				tactics.ResumeSoliderNum,
+			)
+		}
+	}
+	fmt.Printf("敌方结果：%v\n", resp.BattleResultStatistics.EnemyTeam.BattleResult)
+	for idx, general := range resp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList {
+		fmt.Printf("武将[%v]\n", req.EnemyTeam.BattleGenerals[idx].BaseInfo.Name)
+		for _, tactics := range general.TacticStatisticsList {
+			fmt.Printf("战法[%v]触发[%v]杀敌[%v]恢复[%v]\n",
+				tactics.TacticName,
+				tactics.TriggerTimes,
+				tactics.KillSoliderNum,
+				tactics.ResumeSoliderNum,
+			)
+		}
+	}
 }

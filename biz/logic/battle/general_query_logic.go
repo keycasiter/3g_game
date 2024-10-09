@@ -12,23 +12,23 @@ import (
 	"github.com/spf13/cast"
 )
 
-type GeneralQueryLogic struct {
+type GeneralListLogic struct {
 	Ctx  context.Context
-	Req  api.GeneralQueryRequest
-	Resp api.GeneralQueryResponse
+	Req  api.GeneralListRequest
+	Resp api.GeneralListResponse
 }
 
-func NewGeneralQueryLogic(ctx context.Context, req api.GeneralQueryRequest) *GeneralQueryLogic {
-	return &GeneralQueryLogic{
+func NewGeneralListLogic(ctx context.Context, req api.GeneralListRequest) *GeneralListLogic {
+	return &GeneralListLogic{
 		Ctx: ctx,
 		Req: req,
-		Resp: api.GeneralQueryResponse{
+		Resp: api.GeneralListResponse{
 			Meta: util.BuildSuccMeta(),
 		},
 	}
 }
 
-func (g *GeneralQueryLogic) Handle() (api.GeneralQueryResponse, error) {
+func (g *GeneralListLogic) Handle() (api.GeneralListResponse, error) {
 	//查询武将列表
 	list, err := mysql.NewGeneral().QueryGeneralList(g.Ctx, buildQueryGeneralListReq(g.Req))
 	if err != nil {
@@ -124,7 +124,7 @@ func (g *GeneralQueryLogic) Handle() (api.GeneralQueryResponse, error) {
 	return g.Resp, nil
 }
 
-func buildQueryGeneralListReq(req api.GeneralQueryRequest) *vo.QueryGeneralCondition {
+func buildQueryGeneralListReq(req api.GeneralListRequest) *vo.QueryGeneralCondition {
 	tags := make([]int, 0)
 	for _, tag := range req.GetTags() {
 		tags = append(tags, int(tag))

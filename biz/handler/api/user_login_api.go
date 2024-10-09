@@ -26,8 +26,12 @@ type GetUserOpenIdResponse struct {
 	ErrMsg     string `json:"errmsg"`
 }
 
-// UserLogin .
-// @router /v1/user/login [POST]
+// UserInfoDetail @Summary 用户登录
+// @Description 用户登录
+// @Tags 用户
+// @Accept json
+// @Produce json
+// @Router /v1/user/login [POST]
 func UserLogin(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.UserLoginRequest
@@ -113,77 +117,6 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	resp.NickName = req.NickName
 	resp.AvatarUrl = req.AvatarUrl
 	resp.Level = int64(consts.UserLevel_Common)
-
-	c.JSON(hertzconsts.StatusOK, resp)
-}
-
-// UserInfoQuery .
-// @router /v1/user/query [GET]
-func UserInfoQuery(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req api.UserInfoQueryRequest
-	var resp api.UserInfoQueryResponse
-	resp.Meta = util.BuildSuccMeta()
-
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(hertzconsts.StatusBadRequest, err.Error())
-		return
-	}
-
-	//1.获取登录用户的openId
-	hlog.CtxInfof(ctx, "GetUserWxOpenId Req:%s", util.ToJsonString(ctx, req))
-	requestUrl := fmt.Sprintf(conf.GetConfig().Wexin.GetUserOpenIdApiTemplateUrl,
-		conf.GetConfig().Wexin.AppId,
-		conf.GetConfig().Wexin.Secret,
-		req.Code,
-	)
-	urlResp, err := http.Get(requestUrl)
-	if err != nil {
-		hlog.CtxErrorf(ctx, "Http Get URL:%s err:%v", requestUrl, err)
-		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("err:%v", err))
-		c.JSON(hertzconsts.StatusOK, resp)
-		return
-	}
-	defer urlResp.Body.Close()
-	body, err := ioutil.ReadAll(urlResp.Body)
-	if err != nil {
-		hlog.CtxErrorf(ctx, "Http Get URL:%s err:%v", requestUrl, err)
-		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("err:%v", err))
-		c.JSON(hertzconsts.StatusOK, resp)
-		return
-	}
-	respObj := &GetUserOpenIdResponse{}
-	err = json.Unmarshal(body, respObj)
-	if err != nil {
-		hlog.CtxErrorf(ctx, "parse Object err:%v", err)
-		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("parse Object err:%v", err))
-		c.JSON(hertzconsts.StatusOK, resp)
-		return
-	}
-	hlog.CtxInfof(ctx, "GetUserWxOpenId Resp:%s", util.ToJsonString(ctx, respObj))
-	if respObj.OpenId == "" {
-		hlog.CtxErrorf(ctx, "openId is empty")
-		resp.Meta = util.BuildFailMetaWithMsg("微信openId为空")
-		c.JSON(hertzconsts.StatusOK, resp)
-		return
-	}
-
-	//2.用户信息查询
-	userInfo, err := mysql.NewUserInfo().QueryUserInfo(ctx, respObj.OpenId)
-	if err != nil {
-		hlog.CtxErrorf(ctx, "QueryUserInfo err:%v", err)
-		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("查询用户信息失败 err:%v", err))
-		c.JSON(hertzconsts.StatusOK, resp)
-		return
-	}
-
-	//组合resp
-	resp.Uid = userInfo.Uid
-	resp.WxOpenId = userInfo.WxOpenId
-	resp.NickName = userInfo.NickName
-	resp.AvatarUrl = userInfo.AvatarUrl
-	resp.Level = int64(userInfo.Level)
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

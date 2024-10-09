@@ -10,28 +10,29 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-type SpecialTechQueryLogic struct {
+type SpecialTechListLogic struct {
 	Ctx  context.Context
-	Req  api.SpecialTechQueryRequest
-	Resp api.SpecialTechQueryResponse
+	Req  api.SpecialTechListRequest
+	Resp api.SpecialTechListResponse
 }
 
-func NewSpecialTechQueryLogic(ctx context.Context, req api.SpecialTechQueryRequest) *SpecialTechQueryLogic {
-	return &SpecialTechQueryLogic{
+func NewSpecialTechListLogic(ctx context.Context, req api.SpecialTechListRequest) *SpecialTechListLogic {
+	return &SpecialTechListLogic{
 		Ctx: ctx,
 		Req: req,
-		Resp: api.SpecialTechQueryResponse{
+		Resp: api.SpecialTechListResponse{
 			Meta: util.BuildSuccMeta(),
 		},
 	}
 }
 
-func (s *SpecialTechQueryLogic) Handle() (api.SpecialTechQueryResponse, error) {
+func (s *SpecialTechListLogic) Handle() (api.SpecialTechListResponse, error) {
 	//查询特技列表
 	list, err := mysql.NewSpecialTech().QuerySpecialTechList(s.Ctx, &vo.QuerySpecialTechCondition{
 		Id:     s.Req.Id,
 		Name:   s.Req.Name,
 		Type:   int(s.Req.Type),
+		Level:  int(s.Req.Level),
 		Offset: util.PageNoToOffset(s.Req.PageNo, s.Req.PageSize),
 		Limit:  int(s.Req.PageSize),
 	})
@@ -45,9 +46,10 @@ func (s *SpecialTechQueryLogic) Handle() (api.SpecialTechQueryResponse, error) {
 	resList := make([]*api.SpecialTech, 0)
 	for _, tech := range list {
 		resList = append(resList, &api.SpecialTech{
-			Id:   tech.Id,
-			Name: tech.Name,
-			Type: enum.EquipType(tech.Type),
+			Id:    tech.Id,
+			Name:  tech.Name,
+			Type:  enum.EquipType(tech.Type),
+			Level: enum.EquipLevel(tech.Level),
 		})
 	}
 

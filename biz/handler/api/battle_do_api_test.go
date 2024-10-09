@@ -9,5 +9,5 @@ import (
 func TestBattleExecute(t *testing.T) {
 	ctx := context.Background()
 	req := &app.RequestContext{}
-	BattleExecute(ctx, req)
+	BattleDo(ctx, req)
 }

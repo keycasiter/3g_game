@@ -33,6 +33,24 @@ const (
 	BattleResult_Inferiority_Draw BattleResult = 5 //劣势平局
 )
 
+func (b BattleResult) String() string {
+	switch b {
+	case BattleResult_Win:
+		return "胜利"
+	case BattleResult_Lose:
+		return "失败"
+	case BattleResult_Draw:
+		return "平局"
+	case BattleResult_Advantage_Draw:
+		return "优势平局"
+	case BattleResult_Inferiority_Draw:
+		return "劣势平局"
+	default:
+		return "未知"
+	}
+	return "未知"
+}
+
 /** 武将属性 **/
 type AbilityAttr int
 

@@ -1023,3 +1023,103 @@ func (p *EquipType) Value() (driver.Value, error) {
 	}
 	return int64(*p), nil
 }
+
+// 装备等级
+type EquipLevel int64
+
+const (
+	EquipLevel_S EquipLevel = 1
+	EquipLevel_A EquipLevel = 2
+	EquipLevel_B EquipLevel = 3
+	EquipLevel_C EquipLevel = 4
+)
+
+func (p EquipLevel) String() string {
+	switch p {
+	case EquipLevel_S:
+		return "S"
+	case EquipLevel_A:
+		return "A"
+	case EquipLevel_B:
+		return "B"
+	case EquipLevel_C:
+		return "C"
+	}
+	return "<UNSET>"
+}
+
+func EquipLevelFromString(s string) (EquipLevel, error) {
+	switch s {
+	case "S":
+		return EquipLevel_S, nil
+	case "A":
+		return EquipLevel_A, nil
+	case "B":
+		return EquipLevel_B, nil
+	case "C":
+		return EquipLevel_C, nil
+	}
+	return EquipLevel(0), fmt.Errorf("not a valid EquipLevel string")
+}
+
+func EquipLevelPtr(v EquipLevel) *EquipLevel { return &v }
+func (p *EquipLevel) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = EquipLevel(result.Int64)
+	return
+}
+
+func (p *EquipLevel) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
+type BattleResult int64
+
+const (
+	BattleResult_Win  BattleResult = 1
+	BattleResult_Lose BattleResult = 2
+	BattleResult_Draw BattleResult = 3
+)
+
+func (p BattleResult) String() string {
+	switch p {
+	case BattleResult_Win:
+		return "Win"
+	case BattleResult_Lose:
+		return "Lose"
+	case BattleResult_Draw:
+		return "Draw"
+	}
+	return "<UNSET>"
+}
+
+func BattleResultFromString(s string) (BattleResult, error) {
+	switch s {
+	case "Win":
+		return BattleResult_Win, nil
+	case "Lose":
+		return BattleResult_Lose, nil
+	case "Draw":
+		return BattleResult_Draw, nil
+	}
+	return BattleResult(0), fmt.Errorf("not a valid BattleResult string")
+}
+
+func BattleResultPtr(v BattleResult) *BattleResult { return &v }
+func (p *BattleResult) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = BattleResult(result.Int64)
+	return
+}
+
+func (p *BattleResult) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}

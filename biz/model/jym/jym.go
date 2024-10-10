@@ -26,8 +26,8 @@ type AccountSearchRequest struct {
 	PriceRange string `thrift:"PriceRange,7" form:"PriceRange" json:"PriceRange" query:"PriceRange"`
 	//翻页数量
 	PageNum int64 `thrift:"PageNum,8" form:"PageNum" json:"PageNum" query:"PageNum"`
-	//查询商品列表页数
-	PageSize int64 `thrift:"PageSize,9" form:"PageSize" json:"PageSize" query:"PageSize"`
+	//查询商品数
+	GoodsNum int64 `thrift:"GoodsNum,9" form:"GoodsNum" json:"GoodsNum" query:"GoodsNum"`
 	//指定武将是否必须觉醒
 	IsDefiniteHeroMustAwake bool `thrift:"IsDefiniteHeroMustAwake,10" form:"IsDefiniteHeroMustAwake" json:"IsDefiniteHeroMustAwake" query:"IsDefiniteHeroMustAwake"`
 	//指定武将是否必须开三兵书
@@ -83,8 +83,8 @@ func (p *AccountSearchRequest) GetPageNum() (v int64) {
 	return p.PageNum
 }
 
-func (p *AccountSearchRequest) GetPageSize() (v int64) {
-	return p.PageSize
+func (p *AccountSearchRequest) GetGoodsNum() (v int64) {
+	return p.GoodsNum
 }
 
 func (p *AccountSearchRequest) GetIsDefiniteHeroMustAwake() (v bool) {
@@ -124,7 +124,7 @@ var fieldIDToName_AccountSearchRequest = map[int16]string{
 	6:  "Keyword",
 	7:  "PriceRange",
 	8:  "PageNum",
-	9:  "PageSize",
+	9:  "GoodsNum",
 	10: "IsDefiniteHeroMustAwake",
 	11: "IsDefiniteHeroMustTalent3",
 	12: "MustSpecialTechList",
@@ -442,7 +442,7 @@ func (p *AccountSearchRequest) ReadField9(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.PageSize = _field
+	p.GoodsNum = _field
 	return nil
 }
 func (p *AccountSearchRequest) ReadField10(iprot thrift.TProtocol) error {
@@ -796,10 +796,10 @@ WriteFieldEndError:
 }
 
 func (p *AccountSearchRequest) writeField9(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("PageSize", thrift.I64, 9); err != nil {
+	if err = oprot.WriteFieldBegin("GoodsNum", thrift.I64, 9); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.PageSize); err != nil {
+	if err := oprot.WriteI64(p.GoodsNum); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

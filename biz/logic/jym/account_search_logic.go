@@ -45,6 +45,8 @@ func NewAccountSearchContext(ctx context.Context, req *jym.AccountSearchRequest,
 		GoodsInfoItemMap: make(map[string]*vo.AccountItemInfo, 0),
 	}
 	runCtx.funcs = []func(){
+		//参数校验
+		runCtx.checkParam,
 		//1.查询符合条件的账号列表
 		runCtx.searchAccountList,
 		//2.获取账号详情信息
@@ -66,6 +68,17 @@ func (runCtx *AccountSearchContext) Process() error {
 		}
 	}
 	return nil
+}
+
+func (runCtx *AccountSearchContext) checkParam() {
+	if runCtx.req.PageNum == 0 {
+		//最少查1页数据
+		runCtx.req.PageNum = 1
+	}
+	if runCtx.req.GoodsNum == 0 {
+		//最少查10个数据
+		runCtx.req.GoodsNum = 10
+	}
 }
 
 func (runCtx *AccountSearchContext) searchAccountList() {
@@ -190,7 +203,13 @@ func (runCtx *AccountSearchContext) buildSpecialTech() string {
 }
 
 func (runCtx *AccountSearchContext) searchAccountDetail() {
+	goodsNum := 0
+
 	for i, goodsItem := range runCtx.GoodsInfoList {
+		if goodsNum > int(runCtx.req.GoodsNum) {
+			break
+		}
+
 		hlog.CtxInfof(runCtx.ctx, "商品查询进度：%d/%d", i+1, len(runCtx.GoodsInfoList))
 		//防止被限流
 		time.Sleep(500 * time.Millisecond)
@@ -226,6 +245,7 @@ func (runCtx *AccountSearchContext) searchAccountDetail() {
 		if err != nil {
 			hlog.CtxErrorf(runCtx.ctx, "url:%s, retry err:%v", goodsItem.DetailUrl, err)
 		}
+		goodsNum++
 	}
 }
 

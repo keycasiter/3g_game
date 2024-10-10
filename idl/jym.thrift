@@ -22,8 +22,8 @@ struct AccountSearchRequest {
 	7:string PriceRange
 	//翻页数量
 	8:i64 PageNum
-	//查询商品列表页数
-	9:i64 PageSize
+	//查询商品数
+	9:i64 GoodsNum
 	//指定武将是否必须觉醒
 	10: bool IsDefiniteHeroMustAwake
 	//指定武将是否必须开三兵书

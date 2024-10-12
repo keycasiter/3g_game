@@ -104,8 +104,8 @@ func TestAccountSearchLogicForHero(t *testing.T) {
 		Keyword: "3000区段",
 		//翻页数量
 		PageNum: 10,
-		//当前查询页数，每页最多15个
-		PageSize: 1,
+		//查询商品数量
+		GoodsNum: 1,
 		//指定武将是否必须觉醒
 		IsDefiniteHeroMustAwake: false,
 		//指定武将是否必须开三兵书

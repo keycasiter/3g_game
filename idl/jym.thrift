@@ -7,11 +7,11 @@ include "idl/enum.thrift"
 //============= 账户搜索 BEGIN ==============
 struct AccountSearchRequest {
 	//阵容
-	1: list<string> LineUpList
+	1: string LineUpList
 	//检索条件 {"hero":"10014,10005"}
-	2:list<string> DefiniteHeroList
+	2:string DefiniteHeroList
 	//特技要求 {"equip_skill":"28025,28041"}
-	3:list<string> DefiniteSkillList
+	3:string DefiniteSkillList
 	//红度要求
     4:string DefiniteStage
 	//总红度要求 {"stage_sum":"10"}
@@ -29,9 +29,9 @@ struct AccountSearchRequest {
 	//指定武将是否必须开三兵书
 	11: bool IsDefiniteHeroMustTalent3
 	//特技要求
-	12:list<string> MustSpecialTechList
+	12:string MustSpecialTechList
 	//指定战法
-	13:list<string> MustTacticList
+	13:string MustTacticList
 	//可跨服、公示
 	14: bool CrossServerAndPublic
 	//五星武将数量

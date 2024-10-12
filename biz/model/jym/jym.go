@@ -11,11 +11,11 @@ import (
 // ============= 账户搜索 BEGIN ==============
 type AccountSearchRequest struct {
 	//阵容
-	LineUpList []string `thrift:"LineUpList,1" form:"LineUpList" json:"LineUpList" query:"LineUpList"`
+	LineUpList string `thrift:"LineUpList,1" form:"LineUpList" json:"LineUpList" query:"LineUpList"`
 	//检索条件 {"hero":"10014,10005"}
-	DefiniteHeroList []string `thrift:"DefiniteHeroList,2" form:"DefiniteHeroList" json:"DefiniteHeroList" query:"DefiniteHeroList"`
+	DefiniteHeroList string `thrift:"DefiniteHeroList,2" form:"DefiniteHeroList" json:"DefiniteHeroList" query:"DefiniteHeroList"`
 	//特技要求 {"equip_skill":"28025,28041"}
-	DefiniteSkillList []string `thrift:"DefiniteSkillList,3" form:"DefiniteSkillList" json:"DefiniteSkillList" query:"DefiniteSkillList"`
+	DefiniteSkillList string `thrift:"DefiniteSkillList,3" form:"DefiniteSkillList" json:"DefiniteSkillList" query:"DefiniteSkillList"`
 	//红度要求
 	DefiniteStage string `thrift:"DefiniteStage,4" form:"DefiniteStage" json:"DefiniteStage" query:"DefiniteStage"`
 	//总红度要求 {"stage_sum":"10"}
@@ -33,9 +33,9 @@ type AccountSearchRequest struct {
 	//指定武将是否必须开三兵书
 	IsDefiniteHeroMustTalent3 bool `thrift:"IsDefiniteHeroMustTalent3,11" form:"IsDefiniteHeroMustTalent3" json:"IsDefiniteHeroMustTalent3" query:"IsDefiniteHeroMustTalent3"`
 	//特技要求
-	MustSpecialTechList []string `thrift:"MustSpecialTechList,12" form:"MustSpecialTechList" json:"MustSpecialTechList" query:"MustSpecialTechList"`
+	MustSpecialTechList string `thrift:"MustSpecialTechList,12" form:"MustSpecialTechList" json:"MustSpecialTechList" query:"MustSpecialTechList"`
 	//指定战法
-	MustTacticList []string `thrift:"MustTacticList,13" form:"MustTacticList" json:"MustTacticList" query:"MustTacticList"`
+	MustTacticList string `thrift:"MustTacticList,13" form:"MustTacticList" json:"MustTacticList" query:"MustTacticList"`
 	//可跨服、公示
 	CrossServerAndPublic bool `thrift:"CrossServerAndPublic,14" form:"CrossServerAndPublic" json:"CrossServerAndPublic" query:"CrossServerAndPublic"`
 	//五星武将数量
@@ -51,15 +51,15 @@ func NewAccountSearchRequest() *AccountSearchRequest {
 func (p *AccountSearchRequest) InitDefault() {
 }
 
-func (p *AccountSearchRequest) GetLineUpList() (v []string) {
+func (p *AccountSearchRequest) GetLineUpList() (v string) {
 	return p.LineUpList
 }
 
-func (p *AccountSearchRequest) GetDefiniteHeroList() (v []string) {
+func (p *AccountSearchRequest) GetDefiniteHeroList() (v string) {
 	return p.DefiniteHeroList
 }
 
-func (p *AccountSearchRequest) GetDefiniteSkillList() (v []string) {
+func (p *AccountSearchRequest) GetDefiniteSkillList() (v string) {
 	return p.DefiniteSkillList
 }
 
@@ -95,11 +95,11 @@ func (p *AccountSearchRequest) GetIsDefiniteHeroMustTalent3() (v bool) {
 	return p.IsDefiniteHeroMustTalent3
 }
 
-func (p *AccountSearchRequest) GetMustSpecialTechList() (v []string) {
+func (p *AccountSearchRequest) GetMustSpecialTechList() (v string) {
 	return p.MustSpecialTechList
 }
 
-func (p *AccountSearchRequest) GetMustTacticList() (v []string) {
+func (p *AccountSearchRequest) GetMustTacticList() (v string) {
 	return p.MustTacticList
 }
 
@@ -154,7 +154,7 @@ func (p *AccountSearchRequest) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -162,7 +162,7 @@ func (p *AccountSearchRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -170,7 +170,7 @@ func (p *AccountSearchRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 3:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -242,7 +242,7 @@ func (p *AccountSearchRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 12:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField12(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -250,7 +250,7 @@ func (p *AccountSearchRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 13:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField13(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -311,70 +311,34 @@ ReadStructEndError:
 }
 
 func (p *AccountSearchRequest) ReadField1(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
-		return err
-	}
-	_field := make([]string, 0, size)
-	for i := 0; i < size; i++ {
 
-		var _elem string
-		if v, err := iprot.ReadString(); err != nil {
-			return err
-		} else {
-			_elem = v
-		}
-
-		_field = append(_field, _elem)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
+	} else {
+		_field = v
 	}
 	p.LineUpList = _field
 	return nil
 }
 func (p *AccountSearchRequest) ReadField2(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
-		return err
-	}
-	_field := make([]string, 0, size)
-	for i := 0; i < size; i++ {
 
-		var _elem string
-		if v, err := iprot.ReadString(); err != nil {
-			return err
-		} else {
-			_elem = v
-		}
-
-		_field = append(_field, _elem)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
+	} else {
+		_field = v
 	}
 	p.DefiniteHeroList = _field
 	return nil
 }
 func (p *AccountSearchRequest) ReadField3(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
-		return err
-	}
-	_field := make([]string, 0, size)
-	for i := 0; i < size; i++ {
 
-		var _elem string
-		if v, err := iprot.ReadString(); err != nil {
-			return err
-		} else {
-			_elem = v
-		}
-
-		_field = append(_field, _elem)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
+	} else {
+		_field = v
 	}
 	p.DefiniteSkillList = _field
 	return nil
@@ -468,47 +432,23 @@ func (p *AccountSearchRequest) ReadField11(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *AccountSearchRequest) ReadField12(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
-		return err
-	}
-	_field := make([]string, 0, size)
-	for i := 0; i < size; i++ {
 
-		var _elem string
-		if v, err := iprot.ReadString(); err != nil {
-			return err
-		} else {
-			_elem = v
-		}
-
-		_field = append(_field, _elem)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
+	} else {
+		_field = v
 	}
 	p.MustSpecialTechList = _field
 	return nil
 }
 func (p *AccountSearchRequest) ReadField13(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
-		return err
-	}
-	_field := make([]string, 0, size)
-	for i := 0; i < size; i++ {
 
-		var _elem string
-		if v, err := iprot.ReadString(); err != nil {
-			return err
-		} else {
-			_elem = v
-		}
-
-		_field = append(_field, _elem)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
+	} else {
+		_field = v
 	}
 	p.MustTacticList = _field
 	return nil
@@ -636,18 +576,10 @@ WriteStructEndError:
 }
 
 func (p *AccountSearchRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("LineUpList", thrift.LIST, 1); err != nil {
+	if err = oprot.WriteFieldBegin("LineUpList", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.LineUpList)); err != nil {
-		return err
-	}
-	for _, v := range p.LineUpList {
-		if err := oprot.WriteString(v); err != nil {
-			return err
-		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
+	if err := oprot.WriteString(p.LineUpList); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -661,18 +593,10 @@ WriteFieldEndError:
 }
 
 func (p *AccountSearchRequest) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("DefiniteHeroList", thrift.LIST, 2); err != nil {
+	if err = oprot.WriteFieldBegin("DefiniteHeroList", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.DefiniteHeroList)); err != nil {
-		return err
-	}
-	for _, v := range p.DefiniteHeroList {
-		if err := oprot.WriteString(v); err != nil {
-			return err
-		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
+	if err := oprot.WriteString(p.DefiniteHeroList); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -686,18 +610,10 @@ WriteFieldEndError:
 }
 
 func (p *AccountSearchRequest) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("DefiniteSkillList", thrift.LIST, 3); err != nil {
+	if err = oprot.WriteFieldBegin("DefiniteSkillList", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.DefiniteSkillList)); err != nil {
-		return err
-	}
-	for _, v := range p.DefiniteSkillList {
-		if err := oprot.WriteString(v); err != nil {
-			return err
-		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
+	if err := oprot.WriteString(p.DefiniteSkillList); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -847,18 +763,10 @@ WriteFieldEndError:
 }
 
 func (p *AccountSearchRequest) writeField12(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("MustSpecialTechList", thrift.LIST, 12); err != nil {
+	if err = oprot.WriteFieldBegin("MustSpecialTechList", thrift.STRING, 12); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.MustSpecialTechList)); err != nil {
-		return err
-	}
-	for _, v := range p.MustSpecialTechList {
-		if err := oprot.WriteString(v); err != nil {
-			return err
-		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
+	if err := oprot.WriteString(p.MustSpecialTechList); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -872,18 +780,10 @@ WriteFieldEndError:
 }
 
 func (p *AccountSearchRequest) writeField13(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("MustTacticList", thrift.LIST, 13); err != nil {
+	if err = oprot.WriteFieldBegin("MustTacticList", thrift.STRING, 13); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRING, len(p.MustTacticList)); err != nil {
-		return err
-	}
-	for _, v := range p.MustTacticList {
-		if err := oprot.WriteString(v); err != nil {
-			return err
-		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
+	if err := oprot.WriteString(p.MustTacticList); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

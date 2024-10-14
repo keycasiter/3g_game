@@ -49,6 +49,12 @@ func NewAccountSearchContext(ctx context.Context, req *jym.AccountSearchRequest,
 		runCtx.checkParam,
 		//1.查询符合条件的账号列表
 		runCtx.searchAccountList,
+		//2. 获取账号详情信息
+		runCtx.searchAccountDetail,
+		//3. 整理账号信息
+		runCtx.buildResp,
+		//1.查询符合条件的账号列表
+		runCtx.searchAccountList,
 		//2.获取账号详情信息
 		runCtx.searchAccountDetail,
 		//3.过滤不符合条件的账号
@@ -147,9 +153,11 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 		extConditions.StageSum = runCtx.req.DefiniteTotalStage
 	}
 	//指定阵容
-	if len(runCtx.req.LineUpList) > 0 {
+	lineUpList := make([]string, 0)
+	util.ParseJsonObj(runCtx.ctx, &lineUpList, runCtx.req.LineUpList)
+	if len(lineUpList) > 0 {
 		lineUp := ""
-		for i, team := range runCtx.req.LineUpList {
+		for i, team := range lineUpList {
 			lineUp += team
 			if i < len(lineUp) {
 				lineUp += ","
@@ -182,9 +190,11 @@ func (runCtx *AccountSearchContext) buildGetSgzGameZoneItemListReq(pageNo int64)
 
 func (runCtx *AccountSearchContext) buildHeros() string {
 	heroIds := ""
-	for i, heroId := range runCtx.req.DefiniteHeroList {
+	heros := make([]string, 0)
+	util.ParseJsonObj(runCtx.ctx, &heros, runCtx.req.DefiniteHeroList)
+	for i, heroId := range heros {
 		heroIds += heroId
-		if i < len(runCtx.req.DefiniteHeroList) {
+		if i < len(heros) {
 			heroIds += ","
 		}
 	}
@@ -193,9 +203,11 @@ func (runCtx *AccountSearchContext) buildHeros() string {
 
 func (runCtx *AccountSearchContext) buildSpecialTech() string {
 	skillIds := ""
-	for i, skillId := range runCtx.req.DefiniteSkillList {
+	skills := make([]string, 0)
+	util.ParseJsonObj(runCtx.ctx, &skillIds, runCtx.req.DefiniteSkillList)
+	for i, skillId := range skills {
 		skillIds += skillId
-		if i < len(runCtx.req.DefiniteHeroList) {
+		if i < len(skills) {
 			skillIds += ","
 		}
 	}
@@ -253,7 +265,9 @@ func (runCtx *AccountSearchContext) searchAccountDetail() {
 func (runCtx *AccountSearchContext) filterAccount() {
 	//整理指定武将
 	definiteHeroMap := make(map[string]bool, 0)
-	for _, heroId := range runCtx.req.DefiniteHeroList {
+	heros := make([]string, 0)
+	util.ParseJsonObj(runCtx.ctx, &heros, runCtx.req.DefiniteHeroList)
+	for _, heroId := range heros {
 		definiteHeroMap[heroId] = true
 	}
 	//整理账号全部武将
@@ -311,7 +325,9 @@ func (runCtx *AccountSearchContext) filterAccount() {
 	if len(runCtx.req.MustTacticList) > 0 {
 		//整理战法map
 		tacticMap := make(map[string]bool, 0)
-		for _, tacticName := range runCtx.req.MustTacticList {
+		mustTactics := make([]string, 0)
+		util.ParseJsonObj(runCtx.ctx, &mustTactics, runCtx.req.MustTacticList)
+		for _, tacticName := range mustTactics {
 			tacticMap[tacticName] = true
 		}
 		//符合条件的账号
@@ -353,7 +369,9 @@ func (runCtx *AccountSearchContext) filterAccount() {
 	if len(runCtx.req.MustSpecialTechList) > 0 {
 		//整理特技map
 		specialTechMap := make(map[string]bool, 0)
-		for _, techName := range runCtx.req.MustSpecialTechList {
+		techNames := make([]string, 0)
+		util.ParseJsonObj(runCtx.ctx, &techNames, runCtx.req.MustSpecialTechList)
+		for _, techName := range techNames {
 			specialTechMap[techName] = true
 		}
 		//符合条件的账号
@@ -423,18 +441,22 @@ func (runCtx *AccountSearchContext) buildRespPrint() {
 		fmt.Printf("【卖点】%s\n", util.ToJsonString(runCtx.ctx, detailItem.ApiData.SellPointTags)+" "+util.ToJsonString(runCtx.ctx, detailItem.ApiData.SecondSellPointTags))
 
 		fmt.Printf("\n【检测如下战法均存在】\n")
-		tacticNames := ""
-		for _, tacticName := range runCtx.req.MustTacticList {
-			tacticNames += tacticName + ","
+		tacticNameStr := ""
+		tacticNames := make([]string, 0)
+		util.ParseJsonObj(runCtx.ctx, &tacticNames, runCtx.req.MustTacticList)
+		for _, tacticName := range tacticNames {
+			tacticNameStr += tacticName + ","
 		}
-		fmt.Printf(tacticNames)
+		fmt.Printf(tacticNameStr)
 
 		fmt.Printf("\n【检测如下指定武将均存在】\n")
-		heroNames := ""
-		for _, heroId := range runCtx.req.DefiniteHeroList {
-			heroNames += consts.HeroMap[heroId] + ","
+		heroNameStr := ""
+		heroNames := make([]string, 0)
+		util.ParseJsonObj(runCtx.ctx, &heroNames, runCtx.req.DefiniteHeroList)
+		for _, heroId := range heroNames {
+			heroNameStr += consts.HeroMap[heroId] + ","
 		}
-		fmt.Printf(heroNames)
+		fmt.Printf(heroNameStr)
 
 		fmt.Printf("\n【特技情况】\n")
 		techNames := ""

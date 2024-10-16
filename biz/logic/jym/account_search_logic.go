@@ -218,7 +218,7 @@ func (runCtx *AccountSearchContext) searchAccountDetail() {
 	goodsNum := 0
 
 	for i, goodsItem := range runCtx.GoodsInfoList {
-		if goodsNum > int(runCtx.req.GoodsNum) {
+		if goodsNum >= int(runCtx.req.GoodsNum) {
 			break
 		}
 

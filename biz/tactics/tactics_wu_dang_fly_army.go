@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -85,7 +86,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 						consts.DebuffEffectType_Methysis,
 					)
 					dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
-					util.TacticDamage(&util.TacticDamageParam{
+					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams: w.tacticsParams,
 						AttackGeneral: currentGeneral,
 						SufferGeneral: triggerGeneral,

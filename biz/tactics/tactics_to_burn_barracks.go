@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -73,7 +74,7 @@ func (t ToBurnBarracksTactic) Execute() {
 	for _, enemyGeneral := range enemyGenerals {
 		//伤害
 		dmg := cast.ToInt64(enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.46)
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: t.tacticsParams,
 			AttackGeneral: currentGeneral,
 			SufferGeneral: enemyGeneral,

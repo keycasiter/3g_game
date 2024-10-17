@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -73,11 +74,11 @@ func (f FocusingOnAllThingsTactic) Prepare() {
 				enemyGeneral := util.GetEnemyOneGeneralByGeneral(general, f.tacticsParams)
 				//若目标不处于连击状态则令其尝试对敌军单体发动一次普通攻击
 				if !util.BuffEffectContains(general, consts.BuffEffectType_ContinuousAttack) {
-					util.AttackDamage(f.tacticsParams, general, enemyGeneral, 0)
+					damage.AttackDamage(f.tacticsParams, general, enemyGeneral, 0)
 				} else {
 					//否则自身对敌军单体造成谋略伤害（伤害率188%，受智力影响）
 					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.88)
-					util.TacticDamage(&util.TacticDamageParam{
+					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams: f.tacticsParams,
 						AttackGeneral: currentGeneral,
 						SufferGeneral: enemyGeneral,

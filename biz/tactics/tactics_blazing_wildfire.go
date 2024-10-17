@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -91,7 +92,7 @@ func (b BlazingWildfireTactic) Execute() {
 				TacticId:   b.Id(),
 			}) {
 				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: b.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: sufferGeneral,
@@ -125,7 +126,7 @@ func (b BlazingWildfireTactic) Execute() {
 							consts.DebuffEffectType_Firing,
 						)
 						dmgNum := cast.ToInt64(0.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-						util.TacticDamage(&util.TacticDamageParam{
+						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams: b.tacticsParams,
 							AttackGeneral: currentGeneral,
 							SufferGeneral: triggerGeneral,

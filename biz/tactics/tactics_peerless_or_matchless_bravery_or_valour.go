@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -72,7 +73,7 @@ func (p PeerlessOrMatchlessBraveryOrValourTactic) Execute() {
 	// 普通攻击之后，对攻击目标再次发起猛攻（伤害率180%），并使其进入震慑状态（无法行动），持续1回合
 	sufferGeneral := p.tacticsParams.CurrentSufferGeneral
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.8)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: p.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: sufferGeneral,

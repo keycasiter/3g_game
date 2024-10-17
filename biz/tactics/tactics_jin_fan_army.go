@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -51,7 +53,7 @@ func (j JinFanArmyTactic) Prepare() {
 				//若目标已经溃逃则造成兵刃攻击（伤害率110%）并恢复伤害量的30%兵力；
 				if util.DeBuffEffectContains(sufferGeneral, consts.DebuffEffectType_Escape) {
 					weaponDmg := cast.ToInt64(pairGeneral.BaseInfo.AbilityAttr.ForceBase * 1.1)
-					util.TacticDamage(&util.TacticDamageParam{
+					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams: j.tacticsParams,
 						AttackGeneral: triggerGeneral,
 						SufferGeneral: sufferGeneral,
@@ -88,7 +90,7 @@ func (j JinFanArmyTactic) Prepare() {
 								TacticId:   j.Id(),
 							}) {
 								dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.64)
-								util.TacticDamage(&util.TacticDamageParam{
+								damage.TacticDamage(&damage.TacticDamageParam{
 									TacticsParams: j.tacticsParams,
 									AttackGeneral: triggerGeneral,
 									SufferGeneral: revokeGeneral,

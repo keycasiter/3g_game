@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -84,7 +85,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 						dmgNum += cast.ToInt64(diff)
 					}
 				}
-				_, _, _, isEffect := util.TacticDamage(&util.TacticDamageParam{
+				_, _, _, isEffect := damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: c.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: sufferGeneral,

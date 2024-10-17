@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -75,7 +76,7 @@ func (v VigorousAndWalkTactic) Execute() {
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, v.tacticsParams)
 	if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_CancelWeapon) {
 		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.56)
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: v.tacticsParams,
 			AttackGeneral: currentGeneral,
 			SufferGeneral: enemyGeneral,

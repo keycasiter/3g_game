@@ -3,9 +3,9 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
-	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
 )
 
@@ -88,7 +88,7 @@ func (g GhostGodThunderForceTactic) Execute() {
 	}
 
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: g.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: g.tacticsParams.CurrentSufferGeneral,

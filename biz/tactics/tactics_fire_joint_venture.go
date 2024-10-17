@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -87,7 +89,7 @@ func (f FireJointVentureTactic) Execute() {
 			//找到敌军全体进行焚营
 			for _, general := range enemyGenerals {
 				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.62)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: f.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: general,
@@ -150,7 +152,7 @@ func (f FireJointVentureTactic) Execute() {
 							rate = 0.98
 						}
 						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * rate)
-						util.TacticDamage(&util.TacticDamageParam{
+						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams: f.tacticsParams,
 							AttackGeneral: currentGeneral,
 							SufferGeneral: revokeGeneral,
@@ -189,7 +191,7 @@ func (f FireJointVentureTactic) Execute() {
 							rate = 0.98
 						}
 						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * rate)
-						util.TacticDamage(&util.TacticDamageParam{
+						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams: f.tacticsParams,
 							AttackGeneral: currentGeneral,
 							SufferGeneral: revokeGeneral,

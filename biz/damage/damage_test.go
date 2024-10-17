@@ -1,4 +1,4 @@
-package util
+package damage
 
 import (
 	"testing"

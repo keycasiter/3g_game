@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -67,7 +68,7 @@ func (f FallingPhoenixTactic) Execute() {
 	//找到敌军单体
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, f.tacticsParams)
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.5)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: f.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: enemyGeneral,

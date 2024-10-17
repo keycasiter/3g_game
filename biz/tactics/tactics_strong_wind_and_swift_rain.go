@@ -1,19 +1,21 @@
 package tactics
 
 import (
+	"math"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
-	"math"
 )
 
-//疾风骤雨
-//主动 40%
-//随机对敌军武将造成3-4次兵刃攻击（伤害率78%，每次提升6%），第3次和第4次攻击额外附带1回合禁疗状态
+// 疾风骤雨
+// 主动 40%
+// 随机对敌军武将造成3-4次兵刃攻击（伤害率78%，每次提升6%），第3次和第4次攻击额外附带1回合禁疗状态
 type StrongWindAndSwiftRainTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -80,7 +82,7 @@ func (s StrongWindAndSwiftRainTactic) Execute() {
 		if i > 1 {
 			dmg = cast.ToInt64(cast.ToFloat64(dmg) * (1 + improveRate))
 		}
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: s.tacticsParams,
 			AttackGeneral: currentGeneral,
 			SufferGeneral: enemyGeneral,

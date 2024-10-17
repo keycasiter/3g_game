@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -117,7 +119,7 @@ func (f FloodedSeventhArmyTactic) Execute() {
 				if effectParams, ok := util.DeBuffEffectGet(enemyGeneral, consts.DebuffEffectType_WaterAttack); ok {
 					for _, effectParam := range effectParams {
 						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * effectParam.EffectRate)
-						util.TacticDamage(&util.TacticDamageParam{
+						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams: f.tacticsParams,
 							AttackGeneral: currentGeneral,
 							SufferGeneral: enemyGeneral,
@@ -140,7 +142,7 @@ func (f FloodedSeventhArmyTactic) Execute() {
 			//是否有水攻状态
 			if util.DeBuffEffectContains(general, consts.DebuffEffectType_WaterAttack) {
 				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.08)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: f.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: general,
@@ -181,7 +183,7 @@ func (f FloodedSeventhArmyTactic) Execute() {
 				}) {
 
 					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * effectRate)
-					util.TacticDamage(&util.TacticDamageParam{
+					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams: f.tacticsParams,
 						AttackGeneral: currentGeneral,
 						SufferGeneral: revokeGeneral,

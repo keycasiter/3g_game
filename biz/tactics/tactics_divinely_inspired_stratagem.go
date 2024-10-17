@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -134,7 +135,7 @@ func (d DivinelyInspiredStratagemTactic) Execute() {
 			} else {
 				// 敌军已混乱时，对其造成谋略攻击（伤害率175%，受智力影响）
 				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.75)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: d.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: general,

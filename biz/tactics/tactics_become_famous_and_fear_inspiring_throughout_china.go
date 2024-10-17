@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -101,7 +102,7 @@ func (b BecomeFamousAndFearInspiringThroughoutChinaTactic) Execute() {
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, b.tacticsParams)
 			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.46)
 			for _, enemyGeneral := range enemyGenerals {
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: b.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: enemyGeneral,

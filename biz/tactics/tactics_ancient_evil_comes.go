@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -57,7 +58,7 @@ func (a AncientEvilComesTactic) Prepare() {
 
 		//猛击（伤害率80%）
 		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.8)
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: a.tacticsParams,
 			AttackGeneral: currentGeneral,
 			SufferGeneral: attackGeneral,

@@ -2,9 +2,11 @@ package battle
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics"
@@ -119,7 +121,6 @@ func (runCtx *BattleLogicV2Context) fillGeneralDataByGeneralId() {
 			general.BaseInfo.Id = generalDb.Id
 			general.BaseInfo.Name = generalDb.Name
 			general.BaseInfo.Group = consts.Group(generalDb.Group)
-			general.BaseInfo.UniqueId = cast.ToString(generalDb.Id)
 
 			//属性
 			abilityAttr := &po.AbilityAttrString{}
@@ -857,7 +858,7 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 				}
 
 				//发起攻击
-				util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
+				damage.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
 
 				//群攻效果
 				effectParams, ok := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_GroupAttack)
@@ -871,7 +872,7 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 					otherEnemyGenerals := util.GetEnemyGeneralsNotSelfByGeneral(sufferGeneral, tacticsParams)
 					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 					for _, enemyGeneral := range otherEnemyGenerals {
-						util.AttackDamage(tacticsParams, currentGeneral, enemyGeneral, dmg)
+						damage.AttackDamage(tacticsParams, currentGeneral, enemyGeneral, dmg)
 					}
 				}
 				//普攻次数减一

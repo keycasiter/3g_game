@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -63,7 +64,7 @@ func (t TigerGuardArmyTactic) Prepare() {
 				dmgRate += dmgImproveRate
 
 				dmg := cast.ToInt64(viceGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: t.tacticsParams,
 					AttackGeneral: viceGeneral,
 					SufferGeneral: attackGeneral,

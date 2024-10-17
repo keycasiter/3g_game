@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -70,7 +71,7 @@ func (e ExcitingArmyAttackCampTactic) Execute() {
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, e.tacticsParams)
 	//兵刃伤害
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.35)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: e.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: enemyGeneral,

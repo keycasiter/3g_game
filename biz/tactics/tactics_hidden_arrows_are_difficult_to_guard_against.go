@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -104,7 +105,7 @@ func (h HiddenArrowsAreDifficultToGuardAgainstTactic) Execute() {
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, h.tacticsParams)
 			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.6)
 			for _, enemyGeneral := range enemyGenerals {
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: h.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: enemyGeneral,
@@ -123,7 +124,7 @@ func (h HiddenArrowsAreDifficultToGuardAgainstTactic) Execute() {
 			for _, enemyGeneral := range allEnemyGenerals {
 				if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Capture) {
 					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.6)
-					util.TacticDamage(&util.TacticDamageParam{
+					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams: h.tacticsParams,
 						AttackGeneral: currentGeneral,
 						SufferGeneral: enemyGeneral,

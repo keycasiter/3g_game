@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -83,7 +85,7 @@ func (g GeneralBraveGirlTactic) Execute() {
 	for _, general := range enemyGenerals {
 		//造成伤害
 		dmg := cast.ToInt64(general.BaseInfo.AbilityAttr.ForceBase * 1.28)
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: g.tacticsParams,
 			AttackGeneral: currentGeneral,
 			SufferGeneral: general,
@@ -121,7 +123,7 @@ func (g GeneralBraveGirlTactic) Execute() {
 							dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectTimes))
 						}
 						settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
-						util.TacticDamage(&util.TacticDamageParam{
+						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams: g.tacticsParams,
 							AttackGeneral: currentGeneral,
 							SufferGeneral: triggerGeneral,
@@ -173,7 +175,7 @@ func (g GeneralBraveGirlTactic) Execute() {
 								}
 
 								settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
-								util.TacticDamage(&util.TacticDamageParam{
+								damage.TacticDamage(&damage.TacticDamageParam{
 									TacticsParams: g.tacticsParams,
 									AttackGeneral: currentGeneral,
 									SufferGeneral: settleGeneral,

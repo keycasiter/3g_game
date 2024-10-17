@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -100,7 +102,7 @@ func (r RainOfFireFromTheSkyTactic) Execute() {
 			for _, enemyGeneral := range enemyGenerals {
 				//伤害
 				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: r.tacticsParams,
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,
@@ -126,7 +128,7 @@ func (r RainOfFireFromTheSkyTactic) Execute() {
 							TacticId:   r.Id(),
 						}) {
 							fireDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.66)
-							util.TacticDamage(&util.TacticDamageParam{
+							damage.TacticDamage(&damage.TacticDamageParam{
 								TacticsParams: r.tacticsParams,
 								AttackGeneral: currentGeneral,
 								SufferGeneral: triggerGeneral,

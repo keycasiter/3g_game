@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -68,7 +69,7 @@ func (s SuperviseLeadAndSeizureArmyTactic) Prepare() {
 		}
 		if debuffMaxCnt > 0 {
 			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.14)
-			util.TacticDamage(&util.TacticDamageParam{
+			damage.TacticDamage(&damage.TacticDamageParam{
 				TacticsParams: s.tacticsParams,
 				AttackGeneral: currentGeneral,
 				SufferGeneral: enemyGeneral,

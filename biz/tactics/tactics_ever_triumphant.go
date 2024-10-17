@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -99,7 +100,7 @@ func (e EverTriumphantTactic) Execute() {
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, e.tacticsParams)
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 2.46)
 			for _, enemyGeneral := range enemyGenerals {
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: e.tacticsParams,
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,

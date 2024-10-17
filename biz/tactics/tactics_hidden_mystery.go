@@ -3,9 +3,9 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
-	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
 )
 
@@ -70,7 +70,7 @@ func (h HiddenMysteryTactic) Execute() {
 
 	//普通攻击之后，对攻击目标在此发起一次兵刃攻击（伤害率144%）
 	weaponDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.44)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: h.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: h.tacticsParams.CurrentSufferGeneral,
@@ -81,7 +81,7 @@ func (h HiddenMysteryTactic) Execute() {
 	//如果目标为敌军主将则额外造成一次谋略攻击（伤害率92%，受智力影响）
 	if h.tacticsParams.CurrentSufferGeneral.IsMaster {
 		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.92)
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: h.tacticsParams,
 			AttackGeneral: currentGeneral,
 			SufferGeneral: h.tacticsParams.CurrentSufferGeneral,

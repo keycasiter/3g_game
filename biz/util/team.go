@@ -1,10 +1,11 @@
 package util
 
 import (
+	"sort"
+
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
-	"sort"
 )
 
 // 找到当前执行战法武将的队友Map
@@ -364,13 +365,13 @@ func GetEnemyTwoGeneralByGeneral(general *vo.BattleGeneral, tacticsParams *model
 	resGenerals := make([]*vo.BattleGeneral, 0)
 	currentGeneralId := general.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
-		for _, general := range tacticsParams.FightingGeneralMap {
-			enemyGenerals = append(enemyGenerals, general)
+		for _, generalVo := range tacticsParams.FightingGeneralMap {
+			enemyGenerals = append(enemyGenerals, generalVo)
 		}
 	}
 	if _, ok := tacticsParams.EnemyGeneralMap[currentGeneralId]; !ok {
-		for _, general := range tacticsParams.EnemyGeneralMap {
-			enemyGenerals = append(enemyGenerals, general)
+		for _, generalVo := range tacticsParams.EnemyGeneralMap {
+			enemyGenerals = append(enemyGenerals, generalVo)
 		}
 	}
 	hitIdxArr := GenerateHitIdxArr(2, len(enemyGenerals))

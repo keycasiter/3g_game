@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -132,7 +134,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 					pairGenerals := util.GetPairGeneralsTwoArrByGeneral(lockGeneral, i.tacticsParams)
 					for _, reboundGeneral := range pairGenerals {
 						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.15)
-						util.TacticDamage(&util.TacticDamageParam{
+						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams:          i.tacticsParams,
 							AttackGeneral:          currentGeneral,
 							SufferGeneral:          reboundGeneral,
@@ -170,7 +172,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 			//并发动谋略攻击（伤害率156%，受智力影响）
 			for _, sufferGeneral := range allEnemyGenerals {
 				dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.56)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: i.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: sufferGeneral,

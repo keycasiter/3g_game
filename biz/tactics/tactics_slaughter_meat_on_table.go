@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -71,7 +72,7 @@ func (s SlaughterMeatOnTableTactic) Execute() {
 	// 对敌军单体造成一次兵刃攻击（伤害率150%），及谋略攻击（伤害率150%，受智力影响）
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
 	weaponDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.5)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: s.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: enemyGeneral,
@@ -81,7 +82,7 @@ func (s SlaughterMeatOnTableTactic) Execute() {
 		TacticName:    s.Name(),
 	})
 	strategyDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.5)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: s.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: enemyGeneral,

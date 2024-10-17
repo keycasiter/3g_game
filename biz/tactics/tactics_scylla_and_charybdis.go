@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -77,7 +78,7 @@ func (s ScyllaAndCharybdisTactic) Execute() {
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
 	for _, general := range effectGenerals {
 		dmg := cast.ToInt64(general.BaseInfo.AbilityAttr.IntelligenceBase * 1.18)
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: s.tacticsParams,
 			AttackGeneral: general,
 			SufferGeneral: enemyGeneral,

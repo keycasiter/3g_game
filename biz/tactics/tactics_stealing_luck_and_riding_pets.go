@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -70,7 +71,7 @@ func (s StealingLuckAndRidingPetsTactic) Prepare() {
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, s.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//伤害
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: nil,
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,
@@ -82,7 +83,7 @@ func (s StealingLuckAndRidingPetsTactic) Prepare() {
 				//额外对其中智力低于自身的单位造成谋略伤害（伤害率120%，受智力影响）
 				if enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase < triggerGeneral.BaseInfo.AbilityAttr.IntelligenceRate {
 					strategyDmg := cast.ToInt64(enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
-					util.TacticDamage(&util.TacticDamageParam{
+					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams: s.tacticsParams,
 						AttackGeneral: triggerGeneral,
 						SufferGeneral: enemyGeneral,

@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -68,7 +69,7 @@ func (h HundredCavalryRobberyBattalionsTactic) Execute() {
 	//敌军单体伤害
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, h.tacticsParams)
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.62)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: h.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: enemyGeneral,
@@ -82,7 +83,7 @@ func (h HundredCavalryRobberyBattalionsTactic) Execute() {
 		//敌军主将
 		enemyMasterGeneral := util.GetEnemyMasterGeneral(h.tacticsParams)
 		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.2)
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: h.tacticsParams,
 			AttackGeneral: currentGeneral,
 			SufferGeneral: enemyMasterGeneral,

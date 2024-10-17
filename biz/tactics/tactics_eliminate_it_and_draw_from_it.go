@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -102,7 +103,7 @@ func (e EliminateItAndDrawFromItTactic) Execute() {
 			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.62)
 			for _, enemyGeneral := range enemyGenerals {
 				//造成一次兵刃攻击（伤害率162%）
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: e.tacticsParams,
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,

@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -95,7 +96,7 @@ func (p PullingSwordsAndChoppingEnemiesTactic) Execute() {
 	}
 	//然后对其造成兵刃伤害（伤害率208%）及震慑状态，持续1回合
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.08)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: p.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: enemyGeneral,

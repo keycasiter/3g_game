@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -74,7 +76,7 @@ func (i InjuryOnOneselfTactic) Execute() {
 	)
 	// 对自己造成兵刃伤害（伤害率40%），
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.4)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: i.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: currentGeneral,
@@ -103,7 +105,7 @@ func (i InjuryOnOneselfTactic) Execute() {
 			}) {
 				//伤害
 				fireDmg := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.22)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: i.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: revokeGeneral,

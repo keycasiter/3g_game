@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -72,7 +73,7 @@ func (w WindAssistedFireTactic) Execute() {
 	// 对敌军单体造成谋略伤害（伤害率154%，受智力影响）
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, w.tacticsParams)
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.54)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: w.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: enemyGeneral,
@@ -84,7 +85,7 @@ func (w WindAssistedFireTactic) Execute() {
 	// 若目标处于灼烧状态，额外对目标造成一次谋略伤害（伤害率228%，受智力影响）
 	if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Firing) {
 		fireDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.28)
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: w.tacticsParams,
 			AttackGeneral: currentGeneral,
 			SufferGeneral: enemyGeneral,

@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -11,9 +13,9 @@ import (
 	"github.com/spf13/cast"
 )
 
-//神上使
-//主动 50%
-//准备1回合，对敌军全体造成溃逃状态，每回合持续造成伤害（伤害率68%，受武力影响），持续2回合
+// 神上使
+// 主动 50%
+// 准备1回合，对敌军全体造成溃逃状态，每回合持续造成伤害（伤害率68%，受武力影响），持续2回合
 type DivineEnvoyTactic struct {
 	tacticsParams    *model.TacticsParams
 	triggerRate      float64
@@ -116,7 +118,7 @@ func (d DivineEnvoyTactic) Execute() {
 							TacticId:   d.Id(),
 						}) {
 							dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.68)
-							util.TacticDamage(&util.TacticDamageParam{
+							damage.TacticDamage(&damage.TacticDamageParam{
 								TacticsParams: d.tacticsParams,
 								AttackGeneral: triggerGeneral,
 								SufferGeneral: enemyGeneral,

@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -11,11 +13,11 @@ import (
 	"github.com/spf13/cast"
 )
 
-//飞沙走石
-//主动，50%
-//奇数回合发动时，使敌军群体（2人）智力降低36点（受智力影响），持续1回合，
-//并使其陷入2回合水攻状态（伤害率58%，受智力影响）；
-//偶数回合发动时，使敌军随机单体武力与智力数值对换，持续1回合，并使其陷入2回合沙暴状态（伤害率108%，受智力影响）
+// 飞沙走石
+// 主动，50%
+// 奇数回合发动时，使敌军群体（2人）智力降低36点（受智力影响），持续1回合，
+// 并使其陷入2回合水攻状态（伤害率58%，受智力影响）；
+// 偶数回合发动时，使敌军随机单体武力与智力数值对换，持续1回合，并使其陷入2回合沙暴状态（伤害率108%，受智力影响）
 type FlyingSandAndRollingPebblesTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -108,7 +110,7 @@ func (f FlyingSandAndRollingPebblesTactic) Execute() {
 				}) {
 					//每回合持续造成伤害（伤害率58%，受智力影响）
 					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.58)
-					util.TacticDamage(&util.TacticDamageParam{
+					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams: f.tacticsParams,
 						AttackGeneral: currentGeneral,
 						SufferGeneral: enemyGeneral,
@@ -174,7 +176,7 @@ func (f FlyingSandAndRollingPebblesTactic) Execute() {
 					TacticId:   f.Id(),
 				}) {
 					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.08)
-					util.TacticDamage(&util.TacticDamageParam{
+					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams: f.tacticsParams,
 						AttackGeneral: currentGeneral,
 						SufferGeneral: revokeGeneral,

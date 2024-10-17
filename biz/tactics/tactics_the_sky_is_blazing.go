@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -82,7 +83,7 @@ func (t TheSkyIsBlazingTactic) Execute() {
 			)
 			for _, general := range enemyGenerals {
 				dmg := cast.ToInt64(1.02 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: t.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: general,
@@ -107,7 +108,7 @@ func (t TheSkyIsBlazingTactic) Execute() {
 							consts.DebuffEffectType_Firing,
 						)
 						firingDmg := cast.ToInt64(0.72 * revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-						util.TacticDamage(&util.TacticDamageParam{
+						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams: t.tacticsParams,
 							AttackGeneral: revokeGeneral,
 							SufferGeneral: general,

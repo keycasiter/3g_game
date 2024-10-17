@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -140,7 +141,7 @@ func (t TheKnifeLikeThunderboltTactic) Execute() {
 			totalDmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 			perDmg := totalDmg / cast.ToInt64(len(enemyGenerals))
 			for _, general := range enemyGenerals {
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: t.tacticsParams,
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: general,

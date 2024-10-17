@@ -2,9 +2,9 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
-	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
 )
 
@@ -66,7 +66,7 @@ func (c CutDownTactic) Execute() {
 	currentGeneral := c.tacticsParams.CurrentGeneral
 
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.14)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: c.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: sufferGeneral,

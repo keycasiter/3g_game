@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -73,7 +74,7 @@ func (g GatherTheCrowdAndStrikeTactic) Execute() {
 	enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(g.tacticsParams)
 	for _, general := range enemyGenerals {
 		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.64)
-		util.TacticDamage(&util.TacticDamageParam{
+		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams: g.tacticsParams,
 			AttackGeneral: currentGeneral,
 			SufferGeneral: general,

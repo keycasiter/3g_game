@@ -2,7 +2,9 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -73,7 +75,7 @@ func (d DrawTheBowBothOnTheLeftAndRightTactic) Execute() {
 	//对敌军单体造成一次兵刃攻击（伤害率180%）
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, d.tacticsParams)
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.8)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: d.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: enemyGeneral,
@@ -103,7 +105,7 @@ func (d DrawTheBowBothOnTheLeftAndRightTactic) Execute() {
 					TacticId:   d.Id(),
 				}) {
 					effectDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.9)
-					util.TacticDamage(&util.TacticDamageParam{
+					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams: d.tacticsParams,
 						AttackGeneral: revokeGeneral,
 						SufferGeneral: enemyGeneral,

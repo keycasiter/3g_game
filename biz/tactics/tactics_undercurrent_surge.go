@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -97,7 +98,7 @@ func (u UndercurrentSurgeTactic) Execute() {
 			//准备1回合，对敌军主将造成一次兵刃攻击（伤害率272%）
 			enemyMasterGeneral := util.GetEnemyMasterGeneral(u.tacticsParams)
 			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.72)
-			util.TacticDamage(&util.TacticDamageParam{
+			damage.TacticDamage(&damage.TacticDamageParam{
 				TacticsParams: u.tacticsParams,
 				AttackGeneral: currentGeneral,
 				SufferGeneral: enemyMasterGeneral,

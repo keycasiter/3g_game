@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -10,9 +11,9 @@ import (
 	"github.com/spf13/cast"
 )
 
-//短兵相见
-//主动 40%
-//使敌军单体降低30点统率，持续1回合，并对其造成一次兵刃攻击（伤害率210%）
+// 短兵相见
+// 主动 40%
+// 使敌军单体降低30点统率，持续1回合，并对其造成一次兵刃攻击（伤害率210%）
 type CloseQuartersTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -97,7 +98,7 @@ func (c CloseQuartersTactic) Execute() {
 	}
 	//伤害
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.1)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: c.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: enemyGeneral,

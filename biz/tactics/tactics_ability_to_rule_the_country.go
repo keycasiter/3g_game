@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -57,7 +58,7 @@ func (a AbilityToRuleTheCountryTactic) Prepare() {
 			//对单体发动谋略攻击
 			enemyGeneral := util.GetEnemyOneGeneralByGeneral(pairGeneral, a.tacticsParams)
 			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.5)
-			util.TacticDamage(&util.TacticDamageParam{
+			damage.TacticDamage(&damage.TacticDamageParam{
 				TacticsParams: a.tacticsParams,
 				AttackGeneral: currentGeneral,
 				SufferGeneral: enemyGeneral,

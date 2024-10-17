@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -64,7 +65,7 @@ func (a AvoidTheSolidAndStrikeTheWeakTactic) Execute() {
 	//找到敌军统率最低的武将
 	sufferGeneral := util.GetEnemyGeneralWhoLowestCommand(currentGeneral, a.tacticsParams)
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.85)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: a.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: sufferGeneral,

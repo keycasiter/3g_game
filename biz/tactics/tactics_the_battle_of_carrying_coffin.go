@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -101,7 +102,7 @@ func (t TheBattleOfCarryingCoffinTactic) Execute() {
 				util.BuffEffectClean(ctx, enemyGeneral)
 				//随后造成兵刃攻击（伤害率255%）
 				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 2.55)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: t.tacticsParams,
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,

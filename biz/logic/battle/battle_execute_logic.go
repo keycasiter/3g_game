@@ -2,8 +2,10 @@ package battle
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
@@ -770,7 +772,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 				}
 
 				//发起攻击
-				util.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
+				damage.AttackDamage(tacticsParams, currentGeneral, sufferGeneral, 0)
 
 				//群攻效果
 				effectParams, ok := util.BuffEffectGet(currentGeneral, consts.BuffEffectType_GroupAttack)
@@ -784,7 +786,7 @@ func (runCtx *BattleLogicContext) processBattleFightingRound(currentRound consts
 					otherEnemyGenerals := util.GetEnemyGeneralsNotSelfByGeneral(sufferGeneral, tacticsParams)
 					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 					for _, enemyGeneral := range otherEnemyGenerals {
-						util.AttackDamage(tacticsParams, currentGeneral, enemyGeneral, dmg)
+						damage.AttackDamage(tacticsParams, currentGeneral, enemyGeneral, dmg)
 					}
 				}
 				//普攻次数减一

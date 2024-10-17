@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -103,7 +104,7 @@ func (t ThunderStruckTactic) Execute() {
 				// 准备1回合，对敌军随机单体造成谋略攻击（伤害率136%，受智力影响），
 				enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, t.tacticsParams)
 				dmg := cast.ToInt64(enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.36)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: t.tacticsParams,
 					AttackGeneral: triggerGeneral,
 					SufferGeneral: enemyGeneral,

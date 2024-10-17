@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -38,7 +39,7 @@ func (d DivineFireMeterTactic) Prepare() {
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, d.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.68)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: d.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: enemyGeneral,

@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -111,7 +112,7 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 			enemyMap := util.GetEnemyGeneralsOneOrTwoMap(c.tacticsParams)
 			for _, enemyGeneral := range enemyMap {
 				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.54)
-				util.TacticDamage(&util.TacticDamageParam{
+				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: c.tacticsParams,
 					AttackGeneral: currentGeneral,
 					SufferGeneral: enemyGeneral,

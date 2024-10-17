@@ -2,8 +2,10 @@ package tactics
 
 import (
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -131,7 +133,7 @@ func (s SeizeTheOpportunityToWinTactic) Execute() {
 						switch debuff {
 						case consts.DebuffEffectType_Firing:
 							dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
-							util.TacticDamage(&util.TacticDamageParam{
+							damage.TacticDamage(&damage.TacticDamageParam{
 								TacticsParams: s.tacticsParams,
 								AttackGeneral: currentGeneral,
 								SufferGeneral: revokeGeneral,
@@ -144,7 +146,7 @@ func (s SeizeTheOpportunityToWinTactic) Execute() {
 						case consts.DebuffEffectType_Defect:
 							_, val := util.GetGeneralHighestBetweenForceOrIntelligence(currentGeneral)
 							dmg := cast.ToInt64(val * 1.2)
-							util.TacticDamage(&util.TacticDamageParam{
+							damage.TacticDamage(&damage.TacticDamageParam{
 								TacticsParams:  s.tacticsParams,
 								AttackGeneral:  currentGeneral,
 								SufferGeneral:  revokeGeneral,
@@ -157,7 +159,7 @@ func (s SeizeTheOpportunityToWinTactic) Execute() {
 							})
 						case consts.DebuffEffectType_Sandstorm:
 							dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
-							util.TacticDamage(&util.TacticDamageParam{
+							damage.TacticDamage(&damage.TacticDamageParam{
 								TacticsParams: s.tacticsParams,
 								AttackGeneral: currentGeneral,
 								SufferGeneral: revokeGeneral,
@@ -191,7 +193,7 @@ func (s SeizeTheOpportunityToWinTactic) Execute() {
 						TacticId:   s.Id(),
 					}) {
 						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
-						util.TacticDamage(&util.TacticDamageParam{
+						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams: s.tacticsParams,
 							AttackGeneral: currentGeneral,
 							SufferGeneral: revokeGeneral,

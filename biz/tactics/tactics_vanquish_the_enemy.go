@@ -3,6 +3,7 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -72,7 +73,7 @@ func (v VanquishTheEnemyTactic) Execute() {
 	)
 	// 普通攻击之后，对攻击目标再次造成一次谋略伤害(伤害率180%，受智力影响)；
 	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
-	util.TacticDamage(&util.TacticDamageParam{
+	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams: v.tacticsParams,
 		AttackGeneral: currentGeneral,
 		SufferGeneral: sufferGeneral,

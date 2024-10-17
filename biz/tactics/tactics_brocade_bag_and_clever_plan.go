@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
@@ -111,7 +112,7 @@ func (b BrocadeBagAndCleverPlanTactic) Prepare() {
 			)
 			dmgRate := diff/100/100 + 0.45
 			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * dmgRate)
-			util.TacticDamage(&util.TacticDamageParam{
+			damage.TacticDamage(&damage.TacticDamageParam{
 				TacticsParams: b.tacticsParams,
 				AttackGeneral: currentGeneral,
 				SufferGeneral: enemyGeneral,

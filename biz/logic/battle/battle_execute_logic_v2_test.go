@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/jinzhu/copier"
 	"github.com/keycasiter/3g_game/biz/conf"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
@@ -120,47 +121,79 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 	mysql.InitMysql()
 
 	//############ 1.填入对战阵容 ###########
-	teams := [][]*vo.BattleGeneral{
-		team.QunGong,
-		team.XiangxiangWuQi,
-		team.GuanGuanZhang,
-		team.TaiWeiDun,
-		team.QiLinGong,
+	teams := []*vo.BattleTeam{
+		{
+			ArmType:        consts.ArmType_Archers,
+			BattleGenerals: team.QunGong,
+		},
+		{
+			ArmType:        consts.ArmType_Cavalry,
+			BattleGenerals: team.XiangxiangWuQi,
+		},
+		{
+			ArmType:        consts.ArmType_Spearman,
+			BattleGenerals: team.GuanGuanZhang,
+		},
+		{
+			ArmType:        consts.ArmType_Mauler,
+			BattleGenerals: team.TaiWeiDun,
+		},
+		{
+			ArmType:        consts.ArmType_Archers,
+			BattleGenerals: team.QiLinGong,
+		},
 	}
 
 	battleDatas := make([]string, 0)
-	battleSize := 100
+	battleSize := 10
 	//遍历所有阵容，和其他阵容对战，测评
-	for _, fightingTeam := range teams {
-		winSize := 0
-		loseSize := 0
-		drawSize := 0
-		advantageDrawSize := 0
-		inferiorityDrawSize := 0
-		for _, enemyTeam := range teams {
+	for _, curFightingTeam := range teams {
+		fightingTeam := &vo.BattleTeam{}
+		err := copier.Copy(fightingTeam, curFightingTeam)
+		if err != nil {
+			t.Failed()
+		}
+		for _, curEnemyTeam := range teams {
+			enemyTeam := &vo.BattleTeam{}
+			err := copier.Copy(enemyTeam, curEnemyTeam)
+			if err != nil {
+				t.Failed()
+			}
+
+			//过滤同样队伍
+			if fightingTeam.BattleGenerals[0] == enemyTeam.BattleGenerals[0] &&
+				fightingTeam.BattleGenerals[1] == enemyTeam.BattleGenerals[1] &&
+				fightingTeam.BattleGenerals[2] == enemyTeam.BattleGenerals[2] {
+				continue
+			}
+
+			winSize := 0
+			loseSize := 0
+			drawSize := 0
+			advantageDrawSize := 0
+			inferiorityDrawSize := 0
+
 			for i := 0; i < battleSize; i++ {
 				req := &BattleLogicV2ContextRequest{
 					//出战队伍
 					FightingTeam: &vo.BattleTeam{
 						TeamType:       consts.TeamType_Fighting,
-						ArmType:        consts.ArmType_Mauler,
-						BattleGenerals: fightingTeam,
+						ArmType:        fightingTeam.ArmType,
+						BattleGenerals: fightingTeam.BattleGenerals,
 					},
 					//对战队伍
 					EnemyTeam: &vo.BattleTeam{
 						TeamType:       consts.TeamType_Enemy,
-						ArmType:        consts.ArmType_Spearman,
-						BattleGenerals: enemyTeam,
+						ArmType:        enemyTeam.ArmType,
+						BattleGenerals: enemyTeam.BattleGenerals,
 					},
 				}
 				//############ 配置队伍是敌是友 ###########
 				for _, general := range req.FightingTeam.BattleGenerals {
 					general.BaseInfo.GeneralBattleType = consts.GeneralBattleType_Fighting
-					general.BaseInfo.UniqueId = util.GenerateUUID()
 				}
 				for _, general := range req.EnemyTeam.BattleGenerals {
 					general.BaseInfo.GeneralBattleType = consts.GeneralBattleType_Enemy
-					general.BaseInfo.UniqueId = util.GenerateUUID()
 				}
 
 				//模拟对战
@@ -170,6 +203,8 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 					hlog.CtxErrorf(ctx, "run err:%v", err)
 					return
 				}
+
+				fmt.Printf("result:%v\n", resp.BattleResultStatistics.FightingTeam.BattleResult)
 
 				switch resp.BattleResultStatistics.FightingTeam.BattleResult {
 				case consts.BattleResult_Win:
@@ -185,16 +220,22 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 				}
 			}
 
+			//收集对战数据
 			fightingTeamName := ""
 			enemyTeamName := ""
-			for _, general := range fightingTeam {
+			for _, general := range fightingTeam.BattleGenerals {
 				fightingTeamName += general.BaseInfo.Name + " "
 			}
-			for _, general := range enemyTeam {
+			for _, general := range enemyTeam.BattleGenerals {
 				enemyTeamName += general.BaseInfo.Name + " "
 			}
 			battleDatas = append(battleDatas,
-				fmt.Sprintf("%v VS %v 胜:%v 平:%v 败:%v\n", fightingTeamName, enemyTeamName, winSize, drawSize, loseSize))
+				fmt.Sprintf("%v VS %v 胜:%v 平:%v 优平:%v 劣平:%v 败:%v\n", fightingTeamName, enemyTeamName, winSize, drawSize, advantageDrawSize, inferiorityDrawSize, loseSize))
 		}
+	}
+
+	//打印
+	for _, data := range battleDatas {
+		fmt.Printf("%v\n", data)
 	}
 }

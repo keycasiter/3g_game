@@ -66,10 +66,14 @@ func (t *TacticDamageLogic) checkParam() {
 	ctx := t.param.TacticsParams.Ctx
 
 	//必填参数
-	if t.param.AttackGeneral == nil || t.param.SufferGeneral == nil || t.param.Damage <= 0 || t.param.DamageType == consts.DamageType_None {
+	if t.param.AttackGeneral == nil || t.param.SufferGeneral == nil || t.param.DamageType == consts.DamageType_None {
 		hlog.CtxErrorf(ctx, "damage params err , attackGeneral:%s , sufferGeneral:%s , damage:%d , damageType:%v",
 			util.ToJsonString(ctx, t.param.AttackGeneral), util.ToJsonString(ctx, t.param.SufferGeneral), t.param.Damage, t.param.DamageType)
 		panic(any("damage params err"))
+	}
+
+	if t.param.Damage <= 0 {
+		t.isAvoidDamage = true
 	}
 }
 

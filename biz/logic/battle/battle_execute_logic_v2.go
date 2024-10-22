@@ -121,6 +121,7 @@ func (runCtx *BattleLogicV2Context) fillGeneralDataByGeneralId() {
 			general.BaseInfo.Id = generalDb.Id
 			general.BaseInfo.Name = generalDb.Name
 			general.BaseInfo.Group = consts.Group(generalDb.Group)
+			general.BaseInfo.UniqueId = util.GenerateUUID()
 
 			//属性
 			abilityAttr := &po.AbilityAttrString{}

@@ -9,6 +9,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/conf"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
+	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/team"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -126,8 +127,8 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 	drawSize := 0
 	advantageDrawSize := 0
 	inferiorityDrawSize := 0
-	//fightingTeam := make([]*vo.BattleGeneral, 0)
-	//enemyTeam := make([]*vo.BattleGeneral, 0)
+	fightingGeneralsData := make([]*vo.BattleGeneral, 0)
+	enemyGeneralsData := make([]*vo.BattleGeneral, 0)
 
 	for i := 0; i < battleSize; i++ {
 		fightingGenerals, err := util.DeepCopyBattleGenerals(team.QunGong)
@@ -170,7 +171,6 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 		}
 
 		//战报结果收集
-
 		switch resp.BattleResultStatistics.FightingTeam.BattleResult {
 		case consts.BattleResult_Win:
 			winSize++
@@ -183,8 +183,70 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 		case consts.BattleResult_Inferiority_Draw:
 			inferiorityDrawSize++
 		}
+
+		for idx, general := range resp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals {
+			if len(fightingGeneralsData) > idx {
+				tmpGeneralData := fightingGeneralsData[idx]
+				tmpGeneralData.SoldierNum += general.SoldierNum
+				tmpGeneralData.LossSoldierNum += general.LossSoldierNum
+				tmpGeneralData.AccumulateTotalDamageNum += general.AccumulateTotalDamageNum
+				tmpGeneralData.AccumulateAttackDamageNum += general.AccumulateAttackDamageNum
+				tmpGeneralData.AccumulateTotalResumeNum += general.AccumulateTotalResumeNum
+			} else {
+				fightingGeneralsData = append(fightingGeneralsData, &vo.BattleGeneral{
+					BaseInfo: &po.MetadataGeneral{
+						Name: general.BaseInfo.Name,
+					},
+					SoldierNum:                general.SoldierNum,
+					LossSoldierNum:            general.LossSoldierNum,
+					AccumulateTotalDamageNum:  general.AccumulateTotalDamageNum,
+					AccumulateAttackDamageNum: general.AccumulateAttackDamageNum,
+					AccumulateTotalResumeNum:  general.AccumulateTotalResumeNum,
+				})
+			}
+		}
+		for idx, general := range resp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals {
+			if len(enemyGeneralsData) > idx {
+				tmpGeneralData := enemyGeneralsData[idx]
+				tmpGeneralData.SoldierNum += general.SoldierNum
+				tmpGeneralData.LossSoldierNum += general.LossSoldierNum
+				tmpGeneralData.AccumulateTotalDamageNum += general.AccumulateTotalDamageNum
+				tmpGeneralData.AccumulateAttackDamageNum += general.AccumulateAttackDamageNum
+				tmpGeneralData.AccumulateTotalResumeNum += general.AccumulateTotalResumeNum
+			} else {
+				enemyGeneralsData = append(enemyGeneralsData, &vo.BattleGeneral{
+					BaseInfo: &po.MetadataGeneral{
+						Name: general.BaseInfo.Name,
+					},
+					SoldierNum:                general.SoldierNum,
+					LossSoldierNum:            general.LossSoldierNum,
+					AccumulateTotalDamageNum:  general.AccumulateTotalDamageNum,
+					AccumulateAttackDamageNum: general.AccumulateAttackDamageNum,
+					AccumulateTotalResumeNum:  general.AccumulateTotalResumeNum,
+				})
+			}
+		}
 	}
 
 	//打印
 	fmt.Printf("胜:%v 平:%v 优平:%v 劣平:%v 败:%v\n", winSize, drawSize, advantageDrawSize, inferiorityDrawSize, loseSize)
+	for _, data := range fightingGeneralsData {
+		fmt.Printf("%v: 损失:%v , 累计伤害:%v , 普攻:%v , 恢复:%v\n",
+			data.BaseInfo.Name,
+			data.LossSoldierNum/int64(battleSize),
+			data.AccumulateTotalDamageNum/int64(battleSize),
+			data.AccumulateAttackDamageNum/int64(battleSize),
+			data.AccumulateTotalResumeNum/int64(battleSize),
+		)
+		//战法
+	}
+	for _, data := range enemyGeneralsData {
+		fmt.Printf("%v: 损失:%v , 累计伤害:%v , 普攻:%v , 恢复:%v\n",
+			data.BaseInfo.Name,
+			data.LossSoldierNum/int64(battleSize),
+			data.AccumulateTotalDamageNum/int64(battleSize),
+			data.AccumulateAttackDamageNum/int64(battleSize),
+			data.AccumulateTotalResumeNum/int64(battleSize),
+		)
+	}
 }

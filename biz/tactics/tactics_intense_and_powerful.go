@@ -67,6 +67,9 @@ func (i IntenseAndPowerfulTactic) SupportArmTypes() []consts.ArmType {
 }
 
 func (i IntenseAndPowerfulTactic) Execute() {
+	// 准备1回合，对敌军群体（2人）施加虚弱（无法造成伤害）状态，持续2回合；如果目标已处于虚弱状态则使其陷入叛逃状态，
+	// 每回合持续造成伤害（伤害率158%，受武力或智力最高一项影响，无视防御），持续2回合
+
 	ctx := i.tacticsParams.Ctx
 	currentGeneral := i.tacticsParams.CurrentGeneral
 	currentRound := i.tacticsParams.CurrentRound

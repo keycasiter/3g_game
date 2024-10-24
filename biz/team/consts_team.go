@@ -348,8 +348,8 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.BowWaistConcubine,
-					Name: "弓腰姬",
+					Id:   consts.GeneralBraveGirl,
+					Name: "将门虎女",
 				},
 				{
 					Id:   consts.BrokenBridgeByWater,

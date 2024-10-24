@@ -469,6 +469,14 @@ func (runCtx *BattleLogicV2Context) handlePreparePhaseTactic(tacticsParams *mode
 }
 
 func (runCtx *BattleLogicV2Context) handleGeneralAddition(team *vo.BattleTeam, general *vo.BattleGeneral) {
+	//**基础属性加成**
+	//武将加点加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 武将加点加成")
+	runCtx.handleAbilityAttrAddition(general)
+	//武将等级加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 武将等级加成")
+	runCtx.handleGeneralLevel(general)
+
 	//剧本特殊效果加成
 	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 剧本特殊效果加成")
 	//士气加成 (看了下战报分析了下，每减少0.1士气，降低伤害比例是0.07%，如果0士气则降低70%伤害，其余不影响)
@@ -479,12 +487,7 @@ func (runCtx *BattleLogicV2Context) handleGeneralAddition(team *vo.BattleTeam, g
 	//武将标签加成
 	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 武将标签加成")
 	runCtx.handleGeneralTag(general)
-	//武将加点加成
-	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 武将加点加成")
-	runCtx.handleAbilityAttrAddition(general)
-	//武将等级加成
-	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 武将等级加成")
-	runCtx.handleGeneralLevel(general)
+
 	//城池建筑加成 TODO
 	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 城池建筑加成")
 	//缘分加成 TODO
@@ -729,6 +732,7 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 
 				//已发动准备战法跳过
 				if tacticHandler.IsTriggerPrepare() {
+					hlog.CtxInfof(runCtx.Ctx, "准备战法:【%v】跳过", tactic.Name)
 					continue
 				}
 

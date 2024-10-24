@@ -383,8 +383,8 @@ type BattleAction int
 
 const (
 	BattleAction_Unknow            BattleAction = iota //未知动作
-	BattleAction_BeginAction                           //开始行动
-	BattleAction_EndAction                             //结束行动
+	BattleAction_BeginAction                           //回合开始行动
+	BattleAction_EndAction                             //回合结束行动
 	BattleAction_Attack                                //普通攻击开始
 	BattleAction_AttackEnd                             //普通攻击结束
 	BattleAction_Tactic                                //战法攻击开始

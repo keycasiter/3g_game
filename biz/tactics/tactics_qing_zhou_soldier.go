@@ -51,8 +51,8 @@ func (q QingZhouSoldierTactic) Prepare() {
 				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.72)
 				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams: q.tacticsParams,
-					AttackGeneral: attackGeneral,
-					SufferGeneral: triggerGeneral,
+					AttackGeneral: triggerGeneral,
+					SufferGeneral: attackGeneral,
 					DamageType:    consts.DamageType_Weapon,
 					Damage:        dmg,
 					TacticId:      q.Id(),

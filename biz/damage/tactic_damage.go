@@ -23,6 +23,12 @@ type TacticDamageLogic struct {
 
 func NewTacticDamageLogic(param *TacticDamageParam) *TacticDamageLogic {
 	runCtx := &TacticDamageLogic{param: param}
+
+	//伤害数据收集
+	defer func() {
+		runCtx.collectData()
+	}()
+
 	runCtx.funcs = []func(){
 		//参数校验
 		runCtx.checkParam,
@@ -38,8 +44,6 @@ func NewTacticDamageLogic(param *TacticDamageParam) *TacticDamageLogic {
 		runCtx.damageShareHandler,
 		//伤害结算处理
 		runCtx.damageCalculateHandler,
-		//伤害数据打印
-		runCtx.printLog,
 		//后置触发器
 		runCtx.triggerPostHandler,
 	}
@@ -126,7 +130,16 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 	damage := param.Damage
 	isIgnoreDefend := param.IsIgnoreDefend
 
-	//伤害提升效果
+	//兵力为空
+	if sufferGeneral.SoldierNum == 0 {
+		t.damageNum = 0
+		t.soldierNum = 0
+		t.remainSoldierNum = 0
+		t.isEffect = false
+		return
+	}
+
+	//****伤害提升效果****
 	//自带主动战法伤害提升
 	if attackGeneral.EquipTactics[0].Id == param.TacticId && consts.ActiveTacticsMap[attackGeneral.EquipTactics[0].Id] {
 		if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_TacticsActiveWithSelfDamageImprove); ok {
@@ -147,8 +160,7 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
 		}
 	}
-
-	//伤害提升：兵刃/谋略
+	//造成伤害提升：兵刃/谋略
 	switch param.DamageType {
 	case consts.DamageType_Weapon:
 		if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove); ok {
@@ -158,9 +170,6 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 			}
 			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
 		}
-		//计数
-		attackGeneral.ExecuteWeaponAttackNum++
-		sufferGeneral.SufferExecuteWeaponAttackNum++
 	case consts.DamageType_Strategy:
 		if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove); ok {
 			effectRate := float64(0)
@@ -169,18 +178,46 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 			}
 			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
 		}
-		//计数
-		attackGeneral.ExecuteStrategyAttackNum++
-		sufferGeneral.SufferExecuteStrategyAttackNum++
 	}
 
-	//伤害计算
-	if sufferGeneral.SoldierNum == 0 {
-		t.damageNum = 0
-		t.soldierNum = 0
-		t.remainSoldierNum = 0
-		t.isEffect = false
+	//****伤害减少效果****
+	//自带主动战法伤害减少
+	effectRate := float64(0)
+	if sufferGeneral.EquipTactics[0].Id == param.TacticId && consts.ActiveTacticsMap[sufferGeneral.EquipTactics[0].Id] {
+		if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_SufferActiveTacticDamageDeduce); ok {
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+		}
 	}
+	//突击战法伤害减少
+	if consts.AssaultTacticsMap[param.TacticId] {
+		if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_SufferAssaultTacticDamageDeduce); ok {
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+		}
+	}
+	//造成伤害减少：兵刃/谋略
+	switch param.DamageType {
+	case consts.DamageType_Weapon:
+		if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce); ok {
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+		}
+	case consts.DamageType_Strategy:
+		if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce); ok {
+			for _, effectParam := range effectParams {
+				effectRate += effectParam.EffectRate
+			}
+		}
+	}
+	//伤害减免最大90%
+	if effectRate > 0.9 {
+		effectRate = 0.9
+	}
+	damage = cast.ToInt64(cast.ToFloat64(damage) * (1 - effectRate))
 
 	//是否无视防御
 	if isIgnoreDefend {
@@ -196,10 +233,12 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 		}
 	}
 
+	//****伤害计算兜底****
 	//兜底伤害为负的情况
 	if t.damageNum < 0 {
 		t.damageNum = 0
 	}
+
 	//兜底伤害大于剩余兵力情况
 	t.soldierNum = sufferGeneral.SoldierNum
 	if t.damageNum >= t.soldierNum {
@@ -216,12 +255,14 @@ func (t *TacticDamageLogic) avoidDamageHandler() {
 	//是否可以造成伤害
 	if !util.IsCanDamage(ctx, attackGeneral) {
 		t.isAvoidDamage = true
+		t.damageNum = 0
 		return
 	}
 
 	//是否可以规避
 	if util.IsCanEvade(ctx, sufferGeneral) {
 		t.isAvoidDamage = true
+		t.damageNum = 0
 		return
 	}
 
@@ -255,6 +296,10 @@ func (t *TacticDamageLogic) avoidDamageHandler() {
 						)
 					}
 				}
+
+				//伤害抵御
+				t.isAvoidDamage = true
+				t.damageNum = 0
 			}
 		}
 	}
@@ -503,12 +548,12 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 	}
 }
 
-// 战法伤害计算
+// 战法伤害数据收集
 // @attack 攻击武将
 // @suffer 被攻击武将
 // @damage 伤害量
 // @return 实际伤害/原兵力/剩余兵力
-func (t *TacticDamageLogic) printLog() {
+func (t *TacticDamageLogic) collectData() {
 	param := t.param
 	ctx := t.param.TacticsParams.Ctx
 	tacticsParams := param.TacticsParams
@@ -519,42 +564,53 @@ func (t *TacticDamageLogic) printLog() {
 
 	//统计数据
 	attackGeneral.AccumulateTotalDamageNum += t.damageNum
-	attackGeneral.TacticAccumulateDamageMap[param.TacticId] = t.damageNum
-	attackGeneral.TacticAccumulateTriggerMap[param.TacticId] = t.damageNum
+	attackGeneral.TacticAccumulateDamageMap[param.TacticId] += t.damageNum
+	attackGeneral.TacticAccumulateTriggerMap[param.TacticId] += 1
 	sufferGeneral.LossSoldierNum += t.damageNum
-	//统计上报
-	util.TacticReport(tacticsParams,
-		attackGeneral.BaseInfo.UniqueId,
-		int64(param.TacticId),
-		1,
-		t.damageNum,
-		0,
-	)
 
-	if effectName == "" {
-		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
-			sufferGeneral.BaseInfo.Name,
-			attackGeneral.BaseInfo.Name,
-			tacticName,
+	//计数
+	switch param.DamageType {
+	case consts.DamageType_Weapon:
+		attackGeneral.ExecuteWeaponAttackNum++
+		sufferGeneral.SufferExecuteWeaponAttackNum++
+	case consts.DamageType_Strategy:
+		attackGeneral.ExecuteStrategyAttackNum++
+		sufferGeneral.SufferExecuteStrategyAttackNum++
+
+		//统计上报
+		util.TacticReport(tacticsParams,
+			attackGeneral.BaseInfo.UniqueId,
+			int64(param.TacticId),
+			1,
 			t.damageNum,
-			t.soldierNum,
-			t.remainSoldierNum,
+			0,
 		)
-	} else {
-		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】「%v」的伤害，损失了兵力%d(%d↘%d)",
-			sufferGeneral.BaseInfo.Name,
-			attackGeneral.BaseInfo.Name,
-			tacticName,
-			effectName,
-			t.damageNum,
-			t.soldierNum,
-			t.remainSoldierNum,
-		)
+
+		if effectName == "" {
+			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
+				sufferGeneral.BaseInfo.Name,
+				attackGeneral.BaseInfo.Name,
+				tacticName,
+				t.damageNum,
+				t.soldierNum,
+				t.remainSoldierNum,
+			)
+		} else {
+			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】「%v」的伤害，损失了兵力%d(%d↘%d)",
+				sufferGeneral.BaseInfo.Name,
+				attackGeneral.BaseInfo.Name,
+				tacticName,
+				effectName,
+				t.damageNum,
+				t.soldierNum,
+				t.remainSoldierNum,
+			)
+		}
+
+		return
 	}
 
-	return
 }
-
 func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldierNum int64, isEffect bool) {
 	return NewTacticDamageLogic(param).Process()
 }

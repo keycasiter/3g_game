@@ -154,12 +154,14 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 				BattleGenerals: enemyGenerals,
 			},
 		}
-		//############ 配置队伍是敌是友 ###########
+		//############ 配置默认值 ###########
 		for _, general := range req.FightingTeam.BattleGenerals {
 			general.BaseInfo.GeneralBattleType = consts.GeneralBattleType_Fighting
+			general.Addition.GeneralLevel = 50
 		}
 		for _, general := range req.EnemyTeam.BattleGenerals {
 			general.BaseInfo.GeneralBattleType = consts.GeneralBattleType_Enemy
+			general.Addition.GeneralLevel = 50
 		}
 
 		//模拟对战
@@ -184,54 +186,14 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 			inferiorityDrawSize++
 		}
 
-		for idx, general := range resp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals {
-			if len(fightingGeneralsData) > idx {
-				tmpGeneralData := fightingGeneralsData[idx]
-				tmpGeneralData.SoldierNum += general.SoldierNum
-				tmpGeneralData.LossSoldierNum += general.LossSoldierNum
-				tmpGeneralData.AccumulateTotalDamageNum += general.AccumulateTotalDamageNum
-				tmpGeneralData.AccumulateAttackDamageNum += general.AccumulateAttackDamageNum
-				tmpGeneralData.AccumulateTotalResumeNum += general.AccumulateTotalResumeNum
-			} else {
-				fightingGeneralsData = append(fightingGeneralsData, &vo.BattleGeneral{
-					BaseInfo: &po.MetadataGeneral{
-						Name: general.BaseInfo.Name,
-					},
-					SoldierNum:                general.SoldierNum,
-					LossSoldierNum:            general.LossSoldierNum,
-					AccumulateTotalDamageNum:  general.AccumulateTotalDamageNum,
-					AccumulateAttackDamageNum: general.AccumulateAttackDamageNum,
-					AccumulateTotalResumeNum:  general.AccumulateTotalResumeNum,
-				})
-			}
-		}
-		for idx, general := range resp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals {
-			if len(enemyGeneralsData) > idx {
-				tmpGeneralData := enemyGeneralsData[idx]
-				tmpGeneralData.SoldierNum += general.SoldierNum
-				tmpGeneralData.LossSoldierNum += general.LossSoldierNum
-				tmpGeneralData.AccumulateTotalDamageNum += general.AccumulateTotalDamageNum
-				tmpGeneralData.AccumulateAttackDamageNum += general.AccumulateAttackDamageNum
-				tmpGeneralData.AccumulateTotalResumeNum += general.AccumulateTotalResumeNum
-			} else {
-				enemyGeneralsData = append(enemyGeneralsData, &vo.BattleGeneral{
-					BaseInfo: &po.MetadataGeneral{
-						Name: general.BaseInfo.Name,
-					},
-					SoldierNum:                general.SoldierNum,
-					LossSoldierNum:            general.LossSoldierNum,
-					AccumulateTotalDamageNum:  general.AccumulateTotalDamageNum,
-					AccumulateAttackDamageNum: general.AccumulateAttackDamageNum,
-					AccumulateTotalResumeNum:  general.AccumulateTotalResumeNum,
-				})
-			}
-		}
+		fightingGeneralsData = buildBattleResultData(resp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals, fightingGeneralsData)
+		enemyGeneralsData = buildBattleResultData(resp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals, enemyGeneralsData)
 	}
 
 	//打印
 	fmt.Printf("胜:%v 平:%v 优平:%v 劣平:%v 败:%v\n", winSize, drawSize, advantageDrawSize, inferiorityDrawSize, loseSize)
 	for _, data := range fightingGeneralsData {
-		fmt.Printf("%v: 损失:%v , 累计伤害:%v , 普攻:%v , 恢复:%v\n",
+		fmt.Printf("\n%v\n损失:%v , 累计伤害:%v , 普攻:%v , 恢复:%v",
 			data.BaseInfo.Name,
 			data.LossSoldierNum/int64(battleSize),
 			data.AccumulateTotalDamageNum/int64(battleSize),
@@ -239,14 +201,80 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 			data.AccumulateTotalResumeNum/int64(battleSize),
 		)
 		//战法
+		fmt.Println("\n【战法】")
+		for k, v := range data.TacticAccumulateDamageMap {
+			fmt.Printf("%v:%v ", k, v)
+		}
+		fmt.Println("\n【触发】")
+		for k, v := range data.TacticAccumulateTriggerMap {
+			fmt.Printf("%v:%v ", k, v)
+		}
 	}
 	for _, data := range enemyGeneralsData {
-		fmt.Printf("%v: 损失:%v , 累计伤害:%v , 普攻:%v , 恢复:%v\n",
+		fmt.Printf("\n%v\n损失:%v , 累计伤害:%v , 普攻:%v , 恢复:%v",
 			data.BaseInfo.Name,
 			data.LossSoldierNum/int64(battleSize),
 			data.AccumulateTotalDamageNum/int64(battleSize),
 			data.AccumulateAttackDamageNum/int64(battleSize),
 			data.AccumulateTotalResumeNum/int64(battleSize),
 		)
+		//战法
+		fmt.Println("\n【战法】")
+		for k, v := range data.TacticAccumulateDamageMap {
+			fmt.Printf("%v:%v ", k, v)
+		}
+		fmt.Println("\n【触发】")
+		for k, v := range data.TacticAccumulateTriggerMap {
+			fmt.Printf("%v:%v ", k, v)
+		}
 	}
+}
+
+func buildBattleResultData(generals []*vo.BattleGeneral, generalsData []*vo.BattleGeneral) []*vo.BattleGeneral {
+	for idx, general := range generals {
+		if len(generalsData) > idx {
+			tmpGeneralData := generalsData[idx]
+			tmpGeneralData.SoldierNum += general.SoldierNum
+			tmpGeneralData.LossSoldierNum += general.LossSoldierNum
+			tmpGeneralData.AccumulateTotalDamageNum += general.AccumulateTotalDamageNum
+			tmpGeneralData.AccumulateAttackDamageNum += general.AccumulateAttackDamageNum
+			tmpGeneralData.AccumulateTotalResumeNum += general.AccumulateTotalResumeNum
+			for k, v := range general.TacticAccumulateDamageMap {
+				if add, ok := tmpGeneralData.TacticAccumulateDamageMap[k]; ok {
+					tmpGeneralData.TacticAccumulateDamageMap[k] = v + add
+				} else {
+					tmpGeneralData.TacticAccumulateDamageMap[k] = v
+				}
+			}
+			for k, v := range general.TacticAccumulateTriggerMap {
+				if add, ok := tmpGeneralData.TacticAccumulateTriggerMap[k]; ok {
+					tmpGeneralData.TacticAccumulateTriggerMap[k] = v + add
+				} else {
+					tmpGeneralData.TacticAccumulateTriggerMap[k] = v
+				}
+			}
+			for k, v := range general.TacticAccumulateResumeMap {
+				if add, ok := tmpGeneralData.TacticAccumulateResumeMap[k]; ok {
+					tmpGeneralData.TacticAccumulateResumeMap[k] = v + add
+				} else {
+					tmpGeneralData.TacticAccumulateResumeMap[k] = v
+				}
+			}
+		} else {
+			generalsData = append(generalsData, &vo.BattleGeneral{
+				BaseInfo: &po.MetadataGeneral{
+					Name: general.BaseInfo.Name,
+				},
+				SoldierNum:                 general.SoldierNum,
+				LossSoldierNum:             general.LossSoldierNum,
+				AccumulateTotalDamageNum:   general.AccumulateTotalDamageNum,
+				AccumulateAttackDamageNum:  general.AccumulateAttackDamageNum,
+				AccumulateTotalResumeNum:   general.AccumulateTotalResumeNum,
+				TacticAccumulateTriggerMap: general.TacticAccumulateTriggerMap,
+				TacticAccumulateResumeMap:  general.TacticAccumulateResumeMap,
+				TacticAccumulateDamageMap:  general.TacticAccumulateDamageMap,
+			})
+		}
+	}
+	return generalsData
 }

@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 锦囊妙计
@@ -111,15 +110,14 @@ func (b BrocadeBagAndCleverPlanTactic) Prepare() {
 				currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase,
 			)
 			dmgRate := diff/100/100 + 0.45
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * dmgRate)
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: b.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: enemyGeneral,
-				DamageType:    consts.DamageType_Strategy,
-				Damage:        dmg,
-				TacticName:    b.Name(),
-				TacticId:      b.Id(),
+				TacticsParams:     b.tacticsParams,
+				AttackGeneral:     currentGeneral,
+				SufferGeneral:     enemyGeneral,
+				DamageType:        consts.DamageType_Strategy,
+				DamageImproveRate: dmgRate,
+				TacticId:          b.Id(),
+				TacticName:        b.Name(),
 			})
 		}
 

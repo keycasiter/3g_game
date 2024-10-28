@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 绝其汲道
@@ -100,17 +99,16 @@ func (e EliminateItAndDrawFromItTactic) Execute() {
 
 			//找到敌军2人~3人
 			enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(e.tacticsParams)
-			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.62)
 			for _, enemyGeneral := range enemyGenerals {
 				//造成一次兵刃攻击（伤害率162%）
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: e.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Weapon,
-					TacticId:      e.Id(),
-					TacticName:    e.Name(),
+					TacticsParams:     e.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.62,
+					TacticId:          e.Id(),
+					TacticName:        e.Name(),
 				})
 				//使其进入禁疗状态（无法恢复兵力），持续1回合
 				util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_ProhibitionTreatment, &vo.EffectHolderParams{

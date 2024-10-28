@@ -115,15 +115,15 @@ func (d DecisiveStrategyTactic) Execute() {
 			})
 		}
 		//造成谋略伤害（伤害156%，受智力影响）
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.56)
+		dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.56
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: d.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Strategy,
-			Damage:        dmg,
-			TacticId:      d.Id(),
-			TacticName:    d.Name(),
+			TacticsParams:     d.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Strategy,
+			DamageImproveRate: dmgRate,
+			TacticId:          d.Id(),
+			TacticName:        d.Name(),
 		})
 	}
 }

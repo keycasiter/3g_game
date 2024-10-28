@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 溯江摇橹
@@ -99,22 +98,22 @@ func (c ChasingTheRiverAndRidingRowsTactic) Prepare() {
 
 		if util.GenerateRate(0.6) {
 			enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, c.tacticsParams)
-			dmg := int64(0)
+			dmgRate := float64(0)
 			switch dmgType {
 			case consts.DamageType_Weapon:
-				dmg = cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.5)
+				dmgRate = triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100/100 + 0.5
 			case consts.DamageType_Strategy:
-				dmg = cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.5)
+				dmgRate = triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100 / 100 * 0.5
 			}
 
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: c.tacticsParams,
-				AttackGeneral: triggerGeneral,
-				SufferGeneral: enemyGeneral,
-				DamageType:    dmgType,
-				Damage:        dmg,
-				TacticId:      c.Id(),
-				TacticName:    c.Name(),
+				TacticsParams:     c.tacticsParams,
+				AttackGeneral:     triggerGeneral,
+				SufferGeneral:     enemyGeneral,
+				DamageType:        dmgType,
+				DamageImproveRate: dmgRate,
+				TacticId:          c.Id(),
+				TacticName:        c.Name(),
 			})
 		}
 

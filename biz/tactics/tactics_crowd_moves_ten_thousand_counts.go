@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 众动万计
@@ -46,16 +45,15 @@ func (c CrowdMovesTenThousandCountsTactic) Prepare() {
 
 		//概率攻击
 		if util.GenerateRate(0.45) {
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.4)
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: c.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: params.AttackGeneral,
-				DamageType:    consts.DamageType_Weapon,
-				Damage:        dmg,
-				TacticId:      c.Id(),
-				TacticName:    c.Name(),
-				EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_CrowdMovesTenThousandCounts_Prepare),
+				TacticsParams:     c.tacticsParams,
+				AttackGeneral:     currentGeneral,
+				SufferGeneral:     params.AttackGeneral,
+				DamageType:        consts.DamageType_Weapon,
+				DamageImproveRate: 1.4,
+				TacticId:          c.Id(),
+				TacticName:        c.Name(),
+				EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_CrowdMovesTenThousandCounts_Prepare),
 			})
 
 			//施加效果

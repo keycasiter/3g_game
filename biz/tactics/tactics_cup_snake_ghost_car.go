@@ -100,16 +100,16 @@ func (c CupSnakeGhostCarTactic) Execute() {
 
 			//找到敌军2人
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, c.tacticsParams)
-			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.53)
+			dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.53
 			for _, enemyGeneral := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: c.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      c.Id(),
-					TacticName:    c.Name(),
+					TacticsParams:     c.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          c.Id(),
+					TacticName:        c.Name(),
 				})
 			}
 

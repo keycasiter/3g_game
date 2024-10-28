@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 一举歼灭
@@ -99,15 +98,14 @@ func (a AnnihilateInOneFellSwoopTactic) Execute() {
 			//找到敌军1人
 			enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, a.tacticsParams)
 			//对敌军单体造成一次兵刃攻击（伤害率335%）
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 3.35)
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: a.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: enemyGeneral,
-				DamageType:    consts.DamageType_Weapon,
-				Damage:        dmg,
-				TacticName:    a.Name(),
-				TacticId:      a.Id(),
+				TacticsParams:     a.tacticsParams,
+				AttackGeneral:     currentGeneral,
+				SufferGeneral:     enemyGeneral,
+				DamageType:        consts.DamageType_Weapon,
+				DamageImproveRate: 3.35,
+				TacticId:          a.Id(),
+				TacticName:        a.Name(),
 			})
 			//若目标处于沙暴状态，则额外使目标进入混乱（攻击和战法无差别选择目标）状态，持续2回合
 			if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Sandstorm) {

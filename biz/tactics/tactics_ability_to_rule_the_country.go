@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 经天纬地
@@ -57,15 +56,15 @@ func (a AbilityToRuleTheCountryTactic) Prepare() {
 			}
 			//对单体发动谋略攻击
 			enemyGeneral := util.GetEnemyOneGeneralByGeneral(pairGeneral, a.tacticsParams)
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.5)
+			dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.5
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: a.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: enemyGeneral,
-				Damage:        dmg,
-				DamageType:    consts.DamageType_Strategy,
-				TacticId:      a.Id(),
-				TacticName:    a.Name(),
+				TacticsParams:     a.tacticsParams,
+				AttackGeneral:     currentGeneral,
+				SufferGeneral:     enemyGeneral,
+				DamageImproveRate: dmgRate,
+				DamageType:        consts.DamageType_Strategy,
+				TacticId:          a.Id(),
+				TacticName:        a.Name(),
 			})
 
 			//若由自身触发，则额外有50%概率使我军群体（2人）获得5%攻心（造成谋略伤害时，恢复自身基于伤害量的一定兵力），持续2回合 ，可叠加3次攻心值；

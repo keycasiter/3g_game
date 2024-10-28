@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 十面埋伏
@@ -79,15 +78,14 @@ func (a AmbushOnAllSidesTactic) Execute() {
 	for _, sufferGeneral := range enemyGenerals {
 		//找到有负面状态的
 		if util.DeBuffEffectContainsCheck(sufferGeneral) {
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.96)
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: a.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: sufferGeneral,
-				Damage:        dmg,
-				DamageType:    consts.DamageType_Strategy,
-				TacticName:    a.Name(),
-				TacticId:      a.Id(),
+				TacticsParams:     a.tacticsParams,
+				AttackGeneral:     currentGeneral,
+				SufferGeneral:     sufferGeneral,
+				DamageImproveRate: 0.96,
+				DamageType:        consts.DamageType_Strategy,
+				TacticName:        a.Name(),
+				TacticId:          a.Id(),
 			})
 		}
 	}
@@ -129,22 +127,21 @@ func (a AmbushOnAllSidesTactic) Execute() {
 
 				//叛逃状态，每回合持续造成伤害（伤害率74%，受武力或智力最高一项影响，无视防御），持续2回合
 				//触发效果
-				attrType, attr := util.GetGeneralHighestBetweenForceOrIntelligence(currentGeneral)
+				attrType, _ := util.GetGeneralHighestBetweenForceOrIntelligence(currentGeneral)
 				damageType := consts.DamageType_Weapon
 				if attrType == consts.AbilityAttr_Intelligence {
 					damageType = consts.DamageType_Strategy
 				}
-				dmg := cast.ToInt64(attr * 0.74)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams:  a.tacticsParams,
-					AttackGeneral:  currentGeneral,
-					SufferGeneral:  triggerGeneral,
-					Damage:         dmg,
-					DamageType:     damageType,
-					TacticId:       a.Id(),
-					TacticName:     a.Name(),
-					EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
-					IsIgnoreDefend: true,
+					TacticsParams:     a.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     triggerGeneral,
+					DamageImproveRate: 0.74,
+					DamageType:        damageType,
+					TacticId:          a.Id(),
+					TacticName:        a.Name(),
+					EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
+					IsIgnoreDefend:    true,
 				})
 
 				//效果消耗

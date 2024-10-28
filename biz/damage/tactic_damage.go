@@ -1,6 +1,8 @@
 package damage
 
 import (
+	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
@@ -70,14 +72,13 @@ func (t *TacticDamageLogic) checkParam() {
 	ctx := t.param.TacticsParams.Ctx
 
 	//必填参数
-	if t.param.AttackGeneral == nil || t.param.SufferGeneral == nil || t.param.DamageType == consts.DamageType_None {
-		hlog.CtxErrorf(ctx, "damage params err , attackGeneral:%s , sufferGeneral:%s , damage:%d , damageType:%v",
-			util.ToJsonString(ctx, t.param.AttackGeneral), util.ToJsonString(ctx, t.param.SufferGeneral), t.param.Damage, t.param.DamageType)
+	if t.param.AttackGeneral == nil ||
+		t.param.SufferGeneral == nil ||
+		t.param.DamageType == consts.DamageType_None ||
+		(t.param.DamageImproveRate <= 0 && t.param.DamageDeduceRate <= 0) {
+		hlog.CtxErrorf(ctx, "damage params err , attackGeneral:%s , sufferGeneral:%s ,damageType:%v",
+			util.ToJsonString(ctx, t.param.AttackGeneral), util.ToJsonString(ctx, t.param.SufferGeneral), t.param.DamageType)
 		panic(any("damage params err"))
-	}
-
-	if t.param.Damage <= 0 {
-		t.isAvoidDamage = true
 	}
 }
 
@@ -113,7 +114,6 @@ func (t *TacticDamageLogic) damageShareHandler() {
 				TacticsParams:  tacticsParams,
 				AttackGeneral:  attackGeneral,
 				SufferGeneral:  sufferGeneral.ShareResponsibilityForByGeneral,
-				Damage:         shareDmg,
 				TacticId:       tacticId,
 				TacticName:     tacticName,
 				IsIgnoreDefend: isIgnoreDefend,
@@ -127,7 +127,6 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 	param := t.param
 	sufferGeneral := param.SufferGeneral
 	attackGeneral := param.AttackGeneral
-	damage := param.Damage
 	isIgnoreDefend := param.IsIgnoreDefend
 
 	//兵力为空
@@ -140,53 +139,54 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 	}
 
 	//****伤害提升效果****
+	improveDmgRate := t.param.DamageImproveRate
 	//自带主动战法伤害提升
 	if attackGeneral.EquipTactics[0].Id == param.TacticId && consts.ActiveTacticsMap[attackGeneral.EquipTactics[0].Id] {
 		if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_TacticsActiveWithSelfDamageImprove); ok {
-			effectRate := float64(0)
 			for _, effectParam := range effectParams {
-				effectRate += effectParam.EffectRate
+				improveDmgRate += effectParam.EffectRate
 			}
-			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
 		}
 	}
 	//主动战法伤害提升
 	if consts.ActiveTacticsMap[attackGeneral.EquipTactics[0].Id] {
 		if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_TacticsActiveDamageImprove); ok {
-			effectRate := float64(0)
 			for _, effectParam := range effectParams {
-				effectRate += effectParam.EffectRate
+				improveDmgRate += effectParam.EffectRate
 			}
-			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
 		}
 	}
 	//造成伤害提升：兵刃/谋略
 	switch param.DamageType {
 	case consts.DamageType_Weapon:
 		if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove); ok {
-			effectRate := float64(0)
 			for _, effectParam := range effectParams {
-				effectRate += effectParam.EffectRate
+				improveDmgRate += effectParam.EffectRate
 			}
-			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
 		}
 	case consts.DamageType_Strategy:
 		if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove); ok {
-			effectRate := float64(0)
 			for _, effectParam := range effectParams {
-				effectRate += effectParam.EffectRate
+				improveDmgRate += effectParam.EffectRate
 			}
-			damage = cast.ToInt64(cast.ToFloat64(damage) * (1 + effectRate))
+		}
+	}
+	//藤甲兵灼烧效果
+	if effectParams, ok := util.DeBuffEffectGet(sufferGeneral, consts.DebuffEffectType_Firing_TengJia); ok {
+		if consts.FireTacticsMap[t.param.TacticId] {
+			for _, effectParam := range effectParams {
+				improveDmgRate += effectParam.EffectRate
+			}
 		}
 	}
 
 	//****伤害减少效果****
 	//自带主动战法伤害减少
-	effectRate := float64(0)
+	deduceEffectRate := t.param.DamageDeduceRate
 	if sufferGeneral.EquipTactics[0].Id == param.TacticId && consts.ActiveTacticsMap[sufferGeneral.EquipTactics[0].Id] {
 		if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_SufferActiveTacticDamageDeduce); ok {
 			for _, effectParam := range effectParams {
-				effectRate += effectParam.EffectRate
+				deduceEffectRate += effectParam.EffectRate
 			}
 		}
 	}
@@ -194,7 +194,7 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 	if consts.AssaultTacticsMap[param.TacticId] {
 		if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_SufferAssaultTacticDamageDeduce); ok {
 			for _, effectParam := range effectParams {
-				effectRate += effectParam.EffectRate
+				deduceEffectRate += effectParam.EffectRate
 			}
 		}
 	}
@@ -203,35 +203,57 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 	case consts.DamageType_Weapon:
 		if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce); ok {
 			for _, effectParam := range effectParams {
-				effectRate += effectParam.EffectRate
+				deduceEffectRate += effectParam.EffectRate
 			}
 		}
 	case consts.DamageType_Strategy:
 		if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce); ok {
 			for _, effectParam := range effectParams {
-				effectRate += effectParam.EffectRate
+				deduceEffectRate += effectParam.EffectRate
 			}
 		}
 	}
-	//伤害减免最大90%
-	if effectRate > 0.9 {
-		effectRate = 0.9
-	}
-	damage = cast.ToInt64(cast.ToFloat64(damage) * (1 - effectRate))
 
+	//伤害减免最大90%
+	if deduceEffectRate > 0.9 {
+		deduceEffectRate = 0.9
+	}
+
+	//**伤害计算公式**
+	//最终伤害 = 保底伤害 +（兵力基础伤害+属性差×等级差系数）
+	//兵刃 保底伤害 +（兵力基础伤害+(武力-统率)×属性差）x 变量
+	//谋略  保底伤害 +（兵力基础伤害+(智力-智力)×属性差）x 变量
+	//普通攻击  保底伤害 +（兵力基础伤害+(武力-统率)×属性差）x 1
+	attackAttr := float64(0)
+	defendAttr := float64(0)
+	switch param.DamageType {
+	//兵刃伤害
+	case consts.DamageType_Weapon:
+		attackAttr = t.param.AttackGeneral.BaseInfo.AbilityAttr.ForceBase
+		defendAttr = t.param.SufferGeneral.BaseInfo.AbilityAttr.CommandBase
+	//谋略伤害
+	case consts.DamageType_Strategy:
+		attackAttr = t.param.AttackGeneral.BaseInfo.AbilityAttr.IntelligenceBase
+		defendAttr = t.param.SufferGeneral.BaseInfo.AbilityAttr.IntelligenceBase
+	}
 	//是否无视防御
 	if isIgnoreDefend {
-		t.damageNum = damage
-	} else {
-		switch param.DamageType {
-		//兵刃伤害，统率影响防御
-		case consts.DamageType_Weapon:
-			t.damageNum = damage - cast.ToInt64(sufferGeneral.BaseInfo.AbilityAttr.CommandBase)
-		//谋略伤害，智力影响防御
-		case consts.DamageType_Strategy:
-			t.damageNum = damage - cast.ToInt64(sufferGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
-		}
+		defendAttr = 0
 	}
+
+	t.damageNum =
+		//保底伤害
+		GetMinimumGuaranteeDmg(t.param.AttackGeneral.SoldierNum) +
+			cast.ToInt64(
+				//兵力基础伤害
+				(cast.ToFloat64(GetBaseDmg(t.param.AttackGeneral.SoldierNum))+
+					//属性差
+					(attackAttr-defendAttr)*1.44)*
+					//变量
+					(1+improveDmgRate-deduceEffectRate))
+
+	//最终伤害随机值
+	t.damageNum = FluctuateDamage(t.damageNum)
 
 	//****伤害计算兜底****
 	//兜底伤害为负的情况
@@ -307,11 +329,8 @@ func (t *TacticDamageLogic) avoidDamageHandler() {
 
 func (t *TacticDamageLogic) specialEffectHandler() {
 	param := t.param
-	sufferGeneral := param.SufferGeneral
 	attackGeneral := param.AttackGeneral
 	tacticName := param.TacticName
-	tacticId := param.TacticId
-	damage := param.Damage
 
 	//触发器禁用开关
 	if tacticName == "连环计" && param.IsBanInterLockedEffect {
@@ -323,17 +342,19 @@ func (t *TacticDamageLogic) specialEffectHandler() {
 	if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_TigerIdiot_Locked); ok {
 		if len(effectParams) > 0 {
 			effectParam := effectParams[0]
-			sufferGeneral = effectParam.LockingTarget
+			param.SufferGeneral = effectParam.LockingTarget
 		}
 	}
-	//藤甲兵效果
-	if effectParams, ok := util.DeBuffEffectGet(sufferGeneral, consts.DebuffEffectType_Firing_TengJia); ok {
-		if consts.FireTacticsMap[tacticId] {
-			effectRate := float64(0)
-			for _, effectParam := range effectParams {
-				effectRate += effectParam.EffectRate
+	//弓腰姬
+	if t.param.TacticId == consts.BowWaistConcubine {
+		//自身拥有功能性增益状态时额外对其造成兵刃伤害（伤害率20%x状态数）
+		buffEffectNum := util.BuffEffectContainsNum(attackGeneral)
+		if buffEffectNum > 0 {
+			buffEffectDesc := ""
+			for buffEffectType, _ := range attackGeneral.BuffEffectHolderMap {
+				buffEffectDesc += fmt.Sprintf("[%v]", buffEffectType)
 			}
-			damage = int64(float64(damage) * effectRate)
+			t.param.DamageImproveRate += cast.ToFloat64(buffEffectNum) * 0.2
 		}
 	}
 }

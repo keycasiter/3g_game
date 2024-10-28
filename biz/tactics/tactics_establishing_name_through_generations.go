@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 累世立名
@@ -103,17 +102,16 @@ func (e EstablishingNameThroughGenerationsTactic) Execute() {
 
 			//找到敌军2人
 			enemyGenerals := util.GetEnemyGeneralsTwoArr(e.tacticsParams)
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.26)
 			for _, enemyGeneral := range enemyGenerals {
 				//对敌军单体造成一次兵刃攻击（伤害率126%）
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: e.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      e.Id(),
-					TacticName:    e.Name(),
+					TacticsParams:     e.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.26,
+					TacticId:          e.Id(),
+					TacticName:        e.Name(),
 				})
 				//降低其24统率（受武力影响）
 				//降低统率
@@ -156,16 +154,16 @@ func (e EstablishingNameThroughGenerationsTactic) Execute() {
 							TacticId:   e.Id(),
 						}) {
 							//持续伤害
-							fireDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.6)
+							fireDmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.6
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: e.tacticsParams,
-								AttackGeneral: currentGeneral,
-								SufferGeneral: enemyGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        fireDmg,
-								TacticId:      e.Id(),
-								TacticName:    e.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
+								TacticsParams:     e.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     enemyGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: fireDmgRate,
+								TacticId:          e.Id(),
+								TacticName:        e.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 							})
 						}
 

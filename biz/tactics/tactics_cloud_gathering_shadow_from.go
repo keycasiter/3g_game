@@ -64,16 +64,15 @@ func (c CloudGatheringShadowFromTactic) Prepare() {
 						EffectType: consts.BuffEffectType_StrikeBack,
 						TacticId:   c.Id(),
 					}) {
-						dmg := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.ForceBase * 1.0)
 						damage.TacticDamage(&damage.TacticDamageParam{
-							TacticsParams: c.tacticsParams,
-							AttackGeneral: revokeGeneral,
-							SufferGeneral: attackGeneral,
-							DamageType:    consts.DamageType_Weapon,
-							Damage:        dmg,
-							TacticId:      c.Id(),
-							TacticName:    c.Name(),
-							EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
+							TacticsParams:     c.tacticsParams,
+							AttackGeneral:     revokeGeneral,
+							SufferGeneral:     attackGeneral,
+							DamageType:        consts.DamageType_Weapon,
+							DamageImproveRate: 1.0,
+							TacticId:          c.Id(),
+							TacticName:        c.Name(),
+							EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
 						})
 					}
 

@@ -141,15 +141,14 @@ func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Execute() {
 				}
 
 				//攻击
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.58)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: b.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: general,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Weapon,
-					TacticName:    b.Name(),
-					TacticId:      b.Id(),
+					TacticsParams:     b.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     general,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.58,
+					TacticId:          b.Id(),
+					TacticName:        b.Name(),
 				})
 			}
 		}

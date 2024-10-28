@@ -1,6 +1,7 @@
 package damage
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -36,4 +37,10 @@ func TestDamage(t *testing.T) {
 }
 
 func TestGeneralAttackDamage(t *testing.T) {
+}
+
+func TestFluctuateDamage(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		fmt.Printf("%d\n", FluctuateDamage(333))
+	}
 }

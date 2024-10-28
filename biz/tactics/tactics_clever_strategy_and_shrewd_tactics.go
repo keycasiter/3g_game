@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 神机妙算
@@ -76,23 +75,23 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 					triggerGeneral.BaseInfo.Name,
 					c.Name(),
 				)
-				dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.00)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.00
 				//自身为主将时，该次伤害会基于双方智力之差额外提高
 				if currentGeneral.IsMaster {
 					diff := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase -
 						sufferGeneral.BaseInfo.AbilityAttr.IntelligenceBase
 					if diff > 0 {
-						dmgNum += cast.ToInt64(diff)
+						dmgRate += diff / 100 / 100
 					}
 				}
 				_, _, _, isEffect := damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: c.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: sufferGeneral,
-					Damage:        dmgNum,
-					DamageType:    consts.DamageType_Strategy,
-					TacticName:    c.Name(),
-					TacticId:      c.Id(),
+					TacticsParams:     c.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     sufferGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          c.Id(),
+					TacticName:        c.Name(),
 				})
 				if !isEffect {
 					triggerResp.IsTerminate = true

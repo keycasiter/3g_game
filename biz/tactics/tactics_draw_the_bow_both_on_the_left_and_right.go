@@ -9,7 +9,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 左右开弓
@@ -74,15 +73,14 @@ func (d DrawTheBowBothOnTheLeftAndRightTactic) Execute() {
 	}
 	//对敌军单体造成一次兵刃攻击（伤害率180%）
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, d.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.8)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: d.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticName:    d.Name(),
-		TacticId:      d.Id(),
+		TacticsParams:     d.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 1.8,
+		TacticId:          d.Id(),
+		TacticName:        d.Name(),
 	})
 
 	// 如果目标为骑兵则额外造成溃散状态，每回合持续造成伤害（伤害率90%，受武力影响），持续2回合
@@ -104,16 +102,16 @@ func (d DrawTheBowBothOnTheLeftAndRightTactic) Execute() {
 					EffectType: consts.DebuffEffectType_Escape,
 					TacticId:   d.Id(),
 				}) {
-					effectDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.9)
+					effectDmgRate := currentGeneral.BaseInfo.AbilityAttr.ForceBase/100/100 + 0.9
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: d.tacticsParams,
-						AttackGeneral: revokeGeneral,
-						SufferGeneral: enemyGeneral,
-						DamageType:    consts.DamageType_Weapon,
-						Damage:        effectDmg,
-						TacticName:    d.Name(),
-						TacticId:      d.Id(),
-						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
+						TacticsParams:     d.tacticsParams,
+						AttackGeneral:     revokeGeneral,
+						SufferGeneral:     enemyGeneral,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: effectDmgRate,
+						TacticId:          d.Id(),
+						TacticName:        d.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
 					})
 				}
 

@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 火炽原燎
@@ -91,15 +90,14 @@ func (b BlazingWildfireTactic) Execute() {
 				EffectType: consts.DebuffEffectType_Firing,
 				TacticId:   b.Id(),
 			}) {
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: b.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: sufferGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Weapon,
-					TacticName:    b.Name(),
-					TacticId:      b.Id(),
+					TacticsParams:     b.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     sufferGeneral,
+					DamageImproveRate: 1.18,
+					DamageType:        consts.DamageType_Weapon,
+					TacticName:        b.Name(),
+					TacticId:          b.Id(),
 				})
 			}
 		} else {
@@ -125,15 +123,14 @@ func (b BlazingWildfireTactic) Execute() {
 							b.Name(),
 							consts.DebuffEffectType_Firing,
 						)
-						dmgNum := cast.ToInt64(0.56 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
 						damage.TacticDamage(&damage.TacticDamageParam{
-							TacticsParams: b.tacticsParams,
-							AttackGeneral: currentGeneral,
-							SufferGeneral: triggerGeneral,
-							Damage:        dmgNum,
-							DamageType:    consts.DamageType_Strategy,
-							TacticName:    b.Name(),
-							TacticId:      b.Id(),
+							TacticsParams:     b.tacticsParams,
+							AttackGeneral:     currentGeneral,
+							SufferGeneral:     triggerGeneral,
+							DamageImproveRate: 0.56,
+							DamageType:        consts.DamageType_Strategy,
+							TacticName:        b.Name(),
+							TacticId:          b.Id(),
 						})
 					}
 					//注册灼烧效果消失

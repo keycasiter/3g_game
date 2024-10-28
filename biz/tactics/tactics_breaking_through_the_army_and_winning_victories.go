@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 破军威胜
@@ -105,15 +104,14 @@ func (b BreakingThroughTheArmyAndWinningVictoriesTactic) Execute() {
 			return revokeResp
 		})
 		//并对其造成兵刃伤害（伤害率228%）
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.28)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: b.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticName:    b.Name(),
-			TacticId:      b.Id(),
+			TacticsParams:     b.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			TacticName:        b.Name(),
+			TacticId:          b.Id(),
+			DamageImproveRate: 2.28,
 		})
 	}
 }

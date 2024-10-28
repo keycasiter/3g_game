@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 神火计
@@ -38,15 +37,15 @@ func (d DivineFireMeterTactic) Prepare() {
 			//找到敌军全体
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, d.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.68)
+				dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.68
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: d.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        dmg,
-					TacticName:    d.Name(),
-					TacticId:      d.Id(),
+					TacticsParams:     d.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          d.Id(),
+					TacticName:        d.Name(),
 				})
 				//自身为主将时，该次攻击有40%概率对目标施加灼烧状态（伤害率34%，受智力影响），持续1回合
 				if triggerGeneral.IsMaster {

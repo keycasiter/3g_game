@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 据水断桥
@@ -128,16 +127,15 @@ func (b BrokenBridgeByWaterTactic) Execute() {
 					TacticId:   b.Id(),
 				}) {
 					//每回合持续造成伤害（伤害率78%，受武力影响）
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.78)
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: b.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: revokeGeneral,
-						DamageType:    consts.DamageType_Weapon,
-						Damage:        dmg,
-						TacticName:    b.Name(),
-						TacticId:      b.Id(),
-						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
+						TacticsParams:     b.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     revokeGeneral,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: 0.78,
+						TacticId:          b.Id(),
+						TacticName:        b.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
 					})
 				}
 				return revokeResp

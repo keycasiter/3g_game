@@ -120,16 +120,15 @@ func (b BlackArtTactic) Execute() {
 							EffectType: consts.DebuffEffectType_Sandstorm,
 							TacticId:   0,
 						}) {
-							dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.72)
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: b.tacticsParams,
-								AttackGeneral: currentGeneral,
-								SufferGeneral: triggerGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        dmg,
-								TacticName:    b.Name(),
-								TacticId:      b.Id(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
+								TacticsParams:     b.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     triggerGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: 0.72,
+								TacticId:          b.Id(),
+								TacticName:        b.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
 							})
 						}
 

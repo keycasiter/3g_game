@@ -1,6 +1,8 @@
 package damage
 
 import (
+	"math"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
@@ -9,10 +11,83 @@ import (
 	"github.com/spf13/cast"
 )
 
+// ** 保底、基础伤害 **
+// 兵力  保底 基础
+// 1000  20  88
+// 2000  40  176
+// 3000  53  232
+// 4000  64  276
+// 5000  73  314
+// 6000  77  334
+// 7000  81  350
+// 8000  84  364
+// 9000  87  376
+// 10000 90  387
+
+// 获取基础伤害
+func GetBaseDmg(soldierNum int64) int64 {
+	if soldierNum <= 1000 {
+		return 88
+	} else if soldierNum <= 2000 {
+		return 176
+	} else if soldierNum <= 3000 {
+		return 232
+	} else if soldierNum <= 4000 {
+		return 276
+	} else if soldierNum <= 5000 {
+		return 314
+	} else if soldierNum <= 6000 {
+		return 334
+	} else if soldierNum <= 7000 {
+		return 350
+	} else if soldierNum <= 8000 {
+		return 364
+	} else if soldierNum <= 9000 {
+		return 376
+	} else if soldierNum <= 10000 {
+		return 387
+	}
+
+	panic("Invalid BaseDmg")
+}
+
+// 获取保底伤害
+func GetMinimumGuaranteeDmg(soldierNum int64) int64 {
+	if soldierNum <= 1000 {
+		return 20
+	} else if soldierNum <= 2000 {
+		return 40
+	} else if soldierNum <= 3000 {
+		return 53
+	} else if soldierNum <= 4000 {
+		return 64
+	} else if soldierNum <= 5000 {
+		return 73
+	} else if soldierNum <= 6000 {
+		return 77
+	} else if soldierNum <= 7000 {
+		return 81
+	} else if soldierNum <= 8000 {
+		return 84
+	} else if soldierNum <= 9000 {
+		return 87
+	} else if soldierNum <= 10000 {
+		return 90
+	}
+
+	panic("Invalid MinimumGuaranteeDmg")
+}
+
 // 浮动伤害计算
-// @desc: -10% ~ 10% 伤害浮动
+// @desc: 浮动伤害：正负4% 9种结果
 func FluctuateDamage(dmg int64) int64 {
-	return cast.ToInt64(cast.ToFloat64(dmg) * util.Random(-0.1, 0.1))
+	rates := []float64{
+		-0.01, -0.02, -0.03, -0.04,
+		0,
+		0.01, 0.02, 0.03, 0.04,
+	}
+	idx := util.Random(0, 8)
+	return cast.ToInt64(cast.ToFloat64(dmg) * (1 + rates[int64(math.Round(idx))]))
 }
 
 // 普通攻击伤害结算
@@ -391,8 +466,10 @@ type TacticDamageParam struct {
 	SufferGeneral *vo.BattleGeneral
 	//伤害类型
 	DamageType consts.DamageType
-	//伤害
-	Damage int64
+	//伤害提升
+	DamageImproveRate float64
+	//伤害降低
+	DamageDeduceRate float64
 	//战法ID
 	TacticId consts.TacticId
 	//战法名

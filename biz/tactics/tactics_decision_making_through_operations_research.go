@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 运筹决算
@@ -97,17 +96,17 @@ func (d DecisionMakingThroughOperationsResearchTactic) Execute() {
 			)
 			//对敌军全体发动一次谋略攻击（伤害率176%，受智力影响）
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, d.tacticsParams)
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.76)
+			dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.76
 
 			for _, sufferGeneral := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: d.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: sufferGeneral,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        dmg,
-					TacticName:    d.Name(),
-					TacticId:      d.Id(),
+					TacticsParams:     d.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     sufferGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticName:        d.Name(),
+					TacticId:          d.Id(),
 				})
 			}
 		}

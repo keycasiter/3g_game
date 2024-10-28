@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 威震华夏
@@ -100,16 +99,15 @@ func (b BecomeFamousAndFearInspiringThroughoutChinaTactic) Execute() {
 			//对敌军全体进行猛攻（伤害率146%）
 			//找到敌军全体
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, b.tacticsParams)
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.46)
 			for _, enemyGeneral := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: b.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      b.Id(),
-					TacticName:    b.Name(),
+					TacticsParams:     b.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.46,
+					TacticId:          b.Id(),
+					TacticName:        b.Name(),
 				})
 
 				//使其有50%概率进入缴械、计穷状态，独立判定，持续1回合

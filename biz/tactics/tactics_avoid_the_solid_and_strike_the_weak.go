@@ -6,7 +6,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 避实击虚
@@ -64,15 +63,14 @@ func (a AvoidTheSolidAndStrikeTheWeakTactic) Execute() {
 
 	//找到敌军统率最低的武将
 	sufferGeneral := util.GetEnemyGeneralWhoLowestCommand(currentGeneral, a.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.85)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: a.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: sufferGeneral,
-		Damage:        dmg,
-		DamageType:    consts.DamageType_Weapon,
-		TacticName:    a.Name(),
-		TacticId:      a.Id(),
+		TacticsParams:     a.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     sufferGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 1.85,
+		TacticId:          a.Id(),
+		TacticName:        a.Name(),
 	})
 }
 

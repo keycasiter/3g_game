@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 神上使
@@ -117,15 +116,15 @@ func (d DivineEnvoyTactic) Execute() {
 							EffectType: consts.DebuffEffectType_Escape,
 							TacticId:   d.Id(),
 						}) {
-							dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.68)
+							dmgRate := triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100/100 + 0.68
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: d.tacticsParams,
-								AttackGeneral: triggerGeneral,
-								SufferGeneral: enemyGeneral,
-								DamageType:    consts.DamageType_Weapon,
-								Damage:        dmg,
-								TacticName:    d.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
+								TacticsParams:     d.tacticsParams,
+								AttackGeneral:     triggerGeneral,
+								SufferGeneral:     enemyGeneral,
+								DamageType:        consts.DamageType_Weapon,
+								DamageImproveRate: dmgRate,
+								TacticName:        d.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
 							})
 						}
 

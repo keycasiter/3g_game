@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 暗渡陈仓
@@ -102,15 +101,14 @@ func (a AdvancingSecretlyByUnknownPathTactic) Execute() {
 			//找到敌军单体
 			enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, a.tacticsParams)
 			//谋略伤害
-			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.6)
 			_, _, _, isEffect := damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: a.tacticsParams,
-				AttackGeneral: triggerGeneral,
-				SufferGeneral: enemyGeneral,
-				Damage:        dmg,
-				DamageType:    consts.DamageType_Strategy,
-				TacticName:    a.Name(),
-				TacticId:      a.Id(),
+				TacticsParams:     a.tacticsParams,
+				AttackGeneral:     triggerGeneral,
+				SufferGeneral:     enemyGeneral,
+				DamageType:        consts.DamageType_Strategy,
+				TacticName:        a.Name(),
+				TacticId:          a.Id(),
+				DamageImproveRate: 2.6,
 			})
 			if isEffect {
 				//震慑效果施加

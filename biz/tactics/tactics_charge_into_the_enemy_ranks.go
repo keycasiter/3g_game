@@ -69,15 +69,14 @@ func (c ChargeIntoTheEnemyRanksTactic) Execute() {
 
 	//找到敌军单体
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, c.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.08)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: c.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticId:      c.Id(),
-		TacticName:    c.Name(),
+		TacticsParams:     c.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 2.08,
+		TacticId:          c.Id(),
+		TacticName:        c.Name(),
 	})
 	//施加缴械效果
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_CancelWeapon, &vo.EffectHolderParams{

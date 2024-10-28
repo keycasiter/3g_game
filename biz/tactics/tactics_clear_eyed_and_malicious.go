@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 战法名称：鹰视狼顾
@@ -111,15 +110,15 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 			//找到1～2敌人
 			enemyMap := util.GetEnemyGeneralsOneOrTwoMap(c.tacticsParams)
 			for _, enemyGeneral := range enemyMap {
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.54)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.54
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: c.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: enemyGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      c.Id(),
-					TacticName:    c.Name(),
+					TacticsParams:     c.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          c.Id(),
+					TacticName:        c.Name(),
 				})
 			}
 		}

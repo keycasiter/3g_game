@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 古之恶来
@@ -57,14 +56,13 @@ func (a AncientEvilComesTactic) Prepare() {
 		)
 
 		//猛击（伤害率80%）
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.8)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: a.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: attackGeneral,
-			Damage:        dmg,
-			DamageType:    consts.DamageType_Weapon,
-			TacticName:    a.Name(),
+			TacticsParams:     a.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     attackGeneral,
+			DamageImproveRate: 0.8,
+			DamageType:        consts.DamageType_Weapon,
+			TacticName:        a.Name(),
 		})
 		//造成兵刃伤害降低18%，持续1回合
 		if util.DebuffEffectWrapSet(ctx, attackGeneral, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{

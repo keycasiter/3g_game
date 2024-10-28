@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 义胆雄心
@@ -74,15 +73,14 @@ func (b BraveAmbitionTactic) Prepare() {
 				//找到敌军单体
 				enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, b.tacticsParams)
 				//造成伤害
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.84)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: b.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Weapon,
-					TacticName:    b.Name(),
-					TacticId:      b.Id(),
+					TacticsParams:     b.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.84,
+					TacticId:          b.Id(),
+					TacticName:        b.Name(),
 				})
 
 				//施加效果
@@ -136,16 +134,15 @@ func (b BraveAmbitionTactic) Prepare() {
 				//找到敌军2人
 				enemyGenerals := util.GetEnemyGeneralsTwoArr(b.tacticsParams)
 				//造成伤害
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.76)
 				for _, enemyGeneral := range enemyGenerals {
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: b.tacticsParams,
-						AttackGeneral: triggerGeneral,
-						SufferGeneral: enemyGeneral,
-						Damage:        dmg,
-						DamageType:    consts.DamageType_Strategy,
-						TacticName:    b.Name(),
-						TacticId:      b.Id(),
+						TacticsParams:     b.tacticsParams,
+						AttackGeneral:     triggerGeneral,
+						SufferGeneral:     enemyGeneral,
+						DamageType:        consts.DamageType_Strategy,
+						TacticName:        b.Name(),
+						TacticId:          b.Id(),
+						DamageImproveRate: 0.76,
 					})
 					//降低智力34点，持续2回合；
 					decrNum := float64(34)

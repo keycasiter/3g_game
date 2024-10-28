@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 决水溃城
@@ -160,16 +159,15 @@ func (b BreakingThroughTheWaterAndCrushingTheCityTactic) tacticTrigger(currentGe
 					TacticId:   b.Id(),
 				}) {
 					//每回合持续造成伤害（伤害率112%，受智力影响）
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.12)
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: b.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: revokeGeneral,
-						DamageType:    consts.DamageType_Strategy,
-						Damage:        dmg,
-						TacticId:      b.Id(),
-						TacticName:    b.Name(),
-						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
+						TacticsParams:     b.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     revokeGeneral,
+						DamageType:        consts.DamageType_Strategy,
+						DamageImproveRate: 1.12,
+						TacticId:          b.Id(),
+						TacticName:        b.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 					})
 				}
 

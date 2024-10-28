@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 四面楚歌
@@ -121,16 +120,16 @@ func (b BeBesiegedOnAllSidesTactic) Execute() {
 							consts.DebuffEffectType_Methysis,
 						)
 						//伤害
-						dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.44)
+						dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.44
 						for _, enemyGeneral := range enemyGenerals {
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: b.tacticsParams,
-								AttackGeneral: triggerGeneral,
-								SufferGeneral: enemyGeneral,
-								Damage:        dmg,
-								DamageType:    consts.DamageType_Strategy,
-								TacticId:      b.Id(),
-								TacticName:    b.Name(),
+								TacticsParams:     b.tacticsParams,
+								AttackGeneral:     triggerGeneral,
+								SufferGeneral:     enemyGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: dmgRate,
+								TacticId:          b.Id(),
+								TacticName:        b.Name(),
 							})
 						}
 					}

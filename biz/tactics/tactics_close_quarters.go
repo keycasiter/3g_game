@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 短兵相见
@@ -97,15 +96,14 @@ func (c CloseQuartersTactic) Execute() {
 		})
 	}
 	//伤害
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.1)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: c.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticId:      c.Id(),
-		TacticName:    c.Name(),
+		TacticsParams:     c.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 2.1,
+		TacticId:          c.Id(),
+		TacticName:        c.Name(),
 	})
 }
 

@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 神机莫测
@@ -134,15 +133,15 @@ func (d DivinelyInspiredStratagemTactic) Execute() {
 				}
 			} else {
 				// 敌军已混乱时，对其造成谋略攻击（伤害率175%，受智力影响）
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.75)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.75
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: d.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: general,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        dmg,
-					TacticId:      d.Id(),
-					TacticName:    d.Name(),
+					TacticsParams:     d.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     general,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          d.Id(),
+					TacticName:        d.Name(),
 				})
 			}
 		}

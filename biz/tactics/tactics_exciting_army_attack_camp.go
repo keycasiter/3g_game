@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 振军击营
@@ -70,14 +69,13 @@ func (e ExcitingArmyAttackCampTactic) Execute() {
 	//找到敌军单体
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, e.tacticsParams)
 	//兵刃伤害
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.35)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: e.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticName:    e.Name(),
+		TacticsParams:     e.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 2.35,
+		TacticName:        e.Name(),
 	})
 	//禁疗
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_ProhibitionTreatment, &vo.EffectHolderParams{

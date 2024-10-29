@@ -69,17 +69,16 @@ func (r RampartsOfMetalsAndAMoatOfHotWaterTactic) Prepare() {
 			} else {
 				// 对敌军群体造成兵刃伤害（伤害率102%）及灼烧状态，每回合持续造成伤害（伤害率72%，受智力影响），持续1回合
 				enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, r.tacticsParams)
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.02)
 				for _, general := range enemyGenerals {
 					//伤害
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: r.tacticsParams,
-						AttackGeneral: triggerGeneral,
-						SufferGeneral: general,
-						DamageType:    consts.DamageType_Weapon,
-						TacticId:      r.Id(),
-						Damage:        dmg,
-						TacticName:    r.Name(),
+						TacticsParams:     r.tacticsParams,
+						AttackGeneral:     triggerGeneral,
+						SufferGeneral:     general,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: 1.02,
+						TacticId:          r.Id(),
+						TacticName:        r.Name(),
 					})
 					//效果
 					if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_Firing, &vo.EffectHolderParams{
@@ -97,16 +96,16 @@ func (r RampartsOfMetalsAndAMoatOfHotWaterTactic) Prepare() {
 								EffectType: consts.DebuffEffectType_Firing,
 								TacticId:   r.Id(),
 							}) {
-								fireDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.72)
+								fireDmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.72
 								damage.TacticDamage(&damage.TacticDamageParam{
-									TacticsParams: r.tacticsParams,
-									AttackGeneral: currentGeneral,
-									SufferGeneral: revokeGeneral,
-									DamageType:    consts.DamageType_Strategy,
-									Damage:        fireDmg,
-									TacticId:      r.Id(),
-									TacticName:    r.Name(),
-									EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
+									TacticsParams:     r.tacticsParams,
+									AttackGeneral:     currentGeneral,
+									SufferGeneral:     revokeGeneral,
+									DamageType:        consts.DamageType_Strategy,
+									DamageImproveRate: fireDmgRate,
+									TacticId:          r.Id(),
+									TacticName:        r.Name(),
+									EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 								})
 							}
 

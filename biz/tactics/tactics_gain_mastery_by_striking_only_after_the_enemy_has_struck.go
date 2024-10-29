@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 后发制人
@@ -41,15 +40,14 @@ func (g GainMasteryByStrikingOnlyAfterTheEnemyHasStruckTactic) Prepare() {
 
 		attackGeneral := params.AttackGeneral
 
-		dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.52)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: g.tacticsParams,
-			AttackGeneral: triggerGeneral,
-			SufferGeneral: attackGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      g.Id(),
-			TacticName:    g.Name(),
+			TacticsParams:     g.tacticsParams,
+			AttackGeneral:     triggerGeneral,
+			SufferGeneral:     attackGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 0.52,
+			TacticId:          g.Id(),
+			TacticName:        g.Name(),
 		})
 
 		return triggerResp

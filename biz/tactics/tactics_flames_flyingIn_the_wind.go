@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 焰逐风飞
@@ -74,15 +73,15 @@ func (f FlamesFlyingInTheWindTactic) Execute() {
 	//找到敌军单体
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, f.tacticsParams)
 	//谋略伤害
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.26)
+	dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 2.26
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: f.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Strategy,
-		Damage:        dmg,
-		TacticId:      f.Id(),
-		TacticName:    f.Name(),
+		TacticsParams:     f.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Strategy,
+		DamageImproveRate: dmgRate,
+		TacticId:          f.Id(),
+		TacticName:        f.Name(),
 	})
 	//震慑效果
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_Awe, &vo.EffectHolderParams{

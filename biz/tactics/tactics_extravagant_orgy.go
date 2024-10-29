@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 酒池肉林
@@ -87,19 +86,18 @@ func (e ExtravagantOrgyTactic) Prepare() {
 
 			for _, general := range maleAllGenerals {
 				// 自身为主将时，伤害率提升至68%
-				rate := 0.6
+				dmgRate := 0.6
 				if triggerGeneral.IsMaster {
-					rate = 0.68
+					dmgRate = 0.68
 				}
-				dmg := cast.ToInt64(general.BaseInfo.AbilityAttr.ForceBase * rate)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: e.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: general,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      e.Id(),
-					TacticName:    e.Name(),
+					TacticsParams:     e.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     general,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: dmgRate,
+					TacticId:          e.Id(),
+					TacticName:        e.Name(),
 				})
 			}
 		}

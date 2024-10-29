@@ -52,17 +52,16 @@ func (j JinFanArmyTactic) Prepare() {
 				sufferGeneral := j.tacticsParams.CurrentSufferGeneral
 				//若目标已经溃逃则造成兵刃攻击（伤害率110%）并恢复伤害量的30%兵力；
 				if util.DeBuffEffectContains(sufferGeneral, consts.DebuffEffectType_Escape) {
-					weaponDmg := cast.ToInt64(pairGeneral.BaseInfo.AbilityAttr.ForceBase * 1.1)
-					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: j.tacticsParams,
-						AttackGeneral: triggerGeneral,
-						SufferGeneral: sufferGeneral,
-						DamageType:    consts.DamageType_Weapon,
-						Damage:        weaponDmg,
-						TacticName:    j.Name(),
+					dmgNum, _, _, _ := damage.TacticDamage(&damage.TacticDamageParam{
+						TacticsParams:     j.tacticsParams,
+						AttackGeneral:     triggerGeneral,
+						SufferGeneral:     sufferGeneral,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: 1.1,
+						TacticName:        j.Name(),
 					})
 					//恢复
-					resumeNum := cast.ToInt64(cast.ToFloat64(weaponDmg) * 0.3)
+					resumeNum := cast.ToInt64(cast.ToFloat64(dmgNum) * 0.3)
 					util.ResumeSoldierNum(&util.ResumeParams{
 						Ctx:            ctx,
 						TacticsParams:  j.tacticsParams,
@@ -89,16 +88,16 @@ func (j JinFanArmyTactic) Prepare() {
 								EffectType: consts.DebuffEffectType_Escape,
 								TacticId:   j.Id(),
 							}) {
-								dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.64)
+								dmgRate := triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100/100 + 0.64
 								damage.TacticDamage(&damage.TacticDamageParam{
-									TacticsParams: j.tacticsParams,
-									AttackGeneral: triggerGeneral,
-									SufferGeneral: revokeGeneral,
-									DamageType:    consts.DamageType_Weapon,
-									Damage:        dmg,
-									TacticId:      j.Id(),
-									TacticName:    j.Name(),
-									EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
+									TacticsParams:     j.tacticsParams,
+									AttackGeneral:     triggerGeneral,
+									SufferGeneral:     revokeGeneral,
+									DamageType:        consts.DamageType_Weapon,
+									DamageImproveRate: dmgRate,
+									TacticId:          j.Id(),
+									TacticName:        j.Name(),
+									EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
 								})
 							}
 

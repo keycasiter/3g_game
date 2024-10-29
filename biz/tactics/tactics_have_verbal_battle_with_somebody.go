@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 唇枪舌战
@@ -76,15 +75,15 @@ func (h HaveVerbalBattleWithSomebodyTactic) Execute() {
 	enemyGenerals := util.GetEnemyGeneralsByGeneral(currentGeneral, h.tacticsParams)
 	for _, general := range enemyGenerals {
 		//攻击
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.6)
+		dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.6
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: h.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: general,
-			DamageType:    consts.DamageType_Strategy,
-			Damage:        dmg,
-			TacticId:      h.Id(),
-			TacticName:    h.Name(),
+			TacticsParams:     h.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     general,
+			DamageType:        consts.DamageType_Strategy,
+			DamageImproveRate: dmgRate,
+			TacticId:          h.Id(),
+			TacticName:        h.Name(),
 		})
 		//施加效果
 		if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_Taunt, &vo.EffectHolderParams{

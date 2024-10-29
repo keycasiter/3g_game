@@ -41,15 +41,14 @@ func (j JiangdongLittleOverlordTactic) Prepare() {
 		sufferGeneral := j.tacticsParams.CurrentSufferGeneral
 
 		if util.GenerateRate(0.35) {
-			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.92)
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: j.tacticsParams,
-				AttackGeneral: triggerGeneral,
-				SufferGeneral: sufferGeneral,
-				DamageType:    consts.DamageType_Weapon,
-				Damage:        dmg,
-				TacticId:      j.Id(),
-				TacticName:    j.Name(),
+				TacticsParams:     j.tacticsParams,
+				AttackGeneral:     triggerGeneral,
+				SufferGeneral:     sufferGeneral,
+				DamageType:        consts.DamageType_Weapon,
+				DamageImproveRate: 1.92,
+				TacticId:          j.Id(),
+				TacticName:        j.Name(),
 			})
 			//并为我军单体恢复兵力（治疗率56%，受武力影响）
 			pairGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, j.tacticsParams)

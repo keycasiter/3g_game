@@ -87,15 +87,14 @@ func (g GhostGodThunderForceTactic) Execute() {
 		}
 	}
 
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: g.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: g.tacticsParams.CurrentSufferGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticName:    g.Name(),
-		TacticId:      g.Id(),
+		TacticsParams:     g.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     g.tacticsParams.CurrentSufferGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: dmgRate,
+		TacticId:          g.Id(),
+		TacticName:        g.Name(),
 	})
 
 }

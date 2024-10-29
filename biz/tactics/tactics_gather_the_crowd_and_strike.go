@@ -73,14 +73,13 @@ func (g GatherTheCrowdAndStrikeTactic) Execute() {
 	//找到敌军
 	enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(g.tacticsParams)
 	for _, general := range enemyGenerals {
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.64)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: g.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: general,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticName:    g.Name(),
+			TacticsParams:     g.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     general,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.64,
+			TacticName:        g.Name(),
 		})
 	}
 	//并有45%概率治疗自身（治疗率88%，受武力影响）

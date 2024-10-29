@@ -55,16 +55,15 @@ func (f FireGodHeroStyleTactic) Prepare() {
 					triggerRate += 0.1
 				}
 
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.42)
 				if util.GenerateRate(triggerRate) {
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: f.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: general,
-						DamageType:    consts.DamageType_Weapon,
-						Damage:        dmg,
-						TacticId:      f.Id(),
-						TacticName:    f.Name(),
+						TacticsParams:     f.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     general,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: 1.42,
+						TacticId:          f.Id(),
+						TacticName:        f.Name(),
 					})
 				}
 			}

@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 处兹不惑
@@ -103,41 +102,38 @@ func (i InChaosNotConfusedTactic) Execute() {
 							//伤害
 							switch debuff {
 							case consts.DebuffEffectType_Firing:
-								dmg := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.7)
 								damage.TacticDamage(&damage.TacticDamageParam{
-									TacticsParams: i.tacticsParams,
-									AttackGeneral: currentGeneral,
-									SufferGeneral: enemyGeneral,
-									DamageType:    consts.DamageType_Strategy,
-									Damage:        dmg,
-									TacticId:      i.Id(),
-									TacticName:    i.Name(),
-									EffectName:    fmt.Sprintf("%v", debuff),
+									TacticsParams:     i.tacticsParams,
+									AttackGeneral:     currentGeneral,
+									SufferGeneral:     enemyGeneral,
+									DamageType:        consts.DamageType_Strategy,
+									DamageImproveRate: 0.7,
+									TacticId:          i.Id(),
+									TacticName:        i.Name(),
+									EffectName:        fmt.Sprintf("%v", debuff),
 								})
 							case consts.DebuffEffectType_Methysis:
-								dmg := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.7)
 								damage.TacticDamage(&damage.TacticDamageParam{
-									TacticsParams: i.tacticsParams,
-									AttackGeneral: currentGeneral,
-									SufferGeneral: enemyGeneral,
-									DamageType:    consts.DamageType_Strategy,
-									Damage:        dmg,
-									TacticId:      i.Id(),
-									TacticName:    i.Name(),
-									EffectName:    fmt.Sprintf("%v", debuff),
+									TacticsParams:     i.tacticsParams,
+									AttackGeneral:     currentGeneral,
+									SufferGeneral:     enemyGeneral,
+									DamageType:        consts.DamageType_Strategy,
+									DamageImproveRate: 0.7,
+									TacticId:          i.Id(),
+									TacticName:        i.Name(),
+									EffectName:        fmt.Sprintf("%v", debuff),
 								})
 							case consts.DebuffEffectType_Defect:
-								dmg := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.ForceBase * 0.7)
 								damage.TacticDamage(&damage.TacticDamageParam{
-									TacticsParams:  i.tacticsParams,
-									AttackGeneral:  currentGeneral,
-									SufferGeneral:  enemyGeneral,
-									DamageType:     consts.DamageType_Weapon,
-									Damage:         dmg,
-									TacticId:       i.Id(),
-									TacticName:     i.Name(),
-									EffectName:     fmt.Sprintf("%v", debuff),
-									IsIgnoreDefend: true,
+									TacticsParams:     i.tacticsParams,
+									AttackGeneral:     currentGeneral,
+									SufferGeneral:     enemyGeneral,
+									DamageType:        consts.DamageType_Weapon,
+									DamageImproveRate: 0.7,
+									TacticId:          i.Id(),
+									TacticName:        i.Name(),
+									EffectName:        fmt.Sprintf("%v", debuff),
+									IsIgnoreDefend:    true,
 								})
 							}
 						}

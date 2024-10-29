@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 兴云布雨
@@ -60,16 +59,16 @@ func (m MakeCloudAndRainTactic) Prepare() {
 							EffectType: consts.DebuffEffectType_WaterAttack,
 							TacticId:   m.Id(),
 						}) {
-							dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.72)
+							dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.72
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: m.tacticsParams,
-								AttackGeneral: currentGeneral,
-								SufferGeneral: revokeGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        dmg,
-								TacticId:      m.Id(),
-								TacticName:    m.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
+								TacticsParams:     m.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     revokeGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: dmgRate,
+								TacticId:          m.Id(),
+								TacticName:        m.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 							})
 						}
 

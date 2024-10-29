@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 水淹七军
@@ -118,16 +117,16 @@ func (f FloodedSeventhArmyTactic) Execute() {
 				//是否有水攻状态
 				if effectParams, ok := util.DeBuffEffectGet(enemyGeneral, consts.DebuffEffectType_WaterAttack); ok {
 					for _, effectParam := range effectParams {
-						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * effectParam.EffectRate)
+						dmgRate := currentGeneral.BaseInfo.AbilityAttr.ForceBase/100/100 + effectParam.EffectRate
 						damage.TacticDamage(&damage.TacticDamageParam{
-							TacticsParams: f.tacticsParams,
-							AttackGeneral: currentGeneral,
-							SufferGeneral: enemyGeneral,
-							DamageType:    consts.DamageType_Weapon,
-							Damage:        dmg,
-							TacticId:      f.Id(),
-							TacticName:    f.Name(),
-							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
+							TacticsParams:     f.tacticsParams,
+							AttackGeneral:     currentGeneral,
+							SufferGeneral:     enemyGeneral,
+							DamageType:        consts.DamageType_Weapon,
+							DamageImproveRate: dmgRate,
+							TacticId:          f.Id(),
+							TacticName:        f.Name(),
+							EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 						})
 					}
 				}
@@ -141,15 +140,14 @@ func (f FloodedSeventhArmyTactic) Execute() {
 		for _, general := range allEnemyGenerals {
 			//是否有水攻状态
 			if util.DeBuffEffectContains(general, consts.DebuffEffectType_WaterAttack) {
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.08)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: f.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: general,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      f.Id(),
-					TacticName:    f.Name(),
+					TacticsParams:     f.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     general,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 2.08,
+					TacticId:          f.Id(),
+					TacticName:        f.Name(),
 				})
 			}
 		}
@@ -182,16 +180,16 @@ func (f FloodedSeventhArmyTactic) Execute() {
 					TacticId:   f.Id(),
 				}) {
 
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * effectRate)
+					dmgRate := currentGeneral.BaseInfo.AbilityAttr.ForceBase/100/100 + effectRate
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: f.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: revokeGeneral,
-						DamageType:    consts.DamageType_Weapon,
-						Damage:        dmg,
-						TacticId:      f.Id(),
-						TacticName:    f.Name(),
-						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
+						TacticsParams:     f.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     revokeGeneral,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: dmgRate,
+						TacticId:          f.Id(),
+						TacticName:        f.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 					})
 				}
 

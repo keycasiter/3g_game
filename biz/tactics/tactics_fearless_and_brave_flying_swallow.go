@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 轻勇飞燕
@@ -77,15 +76,14 @@ func (f FearlessAndBraveFlyingSwallowTactic) Execute() {
 	random := []int{2, 3, 4}
 	hitIdx := util.GenerateHitOneIdx(len(random))
 	for i := 0; i < random[hitIdx]; i++ {
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.84)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: f.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticName:    f.Name(),
-			TacticId:      f.Id(),
+			TacticsParams:     f.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 0.84,
+			TacticId:          f.Id(),
+			TacticName:        f.Name(),
 		})
 	}
 }

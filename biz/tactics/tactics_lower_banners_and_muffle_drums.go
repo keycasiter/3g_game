@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 偃旗息鼓
@@ -142,16 +141,16 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 
 				if triggerRound+1 == dmgTriggerRound {
 					enemyGeneral := util.GetEnemyOneGeneralByGeneral(dmgTriggerGeneral, l.tacticsParams)
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.1)
+					dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 2.1
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: l.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: enemyGeneral,
-						Damage:        dmg,
-						DamageType:    consts.DamageType_Strategy,
-						TacticId:      l.Id(),
-						TacticName:    l.Name(),
-						EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_LowerBannersAndMuffleDrums_Prepare),
+						TacticsParams:     l.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     enemyGeneral,
+						DamageType:        consts.DamageType_Strategy,
+						DamageImproveRate: dmgRate,
+						TacticId:          l.Id(),
+						TacticName:        l.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_LowerBannersAndMuffleDrums_Prepare),
 					})
 				}
 				return resp

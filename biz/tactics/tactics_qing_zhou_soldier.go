@@ -48,16 +48,15 @@ func (q QingZhouSoldierTactic) Prepare() {
 			attackGeneral := params.AttackGeneral
 
 			if triggerRound <= consts.Battle_Round_Second {
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.72)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: q.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: attackGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      q.Id(),
-					TacticName:    q.Name(),
-					EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
+					TacticsParams:     q.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     attackGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 0.72,
+					TacticId:          q.Id(),
+					TacticName:        q.Name(),
+					EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
 				})
 			}
 

@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 江东猛虎
@@ -75,15 +74,14 @@ func (j JiangdongTigerTactic) Execute() {
 	// 对敌军群体2人造成126%兵刃伤害，并嘲讽，持续2回合
 	enemyGenerals := util.GetEnemyTwoGeneralByGeneral(currentGeneral, j.tacticsParams)
 	for _, enemyGeneral := range enemyGenerals {
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.26)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: j.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      j.Id(),
-			TacticName:    j.Name(),
+			TacticsParams:     j.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.26,
+			TacticId:          j.Id(),
+			TacticName:        j.Name(),
 		})
 		//嘲讽
 		if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_Taunt, &vo.EffectHolderParams{

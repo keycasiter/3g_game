@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 风声鹤唳
@@ -102,15 +101,15 @@ func (s SoundOfTheWindAndTheCryOfTheStorkTactic) Execute() {
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, s.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//攻击
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.05)
+				dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.05
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: s.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        dmg,
-					TacticId:      s.Id(),
-					TacticName:    s.Name(),
+					TacticsParams:     s.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          s.Id(),
+					TacticName:        s.Name(),
 				})
 				//施加状态
 				if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_Sandstorm, &vo.EffectHolderParams{
@@ -128,16 +127,16 @@ func (s SoundOfTheWindAndTheCryOfTheStorkTactic) Execute() {
 							EffectType: consts.DebuffEffectType_Sandstorm,
 							TacticId:   s.Id(),
 						}) {
-							roundDmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
+							roundDmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.2
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: s.tacticsParams,
-								AttackGeneral: triggerGeneral,
-								SufferGeneral: revokeGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        roundDmg,
-								TacticId:      s.Id(),
-								TacticName:    s.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
+								TacticsParams:     s.tacticsParams,
+								AttackGeneral:     triggerGeneral,
+								SufferGeneral:     revokeGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: roundDmgRate,
+								TacticId:          s.Id(),
+								TacticName:        s.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
 							})
 						}
 

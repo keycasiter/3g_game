@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 苦肉计
@@ -75,15 +74,14 @@ func (i InjuryOnOneselfTactic) Execute() {
 		i.Name(),
 	)
 	// 对自己造成兵刃伤害（伤害率40%），
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.4)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: i.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: currentGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticId:      i.Id(),
-		TacticName:    i.Name(),
+		TacticsParams:     i.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     currentGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 0.4,
+		TacticId:          i.Id(),
+		TacticName:        i.Name(),
 	})
 	//使敌军单体进入灼烧（伤害率122%，受智力影响）及混乱状态
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, i.tacticsParams)
@@ -104,16 +102,16 @@ func (i InjuryOnOneselfTactic) Execute() {
 				TacticId:   i.Id(),
 			}) {
 				//伤害
-				fireDmg := cast.ToInt64(revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.22)
+				fireDmgRate := revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.22
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: i.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: revokeGeneral,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        fireDmg,
-					TacticId:      i.Id(),
-					TacticName:    i.Name(),
-					EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
+					TacticsParams:     i.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     revokeGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: fireDmgRate,
+					TacticId:          i.Id(),
+					TacticName:        i.Name(),
+					EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 				})
 			}
 

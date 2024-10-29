@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 暴敛四方
@@ -73,15 +72,14 @@ func (o OverwhelmingAllDirectionsTactic) Execute() {
 	// 对敌军单体发动2次兵刃伤害（伤害率102%），如果目标处于震慑状态，对其造成禁疗效果，持续2回合，2次攻击目标独立判定
 	for i := 0; i < 2; i++ {
 		enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, o.tacticsParams)
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.02)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: o.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      o.Id(),
-			TacticName:    o.Name(),
+			TacticsParams:     o.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.02,
+			TacticId:          o.Id(),
+			TacticName:        o.Name(),
 		})
 		if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Awe) {
 			util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_ProhibitionTreatment, &vo.EffectHolderParams{

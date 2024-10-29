@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 天降火雨
@@ -101,15 +100,14 @@ func (r RainOfFireFromTheSkyTactic) Execute() {
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, r.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//伤害
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: r.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      r.Id(),
-					TacticName:    r.Name(),
+					TacticsParams:     r.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.18,
+					TacticId:          r.Id(),
+					TacticName:        r.Name(),
 				})
 				//灼烧状态
 				if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_Firing, &vo.EffectHolderParams{
@@ -127,16 +125,16 @@ func (r RainOfFireFromTheSkyTactic) Execute() {
 							EffectType: consts.DebuffEffectType_Firing,
 							TacticId:   r.Id(),
 						}) {
-							fireDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.66)
+							fireDmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.66
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: r.tacticsParams,
-								AttackGeneral: currentGeneral,
-								SufferGeneral: triggerGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        fireDmg,
-								TacticId:      r.Id(),
-								TacticName:    r.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
+								TacticsParams:     r.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     triggerGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: fireDmgRate,
+								TacticId:          r.Id(),
+								TacticName:        r.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 							})
 						}
 

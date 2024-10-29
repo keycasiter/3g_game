@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 落凤
@@ -67,15 +66,14 @@ func (f FallingPhoenixTactic) Execute() {
 	//对随机敌军单体造成兵刃攻击（伤害率250%），并计穷（无法发动主动战法）1回合
 	//找到敌军单体
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, f.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.5)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: f.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticName:    f.Name(),
-		TacticId:      f.Id(),
+		TacticsParams:     f.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 2.5,
+		TacticId:          f.Id(),
+		TacticName:        f.Name(),
 	})
 	//施加效果
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_NoStrategy, &vo.EffectHolderParams{

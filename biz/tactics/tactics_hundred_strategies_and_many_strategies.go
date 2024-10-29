@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 百计多谋
@@ -41,16 +40,16 @@ func (h HundredStrategiesAndManyStrategiesTactic) Prepare() {
 		if util.GenerateRate(0.7) {
 			//敌军单体
 			enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, h.tacticsParams)
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.4)
+			dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.4
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams:  h.tacticsParams,
-				AttackGeneral:  triggerGeneral,
-				SufferGeneral:  enemyGeneral,
-				DamageType:     consts.DamageType_Strategy,
-				Damage:         dmg,
-				TacticName:     h.Name(),
-				TacticId:       h.Id(),
-				IsIgnoreDefend: true,
+				TacticsParams:     h.tacticsParams,
+				AttackGeneral:     triggerGeneral,
+				SufferGeneral:     enemyGeneral,
+				DamageType:        consts.DamageType_Strategy,
+				DamageImproveRate: dmgRate,
+				TacticId:          h.Id(),
+				TacticName:        h.Name(),
+				IsIgnoreDefend:    true,
 			})
 		}
 

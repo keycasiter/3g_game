@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 江天长焰
@@ -64,15 +63,15 @@ func (r RiverFireFlameTactic) Prepare() {
 				triggerRate += 0.04
 			}
 		}
-		dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.46)
+		dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.46
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: r.tacticsParams,
-			AttackGeneral: triggerGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Strategy,
-			Damage:        dmg,
-			TacticId:      r.Id(),
-			TacticName:    r.Name(),
+			TacticsParams:     r.tacticsParams,
+			AttackGeneral:     triggerGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Strategy,
+			DamageImproveRate: dmgRate,
+			TacticId:          r.Id(),
+			TacticName:        r.Name(),
 		})
 
 		return triggerResp

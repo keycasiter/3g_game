@@ -6,7 +6,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
-	"github.com/spf13/cast"
 )
 
 // 暗藏玄机
@@ -69,25 +68,24 @@ func (h HiddenMysteryTactic) Execute() {
 	)
 
 	//普通攻击之后，对攻击目标在此发起一次兵刃攻击（伤害率144%）
-	weaponDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.44)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: h.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: h.tacticsParams.CurrentSufferGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        weaponDmg,
-		TacticName:    h.Name(),
+		TacticsParams:     h.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     h.tacticsParams.CurrentSufferGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 1.44,
+		TacticName:        h.Name(),
 	})
 	//如果目标为敌军主将则额外造成一次谋略攻击（伤害率92%，受智力影响）
 	if h.tacticsParams.CurrentSufferGeneral.IsMaster {
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.92)
+		dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.92
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: h.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: h.tacticsParams.CurrentSufferGeneral,
-			DamageType:    consts.DamageType_Strategy,
-			Damage:        dmg,
-			TacticName:    h.Name(),
+			TacticsParams:     h.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     h.tacticsParams.CurrentSufferGeneral,
+			DamageType:        consts.DamageType_Strategy,
+			DamageImproveRate: dmgRate,
+			TacticName:        h.Name(),
 		})
 	}
 }

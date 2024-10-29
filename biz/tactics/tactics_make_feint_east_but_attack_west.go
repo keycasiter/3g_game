@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 声东击西
@@ -99,15 +98,15 @@ func (m MakeFeintToTheEastButAttackInTheWestTactic) Execute() {
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, m.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//伤害
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.75)
+				dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.75
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: m.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      m.Id(),
-					Damage:        dmg,
-					TacticName:    m.Name(),
+					TacticsParams:     m.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          m.Id(),
+					TacticName:        m.Name(),
 				})
 				//降低速度
 				if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrSpeed, &vo.EffectHolderParams{

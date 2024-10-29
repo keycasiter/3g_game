@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 不辱使命
@@ -74,14 +73,13 @@ func (h HaveSucceededInCarryingOutAnAssignmentTactic) Execute() {
 	// 对敌军单体造成一次兵刃攻击（伤害率220%），并有30%概率施加震慑状态（无法行动），持续1回合
 	// 找到敌军单体
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, h.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.2)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: h.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticName:    h.Name(),
+		TacticsParams:     h.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 2.2,
+		TacticName:        h.Name(),
 	})
 	//施加状态
 	if util.GenerateRate(0.3) {

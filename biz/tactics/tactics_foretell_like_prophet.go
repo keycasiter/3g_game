@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 料事如神
@@ -75,15 +74,15 @@ func (f ForetellLikeProphetTactic) Execute() {
 	enemyGenerals := util.GetEnemyTwoGeneralByGeneral(currentGeneral, f.tacticsParams)
 	for _, general := range enemyGenerals {
 		//谋略伤害
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.06)
+		dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.06
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: f.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: general,
-			DamageType:    consts.DamageType_Strategy,
-			Damage:        dmg,
-			TacticId:      f.Id(),
-			TacticName:    f.Name(),
+			TacticsParams:     f.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     general,
+			DamageType:        consts.DamageType_Strategy,
+			DamageImproveRate: dmgRate,
+			TacticId:          f.Id(),
+			TacticName:        f.Name(),
 		})
 		//施加效果
 		if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{

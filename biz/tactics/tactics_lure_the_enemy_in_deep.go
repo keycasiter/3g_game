@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 诱敌深入
@@ -117,16 +116,16 @@ func (l LureTheEnemyInDeepTactic) Execute() {
 							EffectType: consts.DebuffEffectType_Sandstorm,
 							TacticId:   l.Id(),
 						}) {
-							dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.26)
+							dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.26
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: l.tacticsParams,
-								AttackGeneral: triggerGeneral,
-								SufferGeneral: enemyGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        dmg,
-								TacticId:      l.Id(),
-								TacticName:    l.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
+								TacticsParams:     l.tacticsParams,
+								AttackGeneral:     triggerGeneral,
+								SufferGeneral:     enemyGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: dmgRate,
+								TacticId:          l.Id(),
+								TacticName:        l.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
 							})
 						}
 

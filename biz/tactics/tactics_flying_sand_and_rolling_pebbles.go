@@ -109,15 +109,15 @@ func (f FlyingSandAndRollingPebblesTactic) Execute() {
 					TacticId:   f.Id(),
 				}) {
 					//每回合持续造成伤害（伤害率58%，受智力影响）
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.58)
+					dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.58
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: f.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: enemyGeneral,
-						DamageType:    consts.DamageType_Strategy,
-						Damage:        dmg,
-						TacticName:    f.Name(),
-						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
+						TacticsParams:     f.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     enemyGeneral,
+						DamageType:        consts.DamageType_Strategy,
+						DamageImproveRate: dmgRate,
+						TacticName:        f.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 					})
 				}
 			}
@@ -175,16 +175,16 @@ func (f FlyingSandAndRollingPebblesTactic) Execute() {
 					EffectType: consts.DebuffEffectType_Sandstorm,
 					TacticId:   f.Id(),
 				}) {
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.08)
+					dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.08
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: f.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: revokeGeneral,
-						DamageType:    consts.DamageType_Strategy,
-						Damage:        dmg,
-						TacticId:      f.Id(),
-						TacticName:    f.Name(),
-						EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
+						TacticsParams:     f.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     revokeGeneral,
+						DamageType:        consts.DamageType_Strategy,
+						DamageImproveRate: dmgRate,
+						TacticId:          f.Id(),
+						TacticName:        f.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
 					})
 				}
 				return revokeResp

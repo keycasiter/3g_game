@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 纵兵劫掠
@@ -73,14 +72,13 @@ func (l LeavingSoldiersToPlunderTactic) Execute() {
 	// 对敌军单体造成兵刃攻击（伤害率172%）及震慑状态（无法行动），持续1回合
 	enemyGeneral := util.GetEnemyOneGeneral(l.tacticsParams)
 	//伤害
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.72)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: l.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticName:    l.Name(),
+		TacticsParams:     l.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 1.72,
+		TacticName:        l.Name(),
 	})
 
 	//效果

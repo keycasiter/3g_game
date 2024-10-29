@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 火烧连营
@@ -88,16 +87,16 @@ func (f FireJointVentureTactic) Execute() {
 		if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Firing) {
 			//找到敌军全体进行焚营
 			for _, general := range enemyGenerals {
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.62)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.62
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: f.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: general,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        dmg,
-					TacticId:      f.Id(),
-					TacticName:    f.Name(),
-					EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_FireJointVenture_BurningCamp),
+					TacticsParams:     f.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     general,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          f.Id(),
+					TacticName:        f.Name(),
+					EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_FireJointVenture_BurningCamp),
 				})
 				//焚营计数
 				if _, ok := fireCampGenerals[general.BaseInfo.UniqueId]; ok {
@@ -151,16 +150,16 @@ func (f FireJointVentureTactic) Execute() {
 						if currentGeneral.IsMaster {
 							rate = 0.98
 						}
-						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * rate)
+						dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + rate
 						damage.TacticDamage(&damage.TacticDamageParam{
-							TacticsParams: f.tacticsParams,
-							AttackGeneral: currentGeneral,
-							SufferGeneral: revokeGeneral,
-							DamageType:    consts.DamageType_Strategy,
-							Damage:        dmg,
-							TacticId:      f.Id(),
-							TacticName:    f.Name(),
-							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
+							TacticsParams:     f.tacticsParams,
+							AttackGeneral:     currentGeneral,
+							SufferGeneral:     revokeGeneral,
+							DamageType:        consts.DamageType_Strategy,
+							DamageImproveRate: dmgRate,
+							TacticId:          f.Id(),
+							TacticName:        f.Name(),
+							EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 						})
 					}
 
@@ -190,16 +189,16 @@ func (f FireJointVentureTactic) Execute() {
 						if currentGeneral.IsMaster {
 							rate = 0.98
 						}
-						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * rate)
+						dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + rate
 						damage.TacticDamage(&damage.TacticDamageParam{
-							TacticsParams: f.tacticsParams,
-							AttackGeneral: currentGeneral,
-							SufferGeneral: revokeGeneral,
-							DamageType:    consts.DamageType_Strategy,
-							Damage:        dmg,
-							TacticId:      f.Id(),
-							TacticName:    f.Name(),
-							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
+							TacticsParams:     f.tacticsParams,
+							AttackGeneral:     currentGeneral,
+							SufferGeneral:     revokeGeneral,
+							DamageType:        consts.DamageType_Strategy,
+							DamageImproveRate: dmgRate,
+							TacticId:          f.Id(),
+							TacticName:        f.Name(),
+							EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 						})
 					}
 

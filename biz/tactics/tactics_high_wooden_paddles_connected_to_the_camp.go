@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 高橹连营
@@ -75,15 +74,14 @@ func (h HighWoodenPaddlesConnectedToTheCampTactic) Prepare() {
 			}) {
 				//找到敌军单体
 				enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, h.tacticsParams)
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.82)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: h.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      h.Id(),
-					TacticName:    h.Name(),
+					TacticsParams:     h.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 0.82,
+					TacticId:          h.Id(),
+					TacticName:        h.Name(),
 				})
 				// 并有50%概率使其受到伤害提高6%，可叠加2次
 				if util.GenerateRate(0.5) {

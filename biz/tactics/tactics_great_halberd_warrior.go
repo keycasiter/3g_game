@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 大戟士
@@ -94,15 +93,14 @@ func (g GreatHalberdWarriorTactic) Execute() {
 			enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, g.tacticsParams)
 
 			if util.GenerateRate(triggerRate) {
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.22)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: g.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      g.Id(),
-					TacticName:    g.Name(),
+					TacticsParams:     g.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.22,
+					TacticId:          g.Id(),
+					TacticName:        g.Name(),
 				})
 			}
 

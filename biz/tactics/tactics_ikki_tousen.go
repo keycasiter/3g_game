@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 一骑当千
@@ -78,15 +77,14 @@ func (i IkkiTousenTactic) Execute() {
 			dmgRate = 1.08
 		}
 
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: i.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemeyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticName:    i.Name(),
-			TacticId:      i.Id(),
+			TacticsParams:     i.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemeyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: dmgRate,
+			TacticId:          i.Id(),
+			TacticName:        i.Name(),
 		})
 	}
 }

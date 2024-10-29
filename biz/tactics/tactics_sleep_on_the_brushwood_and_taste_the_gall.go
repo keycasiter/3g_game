@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 卧薪尝胆
@@ -74,15 +73,14 @@ func (s SleepOnTheBrushwoodAndTasteTheGallTactic) Execute() {
 	//对敌军群体（2人）发动一次兵刃攻击（伤害率96%），
 	enemyGenerals := util.GetEnemyTwoGeneralByGeneral(currentGeneral, s.tacticsParams)
 	for _, enemyGeneral := range enemyGenerals {
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.96)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: s.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      s.Id(),
-			TacticName:    s.Name(),
+			TacticsParams:     s.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 0.96,
+			TacticId:          s.Id(),
+			TacticName:        s.Name(),
 		})
 
 		//并有25几率（根据自身连击、洞察、先攻、必中、破阵的状态数，每多一种提高10%几率）造成震慑（无法行动）状态，持续1回合

@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 震骇四境
@@ -75,15 +74,14 @@ func (s ShockingFourRealmsTactic) Execute() {
 	for i := 0; i < 2; i++ {
 		//发动2次对敌军单体的兵刃攻击（伤害率178%）
 		enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.78)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: s.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      s.Id(),
-			TacticName:    s.Name(),
+			TacticsParams:     s.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.78,
+			TacticId:          s.Id(),
+			TacticName:        s.Name(),
 		})
 		//分别造成使其首次受到兵刃伤害提高30%（受武力影响）及计穷状态，持续1回合，每次目标独立选择
 		if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_ShockingFourRealms_Prepare, &vo.EffectHolderParams{

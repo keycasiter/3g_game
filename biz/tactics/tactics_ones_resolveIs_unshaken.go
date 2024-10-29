@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 矢志不移
@@ -66,16 +65,15 @@ func (o OnesResolveIsUnshakenTactic) Prepare() {
 						o.Name(),
 						consts.BuffEffectType_GroupAttack,
 					)
-					dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.0)
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: o.tacticsParams,
-						AttackGeneral: triggerGeneral,
-						SufferGeneral: enemyGeneral,
-						Damage:        dmg,
-						DamageType:    consts.DamageType_Weapon,
-						TacticId:      o.Id(),
-						TacticName:    o.Name(),
-						EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_GroupAttack),
+						TacticsParams:     o.tacticsParams,
+						AttackGeneral:     triggerGeneral,
+						SufferGeneral:     enemyGeneral,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: 1.0,
+						TacticId:          o.Id(),
+						TacticName:        o.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_GroupAttack),
 					})
 
 				}

@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 临机制胜
@@ -132,42 +131,42 @@ func (s SeizeTheOpportunityToWinTactic) Execute() {
 					}) {
 						switch debuff {
 						case consts.DebuffEffectType_Firing:
-							dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
+							dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.2
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: s.tacticsParams,
-								AttackGeneral: currentGeneral,
-								SufferGeneral: revokeGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        dmg,
-								TacticId:      s.Id(),
-								TacticName:    s.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
+								TacticsParams:     s.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     revokeGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: dmgRate,
+								TacticId:          s.Id(),
+								TacticName:        s.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 							})
 						case consts.DebuffEffectType_Defect:
 							_, val := util.GetGeneralHighestBetweenForceOrIntelligence(currentGeneral)
-							dmg := cast.ToInt64(val * 1.2)
+							dmgRate := val/100/100 + 1.2
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams:  s.tacticsParams,
-								AttackGeneral:  currentGeneral,
-								SufferGeneral:  revokeGeneral,
-								DamageType:     consts.DamageType_Strategy,
-								Damage:         dmg,
-								TacticId:       s.Id(),
-								TacticName:     s.Name(),
-								EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
-								IsIgnoreDefend: true,
+								TacticsParams:     s.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     revokeGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: dmgRate,
+								TacticId:          s.Id(),
+								TacticName:        s.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
+								IsIgnoreDefend:    true,
 							})
 						case consts.DebuffEffectType_Sandstorm:
-							dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
+							dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.2
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: s.tacticsParams,
-								AttackGeneral: currentGeneral,
-								SufferGeneral: revokeGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        dmg,
-								TacticId:      s.Id(),
-								TacticName:    s.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
+								TacticsParams:     s.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     revokeGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: dmgRate,
+								TacticId:          s.Id(),
+								TacticName:        s.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Sandstorm),
 							})
 						}
 					}
@@ -192,16 +191,16 @@ func (s SeizeTheOpportunityToWinTactic) Execute() {
 						EffectType: consts.DebuffEffectType_Methysis,
 						TacticId:   s.Id(),
 					}) {
-						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
+						dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.2
 						damage.TacticDamage(&damage.TacticDamageParam{
-							TacticsParams: s.tacticsParams,
-							AttackGeneral: currentGeneral,
-							SufferGeneral: revokeGeneral,
-							DamageType:    consts.DamageType_Strategy,
-							Damage:        dmg,
-							TacticId:      s.Id(),
-							TacticName:    s.Name(),
-							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Methysis),
+							TacticsParams:     s.tacticsParams,
+							AttackGeneral:     currentGeneral,
+							SufferGeneral:     revokeGeneral,
+							DamageType:        consts.DamageType_Strategy,
+							DamageImproveRate: dmgRate,
+							TacticId:          s.Id(),
+							TacticName:        s.Name(),
+							EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Methysis),
 						})
 					}
 

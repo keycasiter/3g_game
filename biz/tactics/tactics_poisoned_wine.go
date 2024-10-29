@@ -91,14 +91,14 @@ func (p PoisonedWineTactic) Execute() {
 				EffectType: consts.DebuffEffectType_DecrForce,
 				TacticId:   p.Id(),
 			}) {
-				dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.26)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 2.26
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: p.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        dmg,
-					TacticName:    p.Name(),
+					TacticsParams:     p.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticName:        p.Name(),
 				})
 				//降低统率
 				decrCommandVal := cast.ToInt64(60 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100)

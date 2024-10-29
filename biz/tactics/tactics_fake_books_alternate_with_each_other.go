@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 伪书相间
@@ -76,22 +75,21 @@ func (f FakeBooksAlternateWithEachOtherTactic) Execute() {
 	//对敌军单体造成谋略伤害（伤害率206%，受智力影响）
 	//找到敌军单体
 	enemeyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, f.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.06)
+	dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 2.06
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: f.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemeyGeneral,
-		DamageType:    consts.DamageType_Strategy,
-		Damage:        dmg,
-		TacticId:      f.Id(),
-		TacticName:    f.Name(),
+		TacticsParams:     f.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemeyGeneral,
+		DamageType:        consts.DamageType_Strategy,
+		DamageImproveRate: dmgRate,
+		TacticId:          f.Id(),
+		TacticName:        f.Name(),
 	})
 	//若目标处于混乱状态则使目标对其友军单体发动攻击（伤害率186%，类型取决于目标武力、智力较高的一项），
 	if util.DeBuffEffectContains(enemeyGeneral, consts.DebuffEffectType_Chaos) {
 		//找到该目标友军
 		enemyPairGeneral := util.GetPairOneGeneralNotSelf(f.tacticsParams, enemeyGeneral)
-		attrType, attrVal := util.GetGeneralHighestBetweenForceOrIntelligence(enemeyGeneral)
-		chaosDmg := cast.ToInt64(attrVal * 1.86)
+		attrType, _ := util.GetGeneralHighestBetweenForceOrIntelligence(enemeyGeneral)
 
 		//伤害类型
 		dmgType := consts.DamageType_Strategy
@@ -100,13 +98,13 @@ func (f FakeBooksAlternateWithEachOtherTactic) Execute() {
 		}
 
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: f.tacticsParams,
-			AttackGeneral: enemeyGeneral,
-			SufferGeneral: enemyPairGeneral,
-			DamageType:    dmgType,
-			Damage:        chaosDmg,
-			TacticId:      f.Id(),
-			TacticName:    f.Name(),
+			TacticsParams:     f.tacticsParams,
+			AttackGeneral:     enemeyGeneral,
+			SufferGeneral:     enemyPairGeneral,
+			DamageType:        dmgType,
+			DamageImproveRate: 1.86,
+			TacticId:          f.Id(),
+			TacticName:        f.Name(),
 		})
 	} else {
 		//否则施加混乱（攻击和战法无差别选择目标）状态，持续1回合

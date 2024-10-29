@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 暗箭难防
@@ -103,16 +102,15 @@ func (h HiddenArrowsAreDifficultToGuardAgainstTactic) Execute() {
 
 			//找到敌军2人
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, h.tacticsParams)
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.6)
 			for _, enemyGeneral := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: h.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      h.Id(),
-					TacticName:    h.Name(),
+					TacticsParams:     h.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 2.6,
+					TacticId:          h.Id(),
+					TacticName:        h.Name(),
 				})
 			}
 			// 并有60%概率（受速度影响）捕获敌军单体武将（捕获效果无法被净化），
@@ -123,15 +121,14 @@ func (h HiddenArrowsAreDifficultToGuardAgainstTactic) Execute() {
 			allEnemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, h.tacticsParams)
 			for _, enemyGeneral := range allEnemyGenerals {
 				if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Capture) {
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.6)
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: h.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: enemyGeneral,
-						DamageType:    consts.DamageType_Weapon,
-						Damage:        dmg,
-						TacticId:      h.Id(),
-						TacticName:    h.Name(),
+						TacticsParams:     h.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     enemyGeneral,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: 2.6,
+						TacticId:          h.Id(),
+						TacticName:        h.Name(),
 					})
 					return triggerResp
 				}

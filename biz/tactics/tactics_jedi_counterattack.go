@@ -53,17 +53,16 @@ func (j JediCounterattackTactic) Prepare() {
 				}
 			}
 			dmgRate := 1.2 + (0.14 * cast.ToFloat64(times))
-			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, j.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: j.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      j.Id(),
-					TacticName:    j.Name(),
+					TacticsParams:     j.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: dmgRate,
+					TacticId:          j.Id(),
+					TacticName:        j.Name(),
 				})
 			}
 		}

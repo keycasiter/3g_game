@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 威谋靡亢
@@ -125,26 +124,26 @@ func (i IntenseAndPowerfulTactic) Execute() {
 								TacticId:   i.Id(),
 							}) {
 								attrType, val := util.GetGeneralHighestBetweenForceOrIntelligence(currentGeneral)
-								dmg := int64(0)
 								dmgType := consts.DamageType_None
+								dmgRate := 1.58
 								switch attrType {
 								case consts.AbilityAttr_Force:
-									dmg = cast.ToInt64(val * 1.58)
 									dmgType = consts.DamageType_Weapon
+									dmgRate += val / 100 / 100
 								case consts.AbilityAttr_Intelligence:
-									dmg = cast.ToInt64(val * 1.58)
 									dmgType = consts.DamageType_Strategy
+									dmgRate += val / 100 / 100
 								}
 								damage.TacticDamage(&damage.TacticDamageParam{
-									TacticsParams:  i.tacticsParams,
-									AttackGeneral:  currentGeneral,
-									SufferGeneral:  revokeGeneral,
-									DamageType:     dmgType,
-									Damage:         dmg,
-									TacticId:       i.Id(),
-									TacticName:     i.Name(),
-									EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
-									IsIgnoreDefend: true,
+									TacticsParams:     i.tacticsParams,
+									AttackGeneral:     currentGeneral,
+									SufferGeneral:     revokeGeneral,
+									DamageType:        dmgType,
+									DamageImproveRate: dmgRate,
+									TacticId:          i.Id(),
+									TacticName:        i.Name(),
+									EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
+									IsIgnoreDefend:    true,
 								})
 							}
 

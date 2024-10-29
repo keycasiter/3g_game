@@ -84,15 +84,14 @@ func (g GeneralBraveGirlTactic) Execute() {
 	enemyGenerals := util.GetEnemyTwoGeneralByGeneral(currentGeneral, g.tacticsParams)
 	for _, general := range enemyGenerals {
 		//造成伤害
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.28)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: g.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: general,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      g.Id(),
-			TacticName:    g.Name(),
+			TacticsParams:     g.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     general,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.28,
+			TacticId:          g.Id(),
+			TacticName:        g.Name(),
 		})
 
 		//下回合结算注册器
@@ -108,16 +107,15 @@ func (g GeneralBraveGirlTactic) Execute() {
 
 			//受到额外兵刃伤害（伤害率20%）
 			dmgRate := 0.2
-			settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: g.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: settleGeneral,
-				DamageType:    consts.DamageType_Weapon,
-				Damage:        settleDmg,
-				TacticId:      g.Id(),
-				TacticName:    g.Name(),
-				EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_TigerAnger),
+				TacticsParams:     g.tacticsParams,
+				AttackGeneral:     currentGeneral,
+				SufferGeneral:     settleGeneral,
+				DamageType:        consts.DamageType_Weapon,
+				DamageImproveRate: dmgRate,
+				TacticId:          g.Id(),
+				TacticName:        g.Name(),
+				EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_TigerAnger),
 			})
 			//目标每次受到伤害时，伤害率提高30%，最多叠加3次
 			//兵刃伤害
@@ -196,16 +194,15 @@ func (g GeneralBraveGirlTactic) Execute() {
 						if effectTimes > 0 {
 							dmgRate = dmgRate * (1 + 0.3*cast.ToFloat64(effectTimes))
 						}
-						settleDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 						damage.TacticDamage(&damage.TacticDamageParam{
-							TacticsParams: g.tacticsParams,
-							AttackGeneral: currentGeneral,
-							SufferGeneral: triggerGeneral,
-							DamageType:    consts.DamageType_Weapon,
-							Damage:        settleDmg,
-							TacticId:      g.Id(),
-							TacticName:    g.Name(),
-							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_TigerAnger),
+							TacticsParams:     g.tacticsParams,
+							AttackGeneral:     currentGeneral,
+							SufferGeneral:     triggerGeneral,
+							DamageType:        consts.DamageType_Weapon,
+							DamageImproveRate: dmgRate,
+							TacticId:          g.Id(),
+							TacticName:        g.Name(),
+							EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_TigerAnger),
 						})
 						//施加震慑
 						if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_Awe, &vo.EffectHolderParams{

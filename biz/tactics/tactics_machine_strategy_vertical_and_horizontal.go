@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 机略纵横
@@ -117,16 +116,16 @@ func (m MachineStrategyVerticalAndHorizontalTactic) Execute() {
 							EffectType: consts.DebuffEffectType_Firing,
 							TacticId:   m.Id(),
 						}) {
-							dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.58)
+							dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.58
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: m.tacticsParams,
-								AttackGeneral: triggerGeneral,
-								SufferGeneral: revokeGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        dmg,
-								TacticName:    m.Name(),
-								TacticId:      m.Id(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
+								TacticsParams:     m.tacticsParams,
+								AttackGeneral:     triggerGeneral,
+								SufferGeneral:     revokeGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: dmgRate,
+								TacticId:          m.Id(),
+								TacticName:        m.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Firing),
 							})
 						}
 
@@ -149,16 +148,16 @@ func (m MachineStrategyVerticalAndHorizontalTactic) Execute() {
 							EffectType: consts.DebuffEffectType_Methysis,
 							TacticId:   m.Id(),
 						}) {
-							dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.58)
+							dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.58
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: m.tacticsParams,
-								AttackGeneral: triggerGeneral,
-								SufferGeneral: revokeGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        dmg,
-								TacticName:    m.Name(),
-								TacticId:      m.Id(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_Methysis),
+								TacticsParams:     m.tacticsParams,
+								AttackGeneral:     triggerGeneral,
+								SufferGeneral:     revokeGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: dmgRate,
+								TacticId:          m.Id(),
+								TacticName:        m.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Methysis),
 							})
 						}
 

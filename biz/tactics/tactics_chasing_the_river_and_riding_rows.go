@@ -103,7 +103,7 @@ func (c ChasingTheRiverAndRidingRowsTactic) Prepare() {
 			case consts.DamageType_Weapon:
 				dmgRate = triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100/100 + 0.5
 			case consts.DamageType_Strategy:
-				dmgRate = triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100 / 100 * 0.5
+				dmgRate = triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.5
 			}
 
 			damage.TacticDamage(&damage.TacticDamageParam{

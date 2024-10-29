@@ -5,7 +5,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/damage"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
-	"github.com/spf13/cast"
 )
 
 // 手起刀落
@@ -65,15 +64,14 @@ func (c CutDownTactic) Execute() {
 	sufferGeneral := c.tacticsParams.CurrentSufferGeneral
 	currentGeneral := c.tacticsParams.CurrentGeneral
 
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.14)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: c.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: sufferGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticId:      c.Id(),
-		TacticName:    c.Name(),
+		TacticsParams:     c.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     sufferGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 2.14,
+		TacticId:          c.Id(),
+		TacticName:        c.Name(),
 	})
 }
 

@@ -139,16 +139,16 @@ func (p PoisonousSpringRefusesShuTactic) Execute() {
 						}
 						dmgRate += 0.4 * cast.ToFloat64(effectTimes)
 
-						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * dmgRate)
+						dmgRate = currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + dmgRate
 						damage.TacticDamage(&damage.TacticDamageParam{
-							TacticsParams: p.tacticsParams,
-							AttackGeneral: currentGeneral,
-							SufferGeneral: general,
-							DamageType:    consts.DamageType_Strategy,
-							Damage:        dmg,
-							TacticId:      p.Id(),
-							TacticName:    p.Name(),
-							EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_StrongMethysis),
+							TacticsParams:     p.tacticsParams,
+							AttackGeneral:     currentGeneral,
+							SufferGeneral:     general,
+							DamageType:        consts.DamageType_Strategy,
+							DamageImproveRate: dmgRate,
+							TacticId:          p.Id(),
+							TacticName:        p.Name(),
+							EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_StrongMethysis),
 						})
 					}
 				},

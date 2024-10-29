@@ -77,15 +77,15 @@ func (f FocusingOnAllThingsTactic) Prepare() {
 					damage.AttackDamage(f.tacticsParams, general, enemyGeneral, 0)
 				} else {
 					//否则自身对敌军单体造成谋略伤害（伤害率188%，受智力影响）
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.88)
+					dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.88
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: f.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: enemyGeneral,
-						DamageType:    consts.DamageType_Strategy,
-						Damage:        dmg,
-						TacticName:    f.Name(),
-						TacticId:      f.Id(),
+						TacticsParams:     f.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     enemyGeneral,
+						DamageType:        consts.DamageType_Strategy,
+						DamageImproveRate: dmgRate,
+						TacticId:          f.Id(),
+						TacticName:        f.Name(),
 					})
 				}
 			}

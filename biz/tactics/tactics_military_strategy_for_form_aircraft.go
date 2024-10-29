@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 形机军略
@@ -71,25 +70,24 @@ func (m MilitaryStrategyForFormAircraftTactic) Execute() {
 
 	//对敌军单体造成一次兵刃攻击（伤害率210%）及谋略攻击（伤害率180%，受智力影响）
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, m.tacticsParams)
-	weaponDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.1)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: m.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        weaponDmg,
-		TacticId:      m.Id(),
-		TacticName:    m.Name(),
+		TacticsParams:     m.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 2.1,
+		TacticId:          m.Id(),
+		TacticName:        m.Name(),
 	})
-	strategyDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
+	strategyDmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.8
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: m.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Strategy,
-		Damage:        strategyDmg,
-		TacticId:      m.Id(),
-		TacticName:    m.Name(),
+		TacticsParams:     m.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Strategy,
+		DamageImproveRate: strategyDmgRate,
+		TacticId:          m.Id(),
+		TacticName:        m.Name(),
 	})
 }
 

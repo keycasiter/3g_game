@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 百步穿杨
@@ -111,16 +110,15 @@ func (h HitTheTargetAtEveryShotTactic) Execute() {
 				if util.DeBuffEffectContainsControl(enemyGeneral) {
 					dmgRate = 2.4
 				}
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: h.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Weapon,
-					TacticId:      h.Id(),
-					TacticName:    h.Name(),
+					TacticsParams:     h.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: dmgRate,
+					TacticId:          h.Id(),
+					TacticName:        h.Name(),
 				})
 			}
 		}

@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 腹背受敌
@@ -77,15 +76,15 @@ func (s ScyllaAndCharybdisTactic) Execute() {
 	//找到敌军单体
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
 	for _, general := range effectGenerals {
-		dmg := cast.ToInt64(general.BaseInfo.AbilityAttr.IntelligenceBase * 1.18)
+		dmgRate := general.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.18
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: s.tacticsParams,
-			AttackGeneral: general,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Strategy,
-			Damage:        dmg,
-			TacticId:      s.Id(),
-			TacticName:    s.Name(),
+			TacticsParams:     s.tacticsParams,
+			AttackGeneral:     general,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Strategy,
+			DamageImproveRate: dmgRate,
+			TacticId:          s.Id(),
+			TacticName:        s.Name(),
 		})
 	}
 }

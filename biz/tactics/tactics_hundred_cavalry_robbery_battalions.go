@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 百骑劫营
@@ -68,29 +67,27 @@ func (h HundredCavalryRobberyBattalionsTactic) Execute() {
 	//普通攻击之后，对随机敌军单体发动一次兵刃攻击（伤害率162%）同时有50%几率对敌军主将额外发动一次兵刃攻击（伤害率120%）
 	//敌军单体伤害
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, h.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.62)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: h.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticId:      h.Id(),
-		TacticName:    h.Name(),
+		TacticsParams:     h.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 1.62,
+		TacticId:          h.Id(),
+		TacticName:        h.Name(),
 	})
 	//额外攻击
 	if util.GenerateRate(0.5) {
 		//敌军主将
 		enemyMasterGeneral := util.GetEnemyMasterGeneral(h.tacticsParams)
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.2)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: h.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyMasterGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      h.Id(),
-			TacticName:    h.Name(),
+			TacticsParams:     h.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyMasterGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.2,
+			TacticId:          h.Id(),
+			TacticName:        h.Name(),
 		})
 	}
 }

@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 连环计
@@ -133,13 +132,13 @@ func (i InterlockedStratagemsTactic) Execute() {
 					//找到2个队友进行伤害反弹
 					pairGenerals := util.GetPairGeneralsTwoArrByGeneral(lockGeneral, i.tacticsParams)
 					for _, reboundGeneral := range pairGenerals {
-						dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.15)
+						dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.15
 						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams:          i.tacticsParams,
 							AttackGeneral:          currentGeneral,
 							SufferGeneral:          reboundGeneral,
-							Damage:                 dmg,
 							DamageType:             consts.DamageType_Strategy,
+							DamageImproveRate:      dmgRate,
 							TacticId:               i.Id(),
 							TacticName:             i.Name(),
 							EffectName:             fmt.Sprintf("%v", consts.DebuffEffectType_InterlockedStratagems),
@@ -171,15 +170,15 @@ func (i InterlockedStratagemsTactic) Execute() {
 			}
 			//并发动谋略攻击（伤害率156%，受智力影响）
 			for _, sufferGeneral := range allEnemyGenerals {
-				dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.56)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.56
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: i.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: sufferGeneral,
-					Damage:        dmgNum,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      i.Id(),
-					TacticName:    i.Name(),
+					TacticsParams:     i.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     sufferGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          i.Id(),
+					TacticName:        i.Name(),
 				})
 			}
 		}

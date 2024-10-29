@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 所向披靡
@@ -98,16 +97,15 @@ func (e EverTriumphantTactic) Execute() {
 			)
 			//找到敌军全体
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, e.tacticsParams)
-			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 2.46)
 			for _, enemyGeneral := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: e.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Weapon,
-					TacticId:      e.Id(),
-					TacticName:    e.Name(),
+					TacticsParams:     e.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 2.46,
+					TacticId:          e.Id(),
+					TacticName:        e.Name(),
 				})
 			}
 		}

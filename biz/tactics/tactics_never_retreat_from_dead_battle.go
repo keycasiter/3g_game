@@ -11,7 +11,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 死战不退
@@ -92,16 +91,15 @@ func (n NeverRetreatFromDeadBattleTactic) costAccumulatePowerHandler(ctx context
 		TacticId:   n.Id(),
 	}) {
 		enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, n.tacticsParams)
-		dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.3)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: n.tacticsParams,
-			AttackGeneral: triggerGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticName:    n.Name(),
-			TacticId:      n.Id(),
-			EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_AccumulatePower),
+			TacticsParams:     n.tacticsParams,
+			AttackGeneral:     triggerGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.3,
+			TacticId:          n.Id(),
+			TacticName:        n.Name(),
+			EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_AccumulatePower),
 		})
 	}
 }

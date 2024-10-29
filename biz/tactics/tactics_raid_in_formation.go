@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 陷阵突袭
@@ -56,15 +55,14 @@ func (r RaidInFormationTactic) Prepare() {
 			triggerAssaultGeneral := params.CurrentGeneral
 			sufferGeneral := r.tacticsParams.CurrentSufferGeneral
 
-			dmg := cast.ToInt64(triggerAssaultGeneral.BaseInfo.AbilityAttr.ForceBase * 0.95)
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: r.tacticsParams,
-				AttackGeneral: triggerAssaultGeneral,
-				SufferGeneral: sufferGeneral,
-				DamageType:    consts.DamageType_Weapon,
-				Damage:        dmg,
-				TacticId:      r.Id(),
-				TacticName:    r.Name(),
+				TacticsParams:     r.tacticsParams,
+				AttackGeneral:     triggerAssaultGeneral,
+				SufferGeneral:     sufferGeneral,
+				DamageType:        consts.DamageType_Weapon,
+				DamageImproveRate: 0.95,
+				TacticId:          r.Id(),
+				TacticName:        r.Name(),
 			})
 
 			return triggerAssaultResp

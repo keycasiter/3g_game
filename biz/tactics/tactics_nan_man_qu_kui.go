@@ -45,15 +45,14 @@ func (n NanManQuKuiTactic) Prepare() {
 		if util.GenerateRate(0.49) {
 			enemyGenerals := util.GetEnemyGeneralArr(n.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
-				dmg := cast.ToInt64(enemyGeneral.BaseInfo.AbilityAttr.ForceBase * 1.06)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: n.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticName:    n.Name(),
-					TacticId:      n.Id(),
+					TacticsParams:     n.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.06,
+					TacticId:          n.Id(),
+					TacticName:        n.Name(),
 				})
 			}
 		} else {

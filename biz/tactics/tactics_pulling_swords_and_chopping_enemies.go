@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 掣刀斫敌
@@ -95,15 +94,14 @@ func (p PullingSwordsAndChoppingEnemiesTactic) Execute() {
 		})
 	}
 	//然后对其造成兵刃伤害（伤害率208%）及震慑状态，持续1回合
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.08)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: p.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticId:      p.Id(),
-		TacticName:    p.Name(),
+		TacticsParams:     p.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 2.08,
+		TacticId:          p.Id(),
+		TacticName:        p.Name(),
 	})
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_Awe, &vo.EffectHolderParams{
 		EffectRound:    1,

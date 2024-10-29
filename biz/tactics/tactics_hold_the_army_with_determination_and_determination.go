@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 持军毅重
@@ -116,15 +115,14 @@ func (h HoldTheArmyWithDeterminationAndDeterminationTactic) Execute() {
 	//攻击
 	enemyGenerals := util.GetEnemyTwoGeneralByGeneral(currentGeneral, h.tacticsParams)
 	for _, enemyGeneral := range enemyGenerals {
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.84)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: h.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      h.Id(),
-			TacticName:    h.Name(),
+			TacticsParams:     h.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.84,
+			TacticId:          h.Id(),
+			TacticName:        h.Name(),
 		})
 	}
 }

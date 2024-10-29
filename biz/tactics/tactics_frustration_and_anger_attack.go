@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 挫志怒袭
@@ -103,15 +102,14 @@ func (f FrustrationAndAngerAttackTactic) Execute() {
 			for _, general := range pairGenerals {
 				//如果目标已处于虚弱状态则改为造成一次猛击（伤害率188%）
 				if util.DeBuffEffectContains(general, consts.DebuffEffectType_PoorHealth) {
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.88)
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: f.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: general,
-						DamageType:    consts.DamageType_Weapon,
-						Damage:        dmg,
-						TacticId:      f.Id(),
-						TacticName:    f.Name(),
+						TacticsParams:     f.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     general,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: 1.88,
+						TacticId:          f.Id(),
+						TacticName:        f.Name(),
 					})
 				} else {
 					//施加效果

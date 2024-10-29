@@ -67,30 +67,30 @@ func (s StealingLuckAndRidingPetsTactic) Prepare() {
 		//奇数回合
 		if triggerRound%2 != 0 {
 			//敌军2人
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.9)
+			dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.9
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, s.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//伤害
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: nil,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        dmg,
-					TacticId:      s.Id(),
-					TacticName:    s.Name(),
+					TacticsParams:     nil,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          s.Id(),
+					TacticName:        s.Name(),
 				})
 				//额外对其中智力低于自身的单位造成谋略伤害（伤害率120%，受智力影响）
 				if enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase < triggerGeneral.BaseInfo.AbilityAttr.IntelligenceRate {
-					strategyDmg := cast.ToInt64(enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.2)
+					strategyDmgRate := enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.2
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: s.tacticsParams,
-						AttackGeneral: triggerGeneral,
-						SufferGeneral: enemyGeneral,
-						DamageType:    consts.DamageType_Strategy,
-						Damage:        strategyDmg,
-						TacticId:      s.Id(),
-						TacticName:    s.Name(),
+						TacticsParams:     s.tacticsParams,
+						AttackGeneral:     triggerGeneral,
+						SufferGeneral:     enemyGeneral,
+						DamageType:        consts.DamageType_Strategy,
+						DamageImproveRate: strategyDmgRate,
+						TacticId:          s.Id(),
+						TacticName:        s.Name(),
 					})
 				}
 			}

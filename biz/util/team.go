@@ -517,6 +517,7 @@ func RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams *model.TacticsParams) {
 			newAllGenerals = append(newAllGenerals, general)
 		}
 	}
+	tacticsParams.AllGeneralArr = newAllGenerals
 }
 
 // 按速度排序，从快到慢

@@ -120,7 +120,7 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 	//初始化mysql
 	mysql.InitMysql()
 
-	battleSize := 10
+	battleSize := 100
 
 	winSize := 0
 	loseSize := 0
@@ -201,13 +201,17 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 			data.AccumulateTotalResumeNum/int64(battleSize),
 		)
 		//战法
-		fmt.Println("\n【战法】")
-		for k, v := range data.TacticAccumulateDamageMap {
-			fmt.Printf("%v:%v ", k, v)
-		}
-		fmt.Println("\n【触发】")
+		fmt.Println("\n【战法触发】")
 		for k, v := range data.TacticAccumulateTriggerMap {
-			fmt.Printf("%v:%v ", k, v)
+			fmt.Printf("%v:%v ", k, v/int64(battleSize))
+		}
+		fmt.Println("\n【战法伤害】")
+		for k, v := range data.TacticAccumulateDamageMap {
+			fmt.Printf("%v:%v ", k, v/int64(battleSize))
+		}
+		fmt.Println("\n【战法恢复】")
+		for k, v := range data.TacticAccumulateResumeMap {
+			fmt.Printf("%v:%v ", k, v/int64(battleSize))
 		}
 	}
 	for _, data := range enemyGeneralsData {
@@ -219,13 +223,17 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 			data.AccumulateTotalResumeNum/int64(battleSize),
 		)
 		//战法
-		fmt.Println("\n【战法】")
-		for k, v := range data.TacticAccumulateDamageMap {
-			fmt.Printf("%v:%v ", k, v)
-		}
-		fmt.Println("\n【触发】")
+		fmt.Println("\n【战法触发】")
 		for k, v := range data.TacticAccumulateTriggerMap {
-			fmt.Printf("%v:%v ", k, v)
+			fmt.Printf("%v:%v ", k, v/int64(battleSize))
+		}
+		fmt.Println("\n【战法伤害】")
+		for k, v := range data.TacticAccumulateDamageMap {
+			fmt.Printf("%v:%v ", k, v/int64(battleSize))
+		}
+		fmt.Println("\n【战法恢复】")
+		for k, v := range data.TacticAccumulateResumeMap {
+			fmt.Printf("%v:%v ", k, v/int64(battleSize))
 		}
 	}
 }

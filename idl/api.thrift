@@ -36,6 +36,27 @@ struct BattleTeam {
 	8:string Name
 }
 
+// 对战队伍信息
+struct BattleTeamStatistics {
+	/** 队伍基础信息 **/
+	//队伍类型
+	1:enum.TeamType TeamType
+	//队伍兵种
+	2:enum.ArmType ArmType
+	//队伍武将信息
+	3:list<BattleGeneral> BattleGenerals
+	//兵战科技-属性加成
+	4:BuildingTechAttrAddition BuildingTechAttrAddition
+	//协力科技-阵营加成
+	5:BuildingTechGroupAddition BuildingTechGroupAddition
+	//队伍总兵力
+	6:i64 SoliderNum
+	//队伍剩余兵力
+	7:i64 RemainNum
+	//队伍名称
+	8:string Name
+}
+
 // 对战武将信息
 struct BattleGeneral {
 	//基础信息
@@ -56,6 +77,31 @@ struct BattleGeneral {
     8: enum.ArmsAbility ArmsAbility
     //剩余兵力
     9: i64 RemainNum
+}
+
+// 对战武将信息
+struct BattleGeneralStatistics {
+	//基础信息
+	1:MetadataGeneral BaseInfo
+	//佩戴战法
+	2:list<Tactics> EquipTactics
+	//佩戴兵书
+	3: list<WarBook> WarBooks
+	//佩戴装备特技
+	4: list<SpecialTech> SpecialTechs
+	//武将对战加成
+	5:BattleGeneralAddition Addition
+	//是否主将
+	6: bool IsMaster
+	//携带兵力
+	7: i64 SoldierNum
+	//兵种适性
+    8: enum.ArmsAbility ArmsAbility
+    //剩余兵力
+    9: i64 RemainNum
+
+    //***对战数据***
+    list<GeneralBattleStatistics> GeneralBattleStatisticsList
 }
 
 // 武将对战加成
@@ -160,13 +206,10 @@ struct BattleResultStatistics  {
 struct TeamBattleStatistics  {
 	//***队伍原始数据***
 	//队伍信息
-	BattleTeam BattleTeam
+	BattleTeamStatistics BattleTeam
 
-	//***对战数据***
 	//对战结果
 	i64 BattleResult
-	//对战统计信息
-	list<GeneralBattleStatistics> GeneralBattleStatisticsList
 }
 
 //武将对战数据统计

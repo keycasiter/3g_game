@@ -2,6 +2,7 @@ package util
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
@@ -89,6 +90,10 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 
 		param.SufferGeneral.SoldierNum += param.ResumeNum
 	}
+
+	//统计
+	param.ProduceGeneral.TacticAccumulateDamageMap[param.TacticId] = param.ResumeNum
+	param.ProduceGeneral.AccumulateTotalResumeNum += param.ResumeNum
 
 	TacticReport(param.TacticsParams,
 		param.ProduceGeneral.BaseInfo.UniqueId,

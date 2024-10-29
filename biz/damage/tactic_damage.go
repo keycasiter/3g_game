@@ -26,11 +26,6 @@ type TacticDamageLogic struct {
 func NewTacticDamageLogic(param *TacticDamageParam) *TacticDamageLogic {
 	runCtx := &TacticDamageLogic{param: param}
 
-	//伤害数据收集
-	defer func() {
-		runCtx.collectData()
-	}()
-
 	runCtx.funcs = []func(){
 		//参数校验
 		runCtx.checkParam,
@@ -48,6 +43,8 @@ func NewTacticDamageLogic(param *TacticDamageParam) *TacticDamageLogic {
 		runCtx.damageCalculateHandler,
 		//后置触发器
 		runCtx.triggerPostHandler,
+		//伤害数据收集
+		runCtx.collectDataHandler,
 	}
 	return runCtx
 }
@@ -582,7 +579,7 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 // @suffer 被攻击武将
 // @damage 伤害量
 // @return 实际伤害/原兵力/剩余兵力
-func (t *TacticDamageLogic) collectData() {
+func (t *TacticDamageLogic) collectDataHandler() {
 	param := t.param
 	ctx := t.param.TacticsParams.Ctx
 	tacticsParams := param.TacticsParams
@@ -605,40 +602,37 @@ func (t *TacticDamageLogic) collectData() {
 	case consts.DamageType_Strategy:
 		attackGeneral.ExecuteStrategyAttackNum++
 		sufferGeneral.SufferExecuteStrategyAttackNum++
-
-		//统计上报
-		util.TacticReport(tacticsParams,
-			attackGeneral.BaseInfo.UniqueId,
-			int64(param.TacticId),
-			1,
-			t.damageNum,
-			0,
-		)
-
-		if effectName == "" {
-			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
-				sufferGeneral.BaseInfo.Name,
-				attackGeneral.BaseInfo.Name,
-				tacticName,
-				t.damageNum,
-				t.soldierNum,
-				t.remainSoldierNum,
-			)
-		} else {
-			hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】「%v」的伤害，损失了兵力%d(%d↘%d)",
-				sufferGeneral.BaseInfo.Name,
-				attackGeneral.BaseInfo.Name,
-				tacticName,
-				effectName,
-				t.damageNum,
-				t.soldierNum,
-				t.remainSoldierNum,
-			)
-		}
-
-		return
 	}
 
+	//统计上报
+	util.TacticReport(tacticsParams,
+		attackGeneral.BaseInfo.UniqueId,
+		int64(param.TacticId),
+		1,
+		t.damageNum,
+		0,
+	)
+
+	if effectName == "" {
+		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】的伤害，损失了兵力%d(%d↘%d)",
+			sufferGeneral.BaseInfo.Name,
+			attackGeneral.BaseInfo.Name,
+			tacticName,
+			t.damageNum,
+			t.soldierNum,
+			t.remainSoldierNum,
+		)
+	} else {
+		hlog.CtxInfof(ctx, "[%s]由于[%s]【%s】「%v」的伤害，损失了兵力%d(%d↘%d)",
+			sufferGeneral.BaseInfo.Name,
+			attackGeneral.BaseInfo.Name,
+			tacticName,
+			effectName,
+			t.damageNum,
+			t.soldierNum,
+			t.remainSoldierNum,
+		)
+	}
 }
 func TacticDamage(param *TacticDamageParam) (damageNum, soldierNum, remainSoldierNum int64, isEffect bool) {
 	return NewTacticDamageLogic(param).Process()

@@ -316,6 +316,7 @@ func (runCtx *BattleLogicContext) processBattlePreparePhase() {
 
 		//执行战法
 		for _, tactic := range currentGeneral.EquipTactics {
+			hlog.CtxInfof(runCtx.Ctx, "执行战法")
 			//战法发动顺序：1.被动 > 2.阵法 > 3.兵种 > 4.指挥 > 5.主动 > 6.普攻 > 7.突击
 			//1.被动
 			if _, ok := consts.PassiveTacticsMap[tactic.Id]; ok {
@@ -943,16 +944,16 @@ func (runCtx *BattleLogicContext) buildBattleRoundParams() {
 		}
 
 		if general.TacticFrozenMap == nil {
-			general.TacticFrozenMap = map[consts.TacticId]bool{}
+			general.TacticFrozenMap = make(map[consts.TacticId]bool, 0)
 		}
 		if general.TacticAccumulateDamageMap == nil {
-			general.TacticAccumulateDamageMap = map[consts.TacticId]int64{}
+			general.TacticAccumulateDamageMap = make(map[consts.TacticId]int64, 0)
 		}
 		if general.TacticAccumulateResumeMap == nil {
-			general.TacticAccumulateResumeMap = map[consts.TacticId]int64{}
+			general.TacticAccumulateResumeMap = make(map[consts.TacticId]int64, 0)
 		}
 		if general.TacticAccumulateTriggerMap == nil {
-			general.TacticAccumulateTriggerMap = map[consts.TacticId]int64{}
+			general.TacticAccumulateTriggerMap = make(map[consts.TacticId]int64, 0)
 		}
 	}
 

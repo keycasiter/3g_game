@@ -677,6 +677,10 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 			currentGeneral.BaseInfo.GeneralBattleType,
 			currentGeneral.BaseInfo.Name,
 		)
+		hlog.CtxInfof(runCtx.Ctx, "[%v]兵力: %v",
+			currentGeneral.BaseInfo.Name,
+			currentGeneral.SoldierNum,
+		)
 
 		//是否可以行动
 		if !util.IsCanBeginAction(runCtx.Ctx, currentGeneral) {
@@ -817,7 +821,6 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 						f(params)
 					}
 				}
-
 				//武将清理
 				util.RemoveGeneralWhenSoldierNumIsEmpty(tacticsParams)
 				//战法后置处理器

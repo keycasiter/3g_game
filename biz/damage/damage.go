@@ -172,7 +172,6 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	}()
 
 	ctx := tacticsParams.Ctx
-	soldierNum := attackGeneral.SoldierNum
 	defSoldierNum := sufferGeneral.SoldierNum
 
 	//虎痴效果
@@ -260,7 +259,7 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	//伤害计算方式
 	if attackDmg == 0 {
 		//需要计算
-		attackDmg = calculateAttackDmg(soldierNum, attackGeneral, sufferGeneral)
+		attackDmg = calculateAttackDmgV2(attackGeneral, sufferGeneral)
 	} else {
 		//不需要计算，用传入值
 	}
@@ -383,6 +382,34 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	if sufferGeneral.SoldierNum == 0 {
 		hlog.CtxInfof(ctx, "[%s]武将兵力为0，无法再战", sufferGeneral.BaseInfo.Name)
 	}
+}
+
+func calculateAttackDmgV2(attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral) int64 {
+	//**伤害计算公式**
+	//最终伤害 = 保底伤害 +（兵力基础伤害+属性差×等级差系数）
+	//兵刃 保底伤害 +（兵力基础伤害+(武力-统率)×属性差）x 变量
+	//谋略  保底伤害 +（兵力基础伤害+(智力-智力)×属性差）x 变量
+	//普通攻击  保底伤害 +（兵力基础伤害+(武力-统率)×属性差）x 1
+	attackAttr := float64(0)
+	defendAttr := float64(0)
+	//兵刃伤害
+	attackAttr = attackGeneral.BaseInfo.AbilityAttr.ForceBase
+	defendAttr = sufferGeneral.BaseInfo.AbilityAttr.CommandBase
+
+	damageNum :=
+		//保底伤害
+		GetMinimumGuaranteeDmg(attackGeneral.SoldierNum) +
+			cast.ToInt64(
+				//兵力基础伤害
+				(cast.ToFloat64(GetBaseDmg(attackGeneral.SoldierNum))+
+					//属性差
+					(attackAttr-defendAttr)*1.44)*
+					//变量
+					1)
+
+	//最终伤害随机值
+	damageNum = FluctuateDamage(damageNum)
+	return damageNum
 }
 
 func calculateAttackDmg(soldierNum int64, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral) int64 {

@@ -1,9 +1,10 @@
 package util
 
 import (
-	"github.com/spf13/cast"
 	"math/rand"
 	"time"
+
+	"github.com/spf13/cast"
 )
 
 // 生成随机数，min为下限，max为上限
@@ -23,6 +24,10 @@ func GenerateRate(rate float64) bool {
 
 // 生成totalNum数中命中hitNum数量的索引数组
 func GenerateHitIdxArr(hitNum, totalNum int) []int64 {
+	//hlog.CtxInfof(context.Background(), "hitNum:%v, totalNum:%v", hitNum, totalNum)
+	if hitNum > totalNum {
+		hitNum = totalNum
+	}
 	idxMap := make(map[int64]bool, 0)
 	for {
 		if len(idxMap) == hitNum {

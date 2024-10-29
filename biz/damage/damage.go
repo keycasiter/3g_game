@@ -396,6 +396,11 @@ func calculateAttackDmgV2(attackGeneral *vo.BattleGeneral, sufferGeneral *vo.Bat
 	attackAttr = attackGeneral.BaseInfo.AbilityAttr.ForceBase
 	defendAttr = sufferGeneral.BaseInfo.AbilityAttr.CommandBase
 
+	diff := attackAttr - defendAttr
+	if diff < 0 {
+		diff = 0
+	}
+
 	damageNum :=
 		//保底伤害
 		GetMinimumGuaranteeDmg(attackGeneral.SoldierNum) +
@@ -403,7 +408,7 @@ func calculateAttackDmgV2(attackGeneral *vo.BattleGeneral, sufferGeneral *vo.Bat
 				//兵力基础伤害
 				(cast.ToFloat64(GetBaseDmg(attackGeneral.SoldierNum))+
 					//属性差
-					(attackAttr-defendAttr)*1.44)*
+					diff*1.44)*
 					//变量
 					1)
 

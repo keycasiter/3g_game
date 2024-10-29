@@ -135,7 +135,7 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 		if err != nil {
 			t.Failed()
 		}
-		enemyGenerals, err := util.DeepCopyBattleGenerals(team.GuanGuanZhang)
+		enemyGenerals, err := util.DeepCopyBattleGenerals(team.TaiWeiDun)
 		if err != nil {
 			t.Failed()
 		}
@@ -200,16 +200,17 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 			data.AccumulateAttackDamageNum/int64(battleSize),
 			data.AccumulateTotalResumeNum/int64(battleSize),
 		)
+		fmt.Printf("\n【普攻触发】%v", data.ExecuteGeneralAttackNum/int64(battleSize))
 		//战法
-		fmt.Println("\n【战法触发】")
+		fmt.Printf("\n【战法触发】")
 		for k, v := range data.TacticAccumulateTriggerMap {
 			fmt.Printf("%v:%v ", k, v/int64(battleSize))
 		}
-		fmt.Println("\n【战法伤害】")
+		fmt.Printf("\n【战法伤害】")
 		for k, v := range data.TacticAccumulateDamageMap {
 			fmt.Printf("%v:%v ", k, v/int64(battleSize))
 		}
-		fmt.Println("\n【战法恢复】")
+		fmt.Printf("\n【战法恢复】")
 		for k, v := range data.TacticAccumulateResumeMap {
 			fmt.Printf("%v:%v ", k, v/int64(battleSize))
 		}
@@ -222,20 +223,22 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 			data.AccumulateAttackDamageNum/int64(battleSize),
 			data.AccumulateTotalResumeNum/int64(battleSize),
 		)
+		fmt.Printf("\n【普攻触发】%v", data.ExecuteGeneralAttackNum/int64(battleSize))
 		//战法
-		fmt.Println("\n【战法触发】")
+		fmt.Printf("\n【战法触发】")
 		for k, v := range data.TacticAccumulateTriggerMap {
 			fmt.Printf("%v:%v ", k, v/int64(battleSize))
 		}
-		fmt.Println("\n【战法伤害】")
+		fmt.Printf("\n【战法伤害】")
 		for k, v := range data.TacticAccumulateDamageMap {
 			fmt.Printf("%v:%v ", k, v/int64(battleSize))
 		}
-		fmt.Println("\n【战法恢复】")
+		fmt.Printf("\n【战法恢复】")
 		for k, v := range data.TacticAccumulateResumeMap {
 			fmt.Printf("%v:%v ", k, v/int64(battleSize))
 		}
 	}
+	fmt.Println("")
 }
 
 func buildBattleResultData(generals []*vo.BattleGeneral, generalsData []*vo.BattleGeneral) []*vo.BattleGeneral {
@@ -247,6 +250,7 @@ func buildBattleResultData(generals []*vo.BattleGeneral, generalsData []*vo.Batt
 			tmpGeneralData.AccumulateTotalDamageNum += general.AccumulateTotalDamageNum
 			tmpGeneralData.AccumulateAttackDamageNum += general.AccumulateAttackDamageNum
 			tmpGeneralData.AccumulateTotalResumeNum += general.AccumulateTotalResumeNum
+			tmpGeneralData.ExecuteGeneralAttackNum += general.ExecuteGeneralAttackNum
 			for k, v := range general.TacticAccumulateDamageMap {
 				if add, ok := tmpGeneralData.TacticAccumulateDamageMap[k]; ok {
 					tmpGeneralData.TacticAccumulateDamageMap[k] = v + add
@@ -281,6 +285,7 @@ func buildBattleResultData(generals []*vo.BattleGeneral, generalsData []*vo.Batt
 				TacticAccumulateTriggerMap: general.TacticAccumulateTriggerMap,
 				TacticAccumulateResumeMap:  general.TacticAccumulateResumeMap,
 				TacticAccumulateDamageMap:  general.TacticAccumulateDamageMap,
+				ExecuteGeneralAttackNum:    general.ExecuteGeneralAttackNum,
 			})
 		}
 	}

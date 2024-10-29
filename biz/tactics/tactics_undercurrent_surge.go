@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 暗潮涌动
@@ -97,15 +96,14 @@ func (u UndercurrentSurgeTactic) Execute() {
 
 			//准备1回合，对敌军主将造成一次兵刃攻击（伤害率272%）
 			enemyMasterGeneral := util.GetEnemyMasterGeneral(u.tacticsParams)
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 2.72)
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: u.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: enemyMasterGeneral,
-				DamageType:    consts.DamageType_Weapon,
-				Damage:        dmg,
-				TacticId:      u.Id(),
-				TacticName:    u.Name(),
+				TacticsParams:     u.tacticsParams,
+				AttackGeneral:     currentGeneral,
+				SufferGeneral:     enemyMasterGeneral,
+				DamageType:        consts.DamageType_Weapon,
+				DamageImproveRate: 2.72,
+				TacticId:          u.Id(),
+				TacticName:        u.Name(),
 			})
 		}
 

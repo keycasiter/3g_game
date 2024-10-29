@@ -63,15 +63,14 @@ func (t TigerGuardArmyTactic) Prepare() {
 				}
 				dmgRate += dmgImproveRate
 
-				dmg := cast.ToInt64(viceGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: t.tacticsParams,
-					AttackGeneral: viceGeneral,
-					SufferGeneral: attackGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      t.Id(),
-					TacticName:    t.Name(),
+					TacticsParams:     t.tacticsParams,
+					AttackGeneral:     viceGeneral,
+					SufferGeneral:     attackGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: dmgRate,
+					TacticId:          t.Id(),
+					TacticName:        t.Name(),
 				})
 				triggerRoundHolderMap[consts.General_Id(viceGeneral.BaseInfo.Id)][triggerRound] = true
 			}

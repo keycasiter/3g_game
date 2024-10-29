@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 抬棺决战
@@ -101,15 +100,14 @@ func (t TheBattleOfCarryingCoffinTactic) Execute() {
 			for _, enemyGeneral := range enemyGenerals {
 				util.BuffEffectClean(ctx, enemyGeneral)
 				//随后造成兵刃攻击（伤害率255%）
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 2.55)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: t.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      t.Id(),
-					TacticName:    t.Name(),
+					TacticsParams:     t.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 2.55,
+					TacticId:          t.Id(),
+					TacticName:        t.Name(),
 				})
 			}
 		}

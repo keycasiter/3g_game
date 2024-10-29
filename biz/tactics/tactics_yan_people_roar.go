@@ -46,15 +46,14 @@ func (y YanPeopleRoarTactic) Prepare() {
 			triggerRound == consts.Battle_Round_Fourth {
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, y.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.04)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: y.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      y.Id(),
-					TacticName:    y.Name(),
+					TacticsParams:     y.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.04,
+					TacticId:          y.Id(),
+					TacticName:        y.Name(),
 				})
 				// 若目标处于缴械状态，则额外使目标统率降低50%，持续2回合
 				// 自身为主将时，降低统率效果额外对计穷状态的目标生效

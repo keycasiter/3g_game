@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 围师必阙
@@ -101,22 +100,21 @@ func (s SurroundingTheTeacherMustBePalaceTactic) Prepare() {
 							EffectType: consts.DebuffEffectType_Defect,
 							TacticId:   s.Id(),
 						}) {
-							attType, val := util.GetGeneralHighestBetweenForceOrIntelligence(currentGeneral)
-							dmg := cast.ToInt64(val * 1.2)
+							attType, _ := util.GetGeneralHighestBetweenForceOrIntelligence(currentGeneral)
 							dmgType := consts.DamageType_Weapon
 							if attType == consts.AbilityAttr_Intelligence {
 								dmgType = consts.DamageType_Strategy
 							}
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams:  s.tacticsParams,
-								AttackGeneral:  currentGeneral,
-								SufferGeneral:  revokeGeneral,
-								DamageType:     dmgType,
-								Damage:         dmg,
-								TacticId:       s.Id(),
-								TacticName:     s.Name(),
-								EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
-								IsIgnoreDefend: true,
+								TacticsParams:     s.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     revokeGeneral,
+								DamageType:        dmgType,
+								DamageImproveRate: 1.2,
+								TacticId:          s.Id(),
+								TacticName:        s.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
+								IsIgnoreDefend:    true,
 							})
 						}
 

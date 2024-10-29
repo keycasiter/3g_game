@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 狮子奋迅
@@ -81,15 +80,14 @@ func (t TheLionFliesFastTactic) Execute() {
 	enemyGenerals = append(enemyGenerals, enemyGeneral)
 	for _, general := range enemyGenerals {
 		//伤害
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.18)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: t.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: general,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      t.Id(),
-			TacticName:    t.Name(),
+			TacticsParams:     t.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     general,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.18,
+			TacticId:          t.Id(),
+			TacticName:        t.Name(),
 		})
 	}
 	//并使自身主动战法发动几率提高10%，自身为主将时，发动几率提高至15%，持续2回合
@@ -136,23 +134,22 @@ func (t TheLionFliesFastTactic) Execute() {
 					TacticId:   t.Id(),
 				}) {
 					//伤害
-					attrType, val := util.GetGeneralHighestBetweenForceOrIntelligence(revokeGeneral)
+					attrType, _ := util.GetGeneralHighestBetweenForceOrIntelligence(revokeGeneral)
 					dmgType := consts.DamageType_Weapon
 					if attrType == consts.AbilityAttr_Intelligence {
 						dmgType = consts.DamageType_Strategy
 					}
 
-					dmg := cast.ToInt64(val * 1.02)
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams:  t.tacticsParams,
-						AttackGeneral:  currentGeneral,
-						SufferGeneral:  revokeGeneral,
-						DamageType:     dmgType,
-						Damage:         dmg,
-						TacticId:       t.Id(),
-						TacticName:     t.Name(),
-						EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
-						IsIgnoreDefend: true,
+						TacticsParams:     t.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     revokeGeneral,
+						DamageType:        dmgType,
+						DamageImproveRate: 1.02,
+						TacticId:          t.Id(),
+						TacticName:        t.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
+						IsIgnoreDefend:    true,
 					})
 				}
 

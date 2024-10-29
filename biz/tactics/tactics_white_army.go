@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 白毦兵
@@ -49,15 +48,15 @@ func (w WhiteArmyTactic) Prepare() {
 					dmgRate = 1.3
 				}
 
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * dmgRate)
+				dmgRate = triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + dmgRate
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: w.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: attackGeneral,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        dmg,
-					TacticId:      w.Id(),
-					TacticName:    w.Name(),
+					TacticsParams:     w.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     attackGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          w.Id(),
+					TacticName:        w.Name(),
 				})
 			}
 

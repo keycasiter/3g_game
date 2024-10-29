@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 风助火势
@@ -72,27 +71,27 @@ func (w WindAssistedFireTactic) Execute() {
 
 	// 对敌军单体造成谋略伤害（伤害率154%，受智力影响）
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, w.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.54)
+	dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.54
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: w.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Strategy,
-		Damage:        dmg,
-		TacticId:      w.Id(),
-		TacticName:    w.Name(),
+		TacticsParams:     w.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Strategy,
+		DamageImproveRate: dmgRate,
+		TacticId:          w.Id(),
+		TacticName:        w.Name(),
 	})
 	// 若目标处于灼烧状态，额外对目标造成一次谋略伤害（伤害率228%，受智力影响）
 	if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_Firing) {
-		fireDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.28)
+		fireDmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 2.28
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: w.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Strategy,
-			Damage:        fireDmg,
-			TacticId:      w.Id(),
-			TacticName:    w.Name(),
+			TacticsParams:     w.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Strategy,
+			DamageImproveRate: fireDmgRate,
+			TacticId:          w.Id(),
+			TacticName:        w.Name(),
 		})
 	}
 }

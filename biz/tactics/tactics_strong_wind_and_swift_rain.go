@@ -78,18 +78,18 @@ func (s StrongWindAndSwiftRainTactic) Execute() {
 	improveRate := 0.06
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
 	for i := 1; i <= attackTimes; i++ {
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.78)
+		dmgRate := 0.78
 		if i > 1 {
-			dmg = cast.ToInt64(cast.ToFloat64(dmg) * (1 + improveRate))
+			dmgRate += improveRate
 		}
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: s.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      s.Id(),
-			TacticName:    s.Name(),
+			TacticsParams:     s.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: dmgRate,
+			TacticId:          s.Id(),
+			TacticName:        s.Name(),
 		})
 
 		//禁疗

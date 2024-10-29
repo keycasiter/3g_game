@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 将行其疾
@@ -74,15 +73,14 @@ func (t ToCureOnesSpeedTactic) Execute() {
 	)
 	// 普通攻击之后，对随机敌军单体发动一次兵刃攻击（伤害率158%）；
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, t.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.58)
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: t.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Weapon,
-		Damage:        dmg,
-		TacticId:      t.Id(),
-		TacticName:    t.Name(),
+		TacticsParams:     t.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Weapon,
+		DamageImproveRate: 1.58,
+		TacticId:          t.Id(),
+		TacticName:        t.Name(),
 	})
 	// 若命中敌军主将，则使其进入计穷状态，持续2回合
 	if enemyGeneral.IsMaster {

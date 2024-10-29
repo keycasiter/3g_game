@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 搦战群雄
@@ -97,15 +96,14 @@ func (t ToSeizeThePowerOfGroupOfHeroesTactic) Execute() {
 			//准备1回合，对敌军群体（2人）造成一次兵刃攻击（伤害率200%）
 			enemeyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, t.tacticsParams)
 			for _, enemeyGeneral := range enemeyGenerals {
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 2.0)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: t.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemeyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      t.Id(),
-					TacticName:    t.Name(),
+					TacticsParams:     t.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemeyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 2.0,
+					TacticId:          t.Id(),
+					TacticName:        t.Name(),
 				})
 			}
 			//随后使自己造成兵刃伤害提高25%，受到兵刃伤害降低25%，（受武力影响），持续2回合

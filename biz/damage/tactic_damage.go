@@ -255,6 +255,14 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 	//最终伤害随机值
 	t.damageNum = FluctuateDamage(t.damageNum)
 
+	//特殊战法效果处理
+	//刀出如霆
+	if t.param.TacticId == consts.TheKnifeLikeThunderbolt {
+		//由敌军全部武将平分
+		pairGenerals := util.GetPairGeneralsNotSelf(t.param.TacticsParams, t.param.SufferGeneral)
+		t.damageNum = t.damageNum / int64(1+len(pairGenerals))
+	}
+
 	//****伤害计算兜底****
 	//兜底伤害为负的情况
 	if t.damageNum < 0 {

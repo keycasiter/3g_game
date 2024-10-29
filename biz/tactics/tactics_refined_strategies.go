@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 精练策数
@@ -61,17 +60,17 @@ func (r RefinedStrategiesTactic) Prepare() {
 			)
 			//准备1回合，对敌军群体（2-3人）造成谋略攻击（伤害率210%，受智力影响），并缴械，持续2回合
 			enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(r.tacticsParams)
-			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.10)
+			dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 2.10
 			for _, enemyGeneral := range enemyGenerals {
 				//伤害
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: r.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      r.Id(),
-					TacticName:    r.Name(),
+					TacticsParams:     r.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          r.Id(),
+					TacticName:        r.Name(),
 				})
 				//缴械
 				if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_CancelWeapon, &vo.EffectHolderParams{

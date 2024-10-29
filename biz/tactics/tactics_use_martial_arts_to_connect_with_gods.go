@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 用武通神
@@ -52,15 +51,15 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 			)
 			enemyGenerals := util.GetEnemyGeneralsTwoArr(u.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
-				dmg := cast.ToInt64(0.75 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.75
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: u.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: sufferGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      u.Id(),
-					TacticName:    u.Name(),
+					TacticsParams:     u.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     sufferGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          u.Id(),
+					TacticName:        u.Name(),
 				})
 			}
 		case consts.Battle_Round_Fourth:
@@ -71,15 +70,15 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 			)
 			enemyGenerals := util.GetEnemyGeneralsTwoArr(u.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
-				dmg := cast.ToInt64(1.05 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.05
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: u.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: sufferGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      u.Id(),
-					TacticName:    u.Name(),
+					TacticsParams:     u.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     sufferGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          u.Id(),
+					TacticName:        u.Name(),
 				})
 			}
 		case consts.Battle_Round_Sixth:
@@ -90,15 +89,15 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 			)
 			enemyGenerals := util.GetEnemyGeneralsTwoArr(u.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
-				dmg := cast.ToInt64(1.35 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.35
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: u.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: sufferGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      u.Id(),
-					TacticName:    u.Name(),
+					TacticsParams:     u.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     sufferGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          u.Id(),
+					TacticName:        u.Name(),
 				})
 			}
 		case consts.Battle_Round_Eighth:
@@ -109,15 +108,15 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 			)
 			enemyGenerals := util.GetEnemyGeneralsTwoArr(u.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
-				dmg := cast.ToInt64(1.65 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.65
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: u.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: sufferGeneral,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      u.Id(),
-					TacticName:    u.Name(),
+					TacticsParams:     u.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     sufferGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          u.Id(),
+					TacticName:        u.Name(),
 				})
 			}
 		}

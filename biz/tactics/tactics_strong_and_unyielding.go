@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 刚烈不屈
@@ -47,16 +46,15 @@ func (s StrongAndUnyieldingTactic) Prepare() {
 		if util.GenerateRate(0.4) {
 			//找到敌军2人
 			enemyGenerals := util.GetEnemyTwoGeneralByGeneral(triggerGeneral, s.tacticsParams)
-			dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 0.84)
 			for _, enemyGeneral := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: s.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      s.Id(),
-					TacticName:    s.Name(),
+					TacticsParams:     s.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 0.84,
+					TacticId:          s.Id(),
+					TacticName:        s.Name(),
 				})
 			}
 		}

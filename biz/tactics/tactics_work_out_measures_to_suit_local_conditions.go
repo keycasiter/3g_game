@@ -43,15 +43,15 @@ func (w WorkOutMeasuresToSuitLocalConditionsTactic) Prepare() {
 		if triggerGeneral.ExecuteGeneralAttackNum > 0 &&
 			triggerGeneral.ExecuteGeneralAttackNum%3 == 0 {
 			//攻击
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.4)
+			dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 2.4
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: w.tacticsParams,
-				AttackGeneral: triggerGeneral,
-				SufferGeneral: sufferGeneral,
-				DamageType:    consts.DamageType_Strategy,
-				Damage:        dmg,
-				TacticId:      w.Id(),
-				TacticName:    w.Name(),
+				TacticsParams:     w.tacticsParams,
+				AttackGeneral:     triggerGeneral,
+				SufferGeneral:     sufferGeneral,
+				DamageType:        consts.DamageType_Strategy,
+				DamageImproveRate: dmgRate,
+				TacticId:          w.Id(),
+				TacticName:        w.Name(),
 			})
 			//治疗
 			resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)

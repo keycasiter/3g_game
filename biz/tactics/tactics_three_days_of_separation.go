@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 战法名称：士别三日
@@ -71,15 +70,15 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 			//找到敌军全体
 			enemyGenerals := util.GetEnemyGeneralArr(t.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
-				dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.8
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: t.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: sufferGeneral,
-					Damage:        dmgNum,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      t.Id(),
-					TacticName:    t.Name(),
+					TacticsParams:     t.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     sufferGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          t.Id(),
+					TacticName:        t.Name(),
 				})
 			}
 		}

@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 千里走单骑
@@ -116,16 +115,15 @@ func (t ThousandMileWalkingSingleRiderTactic) Prepare() {
 						if util.BuffEffectContains(tGeneral, consts.BuffEffectType_ThousandMileWalkingSingleRider_Prepare) &&
 							!StrikeTriggerRoundHolder[tRound] {
 
-							dmg := cast.ToInt64(tGeneral.BaseInfo.AbilityAttr.ForceBase * 2.38)
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: t.tacticsParams,
-								AttackGeneral: tGeneral,
-								SufferGeneral: attackGeneral,
-								DamageType:    consts.DamageType_Weapon,
-								Damage:        dmg,
-								TacticId:      t.Id(),
-								TacticName:    t.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
+								TacticsParams:     t.tacticsParams,
+								AttackGeneral:     tGeneral,
+								SufferGeneral:     attackGeneral,
+								DamageType:        consts.DamageType_Weapon,
+								DamageImproveRate: 2.38,
+								TacticId:          t.Id(),
+								TacticName:        t.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
 							})
 
 							//每回合触发一次

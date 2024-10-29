@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 落雷
@@ -76,15 +75,15 @@ func (t ThunderboltTactic) Execute() {
 		targetGeneral = util.GetPairOneGeneralNotSelf(t.tacticsParams, currentGeneral)
 	}
 	//伤害
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.7)
+	dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.7
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: t.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: targetGeneral,
-		DamageType:    consts.DamageType_Strategy,
-		Damage:        dmg,
-		TacticId:      t.Id(),
-		TacticName:    t.Name(),
+		TacticsParams:     t.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     targetGeneral,
+		DamageType:        consts.DamageType_Strategy,
+		DamageImproveRate: dmgRate,
+		TacticId:          t.Id(),
+		TacticName:        t.Name(),
 	})
 	//效果施加
 	if util.DebuffEffectWrapSet(ctx, targetGeneral, consts.DebuffEffectType_SufferStrategyDamageImprove, &vo.EffectHolderParams{

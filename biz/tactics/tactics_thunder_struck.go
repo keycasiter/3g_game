@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 五雷轰顶
@@ -103,15 +102,15 @@ func (t ThunderStruckTactic) Execute() {
 			for i := 0; i < 5; i++ {
 				// 准备1回合，对敌军随机单体造成谋略攻击（伤害率136%，受智力影响），
 				enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, t.tacticsParams)
-				dmg := cast.ToInt64(enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.36)
+				dmgRate := enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.36
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: t.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Strategy,
-					Damage:        dmg,
-					TacticId:      t.Id(),
-					TacticName:    t.Name(),
+					TacticsParams:     t.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          t.Id(),
+					TacticName:        t.Name(),
 				})
 				// 并有30%概率使其进入震慑状态，持续1回合
 				// 自身为主将时，若目标处于水攻状态、沙暴状态时，每多一种提高20%震慑概率

@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 气凌三军
@@ -46,16 +45,15 @@ func (t TemperamentSurpassesTheThreeArmiesTactic) Prepare() {
 			dmgRate = 0.74
 		}
 
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: t.tacticsParams,
-			AttackGeneral: triggerGeneral,
-			SufferGeneral: attackGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      t.Id(),
-			TacticName:    t.Name(),
-			EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
+			TacticsParams:     t.tacticsParams,
+			AttackGeneral:     triggerGeneral,
+			SufferGeneral:     attackGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: dmgRate,
+			TacticId:          t.Id(),
+			TacticName:        t.Name(),
+			EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_StrikeBack),
 		})
 
 		return triggerResp

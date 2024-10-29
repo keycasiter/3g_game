@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 骁健神行
@@ -75,15 +74,15 @@ func (v VigorousAndWalkTactic) Execute() {
 	// 如果目标已经被缴械则造成兵刃攻击（伤害率156%，受速度影响）
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, v.tacticsParams)
 	if util.DeBuffEffectContains(enemyGeneral, consts.DebuffEffectType_CancelWeapon) {
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.56)
+		dmgRate := currentGeneral.BaseInfo.AbilityAttr.SpeedBase/100/100 + 1.56
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: v.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      v.Id(),
-			TacticName:    v.Name(),
+			TacticsParams:     v.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: dmgRate,
+			TacticId:          v.Id(),
+			TacticName:        v.Name(),
 		})
 	} else {
 		// 对敌军单体造成缴械状态，持续1回合，

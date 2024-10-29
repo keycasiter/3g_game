@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 当锋摧决
@@ -71,15 +70,15 @@ func (w WhenTheFrontIsDestroyedTactic) Execute() {
 		w.Name(),
 	)
 	//普通攻击之后，对攻击目标再次造成一次谋略攻击（伤害率182%，受智力影响），并伪报（禁用被动战法及指挥战法）1回合
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.82)
+	dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.82
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: w.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: sufferGeneral,
-		DamageType:    consts.DamageType_Strategy,
-		Damage:        dmg,
-		TacticId:      w.Id(),
-		TacticName:    w.Name(),
+		TacticsParams:     w.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     sufferGeneral,
+		DamageType:        consts.DamageType_Strategy,
+		DamageImproveRate: dmgRate,
+		TacticId:          w.Id(),
+		TacticName:        w.Name(),
 	})
 	//伪报
 	if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_FalseReport, &vo.EffectHolderParams{

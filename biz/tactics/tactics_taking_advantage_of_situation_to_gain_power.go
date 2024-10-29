@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 挟势弄权
@@ -72,15 +71,15 @@ func (t TakingAdvantageOfTheSituationToGainPowerTactic) Execute() {
 
 	// 对随机敌军单体造成谋略攻击（伤害率186%，受智力影响），
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, t.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.86)
+	dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.86
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: t.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: enemyGeneral,
-		DamageType:    consts.DamageType_Strategy,
-		Damage:        dmg,
-		TacticId:      t.Id(),
-		TacticName:    t.Name(),
+		TacticsParams:     t.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     enemyGeneral,
+		DamageType:        consts.DamageType_Strategy,
+		DamageImproveRate: dmgRate,
+		TacticId:          t.Id(),
+		TacticName:        t.Name(),
 	})
 
 	//并混乱（攻击和战法无差别选择目标）1回合

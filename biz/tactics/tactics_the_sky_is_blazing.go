@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 战法名称：熯天炽地
@@ -82,15 +81,15 @@ func (t TheSkyIsBlazingTactic) Execute() {
 				t.Name(),
 			)
 			for _, general := range enemyGenerals {
-				dmg := cast.ToInt64(1.02 * currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.02
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: t.tacticsParams,
-					AttackGeneral: currentGeneral,
-					SufferGeneral: general,
-					Damage:        dmg,
-					DamageType:    consts.DamageType_Strategy,
-					TacticId:      t.Id(),
-					TacticName:    t.Name(),
+					TacticsParams:     t.tacticsParams,
+					AttackGeneral:     currentGeneral,
+					SufferGeneral:     general,
+					DamageType:        consts.DamageType_Strategy,
+					DamageImproveRate: dmgRate,
+					TacticId:          t.Id(),
+					TacticName:        t.Name(),
 				})
 
 				//每回合持续造成伤害（伤害率72%，受智力影响），持续2回合
@@ -107,15 +106,15 @@ func (t TheSkyIsBlazingTactic) Execute() {
 							t.Name(),
 							consts.DebuffEffectType_Firing,
 						)
-						firingDmg := cast.ToInt64(0.72 * revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase)
+						firingDmgRate := revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.72
 						damage.TacticDamage(&damage.TacticDamageParam{
-							TacticsParams: t.tacticsParams,
-							AttackGeneral: revokeGeneral,
-							SufferGeneral: general,
-							Damage:        firingDmg,
-							DamageType:    consts.DamageType_Strategy,
-							TacticId:      t.Id(),
-							TacticName:    t.Name(),
+							TacticsParams:     t.tacticsParams,
+							AttackGeneral:     revokeGeneral,
+							SufferGeneral:     general,
+							DamageType:        consts.DamageType_Strategy,
+							DamageImproveRate: firingDmgRate,
+							TacticId:          t.Id(),
+							TacticName:        t.Name(),
 						})
 
 						if currentRound+2 == revokeRound {

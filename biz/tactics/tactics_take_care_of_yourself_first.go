@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 先成其虑
@@ -71,15 +70,15 @@ func (t TakeCareOfYourselfFirstTactic) Execute() {
 	)
 
 	//普通攻击之后，对攻击目标再次造成一次谋略攻击（伤害率145%，受智力影响）并使自身主动战法的发动几率提高15%，持续1回合
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.45)
+	dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.45
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: t.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: t.tacticsParams.CurrentSufferGeneral,
-		DamageType:    consts.DamageType_Strategy,
-		Damage:        dmg,
-		TacticId:      t.Id(),
-		TacticName:    t.Name(),
+		TacticsParams:     t.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     t.tacticsParams.CurrentSufferGeneral,
+		DamageType:        consts.DamageType_Strategy,
+		DamageImproveRate: dmgRate,
+		TacticId:          t.Id(),
+		TacticName:        t.Name(),
 	})
 
 	//使自身主动战法的发动几率提高15%，持续1回合

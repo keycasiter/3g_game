@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 骑虎难下
@@ -86,15 +85,14 @@ func (r RideTigerHardToGetOffTactic) Prepare() {
 				//并对敌军群体（2人）造成兵刃攻击（伤害率72%）
 				enemyGenerals := util.GetEnemyGeneralsTwoArr(r.tacticsParams)
 				for _, enemyGeneral := range enemyGenerals {
-					dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 0.72)
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: r.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: enemyGeneral,
-						Damage:        dmg,
-						DamageType:    consts.DamageType_Weapon,
-						TacticName:    r.Name(),
-						EffectName:    fmt.Sprintf("%v", consts.BuffEffectType_RideTigerHardToGetOff_Prepare),
+						TacticsParams:     r.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     enemyGeneral,
+						DamageType:        consts.DamageType_Weapon,
+						DamageImproveRate: 0.72,
+						TacticName:        r.Name(),
+						EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_RideTigerHardToGetOff_Prepare),
 					})
 				}
 				return triggerResp

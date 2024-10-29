@@ -7,7 +7,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 暴戾无仁
@@ -70,17 +69,16 @@ func (v ViolentAndHeartlessTactic) Execute() {
 	//持续1回合
 	//伤害
 	enemyGenerals := util.GetEnemyGeneralArr(v.tacticsParams)
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.96)
 	for _, enemyGeneral := range enemyGenerals {
 		//伤害
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: v.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			Damage:        dmg,
-			DamageType:    consts.DamageType_Weapon,
-			TacticId:      v.Id(),
-			TacticName:    v.Name(),
+			TacticsParams:     v.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.96,
+			TacticId:          v.Id(),
+			TacticName:        v.Name(),
 		})
 		//混乱状态
 		if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_Chaos, &vo.EffectHolderParams{

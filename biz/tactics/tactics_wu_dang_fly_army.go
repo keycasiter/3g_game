@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 无当飞军
@@ -85,15 +84,15 @@ func (w WuDangFlyArmyTactic) Prepare() {
 						w.Name(),
 						consts.DebuffEffectType_Methysis,
 					)
-					dmgNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.8)
+					dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.8
 					damage.TacticDamage(&damage.TacticDamageParam{
-						TacticsParams: w.tacticsParams,
-						AttackGeneral: currentGeneral,
-						SufferGeneral: triggerGeneral,
-						Damage:        dmgNum,
-						DamageType:    consts.DamageType_Strategy,
-						TacticId:      w.Id(),
-						TacticName:    w.Name(),
+						TacticsParams:     w.tacticsParams,
+						AttackGeneral:     currentGeneral,
+						SufferGeneral:     triggerGeneral,
+						DamageType:        consts.DamageType_Strategy,
+						DamageImproveRate: dmgRate,
+						TacticId:          w.Id(),
+						TacticName:        w.Name(),
 					})
 				}
 				return triggerResp

@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 镇压黄巾
@@ -87,7 +86,7 @@ func (s SuppressYellowScarvesTactic) Prepare() {
 						}) {
 							// 每回合持续造成伤害（伤害率88%，受武力或智力最高一项影响，无视防御），持续2回合
 							// 若目标为黄巾军，伤害率提高20%
-							attType, val := util.GetGeneralHighestBetweenForceOrIntelligence(revokeGeneral)
+							attType, _ := util.GetGeneralHighestBetweenForceOrIntelligence(revokeGeneral)
 							dmgType := consts.DamageType_Weapon
 							if attType == consts.AbilityAttr_Intelligence {
 								dmgType = consts.DamageType_Strategy
@@ -97,17 +96,16 @@ func (s SuppressYellowScarvesTactic) Prepare() {
 							if util.IsContainsGeneralTag(revokeGeneral.BaseInfo.GeneralTag, consts.GeneralTag_YellowTurbans) {
 								dmgRate = 0.88 * (1 + 0.2)
 							}
-							dmg := cast.ToInt64(val * dmgRate)
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams:  s.tacticsParams,
-								AttackGeneral:  currentGeneral,
-								SufferGeneral:  revokeGeneral,
-								DamageType:     dmgType,
-								Damage:         dmg,
-								TacticId:       s.Id(),
-								TacticName:     s.Name(),
-								EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
-								IsIgnoreDefend: true,
+								TacticsParams:     s.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     revokeGeneral,
+								DamageType:        dmgType,
+								DamageImproveRate: dmgRate,
+								TacticId:          s.Id(),
+								TacticName:        s.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Defect),
+								IsIgnoreDefend:    true,
 							})
 						}
 

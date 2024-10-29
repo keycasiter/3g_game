@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 克敌制胜
@@ -72,15 +71,15 @@ func (v VanquishTheEnemyTactic) Execute() {
 		v.Name(),
 	)
 	// 普通攻击之后，对攻击目标再次造成一次谋略伤害(伤害率180%，受智力影响)；
-	dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.8)
+	dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.8
 	damage.TacticDamage(&damage.TacticDamageParam{
-		TacticsParams: v.tacticsParams,
-		AttackGeneral: currentGeneral,
-		SufferGeneral: sufferGeneral,
-		DamageType:    consts.DamageType_Strategy,
-		Damage:        dmg,
-		TacticId:      v.Id(),
-		TacticName:    v.Name(),
+		TacticsParams:     v.tacticsParams,
+		AttackGeneral:     currentGeneral,
+		SufferGeneral:     sufferGeneral,
+		DamageType:        consts.DamageType_Strategy,
+		DamageImproveRate: dmgRate,
+		TacticId:          v.Id(),
+		TacticName:        v.Name(),
 	})
 	// 若目标处于溃逃或中毒状态，则有85%概率使目标进入虚弱（无法造成伤害）状态，持续1回合
 	if util.DeBuffEffectContains(sufferGeneral, consts.DebuffEffectType_Methysis) ||

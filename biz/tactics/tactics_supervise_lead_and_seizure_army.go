@@ -68,15 +68,15 @@ func (s SuperviseLeadAndSeizureArmyTactic) Prepare() {
 			}
 		}
 		if debuffMaxCnt > 0 {
-			dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.14)
+			dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.14
 			damage.TacticDamage(&damage.TacticDamageParam{
-				TacticsParams: s.tacticsParams,
-				AttackGeneral: currentGeneral,
-				SufferGeneral: enemyGeneral,
-				DamageType:    consts.DamageType_Strategy,
-				Damage:        dmg,
-				TacticId:      s.Id(),
-				TacticName:    s.Name(),
+				TacticsParams:     s.tacticsParams,
+				AttackGeneral:     currentGeneral,
+				SufferGeneral:     enemyGeneral,
+				DamageType:        consts.DamageType_Strategy,
+				DamageImproveRate: dmgRate,
+				TacticId:          s.Id(),
+				TacticName:        s.Name(),
 			})
 		} else {
 			// 若敌军都没有负面状态则为损失兵力最多的我军单体恢复兵力（治疗率92%，受智力影响）

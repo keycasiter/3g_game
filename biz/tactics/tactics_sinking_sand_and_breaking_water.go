@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 沉沙决水
@@ -115,16 +114,16 @@ func (s SinkingSandAndBreakingWaterTactic) Execute() {
 							EffectType: consts.DebuffEffectType_WaterAttack,
 							TacticId:   s.Id(),
 						}) {
-							dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.26)
+							dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.26
 							damage.TacticDamage(&damage.TacticDamageParam{
-								TacticsParams: s.tacticsParams,
-								AttackGeneral: currentGeneral,
-								SufferGeneral: enemyGeneral,
-								DamageType:    consts.DamageType_Strategy,
-								Damage:        dmg,
-								TacticId:      s.Id(),
-								TacticName:    s.Name(),
-								EffectName:    fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
+								TacticsParams:     s.tacticsParams,
+								AttackGeneral:     currentGeneral,
+								SufferGeneral:     enemyGeneral,
+								DamageType:        consts.DamageType_Strategy,
+								DamageImproveRate: dmgRate,
+								TacticId:          s.Id(),
+								TacticName:        s.Name(),
+								EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_WaterAttack),
 							})
 						}
 

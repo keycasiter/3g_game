@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 刀出如霆
@@ -138,17 +137,15 @@ func (t TheKnifeLikeThunderboltTactic) Execute() {
 					dmgRate += 1.2
 				}
 			}
-			totalDmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * dmgRate)
-			perDmg := totalDmg / cast.ToInt64(len(enemyGenerals))
 			for _, general := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: t.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: general,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        perDmg,
-					TacticId:      t.Id(),
-					TacticName:    t.Name(),
+					TacticsParams:     t.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     general,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: dmgRate,
+					TacticId:          t.Id(),
+					TacticName:        t.Name(),
 				})
 				//施加掠阵状态
 				util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_GrazingArray, &vo.EffectHolderParams{

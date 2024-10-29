@@ -10,7 +10,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 万箭齐发
@@ -96,15 +95,14 @@ func (t TenThousandArrowsShotAtOnceTactic) Execute() {
 			// 准备1回合,对敌军全体造成兵刃攻击（伤害率140%）
 			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, t.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
-				dmg := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 1.4)
 				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams: t.tacticsParams,
-					AttackGeneral: triggerGeneral,
-					SufferGeneral: enemyGeneral,
-					DamageType:    consts.DamageType_Weapon,
-					Damage:        dmg,
-					TacticId:      t.Id(),
-					TacticName:    t.Name(),
+					TacticsParams:     t.tacticsParams,
+					AttackGeneral:     triggerGeneral,
+					SufferGeneral:     enemyGeneral,
+					DamageType:        consts.DamageType_Weapon,
+					DamageImproveRate: 1.4,
+					TacticId:          t.Id(),
+					TacticName:        t.Name(),
 				})
 				//并有50%概率造成溃逃状态，每回合持续造成伤害（伤害率120%，受武力影响），持续1回合
 				if util.GenerateRate(0.5) {
@@ -123,17 +121,17 @@ func (t TenThousandArrowsShotAtOnceTactic) Execute() {
 								EffectType: consts.DebuffEffectType_Escape,
 								TacticId:   t.Id(),
 							}) {
-								effectDmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.2)
+								effectDmgRate := currentGeneral.BaseInfo.AbilityAttr.ForceBase/100/100 + 1.2
 								damage.TacticDamage(&damage.TacticDamageParam{
-									TacticsParams:  t.tacticsParams,
-									AttackGeneral:  currentGeneral,
-									SufferGeneral:  revokeGeneral,
-									DamageType:     consts.DamageType_Weapon,
-									Damage:         effectDmg,
-									TacticId:       t.Id(),
-									TacticName:     t.Name(),
-									EffectName:     fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
-									IsIgnoreDefend: true,
+									TacticsParams:     t.tacticsParams,
+									AttackGeneral:     currentGeneral,
+									SufferGeneral:     revokeGeneral,
+									DamageType:        consts.DamageType_Weapon,
+									DamageImproveRate: effectDmgRate,
+									TacticId:          t.Id(),
+									TacticName:        t.Name(),
+									EffectName:        fmt.Sprintf("%v", consts.DebuffEffectType_Escape),
+									IsIgnoreDefend:    true,
 								})
 							}
 

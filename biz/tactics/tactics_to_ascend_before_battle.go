@@ -8,7 +8,6 @@ import (
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 临战先登
@@ -74,15 +73,14 @@ func (t ToAscendBeforeBattleTactic) Execute() {
 	//对敌军群体（2人）造成兵刃攻击（伤害率150%），之后自己进入虚弱状态，持续1回合
 	enemyGenerals := util.GetEnemyTwoGeneralByGeneral(currentGeneral, t.tacticsParams)
 	for _, enemyGeneral := range enemyGenerals {
-		dmg := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.ForceBase * 1.5)
 		damage.TacticDamage(&damage.TacticDamageParam{
-			TacticsParams: t.tacticsParams,
-			AttackGeneral: currentGeneral,
-			SufferGeneral: enemyGeneral,
-			DamageType:    consts.DamageType_Weapon,
-			Damage:        dmg,
-			TacticId:      t.Id(),
-			TacticName:    t.Name(),
+			TacticsParams:     t.tacticsParams,
+			AttackGeneral:     currentGeneral,
+			SufferGeneral:     enemyGeneral,
+			DamageType:        consts.DamageType_Weapon,
+			DamageImproveRate: 1.5,
+			TacticId:          t.Id(),
+			TacticName:        t.Name(),
 		})
 	}
 	//虚弱效果

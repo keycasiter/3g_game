@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -72,7 +73,7 @@ func BattleDo(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//逻辑执行
-	serviceResp, err := battle.NewBattleLogicContext(ctx, buildBattleDoRequest(ctx, req)).Run()
+	serviceResp, err := battle.NewBattleLogicV2Context(ctx, buildBattleDoRequest(ctx, req)).Run()
 	if err != nil {
 		hlog.CtxErrorf(ctx, "BattleLogicContext Run Err:%v", err)
 		resp.Meta = util.BuildFailMetaWithMsg("未知错误")
@@ -89,7 +90,7 @@ func BattleDo(ctx context.Context, c *app.RequestContext) {
 	pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
 }
 
-func buildResponse(resp *api.BattleDoResponse, serviceResp *battle.BattleLogicContextResponse) {
+func buildResponse(resp *api.BattleDoResponse, serviceResp *battle.BattleLogicV2ContextResponse) {
 	resp.Meta = &common.Meta{
 		StatusCode: enum.ResponseCode_Success,
 		StatusMsg:  "成功",
@@ -101,7 +102,7 @@ func buildResponse(resp *api.BattleDoResponse, serviceResp *battle.BattleLogicCo
 }
 
 // 战报数据
-func makeBattleProcessStatistics(serviceResp *battle.BattleLogicContextResponse) map[int64]map[int64][]string {
+func makeBattleProcessStatistics(serviceResp *battle.BattleLogicV2ContextResponse) map[int64]map[int64][]string {
 	battleProcessStatistics := make(map[int64]map[int64][]string, 0)
 	for battlePhase, battleRoundStatisticsMap := range serviceResp.BattleProcessStatistics {
 		m := make(map[int64][]string, 0)
@@ -114,31 +115,29 @@ func makeBattleProcessStatistics(serviceResp *battle.BattleLogicContextResponse)
 }
 
 // 对战统计数据
-func makeBattleResultStatistics(serviceResp *battle.BattleLogicContextResponse) *api.BattleResultStatistics {
+func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse) *api.BattleResultStatistics {
 	return &api.BattleResultStatistics{
 		//我军
 		FightingTeam: &api.TeamBattleStatistics{
-			BattleTeam: &api.BattleTeam{
+			BattleTeam: &api.BattleTeamStatistics{
 				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.TeamType),
 				ArmType:        enum.ArmType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.ArmType),
 				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 				SoliderNum:     makeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 				RemainNum:      makeRemainNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 			},
-			BattleResult:                int64(serviceResp.BattleResultStatistics.FightingTeam.BattleResult),
-			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
+			BattleResult: int64(serviceResp.BattleResultStatistics.FightingTeam.BattleResult),
 		},
 		//敌军
 		EnemyTeam: &api.TeamBattleStatistics{
-			BattleTeam: &api.BattleTeam{
+			BattleTeam: &api.BattleTeamStatistics{
 				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.TeamType),
 				ArmType:        enum.ArmType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.ArmType),
 				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 				SoliderNum:     makeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 				RemainNum:      makeRemainNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 			},
-			BattleResult:                int64(serviceResp.BattleResultStatistics.EnemyTeam.BattleResult),
-			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
+			BattleResult: int64(serviceResp.BattleResultStatistics.EnemyTeam.BattleResult),
 		},
 	}
 }
@@ -189,10 +188,10 @@ func makeRemainNum(battleGenerals []*vo.BattleGeneral) int64 {
 	return teamRemainNum
 }
 
-func makeBattleGenerals(battleGenerals []*vo.BattleGeneral) []*api.BattleGeneral {
-	resList := make([]*api.BattleGeneral, 0)
+func makeBattleGenerals(battleGenerals []*vo.BattleGeneral) []*api.BattleGeneralStatistics {
+	resList := make([]*api.BattleGeneralStatistics, 0)
 	for _, general := range battleGenerals {
-		resList = append(resList, &api.BattleGeneral{
+		resList = append(resList, &api.BattleGeneralStatistics{
 			BaseInfo: &api.MetadataGeneral{
 				Id:          general.BaseInfo.Id,
 				Name:        general.BaseInfo.Name,
@@ -229,7 +228,7 @@ func makeArmsAttr(general *vo.BattleGeneral) *api.ArmsAttr {
 	}
 }
 
-func buildBattleDoRequest(ctx context.Context, req api.BattleDoRequest) *battle.BattleLogicContextRequest {
+func buildBattleDoRequest(ctx context.Context, req api.BattleDoRequest) *battle.BattleLogicV2ContextRequest {
 	//查询武将信息
 	generalIds := make([]int64, 0)
 	for _, general := range req.FightingTeam.BattleGenerals {
@@ -400,7 +399,7 @@ func buildBattleDoRequest(ctx context.Context, req api.BattleDoRequest) *battle.
 	}
 
 	//组装
-	serviceReq := &battle.BattleLogicContextRequest{
+	serviceReq := &battle.BattleLogicV2ContextRequest{
 		//我方
 		FightingTeam: &vo.BattleTeam{
 			TeamType:                  consts.TeamType(req.FightingTeam.TeamType),

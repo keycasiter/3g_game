@@ -725,7 +725,7 @@ type BattleTeamStatistics struct {
 	//队伍兵种
 	ArmType enum.ArmType `thrift:"ArmType,2" form:"ArmType" json:"ArmType" query:"ArmType"`
 	//队伍武将信息
-	BattleGenerals []*BattleGeneral `thrift:"BattleGenerals,3" form:"BattleGenerals" json:"BattleGenerals" query:"BattleGenerals"`
+	BattleGenerals []*BattleGeneralStatistics `thrift:"BattleGenerals,3" form:"BattleGenerals" json:"BattleGenerals" query:"BattleGenerals"`
 	//兵战科技-属性加成
 	BuildingTechAttrAddition *BuildingTechAttrAddition `thrift:"BuildingTechAttrAddition,4" form:"BuildingTechAttrAddition" json:"BuildingTechAttrAddition" query:"BuildingTechAttrAddition"`
 	//协力科技-阵营加成
@@ -753,7 +753,7 @@ func (p *BattleTeamStatistics) GetArmType() (v enum.ArmType) {
 	return p.ArmType
 }
 
-func (p *BattleTeamStatistics) GetBattleGenerals() (v []*BattleGeneral) {
+func (p *BattleTeamStatistics) GetBattleGenerals() (v []*BattleGeneralStatistics) {
 	return p.BattleGenerals
 }
 
@@ -945,8 +945,8 @@ func (p *BattleTeamStatistics) ReadField3(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make([]*BattleGeneral, 0, size)
-	values := make([]BattleGeneral, size)
+	_field := make([]*BattleGeneralStatistics, 0, size)
+	values := make([]BattleGeneralStatistics, size)
 	for i := 0; i < size; i++ {
 		_elem := &values[i]
 		_elem.InitDefault()

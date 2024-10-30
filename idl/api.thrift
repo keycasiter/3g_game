@@ -44,7 +44,7 @@ struct BattleTeamStatistics {
 	//队伍兵种
 	2:enum.ArmType ArmType
 	//队伍武将信息
-	3:list<BattleGeneral> BattleGenerals
+	3:list<BattleGeneralStatistics> BattleGenerals
 	//兵战科技-属性加成
 	4:BuildingTechAttrAddition BuildingTechAttrAddition
 	//协力科技-阵营加成

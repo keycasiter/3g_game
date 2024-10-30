@@ -123,6 +123,17 @@ func (runCtx *BattleLogicV2Context) fillGeneralDataByGeneralId() {
 			general.BaseInfo.Group = consts.Group(generalDb.Group)
 			general.BaseInfo.UniqueId = util.GenerateUUID()
 
+			//自带战法
+			tacticId := consts.TacticId(generalDb.SelfTacticId)
+			selfTactic := &po.Tactics{
+				Id:   tacticId,
+				Type: consts.GetTacticType(tacticId),
+			}
+			equipTactics := make([]*po.Tactics, 0)
+			equipTactics = append(equipTactics, selfTactic)
+			equipTactics = append(equipTactics, general.EquipTactics...)
+			general.EquipTactics = equipTactics
+
 			//属性
 			abilityAttr := &po.AbilityAttrString{}
 			util.ParseJsonObj(runCtx.Ctx, abilityAttr, generalDb.AbilityAttr)

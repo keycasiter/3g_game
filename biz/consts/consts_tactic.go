@@ -1606,3 +1606,25 @@ func initFireTacticsMap() {
 	FireTacticsMap[FireJointVenture] = true
 	FireTacticsMap[BlazingWildfire] = true
 }
+
+func GetTacticType(tacticId TacticId) TacticsType {
+	if ActiveTacticsMap[tacticId] {
+		return TacticsType_Active
+	}
+	if PassiveTacticsMap[tacticId] {
+		return TacticsType_Passive
+	}
+	if AssaultTacticsMap[tacticId] {
+		return TacticsType_Assault
+	}
+	if TroopsTacticsMap[tacticId] {
+		return TacticsType_TroopsTactics
+	}
+	if ArmTacticsMap[tacticId] {
+		return TacticsType_Arm
+	}
+	if CommandTacticsMap[tacticId] {
+		return TacticsType_Command
+	}
+	panic("unknown tactic type")
+}

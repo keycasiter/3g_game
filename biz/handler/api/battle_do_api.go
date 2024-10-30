@@ -144,32 +144,29 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 
 func makeGeneralBattleStatistics(statisticsList []*model.GeneralBattleStatistics, idx int) *api.GeneralBattleStatistics {
 	result := &api.GeneralBattleStatistics{}
-	for i, statistics := range statisticsList {
-		if i != idx {
-			continue
-		}
-		tacticStatisticsList := make([]*api.TacticStatistics, 0)
-		//战法统计
-		for _, tacticStatistics := range statistics.TacticStatisticsList {
-			tacticStatisticsList = append(tacticStatisticsList, &api.TacticStatistics{
-				TacticId:         tacticStatistics.TacticId,
-				TacticName:       tacticStatistics.TacticName,
-				TacticQuality:    tacticStatistics.TacticQuality,
-				TriggerTimes:     tacticStatistics.TriggerTimes,
-				KillSoliderNum:   tacticStatistics.KillSoliderNum,
-				ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
-			})
-		}
-		//普攻
-		attackStatistics := &api.TacticStatistics{
-			TriggerTimes:     statistics.GeneralAttackStatistics.TriggerTimes,
-			KillSoliderNum:   statistics.GeneralAttackStatistics.KillSoliderNum,
-			ResumeSoliderNum: statistics.GeneralAttackStatistics.ResumeSoliderNum,
-		}
 
-		result.TacticStatisticsList = tacticStatisticsList
-		result.GeneralAttackStatistics = attackStatistics
+	statistics := statisticsList[idx]
+	tacticStatisticsList := make([]*api.TacticStatistics, 0)
+	//战法统计
+	for _, tacticStatistics := range statistics.TacticStatisticsList {
+		tacticStatisticsList = append(tacticStatisticsList, &api.TacticStatistics{
+			TacticId:         tacticStatistics.TacticId,
+			TacticName:       tacticStatistics.TacticName,
+			TacticQuality:    tacticStatistics.TacticQuality,
+			TriggerTimes:     tacticStatistics.TriggerTimes,
+			KillSoliderNum:   tacticStatistics.KillSoliderNum,
+			ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
+		})
 	}
+	//普攻
+	attackStatistics := &api.TacticStatistics{
+		TriggerTimes:     statistics.GeneralAttackStatistics.TriggerTimes,
+		KillSoliderNum:   statistics.GeneralAttackStatistics.KillSoliderNum,
+		ResumeSoliderNum: statistics.GeneralAttackStatistics.ResumeSoliderNum,
+	}
+
+	result.TacticStatisticsList = tacticStatisticsList
+	result.GeneralAttackStatistics = attackStatistics
 
 	return result
 }

@@ -122,7 +122,7 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 			BattleTeam: &api.BattleTeamStatistics{
 				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.TeamType),
 				ArmType:        enum.ArmType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.ArmType),
-				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.FightingTeam),
 				SoliderNum:     makeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 				RemainNum:      makeRemainNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 			},
@@ -133,7 +133,7 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 			BattleTeam: &api.BattleTeamStatistics{
 				TeamType:       enum.TeamType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.TeamType),
 				ArmType:        enum.ArmType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.ArmType),
-				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+				BattleGenerals: makeBattleGenerals(serviceResp.BattleResultStatistics.EnemyTeam),
 				SoliderNum:     makeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 				RemainNum:      makeRemainNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 			},
@@ -188,9 +188,9 @@ func makeRemainNum(battleGenerals []*vo.BattleGeneral) int64 {
 	return teamRemainNum
 }
 
-func makeBattleGenerals(battleGenerals []*vo.BattleGeneral) []*api.BattleGeneralStatistics {
+func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api.BattleGeneralStatistics {
 	resList := make([]*api.BattleGeneralStatistics, 0)
-	for _, general := range battleGenerals {
+	for _, general := range teamBattleStatistics.BattleTeam.BattleGenerals {
 		resList = append(resList, &api.BattleGeneralStatistics{
 			BaseInfo: &api.MetadataGeneral{
 				Id:          general.BaseInfo.Id,
@@ -201,9 +201,10 @@ func makeBattleGenerals(battleGenerals []*vo.BattleGeneral) []*api.BattleGeneral
 				AbilityAttr: makeAbilityAttr(general),
 				ArmsAttr:    makeArmsAttr(general),
 			},
-			IsMaster:   general.IsMaster,
-			SoldierNum: general.InitSoldierNum,
-			RemainNum:  general.SoldierNum,
+			IsMaster:                    general.IsMaster,
+			SoldierNum:                  general.InitSoldierNum,
+			RemainNum:                   general.SoldierNum,
+			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(teamBattleStatistics.GeneralBattleStatisticsList),
 		})
 	}
 	return resList
@@ -501,4 +502,55 @@ func checkParam(req api.BattleDoRequest) error {
 		return errors.New("敌军武将数量不能为空")
 	}
 	return nil
+}
+
+func buildBattleResultData(generals []*vo.BattleGeneral, generalsData []*vo.BattleGeneral) []*vo.BattleGeneral {
+	for idx, general := range generals {
+		if len(generalsData) > idx {
+			tmpGeneralData := generalsData[idx]
+			tmpGeneralData.SoldierNum += general.SoldierNum
+			tmpGeneralData.LossSoldierNum += general.LossSoldierNum
+			tmpGeneralData.AccumulateTotalDamageNum += general.AccumulateTotalDamageNum
+			tmpGeneralData.AccumulateAttackDamageNum += general.AccumulateAttackDamageNum
+			tmpGeneralData.AccumulateTotalResumeNum += general.AccumulateTotalResumeNum
+			tmpGeneralData.ExecuteGeneralAttackNum += general.ExecuteGeneralAttackNum
+			for k, v := range general.TacticAccumulateDamageMap {
+				if add, ok := tmpGeneralData.TacticAccumulateDamageMap[k]; ok {
+					tmpGeneralData.TacticAccumulateDamageMap[k] = v + add
+				} else {
+					tmpGeneralData.TacticAccumulateDamageMap[k] = v
+				}
+			}
+			for k, v := range general.TacticAccumulateTriggerMap {
+				if add, ok := tmpGeneralData.TacticAccumulateTriggerMap[k]; ok {
+					tmpGeneralData.TacticAccumulateTriggerMap[k] = v + add
+				} else {
+					tmpGeneralData.TacticAccumulateTriggerMap[k] = v
+				}
+			}
+			for k, v := range general.TacticAccumulateResumeMap {
+				if add, ok := tmpGeneralData.TacticAccumulateResumeMap[k]; ok {
+					tmpGeneralData.TacticAccumulateResumeMap[k] = v + add
+				} else {
+					tmpGeneralData.TacticAccumulateResumeMap[k] = v
+				}
+			}
+		} else {
+			generalsData = append(generalsData, &vo.BattleGeneral{
+				BaseInfo: &po.MetadataGeneral{
+					Name: general.BaseInfo.Name,
+				},
+				SoldierNum:                 general.SoldierNum,
+				LossSoldierNum:             general.LossSoldierNum,
+				AccumulateTotalDamageNum:   general.AccumulateTotalDamageNum,
+				AccumulateAttackDamageNum:  general.AccumulateAttackDamageNum,
+				AccumulateTotalResumeNum:   general.AccumulateTotalResumeNum,
+				TacticAccumulateTriggerMap: general.TacticAccumulateTriggerMap,
+				TacticAccumulateResumeMap:  general.TacticAccumulateResumeMap,
+				TacticAccumulateDamageMap:  general.TacticAccumulateDamageMap,
+				ExecuteGeneralAttackNum:    general.ExecuteGeneralAttackNum,
+			})
+		}
+	}
+	return generalsData
 }

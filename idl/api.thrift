@@ -101,7 +101,7 @@ struct BattleGeneralStatistics {
     9: i64 RemainNum
 
     //***对战数据***
-    list<GeneralBattleStatistics> GeneralBattleStatisticsList
+    10: GeneralBattleStatistics GeneralBattleStatistics
 }
 
 // 武将对战加成

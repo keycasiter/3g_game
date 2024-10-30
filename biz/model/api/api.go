@@ -1832,7 +1832,7 @@ type BattleGeneralStatistics struct {
 	//剩余兵力
 	RemainNum int64 `thrift:"RemainNum,9" form:"RemainNum" json:"RemainNum" query:"RemainNum"`
 	//***对战数据***
-	GeneralBattleStatisticsList []*GeneralBattleStatistics `thrift:"GeneralBattleStatisticsList,10" form:"GeneralBattleStatisticsList" json:"GeneralBattleStatisticsList" query:"GeneralBattleStatisticsList"`
+	GeneralBattleStatistics *GeneralBattleStatistics `thrift:"GeneralBattleStatistics,10" form:"GeneralBattleStatistics" json:"GeneralBattleStatistics" query:"GeneralBattleStatistics"`
 }
 
 func NewBattleGeneralStatistics() *BattleGeneralStatistics {
@@ -1888,8 +1888,13 @@ func (p *BattleGeneralStatistics) GetRemainNum() (v int64) {
 	return p.RemainNum
 }
 
-func (p *BattleGeneralStatistics) GetGeneralBattleStatisticsList() (v []*GeneralBattleStatistics) {
-	return p.GeneralBattleStatisticsList
+var BattleGeneralStatistics_GeneralBattleStatistics_DEFAULT *GeneralBattleStatistics
+
+func (p *BattleGeneralStatistics) GetGeneralBattleStatistics() (v *GeneralBattleStatistics) {
+	if !p.IsSetGeneralBattleStatistics() {
+		return BattleGeneralStatistics_GeneralBattleStatistics_DEFAULT
+	}
+	return p.GeneralBattleStatistics
 }
 
 var fieldIDToName_BattleGeneralStatistics = map[int16]string{
@@ -1902,7 +1907,7 @@ var fieldIDToName_BattleGeneralStatistics = map[int16]string{
 	7:  "SoldierNum",
 	8:  "ArmsAbility",
 	9:  "RemainNum",
-	10: "GeneralBattleStatisticsList",
+	10: "GeneralBattleStatistics",
 }
 
 func (p *BattleGeneralStatistics) IsSetBaseInfo() bool {
@@ -1911,6 +1916,10 @@ func (p *BattleGeneralStatistics) IsSetBaseInfo() bool {
 
 func (p *BattleGeneralStatistics) IsSetAddition() bool {
 	return p.Addition != nil
+}
+
+func (p *BattleGeneralStatistics) IsSetGeneralBattleStatistics() bool {
+	return p.GeneralBattleStatistics != nil
 }
 
 func (p *BattleGeneralStatistics) Read(iprot thrift.TProtocol) (err error) {
@@ -2005,7 +2014,7 @@ func (p *BattleGeneralStatistics) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 10:
-			if fieldTypeId == thrift.LIST {
+			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -2171,26 +2180,11 @@ func (p *BattleGeneralStatistics) ReadField9(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *BattleGeneralStatistics) ReadField10(iprot thrift.TProtocol) error {
-	_, size, err := iprot.ReadListBegin()
-	if err != nil {
+	_field := NewGeneralBattleStatistics()
+	if err := _field.Read(iprot); err != nil {
 		return err
 	}
-	_field := make([]*GeneralBattleStatistics, 0, size)
-	values := make([]GeneralBattleStatistics, size)
-	for i := 0; i < size; i++ {
-		_elem := &values[i]
-		_elem.InitDefault()
-
-		if err := _elem.Read(iprot); err != nil {
-			return err
-		}
-
-		_field = append(_field, _elem)
-	}
-	if err := iprot.ReadListEnd(); err != nil {
-		return err
-	}
-	p.GeneralBattleStatisticsList = _field
+	p.GeneralBattleStatistics = _field
 	return nil
 }
 
@@ -2436,18 +2430,10 @@ WriteFieldEndError:
 }
 
 func (p *BattleGeneralStatistics) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("GeneralBattleStatisticsList", thrift.LIST, 10); err != nil {
+	if err = oprot.WriteFieldBegin("GeneralBattleStatistics", thrift.STRUCT, 10); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.GeneralBattleStatisticsList)); err != nil {
-		return err
-	}
-	for _, v := range p.GeneralBattleStatisticsList {
-		if err := v.Write(oprot); err != nil {
-			return err
-		}
-	}
-	if err := oprot.WriteListEnd(); err != nil {
+	if err := p.GeneralBattleStatistics.Write(oprot); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

@@ -94,7 +94,8 @@ func (t TheSkyIsBlazingTactic) Execute() {
 
 				//每回合持续造成伤害（伤害率72%，受智力影响），持续2回合
 				if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_Firing, &vo.EffectHolderParams{
-					FromTactic: t.Id(),
+					FromTactic:  t.Id(),
+					EffectRound: 2,
 				}).IsSuccess {
 					//注册持续效果
 					util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
@@ -109,7 +110,7 @@ func (t TheSkyIsBlazingTactic) Execute() {
 						firingDmgRate := revokeGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.72
 						damage.TacticDamage(&damage.TacticDamageParam{
 							TacticsParams:     t.tacticsParams,
-							AttackGeneral:     revokeGeneral,
+							AttackGeneral:     currentGeneral,
 							SufferGeneral:     general,
 							DamageType:        consts.DamageType_Strategy,
 							DamageImproveRate: firingDmgRate,

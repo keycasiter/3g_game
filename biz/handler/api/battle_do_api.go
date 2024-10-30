@@ -142,9 +142,12 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 	}
 }
 
-func makeGeneralBattleStatisticsList(statisticsList []*model.GeneralBattleStatistics) []*api.GeneralBattleStatistics {
+func makeGeneralBattleStatisticsList(statisticsList []*model.GeneralBattleStatistics, idx int) []*api.GeneralBattleStatistics {
 	resList := make([]*api.GeneralBattleStatistics, 0)
-	for _, statistics := range statisticsList {
+	for i, statistics := range statisticsList {
+		if i != idx {
+			continue
+		}
 		tacticStatisticsList := make([]*api.TacticStatistics, 0)
 		//战法统计
 		for _, tacticStatistics := range statistics.TacticStatisticsList {
@@ -190,7 +193,7 @@ func makeRemainNum(battleGenerals []*vo.BattleGeneral) int64 {
 
 func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api.BattleGeneralStatistics {
 	resList := make([]*api.BattleGeneralStatistics, 0)
-	for _, general := range teamBattleStatistics.BattleTeam.BattleGenerals {
+	for idx, general := range teamBattleStatistics.BattleTeam.BattleGenerals {
 		resList = append(resList, &api.BattleGeneralStatistics{
 			BaseInfo: &api.MetadataGeneral{
 				Id:          general.BaseInfo.Id,
@@ -204,7 +207,7 @@ func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api
 			IsMaster:                    general.IsMaster,
 			SoldierNum:                  general.InitSoldierNum,
 			RemainNum:                   general.SoldierNum,
-			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(teamBattleStatistics.GeneralBattleStatisticsList),
+			GeneralBattleStatisticsList: makeGeneralBattleStatisticsList(teamBattleStatistics.GeneralBattleStatisticsList, idx),
 		})
 	}
 	return resList

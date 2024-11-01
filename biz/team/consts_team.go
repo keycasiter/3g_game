@@ -41,10 +41,6 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.BraveAmbition,
-					Name: "义胆雄心",
-				},
-				{
 					Id:   consts.SeizeTheSoul,
 					Name: "夺魂挟魄",
 				},
@@ -63,16 +59,12 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.CleverStrategyAndShrewdTactics,
-					Name: "神机妙算",
+					Id:   consts.TaipingLaw,
+					Name: "太平道法",
 				},
 				{
-					Id:   consts.EightGateGoldenLockArray,
-					Name: "八门金锁阵",
-				},
-				{
-					Id:   consts.BorrowArrowsWithThatchedBoats,
-					Name: "草船借箭",
+					Id:   consts.ThreeDaysOfSeparation,
+					Name: "士别三日",
 				},
 			},
 			Addition:   addition,
@@ -84,10 +76,6 @@ var (
 				Id: int64(consts.ZhuGeLiang),
 			},
 			EquipTactics: []*po.Tactics{
-				{
-					Id:   consts.CleverStrategyAndShrewdTactics,
-					Name: "神机妙算",
-				},
 				{
 					Id:   consts.EightGateGoldenLockArray,
 					Name: "八门金锁阵",
@@ -111,10 +99,6 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.ClearEyedAndMalicious,
-					Name: "鹰视狼顾",
-				},
-				{
 					Id:   consts.ThreeDaysOfSeparation,
 					Name: "士别三日",
 				},
@@ -133,10 +117,6 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.TraitorInTroubledTimes,
-					Name: "乱世奸雄",
-				},
-				{
 					Id:   consts.Charming,
 					Name: "魅惑",
 				},
@@ -154,10 +134,6 @@ var (
 				Id: int64(consts.ManChong),
 			},
 			EquipTactics: []*po.Tactics{
-				{
-					Id:   consts.SuppressChokesAndPreventRefusals,
-					Name: "镇扼防拒",
-				},
 				{
 					Id:   consts.FrontalVectorArray,
 					Name: "锋矢阵",
@@ -182,10 +158,6 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.HighWoodenPaddlesConnectedToTheCamp,
-					Name: "高橹连营",
-				},
-				{
 					Id:   consts.SleepOnTheBrushwoodAndTasteTheGall,
 					Name: "卧薪尝胆",
 				},
@@ -204,10 +176,6 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.SurroundingTheTeacherMustBePalace,
-					Name: "围师必阙",
-				},
-				{
 					Id:   consts.ToBurnBarracks,
 					Name: "焚辎营垒",
 				},
@@ -225,10 +193,6 @@ var (
 				Id: int64(consts.JuShou),
 			},
 			EquipTactics: []*po.Tactics{
-				{
-					Id:   consts.SuperviseLeadAndSeizureArmy,
-					Name: "监统震军",
-				},
 				{
 					Id:   consts.EightGateGoldenLockArray,
 					Name: "八门金锁阵",
@@ -252,10 +216,6 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.CorporealIronWall,
-					Name: "肉身铁壁",
-				},
-				{
 					Id:   consts.IronHorseDrive,
 					Name: "铁骑驱驰",
 				},
@@ -274,10 +234,6 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.BowWaistConcubine,
-					Name: "弓腰姬",
-				},
-				{
 					Id:   consts.NakedBloodBattle,
 					Name: "裸衣血战",
 				},
@@ -295,10 +251,6 @@ var (
 				Id: int64(consts.LingTong),
 			},
 			EquipTactics: []*po.Tactics{
-				{
-					Id:   consts.CountryPersonGeneralStyle,
-					Name: "国士将风",
-				},
 				{
 					Id:   consts.BreakingThroughTheArmyAndWinningVictories,
 					Name: "破军威胜",
@@ -326,10 +278,6 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.BecomeFamousAndFearInspiringThroughoutChina,
-					Name: "威震华夏",
-				},
-				{
 					Id:   consts.DustpanFormation,
 					Name: "箕形阵",
 				},
@@ -348,10 +296,6 @@ var (
 			},
 			EquipTactics: []*po.Tactics{
 				{
-					Id:   consts.GeneralBraveGirl,
-					Name: "将门虎女",
-				},
-				{
 					Id:   consts.BrokenBridgeByWater,
 					Name: "据水断桥",
 				},
@@ -369,10 +313,6 @@ var (
 				Id: int64(consts.ZhangFei),
 			},
 			EquipTactics: []*po.Tactics{
-				{
-					Id:   consts.YanPeopleRoar,
-					Name: "燕人咆哮",
-				},
 				{
 					Id:   consts.QingZhouSoldier,
 					Name: "青州兵",

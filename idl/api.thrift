@@ -217,7 +217,7 @@ struct TeamBattleStatistics  {
 	BattleTeamStatistics BattleTeam
 
 	//对战结果
-	i64 BattleResult
+	enum.BattleResult BattleResult
 }
 
 //武将对战数据统计

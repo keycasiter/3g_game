@@ -159,7 +159,9 @@ enum EquipLevel {
 }
 
 enum BattleResult{
-	Win = 1
-	Lose = 2
-	Draw = 3
+	Win              = 1 //胜利
+    Lose             = 2 //失败
+    Draw             = 3 //平局
+    Advantage_Draw   = 4 //优势平局
+    Inferiority_Draw = 5 //劣势平局
 }

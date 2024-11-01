@@ -128,7 +128,7 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 				KillSoliderNum:   makeKillSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 				ResumeSoliderNum: makeResumeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 			},
-			BattleResult: int64(serviceResp.BattleResultStatistics.FightingTeam.BattleResult),
+			BattleResult: enum.BattleResult(serviceResp.BattleResultStatistics.FightingTeam.BattleResult),
 		},
 		//敌军
 		EnemyTeam: &api.TeamBattleStatistics{
@@ -141,7 +141,7 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 				KillSoliderNum:   makeKillSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 				ResumeSoliderNum: makeResumeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 			},
-			BattleResult: int64(serviceResp.BattleResultStatistics.EnemyTeam.BattleResult),
+			BattleResult: enum.BattleResult(serviceResp.BattleResultStatistics.EnemyTeam.BattleResult),
 		},
 	}
 }

@@ -1080,9 +1080,16 @@ func (p *EquipLevel) Value() (driver.Value, error) {
 type BattleResult int64
 
 const (
-	BattleResult_Win  BattleResult = 1
+	//胜利
+	BattleResult_Win BattleResult = 1
+	//失败
 	BattleResult_Lose BattleResult = 2
+	//平局
 	BattleResult_Draw BattleResult = 3
+	//优势平局
+	BattleResult_Advantage_Draw BattleResult = 4
+	//劣势平局
+	BattleResult_Inferiority_Draw BattleResult = 5
 )
 
 func (p BattleResult) String() string {
@@ -1093,6 +1100,10 @@ func (p BattleResult) String() string {
 		return "Lose"
 	case BattleResult_Draw:
 		return "Draw"
+	case BattleResult_Advantage_Draw:
+		return "Advantage_Draw"
+	case BattleResult_Inferiority_Draw:
+		return "Inferiority_Draw"
 	}
 	return "<UNSET>"
 }
@@ -1105,6 +1116,10 @@ func BattleResultFromString(s string) (BattleResult, error) {
 		return BattleResult_Lose, nil
 	case "Draw":
 		return BattleResult_Draw, nil
+	case "Advantage_Draw":
+		return BattleResult_Advantage_Draw, nil
+	case "Inferiority_Draw":
+		return BattleResult_Inferiority_Draw, nil
 	}
 	return BattleResult(0), fmt.Errorf("not a valid BattleResult string")
 }

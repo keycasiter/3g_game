@@ -5731,7 +5731,7 @@ type TeamBattleStatistics struct {
 	//队伍信息
 	BattleTeam *BattleTeamStatistics `thrift:"BattleTeam,1" form:"BattleTeam" json:"BattleTeam" query:"BattleTeam"`
 	//对战结果
-	BattleResult int64 `thrift:"BattleResult,2" form:"BattleResult" json:"BattleResult" query:"BattleResult"`
+	BattleResult enum.BattleResult `thrift:"BattleResult,2" form:"BattleResult" json:"BattleResult" query:"BattleResult"`
 }
 
 func NewTeamBattleStatistics() *TeamBattleStatistics {
@@ -5750,7 +5750,7 @@ func (p *TeamBattleStatistics) GetBattleTeam() (v *BattleTeamStatistics) {
 	return p.BattleTeam
 }
 
-func (p *TeamBattleStatistics) GetBattleResult() (v int64) {
+func (p *TeamBattleStatistics) GetBattleResult() (v enum.BattleResult) {
 	return p.BattleResult
 }
 
@@ -5791,7 +5791,7 @@ func (p *TeamBattleStatistics) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -5837,11 +5837,11 @@ func (p *TeamBattleStatistics) ReadField1(iprot thrift.TProtocol) error {
 }
 func (p *TeamBattleStatistics) ReadField2(iprot thrift.TProtocol) error {
 
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	var _field enum.BattleResult
+	if v, err := iprot.ReadI32(); err != nil {
 		return err
 	} else {
-		_field = v
+		_field = enum.BattleResult(v)
 	}
 	p.BattleResult = _field
 	return nil
@@ -5897,10 +5897,10 @@ WriteFieldEndError:
 }
 
 func (p *TeamBattleStatistics) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("BattleResult", thrift.I64, 2); err != nil {
+	if err = oprot.WriteFieldBegin("BattleResult", thrift.I32, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.BattleResult); err != nil {
+	if err := oprot.WriteI32(int32(p.BattleResult)); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

@@ -55,6 +55,10 @@ struct BattleTeamStatistics {
 	7:i64 RemainNum
 	//队伍名称
 	8:string Name
+	//杀敌
+    9: i64 KillSoliderNum
+    //救援
+    10: i64 ResumeSoliderNum
 }
 
 // 对战武将信息
@@ -99,9 +103,13 @@ struct BattleGeneralStatistics {
     8: enum.ArmsAbility ArmsAbility
     //剩余兵力
     9: i64 RemainNum
+    //杀敌
+    12:	i64 KillSoliderNum
+    //救援
+    13: i64 ResumeSoliderNum
 
     //***对战数据***
-    10: GeneralBattleStatistics GeneralBattleStatistics
+    99: GeneralBattleStatistics GeneralBattleStatistics
 }
 
 // 武将对战加成

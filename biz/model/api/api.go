@@ -736,6 +736,10 @@ type BattleTeamStatistics struct {
 	RemainNum int64 `thrift:"RemainNum,7" form:"RemainNum" json:"RemainNum" query:"RemainNum"`
 	//队伍名称
 	Name string `thrift:"Name,8" form:"Name" json:"Name" query:"Name"`
+	//杀敌
+	KillSoliderNum int64 `thrift:"KillSoliderNum,9" form:"KillSoliderNum" json:"KillSoliderNum" query:"KillSoliderNum"`
+	//救援
+	ResumeSoliderNum int64 `thrift:"ResumeSoliderNum,10" form:"ResumeSoliderNum" json:"ResumeSoliderNum" query:"ResumeSoliderNum"`
 }
 
 func NewBattleTeamStatistics() *BattleTeamStatistics {
@@ -787,15 +791,25 @@ func (p *BattleTeamStatistics) GetName() (v string) {
 	return p.Name
 }
 
+func (p *BattleTeamStatistics) GetKillSoliderNum() (v int64) {
+	return p.KillSoliderNum
+}
+
+func (p *BattleTeamStatistics) GetResumeSoliderNum() (v int64) {
+	return p.ResumeSoliderNum
+}
+
 var fieldIDToName_BattleTeamStatistics = map[int16]string{
-	1: "TeamType",
-	2: "ArmType",
-	3: "BattleGenerals",
-	4: "BuildingTechAttrAddition",
-	5: "BuildingTechGroupAddition",
-	6: "SoliderNum",
-	7: "RemainNum",
-	8: "Name",
+	1:  "TeamType",
+	2:  "ArmType",
+	3:  "BattleGenerals",
+	4:  "BuildingTechAttrAddition",
+	5:  "BuildingTechGroupAddition",
+	6:  "SoliderNum",
+	7:  "RemainNum",
+	8:  "Name",
+	9:  "KillSoliderNum",
+	10: "ResumeSoliderNum",
 }
 
 func (p *BattleTeamStatistics) IsSetBuildingTechAttrAddition() bool {
@@ -884,6 +898,22 @@ func (p *BattleTeamStatistics) Read(iprot thrift.TProtocol) (err error) {
 		case 8:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField8(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 9:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 10:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField10(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -1012,6 +1042,28 @@ func (p *BattleTeamStatistics) ReadField8(iprot thrift.TProtocol) error {
 	p.Name = _field
 	return nil
 }
+func (p *BattleTeamStatistics) ReadField9(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.KillSoliderNum = _field
+	return nil
+}
+func (p *BattleTeamStatistics) ReadField10(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ResumeSoliderNum = _field
+	return nil
+}
 
 func (p *BattleTeamStatistics) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1049,6 +1101,14 @@ func (p *BattleTeamStatistics) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField8(oprot); err != nil {
 			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
 			goto WriteFieldError
 		}
 	}
@@ -1211,6 +1271,40 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
+func (p *BattleTeamStatistics) writeField9(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("KillSoliderNum", thrift.I64, 9); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.KillSoliderNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
+func (p *BattleTeamStatistics) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ResumeSoliderNum", thrift.I64, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.ResumeSoliderNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
 }
 
 func (p *BattleTeamStatistics) String() string {
@@ -1831,8 +1925,12 @@ type BattleGeneralStatistics struct {
 	ArmsAbility enum.ArmsAbility `thrift:"ArmsAbility,8" form:"ArmsAbility" json:"ArmsAbility" query:"ArmsAbility"`
 	//剩余兵力
 	RemainNum int64 `thrift:"RemainNum,9" form:"RemainNum" json:"RemainNum" query:"RemainNum"`
+	//杀敌
+	KillSoliderNum int64 `thrift:"KillSoliderNum,12" form:"KillSoliderNum" json:"KillSoliderNum" query:"KillSoliderNum"`
+	//救援
+	ResumeSoliderNum int64 `thrift:"ResumeSoliderNum,13" form:"ResumeSoliderNum" json:"ResumeSoliderNum" query:"ResumeSoliderNum"`
 	//***对战数据***
-	GeneralBattleStatistics *GeneralBattleStatistics `thrift:"GeneralBattleStatistics,10" form:"GeneralBattleStatistics" json:"GeneralBattleStatistics" query:"GeneralBattleStatistics"`
+	GeneralBattleStatistics *GeneralBattleStatistics `thrift:"GeneralBattleStatistics,99" form:"GeneralBattleStatistics" json:"GeneralBattleStatistics" query:"GeneralBattleStatistics"`
 }
 
 func NewBattleGeneralStatistics() *BattleGeneralStatistics {
@@ -1888,6 +1986,14 @@ func (p *BattleGeneralStatistics) GetRemainNum() (v int64) {
 	return p.RemainNum
 }
 
+func (p *BattleGeneralStatistics) GetKillSoliderNum() (v int64) {
+	return p.KillSoliderNum
+}
+
+func (p *BattleGeneralStatistics) GetResumeSoliderNum() (v int64) {
+	return p.ResumeSoliderNum
+}
+
 var BattleGeneralStatistics_GeneralBattleStatistics_DEFAULT *GeneralBattleStatistics
 
 func (p *BattleGeneralStatistics) GetGeneralBattleStatistics() (v *GeneralBattleStatistics) {
@@ -1907,7 +2013,9 @@ var fieldIDToName_BattleGeneralStatistics = map[int16]string{
 	7:  "SoldierNum",
 	8:  "ArmsAbility",
 	9:  "RemainNum",
-	10: "GeneralBattleStatistics",
+	12: "KillSoliderNum",
+	13: "ResumeSoliderNum",
+	99: "GeneralBattleStatistics",
 }
 
 func (p *BattleGeneralStatistics) IsSetBaseInfo() bool {
@@ -2013,9 +2121,25 @@ func (p *BattleGeneralStatistics) Read(iprot thrift.TProtocol) (err error) {
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 10:
+		case 12:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField12(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 13:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField13(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 99:
 			if fieldTypeId == thrift.STRUCT {
-				if err = p.ReadField10(iprot); err != nil {
+				if err = p.ReadField99(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -2179,7 +2303,29 @@ func (p *BattleGeneralStatistics) ReadField9(iprot thrift.TProtocol) error {
 	p.RemainNum = _field
 	return nil
 }
-func (p *BattleGeneralStatistics) ReadField10(iprot thrift.TProtocol) error {
+func (p *BattleGeneralStatistics) ReadField12(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.KillSoliderNum = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField13(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ResumeSoliderNum = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField99(iprot thrift.TProtocol) error {
 	_field := NewGeneralBattleStatistics()
 	if err := _field.Read(iprot); err != nil {
 		return err
@@ -2230,8 +2376,16 @@ func (p *BattleGeneralStatistics) Write(oprot thrift.TProtocol) (err error) {
 			fieldId = 9
 			goto WriteFieldError
 		}
-		if err = p.writeField10(oprot); err != nil {
-			fieldId = 10
+		if err = p.writeField12(oprot); err != nil {
+			fieldId = 12
+			goto WriteFieldError
+		}
+		if err = p.writeField13(oprot); err != nil {
+			fieldId = 13
+			goto WriteFieldError
+		}
+		if err = p.writeField99(oprot); err != nil {
+			fieldId = 99
 			goto WriteFieldError
 		}
 	}
@@ -2429,8 +2583,42 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
 }
 
-func (p *BattleGeneralStatistics) writeField10(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("GeneralBattleStatistics", thrift.STRUCT, 10); err != nil {
+func (p *BattleGeneralStatistics) writeField12(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("KillSoliderNum", thrift.I64, 12); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.KillSoliderNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField13(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ResumeSoliderNum", thrift.I64, 13); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.ResumeSoliderNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 13 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 13 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField99(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("GeneralBattleStatistics", thrift.STRUCT, 99); err != nil {
 		goto WriteFieldBeginError
 	}
 	if err := p.GeneralBattleStatistics.Write(oprot); err != nil {
@@ -2441,9 +2629,9 @@ func (p *BattleGeneralStatistics) writeField10(oprot thrift.TProtocol) (err erro
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 99 begin error: ", p), err)
 WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+	return thrift.PrependError(fmt.Sprintf("%T write field 99 end error: ", p), err)
 }
 
 func (p *BattleGeneralStatistics) String() string {

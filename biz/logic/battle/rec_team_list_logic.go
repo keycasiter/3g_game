@@ -2,6 +2,7 @@ package battle
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
@@ -30,10 +31,11 @@ func NewRecTeamListLogic(ctx context.Context, req api.RecTeamListRequest) *RecTe
 func (g *RecTeamListLogic) Handle() (api.RecTeamListResponse, error) {
 	//推荐队伍查询
 	recTeamlist, err := mysql.NewRecTeam().QueryRecTeamList(g.Ctx, &vo.QueryRecTeamCondition{
-		Name:   g.Req.Name,
-		Group:  int64(g.Req.Group),
-		Offset: util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize),
-		Limit:  int(g.Req.PageSize),
+		Name:    g.Req.Name,
+		Group:   int64(g.Req.Group),
+		ArmType: int64(g.Req.ArmType),
+		Offset:  util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize),
+		Limit:   int(g.Req.PageSize),
 	})
 	if err != nil {
 		hlog.CtxErrorf(g.Ctx, "QueryRecTeamList err:%v", err)

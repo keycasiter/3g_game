@@ -3,6 +3,7 @@ package mysql
 import (
 	"context"
 	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
@@ -29,6 +30,9 @@ func (g *RecTeamDal) QueryRecTeamList(ctx context.Context, condition *vo.QueryRe
 	}
 	if condition.Group > 0 {
 		conn.Where("`group` = ?", condition.Group)
+	}
+	if condition.ArmType > 0 {
+		conn.Where("`arm_type` = ?", condition.ArmType)
 	}
 
 	if err := conn.Offset(condition.Offset).Limit(condition.Limit).Find(&list).Error; err != nil {

@@ -6,4 +6,5 @@ type QueryRecTeamCondition struct {
 	Name       string
 	GeneralIds []int64
 	Group      int64
+	ArmType    int64
 }

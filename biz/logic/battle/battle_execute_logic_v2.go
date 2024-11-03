@@ -5,6 +5,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/po"
@@ -620,6 +621,10 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 
 func (runCtx *BattleLogicV2Context) makeGeneralInfos(battleGenerals []*vo.BattleGeneral) []*vo.BattleGeneral {
 	//补充武将信息
+	for _, general := range battleGenerals {
+		generalCache := cache.CacheGeneralMap[general.BaseInfo.Id]
+		general.BaseInfo.AvatarUri = generalCache.AvatarUrl
+	}
 	return battleGenerals
 }
 

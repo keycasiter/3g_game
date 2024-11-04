@@ -73,8 +73,12 @@ func (t *TacticDamageLogic) checkParam() {
 		t.param.SufferGeneral == nil ||
 		t.param.DamageType == consts.DamageType_None ||
 		(t.param.DamageImproveRate <= 0 && t.param.DamageDeduceRate <= 0) {
-		hlog.CtxErrorf(ctx, "damage params err , attackGeneral:%s , sufferGeneral:%s ,damageType:%v",
-			util.ToJsonString(ctx, t.param.AttackGeneral), util.ToJsonString(ctx, t.param.SufferGeneral), t.param.DamageType)
+		hlog.CtxErrorf(ctx, "damage params err , attackGeneral:%s , sufferGeneral:%s ,damageType:%v ,tacticName:%v",
+			util.ToJsonString(ctx, t.param.AttackGeneral),
+			util.ToJsonString(ctx, t.param.SufferGeneral),
+			t.param.DamageType,
+			t.param.TacticId,
+		)
 		panic(any("damage params err"))
 	}
 }

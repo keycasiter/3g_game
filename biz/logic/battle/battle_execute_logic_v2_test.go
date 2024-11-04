@@ -8,6 +8,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/conf"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
@@ -119,6 +120,8 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 	conf.InitConfig()
 	//初始化mysql
 	mysql.InitMysql()
+	//缓存
+	cache.InitCache()
 
 	battleSize := 100
 
@@ -131,11 +134,11 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 	enemyGeneralsData := make([]*vo.BattleGeneral, 0)
 
 	for i := 0; i < battleSize; i++ {
-		fightingGenerals, err := util.DeepCopyBattleGenerals(team.QunGong)
+		fightingGenerals, err := util.DeepCopyBattleGenerals(team.TaiWeiDun)
 		if err != nil {
 			t.Failed()
 		}
-		enemyGenerals, err := util.DeepCopyBattleGenerals(team.TaiWeiDun)
+		enemyGenerals, err := util.DeepCopyBattleGenerals(team.XiangxiangWuQi)
 		if err != nil {
 			t.Failed()
 		}

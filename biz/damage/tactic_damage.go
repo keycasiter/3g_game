@@ -74,8 +74,8 @@ func (t *TacticDamageLogic) checkParam() {
 		t.param.DamageType == consts.DamageType_None ||
 		(t.param.DamageImproveRate <= 0 && t.param.DamageDeduceRate <= 0) {
 		hlog.CtxErrorf(ctx, "damage params err , attackGeneral:%s , sufferGeneral:%s ,damageType:%v ,tacticName:%v",
-			util.ToJsonString(ctx, t.param.AttackGeneral),
-			util.ToJsonString(ctx, t.param.SufferGeneral),
+			t.param.AttackGeneral.BaseInfo.Name,
+			t.param.SufferGeneral.BaseInfo.Name,
 			t.param.DamageType,
 			t.param.TacticId,
 		)
@@ -112,13 +112,14 @@ func (t *TacticDamageLogic) damageShareHandler() {
 		)
 		if shareDmg > 0 {
 			TacticDamage(&TacticDamageParam{
-				TacticsParams:  tacticsParams,
-				AttackGeneral:  attackGeneral,
-				SufferGeneral:  sufferGeneral.ShareResponsibilityForByGeneral,
-				TacticId:       tacticId,
-				TacticName:     tacticName,
-				IsIgnoreDefend: isIgnoreDefend,
-				DamageType:     damageType,
+				TacticsParams:     tacticsParams,
+				AttackGeneral:     attackGeneral,
+				SufferGeneral:     sufferGeneral.ShareResponsibilityForByGeneral,
+				DamageType:        damageType,
+				DamageImproveRate: 1,
+				TacticId:          tacticId,
+				TacticName:        tacticName,
+				IsIgnoreDefend:    isIgnoreDefend,
 			})
 		}
 	}

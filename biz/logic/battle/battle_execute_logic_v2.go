@@ -542,6 +542,15 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 						KillSoliderNum:   tacticStatistics.KillSoliderNum,
 						ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
 					})
+				} else {
+					tacticCache, okk := cache.CacheTacticMap[int64(tactic.Id)]
+					if !okk {
+						continue
+					}
+					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
+						TacticId:   tacticCache.Id,
+						TacticName: tacticCache.Name,
+					})
 				}
 			}
 		}
@@ -573,6 +582,15 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 						TriggerTimes:     tacticStatistics.TriggerTimes,
 						KillSoliderNum:   tacticStatistics.KillSoliderNum,
 						ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
+					})
+				} else {
+					tacticCache, okkk := cache.CacheTacticMap[int64(tactic.Id)]
+					if !okkk {
+						continue
+					}
+					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
+						TacticId:   tacticCache.Id,
+						TacticName: tacticCache.Name,
 					})
 				}
 			}

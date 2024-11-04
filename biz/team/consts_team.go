@@ -103,8 +103,8 @@ var (
 					Name: "士别三日",
 				},
 				{
-					Id:   consts.TheSkyIsBlazing,
-					Name: "熯天炽地",
+					Id:   consts.UseMartialArtsToConnectWithGods,
+					Name: "用武通神",
 				},
 			},
 			Addition:   addition,

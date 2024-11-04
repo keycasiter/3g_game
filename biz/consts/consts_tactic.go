@@ -719,7 +719,7 @@ func (b TacticId) String() string {
 		//横扫千军
 	case SweepAwayTheMillionsOfEnemyTroops:
 		return "横扫千军"
-		//用武通神xr
+		//用武通神
 	case UseMartialArtsToConnectWithGods:
 		return "用武通神"
 		//绝地反击

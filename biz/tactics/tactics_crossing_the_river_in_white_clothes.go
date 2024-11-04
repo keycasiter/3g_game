@@ -36,7 +36,7 @@ func (c CrossingTheRiverInWhiteClothesTactic) Prepare() {
 		c.Name(),
 	)
 
-	pairGenerals := util.GetPairGeneralArr(c.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, c.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		// 战斗首回合我军全体获得1次抵御
 		util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_Defend, &vo.EffectHolderParams{

@@ -99,7 +99,7 @@ func (t TheKnifeLikeThunderboltTactic) Execute() {
 			// 准备1回合。自身及友军单体获得30%倒戈，持续2回合
 			pairGenerals := make([]*vo.BattleGeneral, 0)
 			// 若与张苞同时出战，则友军单体必定选择张苞
-			allPairGenerals := util.GetPairGeneralArr(t.tacticsParams)
+			allPairGenerals := util.GetPairGeneralArr(currentGeneral, t.tacticsParams)
 			pairGeneral := util.GetPairOneGeneralNotSelf(t.tacticsParams, triggerGeneral)
 			for _, general := range allPairGenerals {
 				if consts.General_Id(general.BaseInfo.Id) == consts.ZhangBao {

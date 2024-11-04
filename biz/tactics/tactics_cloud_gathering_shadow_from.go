@@ -45,7 +45,7 @@ func (c CloudGatheringShadowFromTactic) Prepare() {
 		triggerRate := 0.5
 		triggerRate += triggerGeneral.BaseInfo.AbilityAttr.ForceBase / 100 / 100
 		if util.GenerateRate(triggerRate) {
-			highPairGeneral := util.GetPairGeneralWhoIsHighestForce(c.tacticsParams)
+			highPairGeneral := util.GetPairGeneralWhoIsHighestForce(currentGeneral, c.tacticsParams)
 			//反击效果，使武力最高的友军单体获得反击效果（伤害率100%）
 			if util.BuffEffectWrapSet(ctx, highPairGeneral, consts.BuffEffectType_StrikeBack, &vo.EffectHolderParams{
 				EffectRate:     1.0,

@@ -9,8 +9,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//盛气凌敌
-//战斗开始后前2回合，使敌军群体（2人）每回合都有90%的几率陷入缴械状态，无法进行普通攻击
+// 盛气凌敌
+// 战斗开始后前2回合，使敌军群体（2人）每回合都有90%的几率陷入缴械状态，无法进行普通攻击
 type OverwhelmingTheEnemyWithVigourTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -35,7 +35,7 @@ func (o OverwhelmingTheEnemyWithVigourTactic) Prepare() {
 		o.Name(),
 	)
 	//找到敌军2人
-	enemyGenerals := util.GetEnemyGeneralsTwoArr(o.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, o.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
 		//施加效果
 		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_CancelWeapon, &vo.EffectHolderParams{

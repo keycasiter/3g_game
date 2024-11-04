@@ -95,7 +95,7 @@ func (p PromiseToKeepWithoutSurrenderTactic) Execute() {
 				p.Name(),
 			)
 
-			pairGenerals := util.GetPairGeneralsTwoArr(p.tacticsParams)
+			pairGenerals := util.GetPairGeneralsTwoArr(currentGeneral, p.tacticsParams)
 			for _, pairGeneral := range pairGenerals {
 				if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_Insight, &vo.EffectHolderParams{
 					EffectRound:    2,
@@ -123,7 +123,7 @@ func (p PromiseToKeepWithoutSurrenderTactic) Execute() {
 				resp := &vo.TacticsTriggerResult{}
 
 				if round <= triggerRound+1 {
-					enemyMasterGeneral := util.GetEnemyMasterGeneral(p.tacticsParams)
+					enemyMasterGeneral := util.GetEnemyMasterGeneral(currentGeneral, p.tacticsParams)
 					if util.DebuffEffectWrapSet(ctx, enemyMasterGeneral, consts.DebuffEffectType_NoStrategy, &vo.EffectHolderParams{
 						EffectRound:    2,
 						FromTactic:     p.Id(),

@@ -70,13 +70,13 @@ func (t TwelveWonderfulStrategiesTactic) Execute() {
 		t.Name(),
 	)
 	//移除敌军群体（1～2人）增益状态
-	enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(t.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(currentGeneral, t.tacticsParams)
 	for _, enemyGeneral := range enemyGenerals {
 		//移除增益状态
 		util.BuffEffectClean(ctx, enemyGeneral)
 	}
 	//提高我军全体1回合6%主动战法发动率（受智力影响）
-	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, t.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		triggerRate := 0.06 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
 		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_TacticsActiveTriggerImprove, &vo.EffectHolderParams{

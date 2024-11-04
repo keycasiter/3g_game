@@ -108,7 +108,7 @@ func (p PoisonousSpringRefusesShuTactic) Execute() {
 	// 对敌军单体（80%概率选择敌军统率最高的武将）施加猛毒，2回合后消失
 	var enemyGeneral *vo.BattleGeneral
 	if util.GenerateRate(0.8) {
-		enemyGeneral = util.GetEnemyGeneralWhoIsHighestForce(p.tacticsParams)
+		enemyGeneral = util.GetEnemyGeneralWhoIsHighestForce(currentGeneral, p.tacticsParams)
 	} else {
 		enemyGeneral = util.GetEnemyOneGeneralByGeneral(currentGeneral, p.tacticsParams)
 	}

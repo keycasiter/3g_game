@@ -118,7 +118,7 @@ func (r RepelForeignAggressionTactic) Execute() {
 
 	//若自己不是主将，则额外使我军主将获得2次抵御，可免疫伤害，持续2回合
 	if !currentGeneral.IsMaster {
-		pairMasterGeneral := util.GetPairMasterGeneral(r.tacticsParams)
+		pairMasterGeneral := util.GetPairMasterGeneral(currentGeneral, r.tacticsParams)
 		util.BuffEffectWrapSet(ctx, pairMasterGeneral, consts.BuffEffectType_Defend, &vo.EffectHolderParams{
 			EffectRound:    2,
 			EffectTimes:    2,

@@ -99,7 +99,7 @@ func (w WithAllTheHeartTactic) Execute() {
 			)
 
 			// 准备1回合，使敌军群体（1～2人）速度降低15%（受智力影响）,并进入混乱状态，持续2回合
-			enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(w.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(currentGeneral, w.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//速度降低
 				effectDecrRate := 0.15 + triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100

@@ -33,7 +33,7 @@ func (t ThreePotentialArrayTactic) Prepare() {
 	)
 
 	//我军三名武将阵营均不相同
-	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, t.tacticsParams)
 	groupMap := make(map[consts.Group]bool, 0)
 	for _, pairGeneral := range pairGenerals {
 		groupMap[pairGeneral.BaseInfo.Group] = true
@@ -43,7 +43,7 @@ func (t ThreePotentialArrayTactic) Prepare() {
 		return
 	}
 	//且我方主将自带战法为主动战法或突击战法时
-	pairMasterGeneral := util.GetPairMasterGeneral(t.tacticsParams)
+	pairMasterGeneral := util.GetPairMasterGeneral(currentGeneral, t.tacticsParams)
 	if !consts.ActiveTacticsMap[pairMasterGeneral.EquipTactics[0].Id] &&
 		!consts.AssaultTacticsMap[pairMasterGeneral.EquipTactics[0].Id] {
 		hlog.CtxInfof(ctx, "主将自带战法不为主动战法或突击战法，无法发动")
@@ -97,7 +97,7 @@ func (t ThreePotentialArrayTactic) Prepare() {
 		triggerGeneral := params.CurrentGeneral
 
 		//找到损失兵力较多的副将
-		viceGenerals := util.GetPairViceGenerals(t.tacticsParams)
+		viceGenerals := util.GetPairViceGenerals(currentGeneral, t.tacticsParams)
 		lowesGeneral := util.GetLowestSoliderNumGeneral(viceGenerals)
 
 		//兵刃伤害降低

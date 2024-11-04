@@ -35,7 +35,7 @@ func (o OpportunityIdentificationFirstTactic) Prepare() {
 		o.Name(),
 	)
 	// 准备回合使我军群体（2～3人）获得2次警戒
-	pairGenerals := util.GetPairGeneralsTwoOrThreeMap(o.tacticsParams)
+	pairGenerals := util.GetPairGeneralsTwoOrThreeMap(currentGeneral, o.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_Alert, &vo.EffectHolderParams{
 			EffectTimes:    2,
@@ -52,7 +52,7 @@ func (o OpportunityIdentificationFirstTactic) Prepare() {
 		triggerRate := 0.42 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
 
 		if util.GenerateRate(triggerRate) {
-			generals := util.GetPairGeneralsTwoOrThreeMap(o.tacticsParams)
+			generals := util.GetPairGeneralsTwoOrThreeMap(currentGeneral, o.tacticsParams)
 			for _, general := range generals {
 				util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_Alert, &vo.EffectHolderParams{
 					EffectTimes:    1,
@@ -68,7 +68,7 @@ func (o OpportunityIdentificationFirstTactic) Prepare() {
 	})
 
 	// 受到伤害超过自身可携带最大兵力的6%时（最低100兵力），使该次伤害降低40%（受智力影响）并消耗一次警戒；
-	allPairGenerals := util.GetPairGeneralArr(o.tacticsParams)
+	allPairGenerals := util.GetPairGeneralArr(currentGeneral, o.tacticsParams)
 	for _, general := range allPairGenerals {
 		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferDamage, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}

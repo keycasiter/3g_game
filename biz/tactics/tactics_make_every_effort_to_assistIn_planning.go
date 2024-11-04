@@ -70,7 +70,7 @@ func (m MakeEveryEffortToAssistInPlanningTactic) Execute() {
 		m.Name(),
 	)
 	//使敌军智力最高单体智力降低20%，并有70%概率使自身本回合非自带主动战法发动率提高100%，持续1回合
-	enemyGeneral := util.GetEnemyGeneralWhoIsHighestIntelligence(m.tacticsParams)
+	enemyGeneral := util.GetEnemyGeneralWhoIsHighestIntelligence(currentGeneral, m.tacticsParams)
 	//降低智力
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrIntelligence, &vo.EffectHolderParams{
 		EffectValue:    cast.ToInt64(enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.2),

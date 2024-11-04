@@ -65,7 +65,7 @@ func (t TheSkyIsBlazingTactic) Execute() {
 	)
 
 	//找到敌军全体
-	enemyGenerals := util.GetEnemyGeneralArr(t.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralArr(currentGeneral, t.tacticsParams)
 	//注册效果
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerRound := params.CurrentRound

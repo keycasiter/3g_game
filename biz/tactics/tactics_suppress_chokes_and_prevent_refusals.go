@@ -78,7 +78,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 		)
 		//使我军单体(优先选除自己之外的副将)援护所有友军并获得休整状态（每回合恢复一次兵力，治疗率192%，受智力影响）
 		//找到除当前战法执行外的副将
-		viceGeneral := util.GetPairViceGeneralNotSelf(s.tacticsParams)
+		viceGeneral := util.GetPairViceGeneralNotSelf(currentGeneral, s.tacticsParams)
 		//如果不存在除自己的副将则选择为自己
 		if viceGeneral == nil {
 			viceGeneral = currentGeneral

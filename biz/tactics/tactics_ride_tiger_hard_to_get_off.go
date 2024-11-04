@@ -39,7 +39,7 @@ func (r RideTigerHardToGetOffTactic) Prepare() {
 	)
 
 	//找到友军2人
-	pairGenerals := util.GetPairGeneralsTwoArr(r.tacticsParams)
+	pairGenerals := util.GetPairGeneralsTwoArr(currentGeneral, r.tacticsParams)
 	//注册效果
 	for _, general := range pairGenerals {
 		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_RideTigerHardToGetOff_Prepare, &vo.EffectHolderParams{
@@ -83,7 +83,7 @@ func (r RideTigerHardToGetOffTactic) Prepare() {
 				}
 
 				//并对敌军群体（2人）造成兵刃攻击（伤害率72%）
-				enemyGenerals := util.GetEnemyGeneralsTwoArr(r.tacticsParams)
+				enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, r.tacticsParams)
 				for _, enemyGeneral := range enemyGenerals {
 					damage.TacticDamage(&damage.TacticDamageParam{
 						TacticsParams:     r.tacticsParams,

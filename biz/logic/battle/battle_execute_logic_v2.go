@@ -867,7 +867,7 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 				//增益效果
 
 				//找到普攻目标
-				sufferGeneral := util.GetEnemyOneGeneral(tacticsParams)
+				sufferGeneral := util.GetEnemyOneGeneral(currentGeneral, tacticsParams)
 				tacticsParams.CurrentSufferGeneral = sufferGeneral
 				//普通攻击触发器
 				if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {

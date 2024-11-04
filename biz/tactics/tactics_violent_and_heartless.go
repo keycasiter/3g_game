@@ -68,7 +68,7 @@ func (v ViolentAndHeartlessTactic) Execute() {
 	//普通攻击之后，对攻击目标再次发起一次兵刃攻击（伤害率196%），并使其进入混乱状态（攻击和战法无差别选择目标）
 	//持续1回合
 	//伤害
-	enemyGenerals := util.GetEnemyGeneralArr(v.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralArr(currentGeneral, v.tacticsParams)
 	for _, enemyGeneral := range enemyGenerals {
 		//伤害
 		damage.TacticDamage(&damage.TacticDamageParam{

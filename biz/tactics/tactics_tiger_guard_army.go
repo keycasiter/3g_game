@@ -38,13 +38,13 @@ func (t TigerGuardArmyTactic) Prepare() {
 	)
 	// 将盾兵进阶为善固疆场的虎卫军：
 	// 战斗中，我军主将即将受到普通攻击时，副将提高12武力，最多提高5次
-	pairMasterGeneral := util.GetPairMasterGeneral(t.tacticsParams)
+	pairMasterGeneral := util.GetPairMasterGeneral(currentGeneral, t.tacticsParams)
 	util.TacticsTriggerWrapRegister(pairMasterGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
 		attackGeneral := params.AttackGeneral
 		triggerRound := params.CurrentRound
 
-		viceGenerals := util.GetPairViceGenerals(t.tacticsParams)
+		viceGenerals := util.GetPairViceGenerals(currentGeneral, t.tacticsParams)
 		for _, viceGeneral := range viceGenerals {
 			util.BuffEffectWrapSet(ctx, viceGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
 				EffectValue:    12,

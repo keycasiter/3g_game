@@ -36,7 +36,7 @@ func (s StealingLuckAndRidingPetsTactic) Prepare() {
 	)
 	// 我方主将恢复兵力且自身不为主将时，降低其20%治疗量，自身会恢复降低的治疗量，奇数回合对敌军群体（2人）造成谋略伤害（伤害率90%，受智力影响），
 	// 额外对其中智力低于自身的单位造成谋略伤害（伤害率120%，受智力影响）
-	pairMasterGeneral := util.GetPairMasterGeneral(s.tacticsParams)
+	pairMasterGeneral := util.GetPairMasterGeneral(currentGeneral, s.tacticsParams)
 	if pairMasterGeneral.BaseInfo.Id != currentGeneral.BaseInfo.Id {
 		util.DebuffEffectWrapSet(ctx, pairMasterGeneral, consts.DebuffEffectType_SufferResumeDeduce, &vo.EffectHolderParams{
 			EffectRate:     0.2,

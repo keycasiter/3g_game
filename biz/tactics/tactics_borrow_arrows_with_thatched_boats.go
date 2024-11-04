@@ -105,12 +105,12 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 	})
 
 	//移除我军群体(2-3人)负面效果
-	twoOrThreeGenerals := util.GetPairGeneralsTwoOrThreeMap(b.tacticsParams)
+	twoOrThreeGenerals := util.GetPairGeneralsTwoOrThreeMap(currentGeneral, b.tacticsParams)
 	for _, general := range twoOrThreeGenerals {
 		util.DebuffEffectClean(ctx, general)
 	}
 	//并使我军群体(2人)获得急救状态，每次受到伤害时有70%几率回复一定兵力（伤害量的28%，受统率影响）,持续2回合
-	twoGenerals := util.GetPairGeneralsTwoArr(b.tacticsParams)
+	twoGenerals := util.GetPairGeneralsTwoArr(currentGeneral, b.tacticsParams)
 	for _, general := range twoGenerals {
 		//施加急救效果，持续2回合
 		if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_EmergencyTreatment, &vo.EffectHolderParams{

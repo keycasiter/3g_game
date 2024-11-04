@@ -78,7 +78,7 @@ func (f FireGodHeroStyleTactic) Prepare() {
 		triggerResp := &vo.TacticsTriggerResult{}
 
 		if triggerRound == consts.Battle_Round_Third {
-			pairGenerals := util.GetPairGeneralsTwoOrThreeMap(f.tacticsParams)
+			pairGenerals := util.GetPairGeneralsTwoOrThreeMap(currentGeneral, f.tacticsParams)
 			for _, general := range pairGenerals {
 				//武力提升
 				if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{

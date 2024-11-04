@@ -34,7 +34,7 @@ func (w WhiteArmyTactic) Prepare() {
 		w.Name(),
 	)
 	//我军全体战斗中普通攻击后有45%概率对攻击目标再次发起一次谋略攻击（伤害率110%，受智力影响）
-	pairGenerals := util.GetPairGeneralArr(w.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, w.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_AttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}

@@ -72,7 +72,7 @@ func (g GreatHalberdWarriorTactic) Execute() {
 	// 若张合统领，则发动几率提高为40%
 
 	//找到我军全体
-	pairGenerals := util.GetPairGeneralArr(g.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, g.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		//施加效果
 		util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{

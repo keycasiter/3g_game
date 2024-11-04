@@ -32,7 +32,7 @@ func (e ExtravagantOrgyTactic) Prepare() {
 	// 战斗中，每回合使我军男性武将获得4%倒戈及10点武力，同时降低10点智力，可叠加，持续到战斗结束；
 	malePairGenerals := make([]*vo.BattleGeneral, 0)
 	//找到我军全体
-	pairGenerals := util.GetPairGeneralArr(e.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, e.tacticsParams)
 	for _, general := range pairGenerals {
 		if general.BaseInfo.Gender == consts.Gender_Male {
 			malePairGenerals = append(malePairGenerals, general)

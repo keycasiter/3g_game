@@ -78,7 +78,7 @@ func (b BlazingWildfireTactic) Execute() {
 
 	//对敌军群体(2-3人)施加灼烧状态，每回合持续造成伤害(伤害率56%，受智力影响)，持续2回合；
 	//找到敌军2或3人
-	enemyGeneralMap := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
+	enemyGeneralMap := util.GetEnemyGeneralsTwoOrThreeMap(currentGeneral, b.tacticsParams)
 	for _, sufferGeneral := range enemyGeneralMap {
 		//若目标已有灼烧状态则造成兵刃攻击(伤害率118%)
 		//判断当前被攻击武将是否有灼烧状态

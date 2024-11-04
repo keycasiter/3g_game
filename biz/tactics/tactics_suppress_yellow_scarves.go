@@ -44,7 +44,7 @@ func (s SuppressYellowScarvesTactic) Prepare() {
 
 		if triggerRound == consts.Battle_Round_Second {
 			//我军
-			pairGenerals := util.GetPairGeneralArr(s.tacticsParams)
+			pairGenerals := util.GetPairGeneralArr(currentGeneral, s.tacticsParams)
 			for _, pairGeneral := range pairGenerals {
 				if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_ImmunitySandstorm, &vo.EffectHolderParams{
 					EffectRound:    2,

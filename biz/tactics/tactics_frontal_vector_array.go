@@ -48,7 +48,7 @@ func (f FrontalVectorArrayTactic) Prepare() {
 	)
 
 	//使我军主将造成的伤害提升30%，受到的伤害提升20%
-	masterGeneral := util.GetPairMasterGeneral(f.tacticsParams)
+	masterGeneral := util.GetPairMasterGeneral(currentGeneral, f.tacticsParams)
 
 	util.BuffEffectWrapSet(ctx, masterGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove, &vo.EffectHolderParams{
 		EffectRate: 0.3,
@@ -67,7 +67,7 @@ func (f FrontalVectorArrayTactic) Prepare() {
 		FromTactic: f.Id(),
 	})
 	//我军副将造成的伤害降低15%，受到的伤害降低25%
-	viceGenerals := util.GetPairViceGenerals(f.tacticsParams)
+	viceGenerals := util.GetPairViceGenerals(currentGeneral, f.tacticsParams)
 	for _, general := range viceGenerals {
 		util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
 			EffectRate: 0.15,

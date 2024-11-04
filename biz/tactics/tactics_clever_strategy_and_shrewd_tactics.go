@@ -51,7 +51,7 @@ func (c CleverStrategyAndShrewdTacticsTactic) Prepare() {
 
 	//敌军群体(2人)发动主动战法时，有35%几率令其失败并对其造成谋略伤害(伤害率100%，受智力影响)，
 	//找到两个敌军
-	enemyGenerals := util.GetEnemyGeneralsTwoArr(c.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, c.tacticsParams)
 	//注册触发效果
 	for _, sufferGeneral := range enemyGenerals {
 		hlog.CtxInfof(ctx, "[%s]的「%v」效果已施加",

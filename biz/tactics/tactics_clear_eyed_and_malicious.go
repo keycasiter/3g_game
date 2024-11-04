@@ -108,7 +108,7 @@ func (c ClearEyedAndMaliciousTactic) Prepare() {
 			)
 
 			//找到1～2敌人
-			enemyMap := util.GetEnemyGeneralsOneOrTwoMap(c.tacticsParams)
+			enemyMap := util.GetEnemyGeneralsOneOrTwoMap(currentGeneral, c.tacticsParams)
 			for _, enemyGeneral := range enemyMap {
 				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.54
 				damage.TacticDamage(&damage.TacticDamageParam{

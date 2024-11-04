@@ -8,8 +8,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//长者之风
-//使我军全体武力、智力提高28点
+// 长者之风
+// 使我军全体武力、智力提高28点
 type TheWindOfTheElderlyTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -34,7 +34,7 @@ func (t TheWindOfTheElderlyTactic) Prepare() {
 		t.Name(),
 	)
 
-	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, t.tacticsParams)
 	for _, general := range pairGenerals {
 		general.BaseInfo.AbilityAttr.ForceBase += 28
 		general.BaseInfo.AbilityAttr.IntelligenceBase += 28

@@ -41,7 +41,7 @@ func (m MakeCloudAndRainTactic) Prepare() {
 		triggerRound := params.CurrentRound
 
 		if triggerRound == consts.Battle_Round_Second {
-			enemyGenerals := util.GetEnemyGeneralArr(m.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralArr(currentGeneral, m.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//水攻
 				if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_WaterAttack, &vo.EffectHolderParams{

@@ -70,7 +70,7 @@ func (d DisperseTactic) Execute() {
 	)
 
 	//找到敌军全体
-	enemyGenerals := util.GetEnemyGeneralArr(d.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralArr(currentGeneral, d.tacticsParams)
 	for _, general := range enemyGenerals {
 		util.BuffEffectClean(ctx, general)
 	}

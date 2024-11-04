@@ -52,7 +52,7 @@ func (f FocusingOnAllThingsTactic) Prepare() {
 		if triggerRound%2 != 0 {
 			triggerRate := 0.7 + triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
 			if util.GenerateRate(triggerRate) {
-				general := util.GetPairGeneralWhoIsHighestForce(f.tacticsParams)
+				general := util.GetPairGeneralWhoIsHighestForce(currentGeneral, f.tacticsParams)
 				//施加效果
 				effectRate := 0.2 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
 				if util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{

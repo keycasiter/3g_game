@@ -33,7 +33,7 @@ func (s ShapelyArrayTactic) Prepare() {
 	)
 
 	// 我军三名武将自带战法类型相同时
-	pairGenerals := util.GetPairGeneralArr(s.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, s.tacticsParams)
 
 	tacticsType := pairGenerals[0].EquipTactics[0].Type
 	for _, general := range pairGenerals {

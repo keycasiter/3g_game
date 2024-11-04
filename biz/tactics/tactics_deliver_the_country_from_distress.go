@@ -9,10 +9,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//扶危定倾
-//指挥 100%
-//战斗首回合，使我军全体受到伤害降低39%（受自身最高属性影响，自身为主将时，基础值提升至42%）；
-//自身每回合40%概率（受统率影响）清除我军主将的负面状态并使其武力、智力、统率提升3%（受智力影响，可叠加，持续2回合）
+// 扶危定倾
+// 指挥 100%
+// 战斗首回合，使我军全体受到伤害降低39%（受自身最高属性影响，自身为主将时，基础值提升至42%）；
+// 自身每回合40%概率（受统率影响）清除我军主将的负面状态并使其武力、智力、统率提升3%（受智力影响，可叠加，持续2回合）
 type DeliverTheCountryFromDistressTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -35,7 +35,7 @@ func (d DeliverTheCountryFromDistressTactic) Prepare() {
 
 	//战斗首回合，使我军全体受到伤害降低39%（受自身最高属性影响，自身为主将时，基础值提升至42%）；
 	//找到我军全体
-	pairGenerals := util.GetPairGeneralArr(d.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, d.tacticsParams)
 	for _, general := range pairGenerals {
 		effectRate := 0.39
 		if currentGeneral.IsMaster {
@@ -100,7 +100,7 @@ func (d DeliverTheCountryFromDistressTactic) Prepare() {
 		//自身每回合40%概率（受统率影响）清除我军主将的负面状态并使其武力、智力、统率提升3%（受智力影响，可叠加，持续2回合）
 		if util.GenerateRate(triggerRate) {
 			//找到我军主将
-			masterGeneral := util.GetPairMasterGeneral(d.tacticsParams)
+			masterGeneral := util.GetPairMasterGeneral(currentGeneral, d.tacticsParams)
 
 			//清除负面效果
 			util.DebuffEffectClean(ctx, masterGeneral)

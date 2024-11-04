@@ -9,8 +9,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//守而必固
-//战斗开始时，嘲讽敌军主将（强迫目标普通攻击自己），并使自己的统率提升40点，持续4回合
+// 守而必固
+// 战斗开始时，嘲讽敌军主将（强迫目标普通攻击自己），并使自己的统率提升40点，持续4回合
 type ToKeepAndBeFirmTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -36,7 +36,7 @@ func (t ToKeepAndBeFirmTactic) Prepare() {
 	)
 
 	//找到敌军主将嘲讽
-	enemyMaster := util.GetEnemyMasterGeneral(t.tacticsParams)
+	enemyMaster := util.GetEnemyMasterGeneral(currentGeneral, t.tacticsParams)
 	enemyMaster.TauntByGeneral = currentGeneral
 
 	if util.DebuffEffectWrapSet(ctx, enemyMaster, consts.DebuffEffectType_Taunt, &vo.EffectHolderParams{

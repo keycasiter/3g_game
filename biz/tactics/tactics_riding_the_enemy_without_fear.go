@@ -97,7 +97,7 @@ func (r RidingTheEnemyWithoutFearTactic) Execute() {
 			)
 
 			//准备1回合，使敌军主将进入虚弱（无法造成伤害）状态，持续2回合，
-			enemyMasterGeneral := util.GetEnemyMasterGeneral(r.tacticsParams)
+			enemyMasterGeneral := util.GetEnemyMasterGeneral(currentGeneral, r.tacticsParams)
 			if util.DebuffEffectWrapSet(ctx, enemyMasterGeneral, consts.DebuffEffectType_PoorHealth, &vo.EffectHolderParams{
 				EffectRound:    2,
 				FromTactic:     r.Id(),
@@ -118,7 +118,7 @@ func (r RidingTheEnemyWithoutFearTactic) Execute() {
 				})
 			}
 			//并使我军主将进入休整状态（每回合恢复一次兵力，回复率105%，受智力影响），持续2回合
-			pairMasterGeneral := util.GetPairMasterGeneral(r.tacticsParams)
+			pairMasterGeneral := util.GetPairMasterGeneral(currentGeneral, r.tacticsParams)
 			if util.BuffEffectWrapSet(ctx, pairMasterGeneral, consts.BuffEffectType_Rest, &vo.EffectHolderParams{
 				EffectRound:    2,
 				FromTactic:     r.Id(),

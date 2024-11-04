@@ -79,7 +79,7 @@ func (h HundredCavalryRobberyBattalionsTactic) Execute() {
 	//额外攻击
 	if util.GenerateRate(0.5) {
 		//敌军主将
-		enemyMasterGeneral := util.GetEnemyMasterGeneral(h.tacticsParams)
+		enemyMasterGeneral := util.GetEnemyMasterGeneral(currentGeneral, h.tacticsParams)
 		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams:     h.tacticsParams,
 			AttackGeneral:     currentGeneral,

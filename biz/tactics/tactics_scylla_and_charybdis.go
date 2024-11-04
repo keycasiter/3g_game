@@ -72,7 +72,7 @@ func (s ScyllaAndCharybdisTactic) Execute() {
 	// 自己及敌军智力最高的武将同时对敌军单体造成谋略攻击（伤害率118%，受智力影响）
 	effectGenerals := make([]*vo.BattleGeneral, 0)
 	effectGenerals = append(effectGenerals, currentGeneral)
-	effectGenerals = append(effectGenerals, util.GetEnemyGeneralWhoIsHighestIntelligence(s.tacticsParams))
+	effectGenerals = append(effectGenerals, util.GetEnemyGeneralWhoIsHighestIntelligence(currentGeneral, s.tacticsParams))
 	//找到敌军单体
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, s.tacticsParams)
 	for _, general := range effectGenerals {

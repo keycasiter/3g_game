@@ -51,7 +51,7 @@ func (r RampartsOfMetalsAndAMoatOfHotWaterTactic) Prepare() {
 		if triggerRound%2 != 0 {
 			if executeFlag {
 				// 治疗我军群体（2人，治疗率98%，受智力影响）；
-				pairGenerals := util.GetPairGeneralsTwoOrThreeMap(r.tacticsParams)
+				pairGenerals := util.GetPairGeneralsTwoOrThreeMap(currentGeneral, r.tacticsParams)
 				for _, pairGeneral := range pairGenerals {
 					resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.98)
 					util.ResumeSoldierNum(&util.ResumeParams{

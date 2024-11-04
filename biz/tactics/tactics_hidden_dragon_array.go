@@ -34,7 +34,7 @@ func (h HiddenDragonArrayTactic) Prepare() {
 	)
 
 	// 我军三名武将阵营均不相同时，主将提升15%武力、智力、速度、统率，造成伤害降低15%
-	pairGenerals := util.GetPairGeneralArr(h.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, h.tacticsParams)
 	groupMap := make(map[consts.Group]bool)
 	for _, pairGeneral := range pairGenerals {
 		groupMap[pairGeneral.BaseInfo.Group] = true
@@ -47,7 +47,7 @@ func (h HiddenDragonArrayTactic) Prepare() {
 		return
 	}
 	// 副将造成伤害提高15%,受到伤害降低15%，且可触发战法的主将效果
-	viceGenerals := util.GetPairViceGenerals(h.tacticsParams)
+	viceGenerals := util.GetPairViceGenerals(currentGeneral, h.tacticsParams)
 	for _, viceGeneral := range viceGenerals {
 		//造成伤害提高
 		util.BuffEffectWrapSet(ctx, viceGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{

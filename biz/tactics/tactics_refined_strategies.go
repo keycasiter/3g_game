@@ -59,7 +59,7 @@ func (r RefinedStrategiesTactic) Prepare() {
 				r.Name(),
 			)
 			//准备1回合，对敌军群体（2-3人）造成谋略攻击（伤害率210%，受智力影响），并缴械，持续2回合
-			enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(r.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(currentGeneral, r.tacticsParams)
 			dmgRate := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 2.10
 			for _, enemyGeneral := range enemyGenerals {
 				//伤害

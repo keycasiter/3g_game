@@ -51,7 +51,7 @@ func (m MarchIntoTactic) Prepare() {
 				effectTimes += effectParam.EffectTimes
 			}
 			if effectTimes == 5 {
-				pairGenerals := util.GetPairGeneralArr(m.tacticsParams)
+				pairGenerals := util.GetPairGeneralArr(currentGeneral, m.tacticsParams)
 				for _, pairGeneral := range pairGenerals {
 					effectRate := 0.16 + triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100/100
 					//受到兵刃伤害

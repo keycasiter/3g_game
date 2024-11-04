@@ -35,7 +35,7 @@ func (s SuperviseLeadAndSeizureArmyTactic) Prepare() {
 		s.Name(),
 	)
 	// 战斗中，友军群体造成负面状态时，有38%概率（受智力影响）使负面状态持续施加增加1回合（混乱及伪报不生效）
-	pairGenerals := util.GetPairGeneralArr(s.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, s.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_DebuffEffect, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}

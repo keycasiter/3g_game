@@ -132,7 +132,7 @@ func (b BraveAmbitionTactic) Prepare() {
 					consts.BuffEffectType_BraveAmbition_Prepare,
 				)
 				//找到敌军2人
-				enemyGenerals := util.GetEnemyGeneralsTwoArr(b.tacticsParams)
+				enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, b.tacticsParams)
 				//造成伤害
 				for _, enemyGeneral := range enemyGenerals {
 					damage.TacticDamage(&damage.TacticDamageParam{

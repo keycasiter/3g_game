@@ -45,7 +45,7 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 	)
 
 	//找到我军队伍
-	pairGeneralArr := util.GetPairGeneralsTwoArr(a.tacticsParams)
+	pairGeneralArr := util.GetPairGeneralsTwoArr(currentGeneral, a.tacticsParams)
 	//使我军群体(2人)造成的伤害降低24%
 	launchDamageDeduceRate := 0.24
 	for _, general := range pairGeneralArr {
@@ -140,7 +140,7 @@ func (a AppeaseArmyAndPeopleTactic) Prepare() {
 				consts.BuffEffectType_AppeaseArmyAndPeople_Prepare,
 			)
 
-			pairArr := util.GetPairGeneralsTwoArr(a.tacticsParams)
+			pairArr := util.GetPairGeneralsTwoArr(currentGeneral, a.tacticsParams)
 			for _, general := range pairArr {
 				//恢复兵力
 				resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.26)

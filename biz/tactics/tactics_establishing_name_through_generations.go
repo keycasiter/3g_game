@@ -101,7 +101,7 @@ func (e EstablishingNameThroughGenerationsTactic) Execute() {
 			// 自身为主将时，额外提高我军全体80统率，持续3回合
 
 			//找到敌军2人
-			enemyGenerals := util.GetEnemyGeneralsTwoArr(e.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, e.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//对敌军单体造成一次兵刃攻击（伤害率126%）
 				damage.TacticDamage(&damage.TacticDamageParam{
@@ -174,7 +174,7 @@ func (e EstablishingNameThroughGenerationsTactic) Execute() {
 			//自身为主将时，额外提高我军全体80统率，持续3回合
 			if currentGeneral.IsMaster {
 				//找到我军全体
-				pairGenerals := util.GetPairGeneralArr(e.tacticsParams)
+				pairGenerals := util.GetPairGeneralArr(currentGeneral, e.tacticsParams)
 				for _, pairGeneral := range pairGenerals {
 					if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{
 						EffectValue:    80,

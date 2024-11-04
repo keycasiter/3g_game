@@ -9,9 +9,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//舌战群儒
-//敌军尝试发动主动战法时，有25%几率令其发动几率降低5%（受智力影响），
-//并提高自己及随机友军主动战法4%（受智力影响）发动几率，持续1回合
+// 舌战群儒
+// 敌军尝试发动主动战法时，有25%几率令其发动几率降低5%（受智力影响），
+// 并提高自己及随机友军主动战法4%（受智力影响）发动几率，持续1回合
 type LectureFieldTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -38,7 +38,7 @@ func (l LectureFieldTactic) Prepare() {
 
 	//敌军尝试发动主动战法时，有25%几率令其发动几率降低5%（受智力影响）
 	//并提高自己及随机友军主动战法4%（受智力影响）发动几率，持续1回合
-	enemyGenerals := util.GetEnemyGeneralArr(l.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralArr(currentGeneral, l.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
 		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_LectureField, &vo.EffectHolderParams{
 			EffectRate: 1.0,

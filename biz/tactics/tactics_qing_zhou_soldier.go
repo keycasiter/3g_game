@@ -78,7 +78,7 @@ func (q QingZhouSoldierTactic) Prepare() {
 			//TODO 额外受敌军造成伤害影响
 
 			//优先完全恢复我军兵力最低单体
-			allPairGenerals := util.GetPairGeneralArr(q.tacticsParams)
+			allPairGenerals := util.GetPairGeneralArr(currentGeneral, q.tacticsParams)
 			general := util.GetLowestSoliderNumGeneral(allPairGenerals)
 			util.ResumeSoldierNum(&util.ResumeParams{
 				Ctx:            ctx,

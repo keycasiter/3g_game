@@ -56,7 +56,7 @@ func (c CurettageTactic) Execute() {
 	)
 
 	//找我我军损失兵力最多的武将
-	maxLossSoldierNumGeneral := util.GetPairMaxLossSoldierNumGeneral(c.tacticsParams)
+	maxLossSoldierNumGeneral := util.GetPairMaxLossSoldierNumGeneral(currentGeneral, c.tacticsParams)
 
 	//清除负面状态
 	util.DebuffEffectClean(ctx, maxLossSoldierNumGeneral)

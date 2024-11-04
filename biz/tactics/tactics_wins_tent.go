@@ -33,7 +33,7 @@ func (w WinsTentTactic) Prepare() {
 	)
 
 	// 战斗中，提高己方主将14%奇谋几率，及20%奇谋伤害，同时为己方主将分担30%的伤害（自身为主将时无效）
-	pairMasterGeneral := util.GetPairMasterGeneral(w.tacticsParams)
+	pairMasterGeneral := util.GetPairMasterGeneral(currentGeneral, w.tacticsParams)
 	//奇谋几率及伤害
 	util.BuffEffectWrapSet(ctx, pairMasterGeneral, consts.BuffEffectType_EnhanceStrategy, &vo.EffectHolderParams{
 		TriggerRate:    0.14,

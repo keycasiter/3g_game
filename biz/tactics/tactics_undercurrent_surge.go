@@ -95,7 +95,7 @@ func (u UndercurrentSurgeTactic) Execute() {
 			)
 
 			//准备1回合，对敌军主将造成一次兵刃攻击（伤害率272%）
-			enemyMasterGeneral := util.GetEnemyMasterGeneral(u.tacticsParams)
+			enemyMasterGeneral := util.GetEnemyMasterGeneral(currentGeneral, u.tacticsParams)
 			damage.TacticDamage(&damage.TacticDamageParam{
 				TacticsParams:     u.tacticsParams,
 				AttackGeneral:     currentGeneral,

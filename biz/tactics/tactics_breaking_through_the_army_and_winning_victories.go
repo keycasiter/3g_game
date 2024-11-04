@@ -70,7 +70,7 @@ func (b BreakingThroughTheArmyAndWinningVictoriesTactic) Execute() {
 	)
 	//降低敌军单体70点统率（受武力影响），持续2回合，并对其造成兵刃伤害（伤害率228%）
 	//找到敌军单体
-	enemyGeneral := util.GetEnemyOneGeneral(b.tacticsParams)
+	enemyGeneral := util.GetEnemyOneGeneral(currentGeneral, b.tacticsParams)
 
 	//施加效果
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrCommand, &vo.EffectHolderParams{

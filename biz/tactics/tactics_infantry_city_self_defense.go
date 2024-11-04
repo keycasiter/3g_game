@@ -71,7 +71,7 @@ func (i InfantryCitySelfDefenseTactic) Execute() {
 	)
 	// 恢复我军群体（2人）兵力（治疗率92%，受智力影响），
 	// 并使其获得休整状态（每回合恢复一次兵力，治疗率62%），持续1回合
-	pairGenerals := util.GetPairGeneralsTwoArr(i.tacticsParams)
+	pairGenerals := util.GetPairGeneralsTwoArr(currentGeneral, i.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		resumeNum := cast.ToInt64(pairGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.92)
 		util.ResumeSoldierNum(&util.ResumeParams{

@@ -35,7 +35,7 @@ func (t TengjiaSoldierTactic) Prepare() {
 
 	//将盾兵进阶为刀枪不入的藤甲兵：
 	//我军全体受到兵刃伤害降低24%（受统率影响）
-	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, t.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		effectRate := 0.24 + currentGeneral.BaseInfo.AbilityAttr.CommandBase/100/100
 		util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{

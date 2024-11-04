@@ -9,9 +9,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//顾盼生姿
-//偷取敌军一名男性武将35点智力和武力给自身和友军单体（受魅力影响）持续2回合，可叠加2次
-//主动 45%
+// 顾盼生姿
+// 偷取敌军一名男性武将35点智力和武力给自身和友军单体（受魅力影响）持续2回合，可叠加2次
+// 主动 45%
 type LookAroundCharminglyTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -69,7 +69,7 @@ func (l LookAroundCharminglyTactic) Execute() {
 		l.Name(),
 	)
 	//偷取敌军一名男性武将35点智力和武力给自身和友军单体（受魅力影响）持续2回合，可叠加2次
-	enemyGeneral := util.GetEnemyOneMaleGeneral(l.tacticsParams)
+	enemyGeneral := util.GetEnemyOneMaleGeneral(currentGeneral, l.tacticsParams)
 
 	//偷取武力
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrForce, &vo.EffectHolderParams{

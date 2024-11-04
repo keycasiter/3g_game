@@ -49,7 +49,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 				u.Name(),
 				consts.BuffEffectType_UseMartialArtsToConnectWithGods_Prepare,
 			)
-			enemyGenerals := util.GetEnemyGeneralsTwoArr(u.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, u.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
 				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 0.75
 				damage.TacticDamage(&damage.TacticDamageParam{
@@ -68,7 +68,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 				u.Name(),
 				consts.BuffEffectType_UseMartialArtsToConnectWithGods_Prepare,
 			)
-			enemyGenerals := util.GetEnemyGeneralsTwoArr(u.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, u.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
 				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.05
 				damage.TacticDamage(&damage.TacticDamageParam{
@@ -87,7 +87,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 				u.Name(),
 				consts.BuffEffectType_UseMartialArtsToConnectWithGods_Prepare,
 			)
-			enemyGenerals := util.GetEnemyGeneralsTwoArr(u.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, u.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
 				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.35
 				damage.TacticDamage(&damage.TacticDamageParam{
@@ -106,7 +106,7 @@ func (u UseMartialArtsToConnectWithGodsTactic) Prepare() {
 				u.Name(),
 				consts.BuffEffectType_UseMartialArtsToConnectWithGods_Prepare,
 			)
-			enemyGenerals := util.GetEnemyGeneralsTwoArr(u.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, u.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
 				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.65
 				damage.TacticDamage(&damage.TacticDamageParam{

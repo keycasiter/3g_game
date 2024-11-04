@@ -49,7 +49,7 @@ func (t TraitorInTroubledTimesTactic) Prepare() {
 	)
 	//战斗中，使友军群体(2人)造成伤害提高16%（受智力影响）
 	//找到队友
-	pairGenerals := util.GetPairGeneralsTwoArr(t.tacticsParams)
+	pairGenerals := util.GetPairGeneralsTwoArr(currentGeneral, t.tacticsParams)
 	for _, general := range pairGenerals {
 		//造成伤害提高16% TODO （受智力影响）
 		rate := 0.16

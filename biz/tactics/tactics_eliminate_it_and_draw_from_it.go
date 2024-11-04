@@ -98,7 +98,7 @@ func (e EliminateItAndDrawFromItTactic) Execute() {
 			)
 
 			//找到敌军2人~3人
-			enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(e.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(currentGeneral, e.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//造成一次兵刃攻击（伤害率162%）
 				damage.TacticDamage(&damage.TacticDamageParam{

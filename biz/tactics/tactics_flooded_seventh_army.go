@@ -82,7 +82,7 @@ func (f FloodedSeventhArmyTactic) Execute() {
 	//第二次及之后释放前，使敌军群体（2～3人）受到兵刃伤害提升20%（受武力影响），持续1回合
 	if f.triggerCnt >= 2 {
 		//找到敌军群体2～3
-		enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(f.tacticsParams)
+		enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(currentGeneral, f.tacticsParams)
 		for _, enemyGeneral := range enemyGenerals {
 			effectRate := 0.2 + currentGeneral.BaseInfo.AbilityAttr.ForceBase/100/100
 			if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_SufferWeaponDamageImprove, &vo.EffectHolderParams{

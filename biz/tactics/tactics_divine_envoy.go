@@ -98,7 +98,7 @@ func (d DivineEnvoyTactic) Execute() {
 				d.Name(),
 			)
 			//对敌军全体造成溃逃状态，每回合持续造成伤害（伤害率68%，受武力影响），持续2回合
-			enemyGenerals := util.GetEnemyGeneralArr(d.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralArr(currentGeneral, d.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				//溃逃状态
 				if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_Escape, &vo.EffectHolderParams{

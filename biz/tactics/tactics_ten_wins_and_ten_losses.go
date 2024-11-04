@@ -32,7 +32,7 @@ func (t TenWinsAndTenLossesTactic) Prepare() {
 		t.Name(),
 	)
 
-	pairMasterGeneral := util.GetPairMasterGeneral(t.tacticsParams)
+	pairMasterGeneral := util.GetPairMasterGeneral(currentGeneral, t.tacticsParams)
 	// 战斗前2回合，使我军主将获得洞察状态
 	if util.BuffEffectWrapSet(ctx, pairMasterGeneral, consts.BuffEffectType_Insight, &vo.EffectHolderParams{
 		EffectRound:    2,

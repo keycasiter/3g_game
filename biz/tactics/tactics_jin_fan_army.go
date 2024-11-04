@@ -42,7 +42,7 @@ func (j JinFanArmyTactic) Prepare() {
 	//部队普通攻击时，有45%概率使目标进入溃逃状态（伤害率64%，受武力影响），持续2回合
 	//若目标已经溃逃则造成兵刃攻击（伤害率110%）并恢复伤害量的30%兵力；
 	//若甘宁统领，提高友军6%会心
-	pairGenerals := util.GetPairGeneralArr(j.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, j.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_AttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}

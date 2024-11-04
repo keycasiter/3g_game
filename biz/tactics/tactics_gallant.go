@@ -63,7 +63,7 @@ func (g GallantTactic) Prepare() {
 	}
 
 	//第三回合起，使我军全体造成的兵刃伤害提升20%（受速度影响），持续到战斗结束
-	pairGenerals := util.GetPairGeneralArr(g.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, g.tacticsParams)
 	for _, general := range pairGenerals {
 		util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}

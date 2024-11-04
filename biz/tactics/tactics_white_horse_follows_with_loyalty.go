@@ -33,7 +33,7 @@ func (w WhiteHorseFollowsWithLoyaltyTactic) Prepare() {
 		w.Name(),
 	)
 	// 我军全体战斗前2回合获得先攻，并提高10%主动战法发动率
-	pairGenerals := util.GetPairGeneralArr(w.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, w.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		//先攻
 		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_FirstAttack, &vo.EffectHolderParams{

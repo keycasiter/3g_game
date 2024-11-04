@@ -52,7 +52,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 
 	//我军全体统率、速度提高22点
 	//找我我军全体
-	pairGenerals := util.GetPairGeneralArr(w.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, w.tacticsParams)
 	for _, general := range pairGenerals {
 		general.BaseInfo.AbilityAttr.CommandBase += 22
 		hlog.CtxInfof(ctx, "[%s]的统率提高了22",
@@ -65,7 +65,7 @@ func (w WuDangFlyArmyTactic) Prepare() {
 	}
 	//首回合对敌军群体（2人）施加中毒状态，每回合持续造成伤害（伤害率80%，受智力影响），持续3回合
 	//找到敌军2人
-	enemyGenerals := util.GetEnemyGeneralsTwoArr(w.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, w.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
 		//持续3回合
 		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Methysis, &vo.EffectHolderParams{

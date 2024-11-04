@@ -35,7 +35,7 @@ func (t TigerAndLeopardCavalryTactic) Prepare() {
 	// 将骑兵进阶为天下骁锐的虎豹骑：
 	// 我军全体提高40武力，战斗前3回合，我军全体突击战法发动率提高10%，
 	// 若曹纯统领时，提升的发动概率额外受武力影响
-	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, t.tacticsParams)
 	//武力
 	for _, pairGeneral := range pairGenerals {
 		//我军全体提高40武力

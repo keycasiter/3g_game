@@ -9,8 +9,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//御敌屏障
-//战斗前4回合，使我军群体（2人）受到的伤害降低25%
+// 御敌屏障
+// 战斗前4回合，使我军群体（2人）受到的伤害降低25%
 type DefensiveBarrierTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -32,7 +32,7 @@ func (d DefensiveBarrierTactic) Prepare() {
 	)
 
 	//找到随机友军2人
-	pairGenerals := util.GetPairGeneralsTwoArr(d.tacticsParams)
+	pairGenerals := util.GetPairGeneralsTwoArr(currentGeneral, d.tacticsParams)
 	for _, general := range pairGenerals {
 		util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
 			EffectRate: 0.25,

@@ -106,7 +106,7 @@ func (b BrokenBridgeByWaterTactic) Execute() {
 	// 同时使自身获得16%倒戈（造成兵刃伤害时，恢复自身基于伤害量的一定兵力），持续2回合，该战法发动后回进入1回合冷却
 
 	//找到敌军2～3人
-	enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(currentGeneral, b.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
 		//施加溃逃状态
 		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Escape, &vo.EffectHolderParams{

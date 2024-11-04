@@ -58,7 +58,7 @@ func (i IronHorseDriveTactic) Prepare() {
 	}
 
 	//我军全体发动突击战法后，降低普通攻击目标15%统率，持续3回合，可叠加
-	pairGenerals := util.GetPairGeneralArr(i.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, i.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_AssaultTacticEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}

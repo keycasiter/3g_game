@@ -41,7 +41,7 @@ func (j JinfanArmyHundredFeathersTactic) Prepare() {
 	})
 	// 自身为主将时，提高友军群体（2人）5%会心几率及10%会心伤害
 	if currentGeneral.IsMaster {
-		pairGenerals := util.GetPairGeneralsTwoArr(j.tacticsParams)
+		pairGenerals := util.GetPairGeneralsTwoArr(currentGeneral, j.tacticsParams)
 		for _, pairGeneral := range pairGenerals {
 			util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_EnhanceWeapon, &vo.EffectHolderParams{
 				TriggerRate:    0.05,

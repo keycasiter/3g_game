@@ -99,9 +99,9 @@ func (b BeautyWhichOverthrowsStatesAndCitiesTactic) Execute() {
 			//自身为女性时，必定选择敌军群体2人
 			enemyGenerals := make([]*vo.BattleGeneral, 0)
 			if currentGeneral.BaseInfo.Gender == consts.Gender_Female {
-				enemyGenerals = util.GetEnemyTwoGeneralByGeneral(triggerGeneral, b.tacticsParams)
+				enemyGenerals = util.GetEnemyTwoGeneralByGeneral(currentGeneral, b.tacticsParams)
 			} else {
-				enemyGenerals = util.GetEnemyGeneralsOneOrTwoArr(b.tacticsParams)
+				enemyGenerals = util.GetEnemyGeneralsOneOrTwoArr(currentGeneral, b.tacticsParams)
 			}
 			//施加混乱效果
 			for _, general := range enemyGenerals {

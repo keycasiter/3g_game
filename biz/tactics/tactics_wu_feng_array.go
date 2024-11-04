@@ -35,7 +35,7 @@ func (w WuFengArrayTactic) Prepare() {
 	)
 	// 我军三名武将兵种适性均不相同时，战斗前5回合，我军主将有80%几率优先成为敌军战法的目标，且使该战法对其造成的伤害降低30%（受主将统率影响），
 	armsAbilityMap := make(map[consts.ArmsAbility]*vo.BattleGeneral, 0)
-	pairGenerals := util.GetPairGeneralArr(w.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, w.tacticsParams)
 
 	armType := util.GetPairArmType(currentGeneral, w.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
@@ -57,7 +57,7 @@ func (w WuFengArrayTactic) Prepare() {
 		return
 	}
 
-	viceGenerals := util.GetPairViceGenerals(w.tacticsParams)
+	viceGenerals := util.GetPairViceGenerals(currentGeneral, w.tacticsParams)
 	highGeneral := util.GetHighestArmAbilityGeneral(viceGenerals, armType)
 	lowGeneral := util.GetLowestArmAbilityGeneral(viceGenerals, armType)
 

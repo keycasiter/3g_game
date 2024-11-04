@@ -35,7 +35,7 @@ func (f FallIntoCampTactic) Prepare() {
 
 	//我军全体武力/统率提高22点
 	//找到我军全体
-	pairGenerals := util.GetPairGeneralArr(f.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, f.tacticsParams)
 	for _, general := range pairGenerals {
 		//武力
 		util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{

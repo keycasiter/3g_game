@@ -71,7 +71,7 @@ func (g GatherTheCrowdAndStrikeTactic) Execute() {
 	)
 	//对敌军群体(1-2人)造成兵刃伤害（伤害率164%）
 	//找到敌军
-	enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(g.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(currentGeneral, g.tacticsParams)
 	for _, general := range enemyGenerals {
 		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams:     g.tacticsParams,

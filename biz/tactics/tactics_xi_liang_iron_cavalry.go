@@ -36,7 +36,7 @@ func (x XiLiangIronCavalryTactic) Prepare() {
 	//将骑兵进阶为横行天下的西凉铁骑铁骑：
 	//战斗前3回合，提高我军全体25%会心几率（触发时兵刃伤害提高100%）；
 	//若马腾统领，则提高会心几率受速度影响
-	pairGenerals := util.GetPairGeneralArr(x.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, x.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		effectRate := 0.25
 		if consts.General_Id(currentGeneral.BaseInfo.Id) == consts.MaTeng {

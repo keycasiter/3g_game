@@ -72,7 +72,7 @@ func (h HuJiaLingeringSoundTactic) Execute() {
 	)
 	// 治疗我军群体（2人，治疗率122%，受智力影响）并有50%概率使自身及友军单体造成的兵刃伤害和谋略伤害提高，受到的兵刃伤害和谋略伤害降低26%（受智力影响），
 	// 独立判断，持续2回合
-	pairGenerals := util.GetPairGeneralsTwoArr(h.tacticsParams)
+	pairGenerals := util.GetPairGeneralsTwoArr(currentGeneral, h.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		//治疗
 		resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.22)

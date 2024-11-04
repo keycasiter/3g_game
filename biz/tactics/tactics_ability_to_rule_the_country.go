@@ -35,7 +35,7 @@ func (a AbilityToRuleTheCountryTactic) Prepare() {
 	)
 
 	//找到我军队伍
-	pairGeneralArr := util.GetPairGeneralArr(a.tacticsParams)
+	pairGeneralArr := util.GetPairGeneralArr(currentGeneral, a.tacticsParams)
 	for _, pairGeneral := range pairGeneralArr {
 		//施加效果
 		util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_AbilityToRuleTheCountry_Prepare, &vo.EffectHolderParams{

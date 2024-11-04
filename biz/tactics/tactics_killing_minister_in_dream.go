@@ -9,10 +9,10 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//梦中弑臣
-//战斗前2回合，如果自己为主将，则使随机副将为自己分担20%伤害。
-//战斗第3回合起，自己行动时如果有负面状态，则获得25%概率反击状态（伤害率150%）
-//直到战斗结束
+// 梦中弑臣
+// 战斗前2回合，如果自己为主将，则使随机副将为自己分担20%伤害。
+// 战斗第3回合起，自己行动时如果有负面状态，则获得25%概率反击状态（伤害率150%）
+// 直到战斗结束
 type KillingMinisterInDreamTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -39,7 +39,7 @@ func (k KillingMinisterInDreamTactic) Prepare() {
 			k.Name(),
 		)
 		//找到随机副将
-		viceGeneral := util.GetPairViceGeneral(k.tacticsParams)
+		viceGeneral := util.GetPairViceGeneral(currentGeneral, k.tacticsParams)
 
 		//施加分担效果
 		if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_ShareResponsibilityFor, &vo.EffectHolderParams{

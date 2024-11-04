@@ -74,7 +74,7 @@ func (a AmbushOnAllSidesTactic) Execute() {
 		a.Name(),
 	)
 	//找到敌军
-	enemyGenerals := util.GetEnemyGeneralsTwoArr(a.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, a.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
 		//找到有负面状态的
 		if util.DeBuffEffectContainsCheck(sufferGeneral) {

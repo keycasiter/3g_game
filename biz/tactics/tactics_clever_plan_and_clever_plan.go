@@ -9,9 +9,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//奇计良谋
-//战斗前3回合，使敌军武力最高的武将造成兵刃伤害降低28%（受速度影响），
-//使敌军智力最高的武将造成的谋略伤害降低28%（受速度影响）
+// 奇计良谋
+// 战斗前3回合，使敌军武力最高的武将造成兵刃伤害降低28%（受速度影响），
+// 使敌军智力最高的武将造成的谋略伤害降低28%（受速度影响）
 type CleverPlanAndCleverPlanTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -37,7 +37,7 @@ func (c CleverPlanAndCleverPlanTactic) Prepare() {
 	)
 
 	//战斗前3回合，使敌军武力最高的武将造成兵刃伤害降低28%（受速度影响）
-	mostForceEnemyGeneral := util.GetMostForceEnemyGeneral(c.tacticsParams)
+	mostForceEnemyGeneral := util.GetMostForceEnemyGeneral(currentGeneral, c.tacticsParams)
 	forceRate := 0.28 + currentGeneral.BaseInfo.AbilityAttr.SpeedBase/100/100
 
 	if util.DebuffEffectWrapSet(ctx, mostForceEnemyGeneral, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
@@ -67,7 +67,7 @@ func (c CleverPlanAndCleverPlanTactic) Prepare() {
 	}
 
 	//使敌军智力最高的武将造成的谋略伤害降低28%（受速度影响）
-	mostIntelligenceEnemyGeneral := util.GetMostIntelligenceEnemyGeneral(c.tacticsParams)
+	mostIntelligenceEnemyGeneral := util.GetMostIntelligenceEnemyGeneral(currentGeneral, c.tacticsParams)
 	intelligenceRate := 0.28 + currentGeneral.BaseInfo.AbilityAttr.SpeedBase/100/100
 
 	hlog.CtxInfof(ctx, "[%s]造成谋略伤害降低%.2f%%",

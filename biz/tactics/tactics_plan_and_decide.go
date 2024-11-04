@@ -35,7 +35,7 @@ func (p PlanAndDecideTactic) Prepare() {
 	)
 	// 偷取敌方智力最高武将24点智力（受智力影响）；
 	// 且每当自身试图发动主动战法前，回复我军单体一定兵力（治疗率64%，受智力影响）
-	highestGeneral := util.GetEnemyGeneralWhoIsHighestIntelligence(p.tacticsParams)
+	highestGeneral := util.GetEnemyGeneralWhoIsHighestIntelligence(currentGeneral, p.tacticsParams)
 	effectVal := cast.ToInt64(24 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100)
 	util.DebuffEffectWrapSet(ctx, highestGeneral, consts.DebuffEffectType_DecrIntelligence, &vo.EffectHolderParams{
 		EffectValue:    effectVal,

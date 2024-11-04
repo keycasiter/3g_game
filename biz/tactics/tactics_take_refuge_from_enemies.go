@@ -36,7 +36,7 @@ func (t TakeRefugeFromEnemiesTactic) Prepare() {
 		t.Name(),
 	)
 	//战斗开始后前3回合，使我军智力最高的武将受到兵刃伤害降低40%（受智力影响）
-	mostIntelligenceGeneral := util.GetMostIntelligencePairGeneral(t.tacticsParams)
+	mostIntelligenceGeneral := util.GetMostIntelligencePairGeneral(currentGeneral, t.tacticsParams)
 	weaponDamageDeduceRate := 0.4 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
 
 	if util.BuffEffectWrapSet(ctx, mostIntelligenceGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{
@@ -64,7 +64,7 @@ func (t TakeRefugeFromEnemiesTactic) Prepare() {
 	}
 
 	//使我军武力最高的武将受到的谋略伤害降低40%（受智力影响）
-	mostForceGeneral := util.GetMostForcePairGeneral(t.tacticsParams)
+	mostForceGeneral := util.GetMostForcePairGeneral(currentGeneral, t.tacticsParams)
 	strategyDamageDeduceRate := 0.4 + currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
 	if util.BuffEffectWrapSet(ctx, mostForceGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
 		EffectRate: strategyDamageDeduceRate,

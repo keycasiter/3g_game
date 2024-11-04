@@ -9,9 +9,9 @@ import (
 )
 
 // 找到当前执行战法武将的队友Map
-func GetPairGeneralMap(tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
+func GetPairGeneralMap(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
 	pairGeneralMap := make(map[string]*vo.BattleGeneral, 0)
-	currentGeneralId := tacticsParams.CurrentGeneral.BaseInfo.UniqueId
+	currentGeneralId := currentGeneral.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; ok {
 		pairGeneralMap = tacticsParams.FightingGeneralMap
 	}
@@ -22,9 +22,9 @@ func GetPairGeneralMap(tacticsParams *model.TacticsParams) map[string]*vo.Battle
 }
 
 // 找到当前执行战法武将的队友Arr
-func GetPairGeneralArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+func GetPairGeneralArr(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	pairGeneralArr := make([]*vo.BattleGeneral, 0)
-	currentGeneralId := tacticsParams.CurrentGeneral.BaseInfo.UniqueId
+	currentGeneralId := currentGeneral.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; ok {
 		for _, general := range tacticsParams.FightingGeneralMap {
 			pairGeneralArr = append(pairGeneralArr, general)
@@ -50,9 +50,9 @@ func GetLowestSoliderNumGeneral(generals []*vo.BattleGeneral) *vo.BattleGeneral 
 }
 
 // 找到当前执行战法武将的敌军Map
-func GetEnemyGeneralMap(tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
+func GetEnemyGeneralMap(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
 	enemyGeneralMap := make(map[string]*vo.BattleGeneral, 0)
-	currentGeneralId := tacticsParams.CurrentGeneral.BaseInfo.UniqueId
+	currentGeneralId := currentGeneral.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
 		enemyGeneralMap = tacticsParams.FightingGeneralMap
 	}
@@ -63,9 +63,9 @@ func GetEnemyGeneralMap(tacticsParams *model.TacticsParams) map[string]*vo.Battl
 }
 
 // 找到当前执行战法武将的敌军Arr
-func GetEnemyGeneralArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+func GetEnemyGeneralArr(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	enemyGeneralArr := make([]*vo.BattleGeneral, 0)
-	currentGeneralId := tacticsParams.CurrentGeneral.BaseInfo.UniqueId
+	currentGeneralId := currentGeneral.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
 		for _, general := range tacticsParams.FightingGeneralMap {
 			enemyGeneralArr = append(enemyGeneralArr, general)
@@ -80,8 +80,8 @@ func GetEnemyGeneralArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral 
 }
 
 // 找到敌军一名男性武将
-func GetEnemyOneMaleGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	enemyGenerals := GetEnemyGeneralArr(tacticsParams)
+func GetEnemyOneMaleGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(currentGeneral, tacticsParams)
 
 	maleGenerals := make([]*vo.BattleGeneral, 0)
 	for _, enemyGeneral := range enemyGenerals {
@@ -97,8 +97,8 @@ func GetEnemyOneMaleGeneral(tacticsParams *model.TacticsParams) *vo.BattleGenera
 }
 
 // 找到当前执行战法武将的队伍主将
-func GetPairMasterGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+func GetPairMasterGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	pairGeneralArr := GetPairGeneralArr(currentGeneral, tacticsParams)
 	for _, general := range pairGeneralArr {
 		if general.IsMaster {
 			return general
@@ -109,8 +109,8 @@ func GetPairMasterGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral 
 }
 
 // 找到当前执行战法武将的敌军主将
-func GetEnemyMasterGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
+func GetEnemyMasterGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGeneralArr := GetEnemyGeneralArr(currentGeneral, tacticsParams)
 	for _, general := range enemyGeneralArr {
 		if general.IsMaster {
 			return general
@@ -121,8 +121,8 @@ func GetEnemyMasterGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral
 }
 
 // 找到当前执行战法武将的队伍副将
-func GetPairViceGenerals(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
-	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+func GetPairViceGenerals(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+	pairGeneralArr := GetPairGeneralArr(currentGeneral, tacticsParams)
 	viceGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range pairGeneralArr {
 		if !general.IsMaster {
@@ -133,8 +133,8 @@ func GetPairViceGenerals(tacticsParams *model.TacticsParams) []*vo.BattleGeneral
 }
 
 // 找到当前执行战法武将的队伍一个副将
-func GetPairViceGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	viceGenerals := GetPairViceGenerals(tacticsParams)
+func GetPairViceGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	viceGenerals := GetPairViceGenerals(currentGeneral, tacticsParams)
 	if len(viceGenerals) == 1 {
 		return viceGenerals[0]
 	} else {
@@ -147,8 +147,8 @@ func GetPairViceGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 }
 
 // 找到当前执行战法武将的队伍除自己之外的副将
-func GetPairViceGeneralNotSelf(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+func GetPairViceGeneralNotSelf(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	pairGeneralArr := GetPairGeneralArr(currentGeneral, tacticsParams)
 	for _, general := range pairGeneralArr {
 		//不是主将，也不是当前执行战法武将自己的副将
 		if !general.IsMaster &&
@@ -160,9 +160,9 @@ func GetPairViceGeneralNotSelf(tacticsParams *model.TacticsParams) *vo.BattleGen
 }
 
 // 找到当前友军两到三个队友
-func GetPairGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+func GetPairGeneralsTwoOrThreeMap(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	//找到队友
-	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+	pairGeneralArr := GetPairGeneralArr(currentGeneral, tacticsParams)
 	pairGenerals := make([]*vo.BattleGeneral, 0)
 	//两到三个
 	totalNum := len(pairGeneralArr)
@@ -250,9 +250,9 @@ func GetPairGeneralsNotSelf(tacticsParams *model.TacticsParams, general *vo.Batt
 }
 
 // 找到当前敌军一个人
-func GetEnemyOneGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+func GetEnemyOneGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	//找到敌军
-	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
+	enemyGeneralArr := GetEnemyGeneralArr(currentGeneral, tacticsParams)
 	//随机1个人
 	totalNum := len(enemyGeneralArr)
 	hitIdx := GenerateHitOneIdx(totalNum)
@@ -267,13 +267,13 @@ func GetEnemyGeneralsByGeneral(general *vo.BattleGeneral, tacticsParams *model.T
 	enemyGenerals := make([]*vo.BattleGeneral, 0)
 	currentGeneralId := general.BaseInfo.UniqueId
 	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
-		for _, general := range tacticsParams.FightingGeneralMap {
-			enemyGenerals = append(enemyGenerals, general)
+		for _, generalVo := range tacticsParams.FightingGeneralMap {
+			enemyGenerals = append(enemyGenerals, generalVo)
 		}
 	}
 	if _, ok := tacticsParams.EnemyGeneralMap[currentGeneralId]; !ok {
-		for _, general := range tacticsParams.EnemyGeneralMap {
-			enemyGenerals = append(enemyGenerals, general)
+		for _, generalVo := range tacticsParams.EnemyGeneralMap {
+			enemyGenerals = append(enemyGenerals, generalVo)
 		}
 	}
 	return enemyGenerals
@@ -382,18 +382,17 @@ func GetEnemyTwoGeneralByGeneral(general *vo.BattleGeneral, tacticsParams *model
 }
 
 // 找到当前敌军两个人
-func GetEnemyGeneralsTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+func GetEnemyGeneralsTwoArr(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	//找到敌军
-	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
-	enemyGenerals := make([]*vo.BattleGeneral, 0)
+	enemyGenerals := GetEnemyGeneralsByGeneral(currentGeneral, tacticsParams)
 	//随机两个人
 	hitNum := 2
-	totalNum := len(enemyGeneralArr)
+	totalNum := len(enemyGenerals)
 	if totalNum < 2 {
 		hitNum = 1
 	}
 	hitIdxMap := GenerateHitIdxMap(hitNum, totalNum)
-	for idx, general := range enemyGeneralArr {
+	for idx, general := range enemyGenerals {
 		if _, ok := hitIdxMap[int64(idx)]; ok {
 			enemyGenerals = append(enemyGenerals, general)
 		}
@@ -420,9 +419,9 @@ func GetPairGeneralsTwoArrByGeneral(currentGeneral *vo.BattleGeneral, tacticsPar
 }
 
 // 找到当前友军两个队友
-func GetPairGeneralsTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+func GetPairGeneralsTwoArr(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	//找到队友
-	pairGeneralArr := GetPairGeneralArr(tacticsParams)
+	pairGeneralArr := GetPairGeneralArr(currentGeneral, tacticsParams)
 	pairGenerals := make([]*vo.BattleGeneral, 0)
 	//随机两个队友
 	hitNum := 2
@@ -440,9 +439,9 @@ func GetPairGeneralsTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGener
 }
 
 // 找到当前敌军两到三个敌人
-func GetEnemyGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
+func GetEnemyGeneralsTwoOrThreeMap(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
 	//找到敌人
-	enemyGeneralArr := GetEnemyGeneralArr(tacticsParams)
+	enemyGeneralArr := GetEnemyGeneralArr(currentGeneral, tacticsParams)
 	enemyGeneralMap := make(map[string]*vo.BattleGeneral, 0)
 	//两到三个
 	totalNum := len(enemyGeneralArr)
@@ -456,15 +455,15 @@ func GetEnemyGeneralsTwoOrThreeMap(tacticsParams *model.TacticsParams) map[strin
 }
 
 // 找到当前敌军1到2个敌人
-func GetEnemyGeneralsOneOrTwoMap(tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
+func GetEnemyGeneralsOneOrTwoMap(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) map[string]*vo.BattleGeneral {
 	//找到敌人
 	enemyGeneralArr := make([]*vo.BattleGeneral, 0)
 	enemyGeneralMap := make(map[string]*vo.BattleGeneral, 0)
 
 	if GenerateRate(0.5) {
-		enemyGeneralArr = append(enemyGeneralArr, GetEnemyOneGeneral(tacticsParams))
+		enemyGeneralArr = append(enemyGeneralArr, GetEnemyOneGeneral(currentGeneral, tacticsParams))
 	} else {
-		enemyGeneralArr = append(enemyGeneralArr, GetEnemyGeneralsTwoArr(tacticsParams)...)
+		enemyGeneralArr = append(enemyGeneralArr, GetEnemyGeneralsTwoArr(currentGeneral, tacticsParams)...)
 	}
 	for _, general := range enemyGeneralArr {
 		enemyGeneralMap[general.BaseInfo.UniqueId] = general
@@ -473,21 +472,21 @@ func GetEnemyGeneralsOneOrTwoMap(tacticsParams *model.TacticsParams) map[string]
 }
 
 // 找到当前敌军1到2个敌人
-func GetEnemyGeneralsOneOrTwoArr(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
+func GetEnemyGeneralsOneOrTwoArr(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	//找到敌人
 	enemyGeneralArr := make([]*vo.BattleGeneral, 0)
 
 	if GenerateRate(0.5) {
-		enemyGeneralArr = append(enemyGeneralArr, GetEnemyOneGeneral(tacticsParams))
+		enemyGeneralArr = append(enemyGeneralArr, GetEnemyOneGeneral(currentGeneral, tacticsParams))
 	} else {
-		enemyGeneralArr = append(enemyGeneralArr, GetEnemyGeneralsTwoArr(tacticsParams)...)
+		enemyGeneralArr = append(enemyGeneralArr, GetEnemyGeneralsTwoArr(currentGeneral, tacticsParams)...)
 	}
 	return enemyGeneralArr
 }
 
 // 找到我军损失兵力最多的武将
-func GetPairMaxLossSoldierNumGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	pairGenerals := GetPairGeneralArr(tacticsParams)
+func GetPairMaxLossSoldierNumGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(currentGeneral, tacticsParams)
 	if pairGenerals == nil || len(pairGenerals) == 0 {
 		return tacticsParams.CurrentGeneral
 	}
@@ -534,8 +533,8 @@ func GetAllGenerals(tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 }
 
 // 获取我军武力最高的武将
-func GetMostForcePairGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	pairGenerals := GetPairGeneralArr(tacticsParams)
+func GetMostForcePairGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(currentGeneral, tacticsParams)
 	mostForceGeneral := pairGenerals[0]
 	for _, general := range pairGenerals {
 		if general.BaseInfo.AbilityAttr.ForceBase > mostForceGeneral.BaseInfo.AbilityAttr.ForceBase {
@@ -546,8 +545,8 @@ func GetMostForcePairGeneral(tacticsParams *model.TacticsParams) *vo.BattleGener
 }
 
 // 获取我军智力最高的武将
-func GetMostIntelligencePairGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	pairGenerals := GetPairGeneralArr(tacticsParams)
+func GetMostIntelligencePairGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(currentGeneral, tacticsParams)
 	mostIntelligenceGeneral := pairGenerals[0]
 	for _, general := range pairGenerals {
 		if general.BaseInfo.AbilityAttr.IntelligenceBase > mostIntelligenceGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
@@ -558,8 +557,8 @@ func GetMostIntelligencePairGeneral(tacticsParams *model.TacticsParams) *vo.Batt
 }
 
 // 获取敌军武力最高的武将
-func GetMostForceEnemyGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	enemyGenerals := GetEnemyGeneralArr(tacticsParams)
+func GetMostForceEnemyGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(currentGeneral, tacticsParams)
 	mostForceGeneral := enemyGenerals[0]
 	for _, general := range enemyGenerals {
 		if general.BaseInfo.AbilityAttr.ForceBase > mostForceGeneral.BaseInfo.AbilityAttr.ForceBase {
@@ -570,8 +569,8 @@ func GetMostForceEnemyGeneral(tacticsParams *model.TacticsParams) *vo.BattleGene
 }
 
 // 获取敌军智力最高的武将
-func GetMostIntelligenceEnemyGeneral(tacticsParams *model.TacticsParams) *vo.BattleGeneral {
-	enemyGenerals := GetEnemyGeneralArr(tacticsParams)
+func GetMostIntelligenceEnemyGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(currentGeneral, tacticsParams)
 	mostIntelligenceGeneral := enemyGenerals[0]
 	for _, general := range enemyGenerals {
 		if general.BaseInfo.AbilityAttr.IntelligenceBase > mostIntelligenceGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
@@ -639,8 +638,8 @@ func GetGeneralHighestBetweenForceOrIntelligence(general *vo.BattleGeneral) (con
 }
 
 // 获取敌军智力最高的武将
-func GetEnemyGeneralWhoIsHighestIntelligence(params *model.TacticsParams) *vo.BattleGeneral {
-	enemyGenerals := GetEnemyGeneralArr(params)
+func GetEnemyGeneralWhoIsHighestIntelligence(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(currentGeneral, params)
 	highestGeneral := enemyGenerals[0]
 	for _, general := range enemyGenerals {
 		if general.BaseInfo.AbilityAttr.IntelligenceBase > highestGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
@@ -651,8 +650,8 @@ func GetEnemyGeneralWhoIsHighestIntelligence(params *model.TacticsParams) *vo.Ba
 }
 
 // 获取敌军武力最高的武将
-func GetEnemyGeneralWhoIsHighestForce(params *model.TacticsParams) *vo.BattleGeneral {
-	enemyGenerals := GetEnemyGeneralArr(params)
+func GetEnemyGeneralWhoIsHighestForce(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(currentGeneral, params)
 	highestGeneral := enemyGenerals[0]
 	for _, general := range enemyGenerals {
 		if general.BaseInfo.AbilityAttr.ForceBase > highestGeneral.BaseInfo.AbilityAttr.ForceBase {
@@ -663,8 +662,8 @@ func GetEnemyGeneralWhoIsHighestForce(params *model.TacticsParams) *vo.BattleGen
 }
 
 // 获取我军武力最高的武将
-func GetPairGeneralWhoIsHighestForce(params *model.TacticsParams) *vo.BattleGeneral {
-	pairGenerals := GetPairGeneralArr(params)
+func GetPairGeneralWhoIsHighestForce(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(currentGeneral, params)
 	highestGeneral := pairGenerals[0]
 	for _, general := range pairGenerals {
 		if general.BaseInfo.AbilityAttr.ForceBase > highestGeneral.BaseInfo.AbilityAttr.ForceBase {
@@ -675,8 +674,8 @@ func GetPairGeneralWhoIsHighestForce(params *model.TacticsParams) *vo.BattleGene
 }
 
 // 获取我军智力最高的武将
-func GetPairGeneralWhoIsHighestIntelligence(params *model.TacticsParams) *vo.BattleGeneral {
-	pairGenerals := GetPairGeneralArr(params)
+func GetPairGeneralWhoIsHighestIntelligence(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(currentGeneral, params)
 	highestGeneral := pairGenerals[0]
 	for _, general := range pairGenerals {
 		if general.BaseInfo.AbilityAttr.IntelligenceBase > highestGeneral.BaseInfo.AbilityAttr.IntelligenceBase {

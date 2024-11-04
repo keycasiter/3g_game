@@ -86,7 +86,7 @@ func (i InterlockedStratagemsTactic) Execute() {
 
 	//准备一回合，对敌军全体释放铁索连环，使其任一目标受到伤害时会反馈15%（受智力影响）伤害给其他单位，持续2回合，
 	//获取敌军全体
-	allEnemyGenerals := util.GetEnemyGeneralMap(i.tacticsParams)
+	allEnemyGenerals := util.GetEnemyGeneralMap(currentGeneral, i.tacticsParams)
 	//注册发动效果
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_ActiveTactic, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}

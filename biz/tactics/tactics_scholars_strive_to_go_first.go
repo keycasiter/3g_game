@@ -45,7 +45,7 @@ func (s ScholarsStriveToGoFirstTactic) Prepare() {
 		triggerGeneral := params.CurrentGeneral
 
 		if util.GenerateRate(0.5) {
-			enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(s.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(currentGeneral, s.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams:     s.tacticsParams,

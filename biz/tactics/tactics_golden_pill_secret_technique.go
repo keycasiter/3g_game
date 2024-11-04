@@ -35,7 +35,7 @@ func (g GoldenPillSecretTechniqueTactic) Prepare() {
 	//战斗前2回合，使我军全体获得35%规避（可以免疫伤害）效果，并在战斗第3回合开始，获得休整状态（每回合恢复一次兵力，回复率58%，受智力影响），持续3回合
 
 	//找到我军全体
-	pairGenerals := util.GetPairGeneralArr(g.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, g.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		//规避效果施加
 		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_Evade, &vo.EffectHolderParams{

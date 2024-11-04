@@ -10,10 +10,10 @@ import (
 	"github.com/spf13/cast"
 )
 
-//聚石成金
-//主动 50%
-//奇数回合发动时，使我军全体统率提升68点（对黄巾武将生效时，受主将魅力影响），并使敌军魅力低于我军主将的武将进入禁疗状态，持续2回合
-//偶数回合发动时，使我军受到的主动战法和突击战法伤害降低24%（对黄巾武将生效时，受统率影响），持续2回合
+// 聚石成金
+// 主动 50%
+// 奇数回合发动时，使我军全体统率提升68点（对黄巾武将生效时，受主将魅力影响），并使敌军魅力低于我军主将的武将进入禁疗状态，持续2回合
+// 偶数回合发动时，使我军受到的主动战法和突击战法伤害降低24%（对黄巾武将生效时，受统率影响），持续2回合
 type AggregateStoneIntoGoldTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -75,11 +75,11 @@ func (a AggregateStoneIntoGoldTactic) Execute() {
 	//奇数回合发动时，使我军全体统率提升68点（对黄巾武将生效时，受主将魅力影响），并使敌军魅力低于我军主将的武将进入禁疗状态，持续2回合
 	if currentRound%2 != 0 {
 		//找到我军全体
-		pairGenerals := util.GetPairGeneralArr(a.tacticsParams)
+		pairGenerals := util.GetPairGeneralArr(currentGeneral, a.tacticsParams)
 		for _, general := range pairGenerals {
 			effectValue := int64(68)
 			if util.IsContainsGeneralTag(general.BaseInfo.GeneralTag, consts.GeneralTag_YellowTurbans) {
-				masterGeneral := util.GetPairMasterGeneral(a.tacticsParams)
+				masterGeneral := util.GetPairMasterGeneral(currentGeneral, a.tacticsParams)
 				effectValue += cast.ToInt64(masterGeneral.BaseInfo.AbilityAttr.CharmBase / 100)
 			}
 
@@ -106,8 +106,8 @@ func (a AggregateStoneIntoGoldTactic) Execute() {
 			}
 		}
 		//判断敌军魅力低于我军主将
-		masterEnemyGeneral := util.GetEnemyMasterGeneral(a.tacticsParams)
-		enemyGenerals := util.GetEnemyGeneralArr(a.tacticsParams)
+		masterEnemyGeneral := util.GetEnemyMasterGeneral(currentGeneral, a.tacticsParams)
+		enemyGenerals := util.GetEnemyGeneralArr(currentGeneral, a.tacticsParams)
 		for _, general := range enemyGenerals {
 			if masterEnemyGeneral.BaseInfo.AbilityAttr.CharmBase > general.BaseInfo.AbilityAttr.CharmBase {
 				if util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_ProhibitionTreatment, &vo.EffectHolderParams{
@@ -135,7 +135,7 @@ func (a AggregateStoneIntoGoldTactic) Execute() {
 	}
 	//偶数回合发动时，使我军受到的主动战法和突击战法伤害降低24%（对黄巾武将生效时，受统率影响），持续2回合
 	if currentRound%2 == 0 {
-		pairGenerals := util.GetPairGeneralArr(a.tacticsParams)
+		pairGenerals := util.GetPairGeneralArr(currentGeneral, a.tacticsParams)
 		for _, general := range pairGenerals {
 			effectRate := float64(0.24)
 			if util.IsContainsGeneralTag(general.BaseInfo.GeneralTag, consts.GeneralTag_YellowTurbans) {

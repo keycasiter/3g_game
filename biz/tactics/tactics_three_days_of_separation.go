@@ -68,7 +68,7 @@ func (t ThreeDaysOfSeparationTactic) Prepare() {
 
 			//并对敌军全体造成谋略伤害(伤害率180%，受智力影响)
 			//找到敌军全体
-			enemyGenerals := util.GetEnemyGeneralArr(t.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralArr(currentGeneral, t.tacticsParams)
 			for _, sufferGeneral := range enemyGenerals {
 				dmgRate := currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100 + 1.8
 				damage.TacticDamage(&damage.TacticDamageParam{

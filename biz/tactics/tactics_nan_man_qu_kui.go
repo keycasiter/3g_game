@@ -43,7 +43,7 @@ func (n NanManQuKuiTactic) Prepare() {
 		triggerGeneral := params.CurrentGeneral
 
 		if util.GenerateRate(0.49) {
-			enemyGenerals := util.GetEnemyGeneralArr(n.tacticsParams)
+			enemyGenerals := util.GetEnemyGeneralArr(currentGeneral, n.tacticsParams)
 			for _, enemyGeneral := range enemyGenerals {
 				damage.TacticDamage(&damage.TacticDamageParam{
 					TacticsParams:     n.tacticsParams,

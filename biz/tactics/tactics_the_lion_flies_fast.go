@@ -76,7 +76,7 @@ func (t TheLionFliesFastTactic) Execute() {
 	// 对敌军单体及额外1～2名敌人造成兵刃攻击（伤害率118%），并使自身主动战法发动几率提高10%，
 	// 自身为主将时，发动几率提高至15%，持续2回合，如果单体目标为敌军主将则使其陷入叛逃状态，每回合持续造成伤害（伤害率102%），持续2回合
 	enemyGeneral := util.GetEnemyOneGeneralByGeneral(currentGeneral, t.tacticsParams)
-	enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(t.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsOneOrTwoArr(currentGeneral, t.tacticsParams)
 	enemyGenerals = append(enemyGenerals, enemyGeneral)
 	for _, general := range enemyGenerals {
 		//伤害

@@ -33,7 +33,7 @@ func (t TheGodOfCraftsmenTactic) Prepare() {
 		t.Name(),
 	)
 	// 战斗前3回合，使我军全体获得先攻状态，我军主将造成的兵刃伤害和谋略伤害提高30%，我军副将造成伤害提升15%；
-	pairGenerals := util.GetPairGeneralArr(t.tacticsParams)
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, t.tacticsParams)
 	for _, pairGeneral := range pairGenerals {
 		//先攻状态
 		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_FirstAttack, &vo.EffectHolderParams{
@@ -110,7 +110,7 @@ func (t TheGodOfCraftsmenTactic) Prepare() {
 		})
 	}
 	//我军主将造成的兵刃伤害和谋略伤害提高30%
-	pairMasterGeneral := util.GetPairMasterGeneral(t.tacticsParams)
+	pairMasterGeneral := util.GetPairMasterGeneral(currentGeneral, t.tacticsParams)
 	//兵刃伤害提升
 	if util.BuffEffectWrapSet(ctx, pairMasterGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{
 		EffectRound:    3,
@@ -154,7 +154,7 @@ func (t TheGodOfCraftsmenTactic) Prepare() {
 		})
 	}
 	//我军副将造成伤害提升15%；
-	viceGenerals := util.GetPairViceGenerals(t.tacticsParams)
+	viceGenerals := util.GetPairViceGenerals(currentGeneral, t.tacticsParams)
 	for _, viceGeneral := range viceGenerals {
 		//兵刃伤害提升
 		if util.BuffEffectWrapSet(ctx, viceGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{

@@ -40,7 +40,7 @@ func (r RaidInFormationTactic) Prepare() {
 
 		// 战斗中，使自己的普通攻击目标有68%几率锁定为敌军主将
 		if util.GenerateRate(0.68) {
-			enemyMasterGeneral := util.GetEnemyMasterGeneral(r.tacticsParams)
+			enemyMasterGeneral := util.GetEnemyMasterGeneral(currentGeneral, r.tacticsParams)
 			r.tacticsParams.CurrentSufferGeneral = enemyMasterGeneral
 		}
 		//自身突击战法的发动几率提高15%

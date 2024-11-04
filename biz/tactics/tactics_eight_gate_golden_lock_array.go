@@ -50,7 +50,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 
 	//战斗前3回合，使敌军群体（2人）造成的伤害降低30%（受智力影响）
 	//找到敌军2人
-	enemyGenerals := util.GetEnemyGeneralsTwoArr(e.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsTwoArr(currentGeneral, e.tacticsParams)
 	//造成的伤害降低30%
 	//TODO（受智力影响）
 	effectRate := 0.3 + (currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100 / 100)
@@ -101,7 +101,7 @@ func (e EightGateGoldenLockArrayTactic) Prepare() {
 	}
 	//并使我军主将获得先攻状态（优先行动）
 	//找到我军主将
-	pairMasterGeneral := util.GetPairMasterGeneral(e.tacticsParams)
+	pairMasterGeneral := util.GetPairMasterGeneral(currentGeneral, e.tacticsParams)
 	if util.BuffEffectWrapSet(ctx, pairMasterGeneral, consts.BuffEffectType_FirstAttack, &vo.EffectHolderParams{
 		EffectRate: 1.0,
 		FromTactic: e.Id(),

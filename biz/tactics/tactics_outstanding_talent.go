@@ -9,8 +9,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//才器过人
-//使我军群体（2人）造成的谋略伤害提高27%，持续2回合
+// 才器过人
+// 使我军群体（2人）造成的谋略伤害提高27%，持续2回合
 type OutstandingTalentTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -70,7 +70,7 @@ func (o OutstandingTalentTactic) Execute() {
 	)
 
 	//使我军群体（2人）造成的谋略伤害提高27%，持续2回合
-	pairGeneral := util.GetPairGeneralsTwoArr(o.tacticsParams)
+	pairGeneral := util.GetPairGeneralsTwoArr(currentGeneral, o.tacticsParams)
 	for _, general := range pairGeneral {
 		//设置效果
 		rate := 0.27

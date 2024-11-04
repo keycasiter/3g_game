@@ -118,7 +118,7 @@ func (b BreakingThroughTheWaterAndCrushingTheCityTactic) tacticTrigger(currentGe
 	)
 	//对敌军群体（2～3人）造成破坏（禁用装备）状态及水攻状态，每回合持续造成伤害（伤害率112%，受智力影响）,持续2回合
 	//找到敌军2~3人
-	enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(b.tacticsParams)
+	enemyGenerals := util.GetEnemyGeneralsTwoOrThreeMap(currentGeneral, b.tacticsParams)
 	for _, sufferGeneral := range enemyGenerals {
 		//施加破坏效果
 		if util.DebuffEffectWrapSet(ctx, sufferGeneral, consts.DebuffEffectType_Break, &vo.EffectHolderParams{

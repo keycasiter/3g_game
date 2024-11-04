@@ -95,10 +95,10 @@ func (c ClosedMoonTactic) Execute() {
 	}
 	// 且当目标为敌军武力最高时进入混乱状态，若为敌军智力最高时进入计穷状态，否则造成虚弱及禁疗状态，持续1回合
 	debuff := consts.DebuffEffectType_ProhibitionTreatment
-	if enemyGeneral.BaseInfo.Id == util.GetEnemyGeneralWhoIsHighestForce(c.tacticsParams).BaseInfo.Id {
+	if enemyGeneral.BaseInfo.Id == util.GetEnemyGeneralWhoIsHighestForce(currentGeneral, c.tacticsParams).BaseInfo.Id {
 		//武力最高
 		debuff = consts.DebuffEffectType_Chaos
-	} else if enemyGeneral.BaseInfo.Id == util.GetEnemyGeneralWhoIsHighestIntelligence(c.tacticsParams).BaseInfo.Id {
+	} else if enemyGeneral.BaseInfo.Id == util.GetEnemyGeneralWhoIsHighestIntelligence(currentGeneral, c.tacticsParams).BaseInfo.Id {
 		//智力最高
 		debuff = consts.DebuffEffectType_NoStrategy
 	}

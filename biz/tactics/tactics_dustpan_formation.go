@@ -31,7 +31,7 @@ func (d DustpanFormationTactic) Prepare() {
 		triggerResp := &vo.TacticsTriggerResult{}
 
 		//找到敌军主将
-		masterEnemyGeneral := util.GetEnemyMasterGeneral(d.tacticsParams)
+		masterEnemyGeneral := util.GetEnemyMasterGeneral(currentGeneral, d.tacticsParams)
 		rate := 0.4 + (currentGeneral.BaseInfo.AbilityAttr.ForceBase / 100 / 100)
 		if util.DebuffEffectWrapSet(ctx, masterEnemyGeneral, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
 			EffectRate:  rate,
@@ -75,7 +75,7 @@ func (d DustpanFormationTactic) Prepare() {
 		}
 
 		//并使我军随机副将受到兵刃伤害降低18%，另一名副将受到谋略伤害降低18%
-		pairGenerals := util.GetPairViceGenerals(d.tacticsParams)
+		pairGenerals := util.GetPairViceGenerals(currentGeneral, d.tacticsParams)
 
 		//效果二选一随机
 		buffEffects := []consts.BuffEffectType{}

@@ -42,6 +42,9 @@ func (g *RecTeamListLogic) Handle() (api.RecTeamListResponse, error) {
 		g.Resp.Meta = util.BuildFailMeta()
 		return g.Resp, err
 	}
+	if len(recTeamlist) == 0 {
+		return g.Resp, nil
+	}
 
 	generalIds := make([]int64, 0)
 	tacticIds := make([]int64, 0)

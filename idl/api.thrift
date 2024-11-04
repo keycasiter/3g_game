@@ -693,7 +693,7 @@ service ApiService {
     //用户武将抽卡数据查询
     GeneralLotteryUserDataQueryResponse GeneralLotteryUserDataQuery(1:GeneralLotteryUserDataQueryRequest request)(api.get="/v1/lottery/general/user_data_query");
 
-    //**微信**
+    //**个人信息**
     //用户登录接口
     UserLoginResponse UserLogin(1:UserLoginRequest request)(api.post="/v1/user/login");
     //用户信息获取接口

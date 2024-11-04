@@ -174,6 +174,7 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 			hlog.CtxErrorf(ctx, "run err:%v", err)
 			return
 		}
+		hlog.CtxInfof(ctx, "resp:%v", util.ToJsonString(ctx, resp))
 
 		//战报结果收集
 		switch resp.BattleResultStatistics.FightingTeam.BattleResult {

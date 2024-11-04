@@ -77,24 +77,24 @@ type BattleGeneral struct {
 	TacticAccumulateTriggerMap map[consts.TacticId]int64
 
 	//被谁援护
-	HelpByGeneral *BattleGeneral
+	HelpByGeneral *BattleGeneral `json:"-"`
 	//被谁嘲讽
-	TauntByGeneral *BattleGeneral
+	TauntByGeneral *BattleGeneral `json:"-"`
 	//被谁分担伤害
-	ShareResponsibilityForByGeneral *BattleGeneral
+	ShareResponsibilityForByGeneral *BattleGeneral `json:"-"`
 
 	//增益效果变量 map<效果,容器属性>
-	BuffEffectHolderMap map[consts.BuffEffectType][]*EffectHolderParams
+	BuffEffectHolderMap map[consts.BuffEffectType][]*EffectHolderParams `json:"-"`
 	//减益效果变量 map<效果,容器属性>
-	DeBuffEffectHolderMap map[consts.DebuffEffectType][]*EffectHolderParams
+	DeBuffEffectHolderMap map[consts.DebuffEffectType][]*EffectHolderParams `json:"-"`
 
 	//增益效果次数
-	BuffEffectCountMap map[consts.BuffEffectType]int64
+	BuffEffectCountMap map[consts.BuffEffectType]int64 `json:"-"`
 	//减益效果次数
-	DeBuffEffectCountMap map[consts.DebuffEffectType]int64
+	DeBuffEffectCountMap map[consts.DebuffEffectType]int64 `json:"-"`
 
 	//战法冷却容器
-	TacticFrozenMap map[consts.TacticId]bool
+	TacticFrozenMap map[consts.TacticId]bool `json:"-"`
 
 	//普通攻击次数
 	ExecuteGeneralAttackNum int64

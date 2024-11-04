@@ -631,7 +631,7 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 			GeneralBattleStatisticsList: enemyGeneralsStatisticsList,
 		},
 	}
-	//处理对战过程数据
+	//TODO 处理对战过程数据
 	battleProcessStatistics := make(map[consts.BattlePhase]map[consts.BattleRound][]string, 0)
 
 	runCtx.Resp.BattleProcessStatistics = battleProcessStatistics

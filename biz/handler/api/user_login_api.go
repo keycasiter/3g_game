@@ -113,11 +113,12 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//组装resp
-	resp.Uid = uid
-	resp.WxOpenId = respObj.OpenId
-	resp.NickName = req.NickName
-	resp.AvatarUrl = req.AvatarUrl
-	resp.Level = int64(consts.UserLevel_Common)
+	resp.UserInfo = &api.UserInfo{}
+	resp.UserInfo.Uid = uid
+	resp.UserInfo.WxOpenId = respObj.OpenId
+	resp.UserInfo.NickName = req.NickName
+	resp.UserInfo.AvatarUrl = req.AvatarUrl
+	resp.UserInfo.Level = int64(consts.UserLevel_Common)
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

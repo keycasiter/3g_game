@@ -29,7 +29,7 @@ func TestBattleLogicV2Context_Run(t *testing.T) {
 		FightingTeam: &vo.BattleTeam{
 			TeamType:       consts.TeamType_Fighting,
 			ArmType:        consts.ArmType_Archers,
-			BattleGenerals: team.QunGong,
+			BattleGenerals: team.QiLinGong,
 		},
 		//对战队伍
 		EnemyTeam: &vo.BattleTeam{
@@ -134,7 +134,7 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 	enemyGeneralsData := make([]*vo.BattleGeneral, 0)
 
 	for i := 0; i < battleSize; i++ {
-		fightingGenerals, err := util.DeepCopyBattleGenerals(team.TaiWeiDun)
+		fightingGenerals, err := util.DeepCopyBattleGenerals(team.QiLinGong)
 		if err != nil {
 			t.Failed()
 		}

@@ -326,6 +326,12 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 
 	//伤害分担
 	if v, ok := util.BuffEffectGetAggrEffectRate(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
+		//分担者是否还有效
+		if sufferGeneral.ShareResponsibilityForByGeneral.SoldierNum == 0 {
+			hlog.CtxInfof(ctx, "[%v]兵力为0，无法再分担伤害", sufferGeneral.ShareResponsibilityForByGeneral.BaseInfo.Name)
+			return
+		}
+
 		hlog.CtxInfof(ctx, "[%s]由于「%v」效果，本次攻击受到的伤害减少了%.2f%%",
 			sufferGeneral.BaseInfo.Name,
 			consts.BuffEffectType_ShareResponsibilityFor,

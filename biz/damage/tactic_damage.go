@@ -96,11 +96,18 @@ func (t *TacticDamageLogic) damageShareHandler() {
 
 	//伤害分担
 	if v, ok := util.BuffEffectGetAggrEffectRate(sufferGeneral, consts.BuffEffectType_ShareResponsibilityFor); ok {
+		//分担者是否还有效
+		if sufferGeneral.ShareResponsibilityForByGeneral.SoldierNum == 0 {
+			hlog.CtxInfof(ctx, "[%v]兵力为0，无法再分担伤害", sufferGeneral.ShareResponsibilityForByGeneral.BaseInfo.Name)
+			return
+		}
+
 		hlog.CtxInfof(ctx, "[%s]由于「%v」效果，本次攻击受到的伤害减少了%.2f%%",
 			sufferGeneral.BaseInfo.Name,
 			consts.BuffEffectType_ShareResponsibilityFor,
 			v*100,
 		)
+
 		//分担伤害
 		shareDmg := cast.ToInt64(cast.ToFloat64(t.damageNum) * v)
 		//被分担后的伤害
@@ -344,6 +351,7 @@ func (t *TacticDamageLogic) specialEffectHandler() {
 
 	//触发器禁用开关
 	if tacticName == "连环计" && param.IsBanInterLockedEffect {
+		t.isAvoidDamage = true
 		return
 	}
 

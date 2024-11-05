@@ -78,6 +78,7 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//组合resp
+	resp.UserInfo = &api.UserInfo{}
 	resp.UserInfo.Uid = userInfo.Uid
 	resp.UserInfo.WxOpenId = userInfo.WxOpenId
 	resp.UserInfo.NickName = userInfo.NickName

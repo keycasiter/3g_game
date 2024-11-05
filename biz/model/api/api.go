@@ -18,6 +18,8 @@ type BattleDoRequest struct {
 	FightingTeam *BattleTeam `thrift:"FightingTeam,1" form:"FightingTeam" json:"FightingTeam" query:"FightingTeam"`
 	// 对战队伍信息
 	EnemyTeam *BattleTeam `thrift:"EnemyTeam,2" form:"EnemyTeam" json:"EnemyTeam" query:"EnemyTeam"`
+	//用户uid
+	Uid string `thrift:"Uid,3" form:"Uid" json:"Uid" query:"Uid"`
 }
 
 func NewBattleDoRequest() *BattleDoRequest {
@@ -45,9 +47,14 @@ func (p *BattleDoRequest) GetEnemyTeam() (v *BattleTeam) {
 	return p.EnemyTeam
 }
 
+func (p *BattleDoRequest) GetUid() (v string) {
+	return p.Uid
+}
+
 var fieldIDToName_BattleDoRequest = map[int16]string{
 	1: "FightingTeam",
 	2: "EnemyTeam",
+	3: "Uid",
 }
 
 func (p *BattleDoRequest) IsSetFightingTeam() bool {
@@ -88,6 +95,14 @@ func (p *BattleDoRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.STRUCT {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -138,6 +153,17 @@ func (p *BattleDoRequest) ReadField2(iprot thrift.TProtocol) error {
 	p.EnemyTeam = _field
 	return nil
 }
+func (p *BattleDoRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Uid = _field
+	return nil
+}
 
 func (p *BattleDoRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -151,6 +177,10 @@ func (p *BattleDoRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -203,6 +233,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *BattleDoRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Uid", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Uid); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *BattleDoRequest) String() string {

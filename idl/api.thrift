@@ -13,6 +13,9 @@ struct BattleDoRequest {
 	1:BattleTeam FightingTeam
 	// 对战队伍信息
 	2:BattleTeam EnemyTeam
+
+	//用户uid
+	3:string Uid
 }
 
 // 对战队伍信息

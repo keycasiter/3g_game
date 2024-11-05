@@ -447,7 +447,7 @@ struct UserLoginResponse{
 
 //============= 用户信息查询 BEGIN ==============
 struct UserInfoDetailRequest{
-    1: string Code
+    1: string WxOpenId
 }
 
 struct UserInfoDetailResponse{

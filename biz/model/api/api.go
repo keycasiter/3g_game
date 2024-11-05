@@ -13285,7 +13285,7 @@ func (p *UserLoginResponse) String() string {
 // ============= 用户登录 END ==============
 // ============= 用户信息查询 BEGIN ==============
 type UserInfoDetailRequest struct {
-	Code string `thrift:"Code,1" form:"Code" json:"Code" query:"Code"`
+	WxOpenId string `thrift:"WxOpenId,1" form:"WxOpenId" json:"WxOpenId" query:"WxOpenId"`
 }
 
 func NewUserInfoDetailRequest() *UserInfoDetailRequest {
@@ -13295,12 +13295,12 @@ func NewUserInfoDetailRequest() *UserInfoDetailRequest {
 func (p *UserInfoDetailRequest) InitDefault() {
 }
 
-func (p *UserInfoDetailRequest) GetCode() (v string) {
-	return p.Code
+func (p *UserInfoDetailRequest) GetWxOpenId() (v string) {
+	return p.WxOpenId
 }
 
 var fieldIDToName_UserInfoDetailRequest = map[int16]string{
-	1: "Code",
+	1: "WxOpenId",
 }
 
 func (p *UserInfoDetailRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -13367,7 +13367,7 @@ func (p *UserInfoDetailRequest) ReadField1(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.Code = _field
+	p.WxOpenId = _field
 	return nil
 }
 
@@ -13400,10 +13400,10 @@ WriteStructEndError:
 }
 
 func (p *UserInfoDetailRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Code", thrift.STRING, 1); err != nil {
+	if err = oprot.WriteFieldBegin("WxOpenId", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Code); err != nil {
+	if err := oprot.WriteString(p.WxOpenId); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -19220,7 +19220,7 @@ type ApiService interface {
 	GeneralLotteryUserDataReset(ctx context.Context, request *GeneralLotteryUserDataResetRequest) (r *GeneralLotteryUserDataResetResponse, err error)
 	//用户武将抽卡数据查询
 	GeneralLotteryUserDataQuery(ctx context.Context, request *GeneralLotteryUserDataQueryRequest) (r *GeneralLotteryUserDataQueryResponse, err error)
-	//**微信**
+	//**个人信息**
 	//用户登录接口
 	UserLogin(ctx context.Context, request *UserLoginRequest) (r *UserLoginResponse, err error)
 	//用户信息获取接口

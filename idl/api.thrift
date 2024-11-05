@@ -443,7 +443,7 @@ struct UserLoginResponse{
     3: string AvatarUrl
     4: string WxOpenId
     5: i64 Level
-    6: string Uid
+    6: i64 Uid
 }
 
 //============= 用户登录 END ==============
@@ -461,7 +461,7 @@ struct UserInfoDetailResponse{
 }
 
 struct UserInfo {
-    1: string Uid
+    1: i64 Uid
     2: string NickName
     3: string AvatarUrl
     4: string WxOpenId

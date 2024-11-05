@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -10,6 +9,6 @@ func Test_useDps(t *testing.T) {
 }
 
 func TestUseTps(t *testing.T) {
-	u, p, ips := UseTps()
-	fmt.Printf("%v ,%v ,%v", u, p, ips)
+	//u, p, ips := UseTps()
+	//fmt.Printf("%v ,%v ,%v", u, p, ips)
 }

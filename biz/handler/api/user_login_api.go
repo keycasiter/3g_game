@@ -4,6 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"time"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -13,9 +17,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/util"
-	"io/ioutil"
-	"net/http"
-	"time"
 )
 
 type GetUserOpenIdResponse struct {
@@ -91,7 +92,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	//不存在则注册
-	uid := util.GenerateUUID()
+	uid := util.GenerateUID()
 	if !isExist {
 		nowTime := time.Now()
 		err := mysql.NewUserInfo().CreateUserInfo(ctx, &po.UserInfo{

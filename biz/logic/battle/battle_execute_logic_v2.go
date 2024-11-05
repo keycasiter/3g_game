@@ -78,6 +78,8 @@ func NewBattleLogicV2Context(ctx context.Context, req *BattleLogicV2ContextReque
 		runCtx.processBattleFightingPhase,
 		//对战战报统计数据处理
 		runCtx.processBattleReportStatistics,
+		//记录对战数据
+		runCtx.storeBattleRecord,
 	}
 
 	return runCtx
@@ -521,6 +523,10 @@ func (runCtx *BattleLogicV2Context) handleTeamAddition(team *vo.BattleTeam) {
 	runCtx.handleBuildingTechGroupAddition(team)
 	//兵种-科技加成 TODO
 	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleTeamAddition 兵种-科技加成")
+}
+
+func (runCtx *BattleLogicV2Context) storeBattleRecord() {
+
 }
 
 // 对战战报统计数据处理

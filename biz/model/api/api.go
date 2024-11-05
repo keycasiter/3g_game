@@ -19,7 +19,7 @@ type BattleDoRequest struct {
 	// 对战队伍信息
 	EnemyTeam *BattleTeam `thrift:"EnemyTeam,2" form:"EnemyTeam" json:"EnemyTeam" query:"EnemyTeam"`
 	//用户uid
-	Uid string `thrift:"Uid,3" form:"Uid" json:"Uid" query:"Uid"`
+	Uid int64 `thrift:"Uid,3" form:"Uid" json:"Uid" query:"Uid"`
 }
 
 func NewBattleDoRequest() *BattleDoRequest {
@@ -47,7 +47,7 @@ func (p *BattleDoRequest) GetEnemyTeam() (v *BattleTeam) {
 	return p.EnemyTeam
 }
 
-func (p *BattleDoRequest) GetUid() (v string) {
+func (p *BattleDoRequest) GetUid() (v int64) {
 	return p.Uid
 }
 
@@ -101,7 +101,7 @@ func (p *BattleDoRequest) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 3:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -155,8 +155,8 @@ func (p *BattleDoRequest) ReadField2(iprot thrift.TProtocol) error {
 }
 func (p *BattleDoRequest) ReadField3(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -236,10 +236,10 @@ WriteFieldEndError:
 }
 
 func (p *BattleDoRequest) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("Uid", thrift.STRING, 3); err != nil {
+	if err = oprot.WriteFieldBegin("Uid", thrift.I64, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Uid); err != nil {
+	if err := oprot.WriteI64(p.Uid); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

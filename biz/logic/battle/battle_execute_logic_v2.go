@@ -24,6 +24,8 @@ type BattleLogicV2ContextRequest struct {
 	FightingTeam *vo.BattleTeam
 	// 对战队伍信息
 	EnemyTeam *vo.BattleTeam
+	//用户uid
+	Uid int64
 }
 
 // resp
@@ -526,7 +528,16 @@ func (runCtx *BattleLogicV2Context) handleTeamAddition(team *vo.BattleTeam) {
 }
 
 func (runCtx *BattleLogicV2Context) storeBattleRecord() {
-
+	go func() {
+		err := mysql.NewUserBattleRecord().CreateUserBattleRecord(runCtx.Ctx, &po.UserBattleRecord{
+			Uid:          runCtx.Req.Uid,
+			BattleRecord: util.ToJsonString(runCtx.Ctx, runCtx.Resp),
+		})
+		if err != nil {
+			hlog.CtxErrorf(runCtx.Ctx, "CreateUserBattleRecord err:%v", err)
+			//ignore 不阻塞对战流程
+		}
+	}()
 }
 
 // 对战战报统计数据处理

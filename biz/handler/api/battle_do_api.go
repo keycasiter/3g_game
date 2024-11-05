@@ -438,6 +438,7 @@ func buildBattleDoRequest(ctx context.Context, req api.BattleDoRequest) *battle.
 			BuildingTechAttrAddition:  makeBuildingTechAttrAddition(req.EnemyTeam),
 			BuildingTechGroupAddition: makeBuildingTechGroupAddition(req.EnemyTeam),
 		},
+		Uid: req.Uid,
 	}
 	return serviceReq
 }

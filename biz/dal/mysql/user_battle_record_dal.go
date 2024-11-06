@@ -78,14 +78,14 @@ func (g *UserBattleRecordDal) QueryUserBattleWinRate(ctx context.Context, uid in
 func (g *UserBattleRecordDal) QueryUserBattleHighFreqTacticStatistics(ctx context.Context, uid int64) (map[int64]int64, error) {
 	resultMap := make(map[int64]int64, 0)
 	var tacticIds string
-	sql := `select case when length(tactic_ids) > 0 then tactic_ids else '' end as tactic_ids
+	sql := `select case when length(t.tactic_ids) > 0 then t.tactic_ids else '' end as tactic_ids
 			from (select group_concat(regexp_replace(json_extract(json_extract(
 																		  json_extract(battle_record,
 																					   '$.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals'),
 																		  '$[*].EquipTactics'), '$[*][*].id'), ']|\\[',
 													 '')) as tactic_ids
 				  from user_battle_record
-				  where uid = %v)`
+				  where uid = %v) as t`
 	sql = fmt.Sprintf(sql, uid)
 
 	err := DataBase.Raw(sql).Find(&tacticIds).Error
@@ -114,14 +114,14 @@ func (g *UserBattleRecordDal) QueryUserBattleHighFreqUsedGeneralStatistics(ctx c
 	resultMap := make(map[int64]int64, 0)
 	var generalIds string
 
-	sql := `select case when length(general_ids) > 0 then general_ids else '' end as general_ids
+	sql := `select case when length(t.general_ids) > 0 then t.general_ids else '' end as general_ids
 			from (select group_concat(regexp_replace(json_extract(json_extract(
 																		  json_extract(battle_record,
 																					   '$.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals'),
 																		  '$[*].BaseInfo'), '$[*].Id'),
 													 ']|\\[', '')) as general_ids
 				  from user_battle_record
-				  where uid = %v)`
+				  where uid = %v) as t`
 	sql = fmt.Sprintf(sql, uid)
 
 	err := DataBase.Raw(sql).Find(&generalIds).Error

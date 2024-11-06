@@ -1,12 +1,13 @@
-package api
+package battle
 
 import (
 	"context"
 	"fmt"
+	"testing"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/keycasiter/3g_game/biz/conf"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
-	"testing"
 )
 
 func TestGeneralQuery(t *testing.T) {

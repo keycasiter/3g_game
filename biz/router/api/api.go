@@ -5,6 +5,9 @@ package api
 import (
 	"github.com/cloudwego/hertz/pkg/app/server"
 	api "github.com/keycasiter/3g_game/biz/handler/api"
+	"github.com/keycasiter/3g_game/biz/handler/api/battle"
+	"github.com/keycasiter/3g_game/biz/handler/api/lottery"
+	"github.com/keycasiter/3g_game/biz/handler/api/user"
 )
 
 /*
@@ -28,58 +31,58 @@ func Register(r *server.Hertz) {
 		_v1 := root.Group("/v1", _v1Mw()...)
 		{
 			_battle := _v1.Group("/battle", _battleMw()...)
-			_battle.POST("/do", append(_battledoMw(), api.BattleDo)...)
-			_battle.GET("/list", append(_battlelistMw(), api.BattleList)...)
+			_battle.POST("/do", append(_battledoMw(), battle.BattleDo)...)
+			_battle.GET("/list", append(_battlelistMw(), battle.BattleList)...)
 		}
 		{
 			_general := _v1.Group("/general", _generalMw()...)
-			_general.GET("/list", append(_generallistMw(), api.GeneralList)...)
+			_general.GET("/list", append(_generallistMw(), battle.GeneralList)...)
 		}
 		{
 			_general_warbook := _v1.Group("/general_warbook", _general_warbookMw()...)
-			_general_warbook.GET("/list", append(_generalwarbooklistMw(), api.GeneralWarBookList)...)
+			_general_warbook.GET("/list", append(_generalwarbooklistMw(), battle.GeneralWarBookList)...)
 		}
 		{
 			_lottery := _v1.Group("/lottery", _lotteryMw()...)
 			{
 				_general0 := _lottery.Group("/general", _general0Mw()...)
-				_general0.POST("/do", append(_generallotterydoMw(), api.GeneralLotteryDo)...)
-				_general0.GET("/info_list", append(_generallotteryinfolistMw(), api.GeneralLotteryInfoList)...)
-				_general0.GET("/list", append(_generallotterylistMw(), api.GeneralLotteryList)...)
-				_general0.GET("/pool_list", append(_generallotterypoollistMw(), api.GeneralLotteryPoolList)...)
-				_general0.GET("/rate_list", append(_generallotteryratelistMw(), api.GeneralLotteryRateList)...)
-				_general0.GET("/user_data_query", append(_generallotteryuserdataqueryMw(), api.GeneralLotteryUserDataQuery)...)
-				_general0.POST("/user_data_reset", append(_generallotteryuserdataresetMw(), api.GeneralLotteryUserDataReset)...)
+				_general0.POST("/do", append(_generallotterydoMw(), lottery.GeneralLotteryDo)...)
+				_general0.GET("/info_list", append(_generallotteryinfolistMw(), lottery.GeneralLotteryInfoList)...)
+				_general0.GET("/list", append(_generallotterylistMw(), lottery.GeneralLotteryList)...)
+				_general0.GET("/pool_list", append(_generallotterypoollistMw(), lottery.GeneralLotteryPoolList)...)
+				_general0.GET("/rate_list", append(_generallotteryratelistMw(), lottery.GeneralLotteryRateList)...)
+				_general0.GET("/user_data_query", append(_generallotteryuserdataqueryMw(), lottery.GeneralLotteryUserDataQuery)...)
+				_general0.POST("/user_data_reset", append(_generallotteryuserdataresetMw(), lottery.GeneralLotteryUserDataReset)...)
 			}
 		}
 		{
 			_rec_special_tech := _v1.Group("/rec_special_tech", _rec_special_techMw()...)
-			_rec_special_tech.GET("/list", append(_recspecialtechlistMw(), api.RecSpecialTechList)...)
+			_rec_special_tech.GET("/list", append(_recspecialtechlistMw(), battle.RecSpecialTechList)...)
 		}
 		{
 			_rec_tactic := _v1.Group("/rec_tactic", _rec_tacticMw()...)
-			_rec_tactic.GET("/list", append(_rectacticlistMw(), api.RecTacticList)...)
+			_rec_tactic.GET("/list", append(_rectacticlistMw(), battle.RecTacticList)...)
 		}
 		{
 			_rec_team := _v1.Group("/rec_team", _rec_teamMw()...)
-			_rec_team.GET("/list", append(_recteamlistMw(), api.RecTeamList)...)
+			_rec_team.GET("/list", append(_recteamlistMw(), battle.RecTeamList)...)
 		}
 		{
 			_rec_warbook := _v1.Group("/rec_warbook", _rec_warbookMw()...)
-			_rec_warbook.GET("/list", append(_recwarbooklistMw(), api.RecWarBookList)...)
+			_rec_warbook.GET("/list", append(_recwarbooklistMw(), battle.RecWarBookList)...)
 		}
 		{
 			_special_tech := _v1.Group("/special_tech", _special_techMw()...)
-			_special_tech.GET("/list", append(_specialtechlistMw(), api.SpecialTechList)...)
+			_special_tech.GET("/list", append(_specialtechlistMw(), battle.SpecialTechList)...)
 		}
 		{
 			_tactic := _v1.Group("/tactic", _tacticMw()...)
-			_tactic.GET("/list", append(_tacticlistMw(), api.TacticList)...)
+			_tactic.GET("/list", append(_tacticlistMw(), battle.TacticList)...)
 		}
 		{
 			_user := _v1.Group("/user", _userMw()...)
-			_user.GET("/detail", append(_userinfodetailMw(), api.UserInfoDetail)...)
-			_user.POST("/login", append(_userloginMw(), api.UserLogin)...)
+			_user.GET("/detail", append(_userinfodetailMw(), user.UserInfoDetail)...)
+			_user.POST("/login", append(_userloginMw(), user.UserLogin)...)
 		}
 	}
 }

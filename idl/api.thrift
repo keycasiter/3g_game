@@ -37,6 +37,8 @@ struct BattleTeam {
 	7:i64 RemainNum
 	//队伍名称
 	8:string Name
+	//队伍头像
+	9:string AvatarUrl
 }
 
 // 对战队伍信息

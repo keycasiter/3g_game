@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"sort"
+	"strings"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -174,8 +175,8 @@ func buildHighFreqGeneralList(m map[int64]int64) []*api.GeneralRecord {
 		return generalRecords[i].Times > generalRecords[j].Times
 	})
 
-	if len(generalRecords) > 10 {
-		generalRecords = generalRecords[:10]
+	if len(generalRecords) > 3 {
+		generalRecords = generalRecords[:3]
 	}
 
 	return generalRecords
@@ -202,8 +203,8 @@ func buildHighFreqTacticsList(m map[int64]int64) []*api.TacticsRecord {
 		return tacticsRecords[i].Times > tacticsRecords[j].Times
 	})
 
-	if len(tacticsRecords) > 10 {
-		tacticsRecords = tacticsRecords[:10]
+	if len(tacticsRecords) > 3 {
+		tacticsRecords = tacticsRecords[:3]
 	}
 
 	return tacticsRecords
@@ -232,8 +233,8 @@ func buildHighFreqTeamList(m map[string]int64) []*api.TeamRecord {
 		return teamRecords[i].Times > teamRecords[j].Times
 	})
 
-	if len(teamRecords) > 10 {
-		teamRecords = teamRecords[:10]
+	if len(teamRecords) > 3 {
+		teamRecords = teamRecords[:3]
 	}
 
 	return teamRecords
@@ -241,6 +242,7 @@ func buildHighFreqTeamList(m map[string]int64) []*api.TeamRecord {
 
 func buildBattleTeam(generalInfos []*po.General) *api.BattleTeam {
 	battleTeam := &api.BattleTeam{}
+	generalNames := make([]string, 0)
 	for _, generalInfo := range generalInfos {
 		battleTeam.BattleGenerals = append(battleTeam.BattleGenerals, &api.BattleGeneral{
 			BaseInfo: &api.MetadataGeneral{
@@ -251,7 +253,10 @@ func buildBattleTeam(generalInfos []*po.General) *api.BattleTeam {
 				AvatarUrl: generalInfo.AvatarUrl,
 			},
 		})
+		generalNames = append(generalNames, generalInfo.Name)
 	}
+
+	battleTeam.Name = strings.Join(generalNames, " ")
 
 	return battleTeam
 }

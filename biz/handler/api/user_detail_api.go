@@ -139,9 +139,9 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 	//组合resp
 	resp.UserInfo = &api.UserInfo{
 		Uid:       userInfo.Uid,
-		NickName:  userInfo.WxOpenId,
-		AvatarUrl: userInfo.NickName,
-		WxOpenId:  userInfo.AvatarUrl,
+		NickName:  userInfo.NickName,
+		AvatarUrl: userInfo.AvatarUrl,
+		WxOpenId:  userInfo.WxOpenId,
 		Level:     int64(userInfo.Level),
 	}
 	resp.BattleStatisticsInfo = &api.BattleStatisticsInfo{

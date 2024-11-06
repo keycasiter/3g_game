@@ -52,11 +52,17 @@ func (g *UserBattleRecordDal) CreateUserBattleRecord(ctx context.Context, userBa
 func (g *UserBattleRecordDal) QueryUserBattleWinRate(ctx context.Context, uid int64) (float64, error) {
 	var winRate float64
 
-	sql := `select sum(case
-               when json_extract(battle_record, '$.BattleResultStatistics.FightingTeam.BattleResult') = 1
-                   then 1
-               else 0 end) / count(1) as win_rate
-				from user_battle_record where uid = %v`
+	sql := `select case
+           when sum(case
+                        when json_extract(battle_record, '$.BattleResultStatistics.FightingTeam.BattleResult') = 1
+                            then 1
+                        else 0 end) > 0 then
+                   sum(case
+                           when json_extract(battle_record, '$.BattleResultStatistics.FightingTeam.BattleResult') = 1
+                               then 1
+                           else 0 end) / count(1)
+           else 0 end as win_rate
+			from user_battle_record where uid = %v`
 	sql = fmt.Sprintf(sql, uid)
 
 	err := DataBase.Raw(sql).Find(&winRate).Error

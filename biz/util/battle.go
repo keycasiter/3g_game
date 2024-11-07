@@ -145,11 +145,7 @@ func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tac
 
 func buildRoundStatistics(tacticParams *model.TacticsParams, count int64) map[consts.BattlePhase]map[consts.BattleRound]int64 {
 	m := make(map[consts.BattlePhase]map[consts.BattleRound]int64, 0)
-	battlePhase := consts.Battle_Phase_Fighting
-	if tacticParams.CurrentRound == consts.Battle_Round_Prepare {
-		battlePhase = consts.Battle_Phase_Prepare
-	}
-	if mm, ok := m[battlePhase]; ok {
+	if mm, ok := m[tacticParams.CurrentPhase]; ok {
 		if times, okk := mm[tacticParams.CurrentRound]; okk {
 			mm[tacticParams.CurrentRound] = times + count
 		} else {
@@ -158,7 +154,7 @@ func buildRoundStatistics(tacticParams *model.TacticsParams, count int64) map[co
 	} else {
 		newMM := make(map[consts.BattleRound]int64, 0)
 		newMM[tacticParams.CurrentRound] = count
-		m[battlePhase] = newMM
+		m[tacticParams.CurrentPhase] = newMM
 	}
 
 	return m

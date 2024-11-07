@@ -134,11 +134,11 @@ func TestBattleLogicV2Context_Run_Many_V2(t *testing.T) {
 	enemyGeneralsData := make([]*vo.BattleGeneral, 0)
 
 	for i := 0; i < battleSize; i++ {
-		fightingGenerals, err := util.DeepCopyBattleGenerals(team.QiLinGong)
+		fightingGenerals, err := util.DeepCopyBattleGenerals(team.GuanGuanZhang)
 		if err != nil {
 			t.Failed()
 		}
-		enemyGenerals, err := util.DeepCopyBattleGenerals(team.XiangxiangWuQi)
+		enemyGenerals, err := util.DeepCopyBattleGenerals(team.TaiWeiDun)
 		if err != nil {
 			t.Failed()
 		}

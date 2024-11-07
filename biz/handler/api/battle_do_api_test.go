@@ -1,4 +1,4 @@
-package battle
+package api
 
 import (
 	"context"

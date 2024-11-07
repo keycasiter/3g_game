@@ -2,15 +2,16 @@ package util
 
 import (
 	"fmt"
+
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//武将战法触发次数容器 map<武将ID,map<战法,mao<回合，触发次数>>>
+// 武将战法触发次数容器 map<武将ID,map<战法,mao<回合，触发次数>>>
 var generalTacticCountMap = map[string]map[consts.TacticId]map[consts.BattleRound]int64{}
 
-//判断对战结果
+// 判断对战结果
 func JudgeBattleResult(team1 *vo.BattleTeam, team2 *vo.BattleTeam) consts.BattleResult {
 	team1SoliderNum := int64(0)
 	team2SoliderNum := int64(0)
@@ -38,7 +39,7 @@ func JudgeBattleResult(team1 *vo.BattleTeam, team2 *vo.BattleTeam) consts.Battle
 	return consts.BattleResult_Draw
 }
 
-//战法触发统计
+// 战法触发统计
 func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tacticId int64, triggerTimes int64, killSoliderNum int64, resumeSoliderNum int64) {
 	if generalUniqueId == "" {
 		panic(any("generalUniqueId is nil"))
@@ -91,27 +92,55 @@ func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tac
 			tacticStatistics.ResumeSoliderNum += resumeSoliderNum
 		} else {
 			tacticStatisticsMap[tacticId] = &model.TacticStatistics{
-				TacticId:         tacticId,
-				TacticName:       fmt.Sprintf("%v", consts.TacticId(tacticId)),
-				TriggerTimes:     triggerTimes,
-				KillSoliderNum:   killSoliderNum,
-				ResumeSoliderNum: resumeSoliderNum,
+				TacticId:              tacticId,
+				TacticName:            fmt.Sprintf("%v", consts.TacticId(tacticId)),
+				TriggerTimes:          triggerTimes,
+				KillSoliderNum:        killSoliderNum,
+				ResumeSoliderNum:      resumeSoliderNum,
+				RoundTriggerTimes:     buildRoundStatistics(tacticParams, triggerTimes),
+				RoundKillSoliderNum:   buildRoundStatistics(tacticParams, killSoliderNum),
+				RoundResumeSoliderNum: buildRoundStatistics(tacticParams, resumeSoliderNum),
 			}
 		}
 	} else {
 		m := make(map[int64]*model.TacticStatistics, 0)
 		m[tacticId] = &model.TacticStatistics{
-			TacticId:         tacticId,
-			TacticName:       fmt.Sprintf("%v", consts.TacticId(tacticId)),
-			TriggerTimes:     triggerTimes,
-			KillSoliderNum:   killSoliderNum,
-			ResumeSoliderNum: resumeSoliderNum,
+			TacticId:              tacticId,
+			TacticName:            fmt.Sprintf("%v", consts.TacticId(tacticId)),
+			TriggerTimes:          triggerTimes,
+			KillSoliderNum:        killSoliderNum,
+			ResumeSoliderNum:      resumeSoliderNum,
+			RoundTriggerTimes:     buildRoundStatistics(tacticParams, triggerTimes),
+			RoundKillSoliderNum:   buildRoundStatistics(tacticParams, killSoliderNum),
+			RoundResumeSoliderNum: buildRoundStatistics(tacticParams, resumeSoliderNum),
 		}
 		tacticParams.BattleTacticStatisticsMap[generalUniqueId] = m
 	}
 }
 
-//普攻触发统计
+func buildRoundStatistics(tacticParams *model.TacticsParams, count int64) map[consts.BattlePhase]map[consts.BattleRound]int64 {
+	m := make(map[consts.BattlePhase]map[consts.BattleRound]int64, 0)
+
+	battlePhase := consts.Battle_Phase_Fighting
+	if tacticParams.CurrentRound == consts.Battle_Round_Prepare {
+		battlePhase = consts.Battle_Phase_Prepare
+	}
+	if mm, ok := m[battlePhase]; ok {
+		if times, okk := mm[tacticParams.CurrentRound]; okk {
+			mm[tacticParams.CurrentRound] = times + count
+		} else {
+			mm[tacticParams.CurrentRound] = count
+		}
+	} else {
+		newMM := make(map[consts.BattleRound]int64, 0)
+		newMM[tacticParams.CurrentRound] = count
+		m[battlePhase] = newMM
+	}
+
+	return m
+}
+
+// 普攻触发统计
 func AttackReport(tacticParams *model.TacticsParams, generalUniqueId string, triggerTimes int64, killSoliderNum int64, resumeSoliderNum int64) {
 	if attackStatistics, ok := tacticParams.BattleAttackStatisticsMap[generalUniqueId]; ok {
 		attackStatistics.TriggerTimes += triggerTimes
@@ -119,9 +148,12 @@ func AttackReport(tacticParams *model.TacticsParams, generalUniqueId string, tri
 		attackStatistics.ResumeSoliderNum += resumeSoliderNum
 	} else {
 		tacticParams.BattleAttackStatisticsMap[generalUniqueId] = &model.TacticStatistics{
-			TriggerTimes:     triggerTimes,
-			KillSoliderNum:   killSoliderNum,
-			ResumeSoliderNum: resumeSoliderNum,
+			TriggerTimes:          triggerTimes,
+			KillSoliderNum:        killSoliderNum,
+			ResumeSoliderNum:      resumeSoliderNum,
+			RoundTriggerTimes:     buildRoundStatistics(tacticParams, triggerTimes),
+			RoundKillSoliderNum:   buildRoundStatistics(tacticParams, killSoliderNum),
+			RoundResumeSoliderNum: buildRoundStatistics(tacticParams, resumeSoliderNum),
 		}
 	}
 }

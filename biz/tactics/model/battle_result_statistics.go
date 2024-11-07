@@ -5,7 +5,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
 
-//对战数据统计
+// 对战数据统计
 type BattleResultStatistics struct {
 	//我军统计
 	FightingTeam *TeamBattleStatistics
@@ -13,7 +13,7 @@ type BattleResultStatistics struct {
 	EnemyTeam *TeamBattleStatistics
 }
 
-//队伍对战数据统计
+// 队伍对战数据统计
 type TeamBattleStatistics struct {
 	//***队伍原始数据***
 	//队伍信息
@@ -26,7 +26,7 @@ type TeamBattleStatistics struct {
 	GeneralBattleStatisticsList []*GeneralBattleStatistics
 }
 
-//武将对战数据统计
+// 武将对战数据统计
 type GeneralBattleStatistics struct {
 	//战法统计
 	TacticStatisticsList []*TacticStatistics
@@ -47,4 +47,11 @@ type TacticStatistics struct {
 	KillSoliderNum int64
 	//救援
 	ResumeSoliderNum int64
+
+	//回合发动
+	RoundTriggerTimes map[consts.BattlePhase]map[consts.BattleRound]int64
+	//回合杀敌
+	RoundKillSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
+	//回合救援
+	RoundResumeSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
 }

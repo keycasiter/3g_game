@@ -90,6 +90,31 @@ func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tac
 			tacticStatistics.TriggerTimes += triggerTimes
 			tacticStatistics.KillSoliderNum += killSoliderNum
 			tacticStatistics.ResumeSoliderNum += resumeSoliderNum
+
+			if m, ok := tacticStatistics.RoundTriggerTimes[tacticParams.CurrentPhase]; ok {
+				if cnt, okk := m[tacticParams.CurrentRound]; okk {
+					m[tacticParams.CurrentRound] = cnt + triggerTimes
+				} else {
+					m[tacticParams.CurrentRound] = triggerTimes
+				}
+				tacticStatistics.RoundTriggerTimes[tacticParams.CurrentPhase] = m
+			}
+			if m, ok := tacticStatistics.RoundKillSoliderNum[tacticParams.CurrentPhase]; ok {
+				if cnt, okk := m[tacticParams.CurrentRound]; okk {
+					m[tacticParams.CurrentRound] = cnt + killSoliderNum
+				} else {
+					m[tacticParams.CurrentRound] = killSoliderNum
+				}
+				tacticStatistics.RoundKillSoliderNum[tacticParams.CurrentPhase] = m
+			}
+			if m, ok := tacticStatistics.RoundResumeSoliderNum[tacticParams.CurrentPhase]; ok {
+				if cnt, okk := m[tacticParams.CurrentRound]; okk {
+					m[tacticParams.CurrentRound] = cnt + resumeSoliderNum
+				} else {
+					m[tacticParams.CurrentRound] = resumeSoliderNum
+				}
+				tacticStatistics.RoundResumeSoliderNum[tacticParams.CurrentPhase] = m
+			}
 		} else {
 			tacticStatisticsMap[tacticId] = &model.TacticStatistics{
 				TacticId:              tacticId,
@@ -120,7 +145,6 @@ func TacticReport(tacticParams *model.TacticsParams, generalUniqueId string, tac
 
 func buildRoundStatistics(tacticParams *model.TacticsParams, count int64) map[consts.BattlePhase]map[consts.BattleRound]int64 {
 	m := make(map[consts.BattlePhase]map[consts.BattleRound]int64, 0)
-
 	battlePhase := consts.Battle_Phase_Fighting
 	if tacticParams.CurrentRound == consts.Battle_Round_Prepare {
 		battlePhase = consts.Battle_Phase_Prepare
@@ -146,6 +170,31 @@ func AttackReport(tacticParams *model.TacticsParams, generalUniqueId string, tri
 		attackStatistics.TriggerTimes += triggerTimes
 		attackStatistics.KillSoliderNum += killSoliderNum
 		attackStatistics.ResumeSoliderNum += resumeSoliderNum
+
+		if m, ok := attackStatistics.RoundTriggerTimes[tacticParams.CurrentPhase]; ok {
+			if cnt, okk := m[tacticParams.CurrentRound]; okk {
+				m[tacticParams.CurrentRound] = cnt + triggerTimes
+			} else {
+				m[tacticParams.CurrentRound] = triggerTimes
+			}
+			attackStatistics.RoundTriggerTimes[tacticParams.CurrentPhase] = m
+		}
+		if m, ok := attackStatistics.RoundKillSoliderNum[tacticParams.CurrentPhase]; ok {
+			if cnt, okk := m[tacticParams.CurrentRound]; okk {
+				m[tacticParams.CurrentRound] = cnt + killSoliderNum
+			} else {
+				m[tacticParams.CurrentRound] = killSoliderNum
+			}
+			attackStatistics.RoundKillSoliderNum[tacticParams.CurrentPhase] = m
+		}
+		if m, ok := attackStatistics.RoundResumeSoliderNum[tacticParams.CurrentPhase]; ok {
+			if cnt, okk := m[tacticParams.CurrentRound]; okk {
+				m[tacticParams.CurrentRound] = cnt + resumeSoliderNum
+			} else {
+				m[tacticParams.CurrentRound] = resumeSoliderNum
+			}
+			attackStatistics.RoundResumeSoliderNum[tacticParams.CurrentPhase] = m
+		}
 	} else {
 		tacticParams.BattleAttackStatisticsMap[generalUniqueId] = &model.TacticStatistics{
 			TriggerTimes:          triggerTimes,

@@ -580,6 +580,9 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 			generalAttackStatistics.KillSoliderNum = attackStatistics.KillSoliderNum
 			generalAttackStatistics.ResumeSoliderNum = attackStatistics.ResumeSoliderNum
 			generalAttackStatistics.TriggerTimes = attackStatistics.TriggerTimes
+			generalAttackStatistics.RoundTriggerTimes = attackStatistics.RoundTriggerTimes
+			generalAttackStatistics.RoundKillSoliderNum = attackStatistics.RoundKillSoliderNum
+			generalAttackStatistics.RoundResumeSoliderNum = attackStatistics.RoundResumeSoliderNum
 		}
 
 		fightingGeneralsStatisticsList = append(fightingGeneralsStatisticsList, &model.GeneralBattleStatistics{
@@ -624,6 +627,9 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 			generalAttackStatistics.KillSoliderNum = attackStatistics.KillSoliderNum
 			generalAttackStatistics.ResumeSoliderNum = attackStatistics.ResumeSoliderNum
 			generalAttackStatistics.TriggerTimes = attackStatistics.TriggerTimes
+			generalAttackStatistics.RoundTriggerTimes = attackStatistics.RoundTriggerTimes
+			generalAttackStatistics.RoundKillSoliderNum = attackStatistics.RoundKillSoliderNum
+			generalAttackStatistics.RoundResumeSoliderNum = attackStatistics.RoundResumeSoliderNum
 		}
 
 		enemyGeneralsStatisticsList = append(enemyGeneralsStatisticsList, &model.GeneralBattleStatistics{

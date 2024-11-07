@@ -553,11 +553,14 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 			for _, tactic := range general.EquipTactics {
 				if tacticStatistics, okk := tacticStatisticsMap[int64(tactic.Id)]; okk {
 					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
-						TacticId:         tacticStatistics.TacticId,
-						TacticName:       tacticStatistics.TacticName,
-						TriggerTimes:     tacticStatistics.TriggerTimes,
-						KillSoliderNum:   tacticStatistics.KillSoliderNum,
-						ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
+						TacticId:              tacticStatistics.TacticId,
+						TacticName:            tacticStatistics.TacticName,
+						TriggerTimes:          tacticStatistics.TriggerTimes,
+						KillSoliderNum:        tacticStatistics.KillSoliderNum,
+						ResumeSoliderNum:      tacticStatistics.ResumeSoliderNum,
+						RoundTriggerTimes:     tacticStatistics.RoundTriggerTimes,
+						RoundKillSoliderNum:   tacticStatistics.RoundKillSoliderNum,
+						RoundResumeSoliderNum: tacticStatistics.RoundResumeSoliderNum,
 					})
 				} else {
 					tacticCache, okk := cache.CacheTacticMap[int64(tactic.Id)]
@@ -594,11 +597,14 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 			for _, tactic := range general.EquipTactics {
 				if tacticStatistics, okk := tacticStatisticsMap[int64(tactic.Id)]; okk {
 					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
-						TacticId:         tacticStatistics.TacticId,
-						TacticName:       tacticStatistics.TacticName,
-						TriggerTimes:     tacticStatistics.TriggerTimes,
-						KillSoliderNum:   tacticStatistics.KillSoliderNum,
-						ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
+						TacticId:              tacticStatistics.TacticId,
+						TacticName:            tacticStatistics.TacticName,
+						TriggerTimes:          tacticStatistics.TriggerTimes,
+						KillSoliderNum:        tacticStatistics.KillSoliderNum,
+						ResumeSoliderNum:      tacticStatistics.ResumeSoliderNum,
+						RoundTriggerTimes:     tacticStatistics.RoundTriggerTimes,
+						RoundKillSoliderNum:   tacticStatistics.RoundKillSoliderNum,
+						RoundResumeSoliderNum: tacticStatistics.RoundResumeSoliderNum,
 					})
 				} else {
 					tacticCache, okkk := cache.CacheTacticMap[int64(tactic.Id)]

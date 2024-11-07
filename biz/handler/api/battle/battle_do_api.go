@@ -154,12 +154,15 @@ func makeGeneralBattleStatistics(statisticsList []*model.GeneralBattleStatistics
 	//战法统计
 	for _, tacticStatistics := range statistics.TacticStatisticsList {
 		tacticStatisticsList = append(tacticStatisticsList, &api.TacticStatistics{
-			TacticId:         tacticStatistics.TacticId,
-			TacticName:       tacticStatistics.TacticName,
-			TacticQuality:    tacticStatistics.TacticQuality,
-			TriggerTimes:     tacticStatistics.TriggerTimes,
-			KillSoliderNum:   tacticStatistics.KillSoliderNum,
-			ResumeSoliderNum: tacticStatistics.ResumeSoliderNum,
+			TacticId:              tacticStatistics.TacticId,
+			TacticName:            tacticStatistics.TacticName,
+			TacticQuality:         tacticStatistics.TacticQuality,
+			TriggerTimes:          tacticStatistics.TriggerTimes,
+			KillSoliderNum:        tacticStatistics.KillSoliderNum,
+			ResumeSoliderNum:      tacticStatistics.ResumeSoliderNum,
+			RoundTriggerTimes:     buildRoundStatistics(tacticStatistics.RoundTriggerTimes),
+			RoundKillSoliderNum:   buildRoundStatistics(tacticStatistics.RoundKillSoliderNum),
+			RoundResumeSoliderNum: buildRoundStatistics(tacticStatistics.RoundResumeSoliderNum),
 		})
 	}
 	//普攻
@@ -173,6 +176,27 @@ func makeGeneralBattleStatistics(statisticsList []*model.GeneralBattleStatistics
 	result.GeneralAttackStatistics = attackStatistics
 
 	return result
+}
+
+func buildRoundStatistics(m map[consts.BattlePhase]map[consts.BattleRound]int64) map[enum.BattlePhase]map[enum.BattleRound]int64 {
+	resultMap := make(map[enum.BattlePhase]map[enum.BattleRound]int64, 0)
+
+	if len(m) == 0 {
+		return resultMap
+	}
+
+	for battlePhase, battleRound2TimesMap := range m {
+		if len(battleRound2TimesMap) == 0 {
+			continue
+		}
+		newMM := make(map[enum.BattleRound]int64, 0)
+		for k, v := range battleRound2TimesMap {
+			newMM[enum.BattleRound(k)] = v
+		}
+		resultMap[enum.BattlePhase(battlePhase)] = newMM
+	}
+
+	return resultMap
 }
 
 func makeSoliderNum(battleGenerals []*vo.BattleGeneral) int64 {

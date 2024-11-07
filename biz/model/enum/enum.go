@@ -1138,3 +1138,137 @@ func (p *BattleResult) Value() (driver.Value, error) {
 	}
 	return int64(*p), nil
 }
+
+// 对战阶段
+type BattlePhase int64
+
+const (
+	//未知
+	BattlePhase_Unknow BattlePhase = 0
+	// 准备阶段
+	BattlePhase_Prepare BattlePhase = 1
+	// 对阵阶段
+	BattlePhase_Fighting BattlePhase = 2
+)
+
+func (p BattlePhase) String() string {
+	switch p {
+	case BattlePhase_Unknow:
+		return "Unknow"
+	case BattlePhase_Prepare:
+		return "Prepare"
+	case BattlePhase_Fighting:
+		return "Fighting"
+	}
+	return "<UNSET>"
+}
+
+func BattlePhaseFromString(s string) (BattlePhase, error) {
+	switch s {
+	case "Unknow":
+		return BattlePhase_Unknow, nil
+	case "Prepare":
+		return BattlePhase_Prepare, nil
+	case "Fighting":
+		return BattlePhase_Fighting, nil
+	}
+	return BattlePhase(0), fmt.Errorf("not a valid BattlePhase string")
+}
+
+func BattlePhasePtr(v BattlePhase) *BattlePhase { return &v }
+func (p *BattlePhase) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = BattlePhase(result.Int64)
+	return
+}
+
+func (p *BattlePhase) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}
+
+// 对战回合
+type BattleRound int64
+
+const (
+	BattleRound_Unknow  BattleRound = 0
+	BattleRound_First   BattleRound = 1
+	BattleRound_Second  BattleRound = 2
+	BattleRound_Third   BattleRound = 3
+	BattleRound_Fourth  BattleRound = 4
+	BattleRound_Fifth   BattleRound = 5
+	BattleRound_Sixth   BattleRound = 6
+	BattleRound_Seventh BattleRound = 7
+	BattleRound_Eighth  BattleRound = 8
+	BattleRound_Prepare BattleRound = -1
+)
+
+func (p BattleRound) String() string {
+	switch p {
+	case BattleRound_Unknow:
+		return "Unknow"
+	case BattleRound_First:
+		return "First"
+	case BattleRound_Second:
+		return "Second"
+	case BattleRound_Third:
+		return "Third"
+	case BattleRound_Fourth:
+		return "Fourth"
+	case BattleRound_Fifth:
+		return "Fifth"
+	case BattleRound_Sixth:
+		return "Sixth"
+	case BattleRound_Seventh:
+		return "Seventh"
+	case BattleRound_Eighth:
+		return "Eighth"
+	case BattleRound_Prepare:
+		return "Prepare"
+	}
+	return "<UNSET>"
+}
+
+func BattleRoundFromString(s string) (BattleRound, error) {
+	switch s {
+	case "Unknow":
+		return BattleRound_Unknow, nil
+	case "First":
+		return BattleRound_First, nil
+	case "Second":
+		return BattleRound_Second, nil
+	case "Third":
+		return BattleRound_Third, nil
+	case "Fourth":
+		return BattleRound_Fourth, nil
+	case "Fifth":
+		return BattleRound_Fifth, nil
+	case "Sixth":
+		return BattleRound_Sixth, nil
+	case "Seventh":
+		return BattleRound_Seventh, nil
+	case "Eighth":
+		return BattleRound_Eighth, nil
+	case "Prepare":
+		return BattleRound_Prepare, nil
+	}
+	return BattleRound(0), fmt.Errorf("not a valid BattleRound string")
+}
+
+func BattleRoundPtr(v BattleRound) *BattleRound { return &v }
+func (p *BattleRound) Scan(value interface{}) (err error) {
+	var result sql.NullInt64
+	err = result.Scan(value)
+	*p = BattleRound(result.Int64)
+	return
+}
+
+func (p *BattleRound) Value() (driver.Value, error) {
+	if p == nil {
+		return nil, nil
+	}
+	return int64(*p), nil
+}

@@ -165,3 +165,24 @@ enum BattleResult{
     Advantage_Draw   = 4 //优势平局
     Inferiority_Draw = 5 //劣势平局
 }
+
+//对战阶段
+enum BattlePhase{
+    Unknow   = 0 //未知
+    Prepare  = 1 // 准备阶段
+    Fighting = 2 // 对阵阶段
+}
+
+//对战回合
+enum BattleRound {
+    Unknow  = 0
+    First   = 1
+    Second  = 2
+    Third   = 3
+    Fourth  = 4
+    Fifth   = 5
+    Sixth   = 6
+    Seventh = 7
+    Eighth  = 8
+    Prepare = -1
+}

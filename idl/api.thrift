@@ -246,6 +246,12 @@ struct TacticStatistics {
 	i64 KillSoliderNum
 	//救援
 	i64 ResumeSoliderNum
+	//回合发动
+    map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundTriggerTimes
+    //回合杀敌
+    map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundKillSoliderNum
+    //回合救援
+    map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundResumeSoliderNum
 }
 
 //============= 模拟对战 END ==============

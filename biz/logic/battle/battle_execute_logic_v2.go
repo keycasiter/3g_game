@@ -531,6 +531,7 @@ func (runCtx *BattleLogicV2Context) storeBattleRecord() {
 	go func() {
 		err := mysql.NewUserBattleRecord().CreateUserBattleRecord(runCtx.Ctx, &po.UserBattleRecord{
 			Uid:          runCtx.Req.Uid,
+			BattleParam:  util.ToJsonString(runCtx.Ctx, runCtx.Req),
 			BattleRecord: util.ToJsonString(runCtx.Ctx, runCtx.Resp),
 		})
 		if err != nil {

@@ -145,11 +145,12 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 		WxOpenId:  userInfo.WxOpenId,
 		Level:     int64(userInfo.Level),
 	}
+
 	resp.BattleStatisticsInfo = &api.BattleStatisticsInfo{
 		HighFreqGeneralList: buildHighFreqGeneralList(highFreqGeneralMap),
 		HighFreqTacticsList: buildHighFreqTacticsList(highFreqTacticMap),
 		HighFreqTeamList:    buildHighFreqTeamList(highFreqTeamMap),
-		WinRate:             winRate,
+		WinRate:             util.Float64Remain(winRate),
 	}
 
 	c.JSON(hertzconsts.StatusOK, resp)

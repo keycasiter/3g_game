@@ -834,6 +834,10 @@ type BattleTeamStatistics struct {
 	KillSoliderNum int64 `thrift:"KillSoliderNum,9" form:"KillSoliderNum" json:"KillSoliderNum" query:"KillSoliderNum"`
 	//救援
 	ResumeSoliderNum int64 `thrift:"ResumeSoliderNum,10" form:"ResumeSoliderNum" json:"ResumeSoliderNum" query:"ResumeSoliderNum"`
+	//回合杀敌
+	RoundKillSoliderNum map[enum.BattlePhase]map[enum.BattleRound]int64 `thrift:"RoundKillSoliderNum,11" form:"RoundKillSoliderNum" json:"RoundKillSoliderNum" query:"RoundKillSoliderNum"`
+	//回合救援
+	RoundResumeSoliderNum map[enum.BattlePhase]map[enum.BattleRound]int64 `thrift:"RoundResumeSoliderNum,12" form:"RoundResumeSoliderNum" json:"RoundResumeSoliderNum" query:"RoundResumeSoliderNum"`
 }
 
 func NewBattleTeamStatistics() *BattleTeamStatistics {
@@ -893,6 +897,14 @@ func (p *BattleTeamStatistics) GetResumeSoliderNum() (v int64) {
 	return p.ResumeSoliderNum
 }
 
+func (p *BattleTeamStatistics) GetRoundKillSoliderNum() (v map[enum.BattlePhase]map[enum.BattleRound]int64) {
+	return p.RoundKillSoliderNum
+}
+
+func (p *BattleTeamStatistics) GetRoundResumeSoliderNum() (v map[enum.BattlePhase]map[enum.BattleRound]int64) {
+	return p.RoundResumeSoliderNum
+}
+
 var fieldIDToName_BattleTeamStatistics = map[int16]string{
 	1:  "TeamType",
 	2:  "ArmType",
@@ -904,6 +916,8 @@ var fieldIDToName_BattleTeamStatistics = map[int16]string{
 	8:  "Name",
 	9:  "KillSoliderNum",
 	10: "ResumeSoliderNum",
+	11: "RoundKillSoliderNum",
+	12: "RoundResumeSoliderNum",
 }
 
 func (p *BattleTeamStatistics) IsSetBuildingTechAttrAddition() bool {
@@ -1008,6 +1022,22 @@ func (p *BattleTeamStatistics) Read(iprot thrift.TProtocol) (err error) {
 		case 10:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField10(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 11:
+			if fieldTypeId == thrift.MAP {
+				if err = p.ReadField11(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 12:
+			if fieldTypeId == thrift.MAP {
+				if err = p.ReadField12(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -1158,6 +1188,100 @@ func (p *BattleTeamStatistics) ReadField10(iprot thrift.TProtocol) error {
 	p.ResumeSoliderNum = _field
 	return nil
 }
+func (p *BattleTeamStatistics) ReadField11(iprot thrift.TProtocol) error {
+	_, _, size, err := iprot.ReadMapBegin()
+	if err != nil {
+		return err
+	}
+	_field := make(map[enum.BattlePhase]map[enum.BattleRound]int64, size)
+	for i := 0; i < size; i++ {
+		var _key enum.BattlePhase
+		if v, err := iprot.ReadI32(); err != nil {
+			return err
+		} else {
+			_key = enum.BattlePhase(v)
+		}
+		_, _, size, err := iprot.ReadMapBegin()
+		if err != nil {
+			return err
+		}
+		_val := make(map[enum.BattleRound]int64, size)
+		for i := 0; i < size; i++ {
+			var _key1 enum.BattleRound
+			if v, err := iprot.ReadI32(); err != nil {
+				return err
+			} else {
+				_key1 = enum.BattleRound(v)
+			}
+
+			var _val1 int64
+			if v, err := iprot.ReadI64(); err != nil {
+				return err
+			} else {
+				_val1 = v
+			}
+
+			_val[_key1] = _val1
+		}
+		if err := iprot.ReadMapEnd(); err != nil {
+			return err
+		}
+
+		_field[_key] = _val
+	}
+	if err := iprot.ReadMapEnd(); err != nil {
+		return err
+	}
+	p.RoundKillSoliderNum = _field
+	return nil
+}
+func (p *BattleTeamStatistics) ReadField12(iprot thrift.TProtocol) error {
+	_, _, size, err := iprot.ReadMapBegin()
+	if err != nil {
+		return err
+	}
+	_field := make(map[enum.BattlePhase]map[enum.BattleRound]int64, size)
+	for i := 0; i < size; i++ {
+		var _key enum.BattlePhase
+		if v, err := iprot.ReadI32(); err != nil {
+			return err
+		} else {
+			_key = enum.BattlePhase(v)
+		}
+		_, _, size, err := iprot.ReadMapBegin()
+		if err != nil {
+			return err
+		}
+		_val := make(map[enum.BattleRound]int64, size)
+		for i := 0; i < size; i++ {
+			var _key1 enum.BattleRound
+			if v, err := iprot.ReadI32(); err != nil {
+				return err
+			} else {
+				_key1 = enum.BattleRound(v)
+			}
+
+			var _val1 int64
+			if v, err := iprot.ReadI64(); err != nil {
+				return err
+			} else {
+				_val1 = v
+			}
+
+			_val[_key1] = _val1
+		}
+		if err := iprot.ReadMapEnd(); err != nil {
+			return err
+		}
+
+		_field[_key] = _val
+	}
+	if err := iprot.ReadMapEnd(); err != nil {
+		return err
+	}
+	p.RoundResumeSoliderNum = _field
+	return nil
+}
 
 func (p *BattleTeamStatistics) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -1203,6 +1327,14 @@ func (p *BattleTeamStatistics) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField10(oprot); err != nil {
 			fieldId = 10
+			goto WriteFieldError
+		}
+		if err = p.writeField11(oprot); err != nil {
+			fieldId = 11
+			goto WriteFieldError
+		}
+		if err = p.writeField12(oprot); err != nil {
+			fieldId = 12
 			goto WriteFieldError
 		}
 	}
@@ -1399,6 +1531,84 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
+func (p *BattleTeamStatistics) writeField11(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("RoundKillSoliderNum", thrift.MAP, 11); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteMapBegin(thrift.I32, thrift.MAP, len(p.RoundKillSoliderNum)); err != nil {
+		return err
+	}
+	for k, v := range p.RoundKillSoliderNum {
+		if err := oprot.WriteI32(int32(k)); err != nil {
+			return err
+		}
+		if err := oprot.WriteMapBegin(thrift.I32, thrift.I64, len(v)); err != nil {
+			return err
+		}
+		for k, v := range v {
+			if err := oprot.WriteI32(int32(k)); err != nil {
+				return err
+			}
+			if err := oprot.WriteI64(v); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteMapEnd(); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteMapEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 11 end error: ", p), err)
+}
+
+func (p *BattleTeamStatistics) writeField12(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("RoundResumeSoliderNum", thrift.MAP, 12); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteMapBegin(thrift.I32, thrift.MAP, len(p.RoundResumeSoliderNum)); err != nil {
+		return err
+	}
+	for k, v := range p.RoundResumeSoliderNum {
+		if err := oprot.WriteI32(int32(k)); err != nil {
+			return err
+		}
+		if err := oprot.WriteMapBegin(thrift.I32, thrift.I64, len(v)); err != nil {
+			return err
+		}
+		for k, v := range v {
+			if err := oprot.WriteI32(int32(k)); err != nil {
+				return err
+			}
+			if err := oprot.WriteI64(v); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteMapEnd(); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteMapEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 12 end error: ", p), err)
 }
 
 func (p *BattleTeamStatistics) String() string {

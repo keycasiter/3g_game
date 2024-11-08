@@ -120,30 +120,121 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 		//我军
 		FightingTeam: &api.TeamBattleStatistics{
 			BattleTeam: &api.BattleTeamStatistics{
-				TeamType:         enum.TeamType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.TeamType),
-				ArmType:          enum.ArmType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.ArmType),
-				BattleGenerals:   makeBattleGenerals(serviceResp.BattleResultStatistics.FightingTeam),
-				SoliderNum:       makeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
-				RemainNum:        makeRemainNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
-				KillSoliderNum:   makeKillSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
-				ResumeSoliderNum: makeResumeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+				TeamType:              enum.TeamType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.TeamType),
+				ArmType:               enum.ArmType(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.ArmType),
+				BattleGenerals:        makeBattleGenerals(serviceResp.BattleResultStatistics.FightingTeam),
+				SoliderNum:            makeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+				RemainNum:             makeRemainNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+				KillSoliderNum:        makeKillSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+				ResumeSoliderNum:      makeResumeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+				RoundKillSoliderNum:   makeRoundKillSolider(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
+				RoundResumeSoliderNum: makeRoundResumeSolider(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
 			},
 			BattleResult: enum.BattleResult(serviceResp.BattleResultStatistics.FightingTeam.BattleResult),
 		},
 		//敌军
 		EnemyTeam: &api.TeamBattleStatistics{
 			BattleTeam: &api.BattleTeamStatistics{
-				TeamType:         enum.TeamType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.TeamType),
-				ArmType:          enum.ArmType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.ArmType),
-				BattleGenerals:   makeBattleGenerals(serviceResp.BattleResultStatistics.EnemyTeam),
-				SoliderNum:       makeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
-				RemainNum:        makeRemainNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
-				KillSoliderNum:   makeKillSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
-				ResumeSoliderNum: makeResumeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+				TeamType:              enum.TeamType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.TeamType),
+				ArmType:               enum.ArmType(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.ArmType),
+				BattleGenerals:        makeBattleGenerals(serviceResp.BattleResultStatistics.EnemyTeam),
+				SoliderNum:            makeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+				RemainNum:             makeRemainNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+				KillSoliderNum:        makeKillSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+				ResumeSoliderNum:      makeResumeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+				RoundKillSoliderNum:   makeRoundKillSolider(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
+				RoundResumeSoliderNum: makeRoundResumeSolider(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
 			},
 			BattleResult: enum.BattleResult(serviceResp.BattleResultStatistics.EnemyTeam.BattleResult),
 		},
 	}
+}
+
+func makeRoundResumeSolider(battleGenerals []*model.GeneralBattleStatistics) map[enum.BattlePhase]map[enum.BattleRound]int64 {
+	resultMap := make(map[enum.BattlePhase]map[enum.BattleRound]int64, 0)
+	for _, general := range battleGenerals {
+		//单独一个武将的每一个回合
+		//恢复
+		for _, tacticStatistic := range general.TacticStatisticsList {
+			for phase, round2CntMapNew := range tacticStatistic.RoundResumeSoliderNum {
+				//准备/对战阶段
+				if round2CntMapOld, ok := resultMap[enum.BattlePhase(phase)]; ok {
+					for round, cntNew := range round2CntMapNew {
+						//存在则累计
+						if cntOld, okk := round2CntMapOld[enum.BattleRound(round)]; okk {
+							round2CntMapOld[enum.BattleRound(round)] = cntOld + cntNew
+						} else {
+							//不存在则新存入
+							round2CntMapOld[enum.BattleRound(round)] = cntNew
+						}
+					}
+				} else {
+					//没有新对战阶段
+					newM := make(map[enum.BattleRound]int64, 0)
+					for round, cnt := range round2CntMapNew {
+						newM[enum.BattleRound(round)] = cnt
+					}
+					resultMap[enum.BattlePhase(phase)] = newM
+				}
+			}
+		}
+	}
+
+	return resultMap
+}
+
+func makeRoundKillSolider(battleGenerals []*model.GeneralBattleStatistics) map[enum.BattlePhase]map[enum.BattleRound]int64 {
+	resultMap := make(map[enum.BattlePhase]map[enum.BattleRound]int64, 0)
+	for _, general := range battleGenerals {
+		//单独一个武将的每一个回合
+		//1.普攻
+		for phase, round2CntMapNew := range general.GeneralAttackStatistics.RoundKillSoliderNum {
+			//准备/对战阶段
+			if round2CntMapOld, ok := resultMap[enum.BattlePhase(phase)]; ok {
+				for round, cntNew := range round2CntMapNew {
+					//存在则累计
+					if cntOld, okk := round2CntMapOld[enum.BattleRound(round)]; okk {
+						round2CntMapOld[enum.BattleRound(round)] = cntOld + cntNew
+					} else {
+						//不存在则新存入
+						round2CntMapOld[enum.BattleRound(round)] = cntNew
+					}
+				}
+			} else {
+				//没有新对战阶段
+				newM := make(map[enum.BattleRound]int64, 0)
+				for round, cnt := range round2CntMapNew {
+					newM[enum.BattleRound(round)] = cnt
+				}
+				resultMap[enum.BattlePhase(phase)] = newM
+			}
+		}
+		//2. 战法
+		for _, tacticStatistic := range general.TacticStatisticsList {
+			for phase, round2CntMapNew := range tacticStatistic.RoundKillSoliderNum {
+				//准备/对战阶段
+				if round2CntMapOld, ok := resultMap[enum.BattlePhase(phase)]; ok {
+					for round, cntNew := range round2CntMapNew {
+						//存在则累计
+						if cntOld, okk := round2CntMapOld[enum.BattleRound(round)]; okk {
+							round2CntMapOld[enum.BattleRound(round)] = cntOld + cntNew
+						} else {
+							//不存在则新存入
+							round2CntMapOld[enum.BattleRound(round)] = cntNew
+						}
+					}
+				} else {
+					//没有新对战阶段
+					newM := make(map[enum.BattleRound]int64, 0)
+					for round, cnt := range round2CntMapNew {
+						newM[enum.BattleRound(round)] = cnt
+					}
+					resultMap[enum.BattlePhase(phase)] = newM
+				}
+			}
+		}
+	}
+	return resultMap
 }
 
 func makeGeneralBattleStatistics(statisticsList []*model.GeneralBattleStatistics, idx int) *api.GeneralBattleStatistics {

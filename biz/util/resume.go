@@ -92,7 +92,7 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 	}
 
 	//统计
-	param.ProduceGeneral.TacticAccumulateDamageMap[param.TacticId] = param.ResumeNum
+	param.ProduceGeneral.TacticAccumulateResumeMap[param.TacticId] = param.ResumeNum
 	param.ProduceGeneral.AccumulateTotalResumeNum += param.ResumeNum
 
 	TacticReport(param.TacticsParams,

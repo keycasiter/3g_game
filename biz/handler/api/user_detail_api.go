@@ -151,10 +151,18 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 		HighFreqGeneralList: buildHighFreqGeneralList(highFreqGeneralMap),
 		HighFreqTacticsList: buildHighFreqTacticsList(highFreqTacticMap),
 		HighFreqTeamList:    buildHighFreqTeamList(highFreqTeamMap),
-		WinRate:             cast.ToString(util.Float64Remain(winRate) * 100),
+		WinRate:             handleWinRate(winRate),
 	}
 
 	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+func handleWinRate(winRate float64) string {
+	winRateStr := cast.ToString(util.Float64Remain(winRate))
+	if len(winRateStr) > 4 {
+		winRateStr = winRateStr[0:4]
+	}
+	return winRateStr
 }
 
 func buildHighFreqGeneralList(m map[int64]int64) []*api.GeneralRecord {

@@ -3,8 +3,10 @@ package util
 import (
 	"fmt"
 	"testing"
+
+	"github.com/spf13/cast"
 )
 
 func TestFloat64Remain(t *testing.T) {
-	fmt.Printf("%v", Float64Remain(29.123123123))
+	fmt.Printf("%v", cast.ToString(Float64Remain(0.29123123123)*100))
 }

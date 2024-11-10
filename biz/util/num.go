@@ -20,6 +20,6 @@ func DivInt64(x, y int64) int64 {
 }
 
 func Float64Remain(num float64) float64 {
-	value, _ := strconv.ParseFloat(fmt.Sprintf("%.2f", num), 64)
+	value, _ := strconv.ParseFloat(fmt.Sprintf("%.4f", num), 64)
 	return value
 }

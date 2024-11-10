@@ -481,7 +481,7 @@ struct BattleStatisticsInfo{
     2: list<TacticsRecord> HighFreqTacticsList //高频使用战法列表
     3: list<TeamRecord> HighFreqTeamList //高频使用队伍列表
 
-    50:double WinRate //胜率
+    50:string WinRate //胜率
 }
 
 struct GeneralRecord{

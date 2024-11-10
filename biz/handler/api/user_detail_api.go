@@ -16,6 +16,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -150,7 +151,7 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 		HighFreqGeneralList: buildHighFreqGeneralList(highFreqGeneralMap),
 		HighFreqTacticsList: buildHighFreqTacticsList(highFreqTacticMap),
 		HighFreqTeamList:    buildHighFreqTeamList(highFreqTeamMap),
-		WinRate:             util.Float64Remain(winRate),
+		WinRate:             cast.ToString(util.Float64Remain(winRate)),
 	}
 
 	c.JSON(hertzconsts.StatusOK, resp)

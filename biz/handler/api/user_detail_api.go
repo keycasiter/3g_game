@@ -151,7 +151,7 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 		HighFreqGeneralList: buildHighFreqGeneralList(highFreqGeneralMap),
 		HighFreqTacticsList: buildHighFreqTacticsList(highFreqTacticMap),
 		HighFreqTeamList:    buildHighFreqTeamList(highFreqTeamMap),
-		WinRate:             cast.ToString(util.Float64Remain(winRate)),
+		WinRate:             cast.ToString(util.Float64Remain(winRate) * 100),
 	}
 
 	c.JSON(hertzconsts.StatusOK, resp)

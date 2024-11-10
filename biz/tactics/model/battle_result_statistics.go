@@ -32,6 +32,9 @@ type GeneralBattleStatistics struct {
 	TacticStatisticsList []*TacticStatistics
 	//普攻统计
 	GeneralAttackStatistics *TacticStatistics
+
+	//回合剩余兵力
+	RoundRemainSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
 }
 
 type TacticStatistics struct {

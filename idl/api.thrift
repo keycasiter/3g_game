@@ -68,6 +68,8 @@ struct BattleTeamStatistics {
     11:map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundKillSoliderNum
     //回合救援
     12:map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundResumeSoliderNum
+    //回合剩余兵力
+    13:map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundRemainSoliderNum
 }
 
 // 对战武将信息
@@ -116,6 +118,8 @@ struct BattleGeneralStatistics {
     12:	i64 KillSoliderNum
     //救援
     13: i64 ResumeSoliderNum
+    //回合剩余兵力
+    14:map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundRemainSoliderNum
 
     //***对战数据***
     99: GeneralBattleStatistics GeneralBattleStatistics

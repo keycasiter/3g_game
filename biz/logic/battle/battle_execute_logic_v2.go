@@ -111,19 +111,9 @@ func (runCtx *BattleLogicV2Context) fillGeneralDataByGeneralId() {
 	for _, general := range allGenerals {
 		allGeneralIds = append(allGeneralIds, general.BaseInfo.Id)
 	}
-	generalList, err := mysql.NewGeneral().QueryGeneralList(runCtx.Ctx, &vo.QueryGeneralCondition{
-		Ids: allGeneralIds,
-	})
-	if err != nil {
-		hlog.CtxErrorf(runCtx.Ctx, "run err:%v", err)
-		return
-	}
-	generalMap := make(map[int64]*po.General, 0)
-	for _, general := range generalList {
-		generalMap[general.Id] = general
-	}
+
 	for _, general := range allGenerals {
-		if generalDb, ok := generalMap[general.BaseInfo.Id]; ok {
+		if generalDb, ok := cache.CacheGeneralMap[general.BaseInfo.Id]; ok {
 			general.BaseInfo.Id = generalDb.Id
 			general.BaseInfo.Name = generalDb.Name
 			general.BaseInfo.Group = consts.Group(generalDb.Group)
@@ -131,14 +121,18 @@ func (runCtx *BattleLogicV2Context) fillGeneralDataByGeneralId() {
 
 			//自带战法
 			tacticId := consts.TacticId(generalDb.SelfTacticId)
-			selfTactic := &po.Tactics{
-				Id:   tacticId,
-				Type: consts.GetTacticType(tacticId),
+			if tacticCache, ok := cache.CacheTacticMap[int64(generalDb.SelfTacticId)]; ok {
+				selfTactic := &po.Tactics{
+					Id:            tacticId,
+					Name:          tacticCache.Name,
+					TacticsSource: consts.TacticsSource(tacticCache.Source),
+					Type:          consts.GetTacticType(tacticId),
+				}
+				equipTactics := make([]*po.Tactics, 0)
+				equipTactics = append(equipTactics, selfTactic)
+				equipTactics = append(equipTactics, general.EquipTactics...)
+				general.EquipTactics = equipTactics
 			}
-			equipTactics := make([]*po.Tactics, 0)
-			equipTactics = append(equipTactics, selfTactic)
-			equipTactics = append(equipTactics, general.EquipTactics...)
-			general.EquipTactics = equipTactics
 
 			//属性
 			abilityAttr := &po.AbilityAttrString{}
@@ -598,6 +592,7 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 		fightingGeneralsStatisticsList = append(fightingGeneralsStatisticsList, &model.GeneralBattleStatistics{
 			TacticStatisticsList:    tacticStatisticsList,
 			GeneralAttackStatistics: generalAttackStatistics,
+			RoundRemainSoliderNum:   general.RoundRemainSoliderNum,
 		})
 	}
 
@@ -645,6 +640,7 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 		enemyGeneralsStatisticsList = append(enemyGeneralsStatisticsList, &model.GeneralBattleStatistics{
 			TacticStatisticsList:    tacticStatisticsList,
 			GeneralAttackStatistics: generalAttackStatistics,
+			RoundRemainSoliderNum:   general.RoundRemainSoliderNum,
 		})
 	}
 
@@ -697,6 +693,9 @@ func (runCtx *BattleLogicV2Context) processBattleFightingPhase() {
 	//最多8回合
 	currentRound := consts.Battle_Round_Unknow
 	for i := 0; i < int(consts.Battle_Round_Eighth); i++ {
+		//回合剩余兵力
+		runCtx.handleRoundRemainSoliderNum()
+
 		if runCtx.BattleRoundEndFlag {
 			break
 		}
@@ -717,6 +716,29 @@ func (runCtx *BattleLogicV2Context) processBattleFightingPhase() {
 	}
 	for _, general := range runCtx.Req.EnemyTeam.BattleGenerals {
 		hlog.CtxInfof(runCtx.Ctx, "[%s]兵力[%d]", general.BaseInfo.Name, general.SoldierNum)
+	}
+}
+
+func (runCtx *BattleLogicV2Context) handleRoundRemainSoliderNum() {
+	//我方
+	for _, general := range runCtx.TacticsParams.FightingTeam.BattleGenerals {
+		if m, ok := general.RoundRemainSoliderNum[runCtx.TacticsParams.CurrentPhase]; ok {
+			m[runCtx.TacticsParams.CurrentRound] = general.SoldierNum
+		} else {
+			newM := make(map[consts.BattleRound]int64, 0)
+			newM[runCtx.TacticsParams.CurrentRound] = general.SoldierNum
+			general.RoundRemainSoliderNum[runCtx.TacticsParams.CurrentPhase] = newM
+		}
+	}
+	//敌方
+	for _, general := range runCtx.TacticsParams.EnemyTeam.BattleGenerals {
+		if m, ok := general.RoundRemainSoliderNum[runCtx.TacticsParams.CurrentPhase]; ok {
+			m[runCtx.TacticsParams.CurrentRound] = general.SoldierNum
+		} else {
+			newM := make(map[consts.BattleRound]int64, 0)
+			newM[runCtx.TacticsParams.CurrentRound] = general.SoldierNum
+			general.RoundRemainSoliderNum[runCtx.TacticsParams.CurrentPhase] = newM
+		}
 	}
 }
 
@@ -1122,6 +1144,9 @@ func (runCtx *BattleLogicV2Context) buildBattleRoundParams() {
 		}
 		if general.TacticAccumulateTriggerMap == nil {
 			general.TacticAccumulateTriggerMap = map[consts.TacticId]int64{}
+		}
+		if general.RoundRemainSoliderNum == nil {
+			general.RoundRemainSoliderNum = map[consts.BattlePhase]map[consts.BattleRound]int64{}
 		}
 	}
 

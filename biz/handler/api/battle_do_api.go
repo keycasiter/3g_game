@@ -10,7 +10,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
-	"github.com/jinzhu/copier"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
@@ -83,12 +83,13 @@ func BattleDo(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//组合resp
-	copier.Copy(resp, serviceResp)
+	//copier.Copy(resp, serviceResp)
 	buildResponse(resp, serviceResp)
 
 	c.JSON(hertzconsts.StatusOK, resp)
 	//日志打印
-	pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
+	jsonStr, _ := jsoniter.Marshal(resp)
+	pretty.Logf("resp:【%s】", jsonStr)
 }
 
 func buildResponse(resp *api.BattleDoResponse, serviceResp *battle.BattleLogicV2ContextResponse) {
@@ -130,6 +131,7 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 				ResumeSoliderNum:      makeResumeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 				RoundKillSoliderNum:   makeRoundKillSolider(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
 				RoundResumeSoliderNum: makeRoundResumeSolider(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
+				RoundRemainSoliderNum: makeRoundRemainSolider(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
 			},
 			BattleResult: enum.BattleResult(serviceResp.BattleResultStatistics.FightingTeam.BattleResult),
 		},
@@ -145,10 +147,36 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 				ResumeSoliderNum:      makeResumeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 				RoundKillSoliderNum:   makeRoundKillSolider(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
 				RoundResumeSoliderNum: makeRoundResumeSolider(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
+				RoundRemainSoliderNum: makeRoundRemainSolider(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
 			},
 			BattleResult: enum.BattleResult(serviceResp.BattleResultStatistics.EnemyTeam.BattleResult),
 		},
 	}
+}
+
+func makeRoundRemainSolider(battleGenerals []*model.GeneralBattleStatistics) map[enum.BattlePhase]map[enum.BattleRound]int64 {
+	resultMap := make(map[enum.BattlePhase]map[enum.BattleRound]int64, 0)
+	for _, general := range battleGenerals {
+		//单独一个武将的每一个回合
+		//剩余兵力
+		for phase, battleRound2CntMap := range general.RoundRemainSoliderNum {
+			if battleRound2CntMapOld, ok := resultMap[enum.BattlePhase(phase)]; ok {
+				for round, cnt := range battleRound2CntMap {
+					oldCnt, _ := battleRound2CntMapOld[enum.BattleRound(round)]
+					battleRound2CntMapOld[enum.BattleRound(round)] = cnt + oldCnt
+				}
+				resultMap[enum.BattlePhase(phase)] = battleRound2CntMapOld
+			} else {
+				battleRound2CntMapNew := make(map[enum.BattleRound]int64, 0)
+				for round, cnt := range battleRound2CntMap {
+					battleRound2CntMapNew[enum.BattleRound(round)] = cnt
+				}
+				resultMap[enum.BattlePhase(phase)] = battleRound2CntMapNew
+			}
+		}
+	}
+
+	return resultMap
 }
 
 func makeRoundResumeSolider(battleGenerals []*model.GeneralBattleStatistics) map[enum.BattlePhase]map[enum.BattleRound]int64 {
@@ -341,10 +369,30 @@ func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api
 			RemainNum:               general.SoldierNum,
 			KillSoliderNum:          general.AccumulateTotalDamageNum,
 			ResumeSoliderNum:        general.AccumulateTotalResumeNum,
+			RoundRemainSoliderNum:   makeGeneralRoundRemainSoliderNum(general.RoundRemainSoliderNum),
 			GeneralBattleStatistics: makeGeneralBattleStatistics(teamBattleStatistics.GeneralBattleStatisticsList, idx),
 		})
 	}
 	return resList
+}
+
+func makeGeneralRoundRemainSoliderNum(roundRemainSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64) map[enum.BattlePhase]map[enum.BattleRound]int64 {
+	resultMap := make(map[enum.BattlePhase]map[enum.BattleRound]int64, 0)
+	for phase, round2CntMap := range roundRemainSoliderNum {
+		if round2CntMapOld, ok := resultMap[enum.BattlePhase(phase)]; ok {
+			for round, cnt := range round2CntMap {
+				cntOld, _ := round2CntMapOld[enum.BattleRound(round)]
+				round2CntMapOld[enum.BattleRound(round)] = cnt + cntOld
+			}
+		} else {
+			round2CntMapNew := make(map[enum.BattleRound]int64, 0)
+			for round, cnt := range round2CntMap {
+				round2CntMapNew[enum.BattleRound(round)] = cnt
+			}
+			resultMap[enum.BattlePhase(phase)] = round2CntMapNew
+		}
+	}
+	return resultMap
 }
 
 func makeAbilityAttr(general *vo.BattleGeneral) *api.AbilityAttr {

@@ -113,6 +113,9 @@ type BattleGeneral struct {
 	//被谋略攻击次数
 	SufferExecuteStrategyAttackNum int64
 
+	//回合剩余兵力
+	RoundRemainSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
+
 	//*****战法触发器都是按条件（非回合）会触发的******
 	//战法触发器 map<触发动作,func(触发函数参数)>
 	TacticsTriggerMap map[consts.BattleAction][]func(params *TacticsTriggerParams) *TacticsTriggerResult `json:"-"`

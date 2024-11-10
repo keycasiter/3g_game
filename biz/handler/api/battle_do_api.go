@@ -12,6 +12,7 @@ import (
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/jinzhu/copier"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/logic/battle"
 	api "github.com/keycasiter/3g_game/biz/model/api"
@@ -392,147 +393,13 @@ func buildBattleDoRequest(ctx context.Context, req api.BattleDoRequest) *battle.
 	//我方信息
 	fightingTeamGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range req.FightingTeam.BattleGenerals {
-		//我方武将信息（从db获取）
-		generalInfo := &po.General{}
-		if info, ok := generalInfoMap[general.BaseInfo.Id]; ok {
-			generalInfo = info
-		} else {
-			panic(any(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id)))
-		}
-		//武将标签
-		generalTags := make([]consts.GeneralTag, 0)
-		generalTagsArr := []string{}
-		util.ParseJsonObj(ctx, &generalTagsArr, generalInfo.Tag)
-		for _, tag := range generalTagsArr {
-			generalTags = append(generalTags, consts.GeneralTag(cast.ToInt(tag)))
-		}
-		//佩戴战法(自带战法+选择战法)
-		equipTactics := make([]*po.Tactics, 0)
-		for _, tactic := range general.EquipTactics {
-			equipTactics = append(equipTactics, &po.Tactics{
-				Id:            consts.TacticId(tactic.Id),
-				Name:          fmt.Sprintf("%v", consts.TacticId(tactic.Id)),
-				TacticsSource: consts.TacticsSource(tactic.TacticsSource),
-				Type:          consts.TacticsType(tactic.Type),
-			})
-		}
-		//武将信息
-		fightingTeamGenerals = append(fightingTeamGenerals, &vo.BattleGeneral{
-			//基础信息
-			BaseInfo: &po.MetadataGeneral{
-				//ID，从参数获取
-				Id: general.BaseInfo.Id,
-				//姓名，从db获取
-				Name: generalInfo.Name,
-				//阵营，从db获取
-				Group: consts.Group(generalInfo.Group),
-				//标签，从db获取
-				GeneralTag: generalTags,
-				//能力值，从db获取
-				AbilityAttr: buildAbilityAttr(ctx, generalInfo),
-				//兵种适性，从参数获取
-				ArmsAttr: buildArmsAttr(general),
-				//我军/敌军，从参数获取
-				GeneralBattleType: consts.GeneralBattleType(general.BaseInfo.GeneralBattleType),
-				//本局对战唯一ID，系统每次生成
-				UniqueId: util.GenerateUUID(),
-			},
-			//战法
-			EquipTactics: equipTactics,
-			//加点
-			Addition: &vo.BattleGeneralAddition{
-				//属性加点，从参数获取
-				AbilityAttr: po.AbilityAttr{
-					ForceBase:        cast.ToFloat64(general.Addition.AbilityAttr.ForceBase),
-					IntelligenceBase: cast.ToFloat64(general.Addition.AbilityAttr.IntelligenceBase),
-					CommandBase:      cast.ToFloat64(general.Addition.AbilityAttr.CommandBase),
-					SpeedBase:        cast.ToFloat64(general.Addition.AbilityAttr.SpeedBase),
-				},
-				//武将等级，从参数获取
-				GeneralLevel: consts.GeneralLevel(general.Addition.GeneralLevel),
-				//武将红度，从参数获取
-				GeneralStarLevel: consts.GeneralStarLevel(general.Addition.GeneralStarLevel),
-			},
-			//是否主将，从参数获取
-			IsMaster: general.IsMaster,
-			//携带兵力，从参数获取
-			SoldierNum: general.SoldierNum,
-			//原始兵力，从参数获取
-			InitSoldierNum: general.SoldierNum,
-		})
+		fightingTeamGenerals = buildGenerals(ctx, generalInfoMap, general, fightingTeamGenerals)
 	}
 
 	//敌方信息
 	enemyTeamGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range req.EnemyTeam.BattleGenerals {
-		//我方武将信息（从db获取）
-		generalInfo := &po.General{}
-		if info, ok := generalInfoMap[general.BaseInfo.Id]; ok {
-			generalInfo = info
-		} else {
-			panic(any(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id)))
-		}
-		//武将标签
-		generalTags := make([]consts.GeneralTag, 0)
-		generalTagsArr := []string{}
-		util.ParseJsonObj(ctx, &generalTagsArr, generalInfo.Tag)
-		for _, tag := range generalTagsArr {
-			generalTags = append(generalTags, consts.GeneralTag(cast.ToInt(tag)))
-		}
-		//佩戴战法(自带战法+选择战法)
-		equipTactics := make([]*po.Tactics, 0)
-		for _, tactic := range general.EquipTactics {
-			equipTactics = append(equipTactics, &po.Tactics{
-				Id:            consts.TacticId(tactic.Id),
-				Name:          fmt.Sprintf("%v", tactic.Id),
-				TacticsSource: consts.TacticsSource(tactic.TacticsSource),
-				Type:          consts.TacticsType(tactic.Type),
-			})
-		}
-		//武将信息
-		enemyTeamGenerals = append(enemyTeamGenerals, &vo.BattleGeneral{
-			//基础信息
-			BaseInfo: &po.MetadataGeneral{
-				//ID，从参数获取
-				Id: general.BaseInfo.Id,
-				//姓名，从db获取
-				Name: generalInfo.Name,
-				//阵营，从db获取
-				Group: consts.Group(generalInfo.Group),
-				//标签，从db获取
-				GeneralTag: generalTags,
-				//能力值，从db获取
-				AbilityAttr: buildAbilityAttr(ctx, generalInfo),
-				//兵种适性，从参数获取
-				ArmsAttr: buildArmsAttr(general),
-				//我军/敌军，从参数获取
-				GeneralBattleType: consts.GeneralBattleType(general.BaseInfo.GeneralBattleType),
-				//本局对战唯一ID，系统每次生成
-				UniqueId: util.GenerateUUID(),
-			},
-			//战法
-			EquipTactics: equipTactics,
-			//加点
-			Addition: &vo.BattleGeneralAddition{
-				//属性加点，从参数获取
-				AbilityAttr: po.AbilityAttr{
-					ForceBase:        cast.ToFloat64(general.Addition.AbilityAttr.ForceBase),
-					IntelligenceBase: cast.ToFloat64(general.Addition.AbilityAttr.IntelligenceBase),
-					CommandBase:      cast.ToFloat64(general.Addition.AbilityAttr.CommandBase),
-					SpeedBase:        cast.ToFloat64(general.Addition.AbilityAttr.SpeedBase),
-				},
-				//武将等级，从参数获取
-				GeneralLevel: consts.GeneralLevel(general.Addition.GeneralLevel),
-				//武将红度，从参数获取
-				GeneralStarLevel: consts.GeneralStarLevel(general.Addition.GeneralStarLevel),
-			},
-			//是否主将，从参数获取
-			IsMaster: general.IsMaster,
-			//携带兵力，从参数获取
-			SoldierNum: general.SoldierNum,
-			//原始兵力，从参数获取
-			InitSoldierNum: general.SoldierNum,
-		})
+		enemyTeamGenerals = buildGenerals(ctx, generalInfoMap, general, enemyTeamGenerals)
 	}
 
 	//组装
@@ -556,6 +423,101 @@ func buildBattleDoRequest(ctx context.Context, req api.BattleDoRequest) *battle.
 		Uid: req.Uid,
 	}
 	return serviceReq
+}
+
+func buildGenerals(ctx context.Context, generalInfoMap map[int64]*po.General, general *api.BattleGeneral, fightingTeamGenerals []*vo.BattleGeneral) []*vo.BattleGeneral {
+	//我方武将信息（从db获取）
+	generalInfo := &po.General{}
+	if info, ok := generalInfoMap[general.BaseInfo.Id]; ok {
+		generalInfo = info
+	} else {
+		panic(any(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id)))
+	}
+	//武将标签
+	generalTags := make([]consts.GeneralTag, 0)
+	generalTagsArr := []string{}
+	util.ParseJsonObj(ctx, &generalTagsArr, generalInfo.Tag)
+	for _, tag := range generalTagsArr {
+		generalTags = append(generalTags, consts.GeneralTag(cast.ToInt(tag)))
+	}
+	//佩戴战法(自带战法+选择战法)
+	equipTactics := make([]*po.Tactics, 0)
+	//*自带战法
+	equipTactics = append(equipTactics, &po.Tactics{
+		Id:            consts.TacticId(general.BaseInfo.SelfTactic.Id),
+		Name:          fmt.Sprintf("%v", consts.TacticId(general.BaseInfo.SelfTactic.Id)),
+		TacticsSource: consts.TacticsSource(general.BaseInfo.SelfTactic.TacticsSource),
+		Type:          consts.TacticsType(general.BaseInfo.SelfTactic.Type),
+	})
+	//*选择战法
+	for _, tactic := range general.EquipTactics {
+		equipTactics = append(equipTactics, &po.Tactics{
+			Id:            consts.TacticId(tactic.Id),
+			Name:          fmt.Sprintf("%v", consts.TacticId(tactic.Id)),
+			TacticsSource: consts.TacticsSource(tactic.TacticsSource),
+			Type:          consts.TacticsType(tactic.Type),
+		})
+	}
+	//兵书
+	warbooks := make([]*po.Warbook, 0)
+	for _, warbook := range general.WarBooks {
+		warbookCache := cache.CacheWarBookMap[warbook.Id]
+		warbooks = append(warbooks, &po.Warbook{
+			Id:    warbook.Id,
+			Name:  fmt.Sprintf("%v", warbookCache.Name),
+			Level: warbookCache.Level,
+			Type:  warbookCache.Type,
+			Desc:  warbookCache.Desc,
+		})
+	}
+
+	//武将信息
+	fightingTeamGenerals = append(fightingTeamGenerals, &vo.BattleGeneral{
+		//基础信息
+		BaseInfo: &po.MetadataGeneral{
+			//ID，从参数获取
+			Id: general.BaseInfo.Id,
+			//姓名，从db获取
+			Name: generalInfo.Name,
+			//阵营，从db获取
+			Group: consts.Group(generalInfo.Group),
+			//标签，从db获取
+			GeneralTag: generalTags,
+			//能力值，从db获取
+			AbilityAttr: buildAbilityAttr(ctx, generalInfo),
+			//兵种适性，从参数获取
+			ArmsAttr: buildArmsAttr(general),
+			//我军/敌军，从参数获取
+			GeneralBattleType: consts.GeneralBattleType(general.BaseInfo.GeneralBattleType),
+			//本局对战唯一ID，系统每次生成
+			UniqueId: util.GenerateUUID(),
+		},
+		//战法
+		EquipTactics: equipTactics,
+		//兵书
+		WarBooks: warbooks,
+		//加点
+		Addition: &vo.BattleGeneralAddition{
+			//属性加点，从参数获取
+			AbilityAttr: po.AbilityAttr{
+				ForceBase:        cast.ToFloat64(general.Addition.AbilityAttr.ForceBase),
+				IntelligenceBase: cast.ToFloat64(general.Addition.AbilityAttr.IntelligenceBase),
+				CommandBase:      cast.ToFloat64(general.Addition.AbilityAttr.CommandBase),
+				SpeedBase:        cast.ToFloat64(general.Addition.AbilityAttr.SpeedBase),
+			},
+			//武将等级，从参数获取
+			GeneralLevel: consts.GeneralLevel(general.Addition.GeneralLevel),
+			//武将红度，从参数获取
+			GeneralStarLevel: consts.GeneralStarLevel(general.Addition.GeneralStarLevel),
+		},
+		//是否主将，从参数获取
+		IsMaster: general.IsMaster,
+		//携带兵力，从参数获取
+		SoldierNum: general.SoldierNum,
+		//原始兵力，从参数获取
+		InitSoldierNum: general.SoldierNum,
+	})
+	return fightingTeamGenerals
 }
 
 func makeBuildingTechGroupAddition(team *api.BattleTeam) vo.BuildingTechGroupAddition {

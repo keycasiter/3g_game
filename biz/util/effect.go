@@ -2,6 +2,7 @@ package util
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
@@ -211,7 +212,7 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 	if isContainBuffEffect && isContainAttrBuffEffect {
 		//来自同一战法的属性效果
 		for _, effectHolderParam := range general.BuffEffectHolderMap[effectType] {
-			if effectHolderParam.FromTactic == effectParam.FromTactic {
+			if effectParam.FromTactic > 0 && effectHolderParam.FromTactic == effectParam.FromTactic {
 				effectHolderParam.EffectRound = effectParam.EffectRound
 				hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已刷新",
 					general.BaseInfo.Name,
@@ -223,17 +224,42 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 					IsRefreshEffect: true,
 				}
 			}
+			if effectParam.FromWarbook > 0 && effectHolderParam.FromWarbook == effectParam.FromWarbook {
+				effectHolderParam.EffectRound = effectParam.EffectRound
+				hlog.CtxInfof(ctx, "[%s]来自【%v】兵书「%v」效果已刷新",
+					general.BaseInfo.Name,
+					effectParam.FromWarbook,
+					effectType,
+				)
+				return &EffectWrapSetResp{
+					IsSuccess:       true,
+					IsRefreshEffect: true,
+				}
+			}
 		}
 		//不来自同一战法的属性效果
 		if effectHolderParams, ok := general.BuffEffectHolderMap[effectType]; ok {
 			effectHolderParams = append(effectHolderParams, effectParam)
-			hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已施加",
-				general.BaseInfo.Name,
-				effectParam.FromTactic,
-				effectType,
-			)
-			return &EffectWrapSetResp{
-				IsSuccess: true,
+			if effectParam.FromTactic > 0 {
+				hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已施加",
+					general.BaseInfo.Name,
+					effectParam.FromTactic,
+					effectType,
+				)
+				return &EffectWrapSetResp{
+					IsSuccess: true,
+				}
+			}
+
+			if effectParam.FromWarbook > 0 {
+				hlog.CtxInfof(ctx, "[%s]来自【%v】兵书「%v」效果已施加",
+					general.BaseInfo.Name,
+					effectParam.FromWarbook,
+					effectType,
+				)
+				return &EffectWrapSetResp{
+					IsSuccess: true,
+				}
 			}
 		}
 	}
@@ -450,6 +476,19 @@ type BuffEffectOfTacticCostRoundParams struct {
 	CostOverTriggerFunc func()
 }
 
+type BuffEffectOfWarbookCostRoundParams struct {
+	//上下文
+	Ctx context.Context
+	//操作武将
+	General *vo.BattleGeneral
+	//正面效果
+	EffectType consts.BuffEffectType
+	//关联兵书
+	WarbookDetailType consts.WarBookDetailType
+	//效果消耗完成回调函数
+	CostOverTriggerFunc func()
+}
+
 // 正面效果消耗
 func BuffEffectOfTacticCostRound(params *BuffEffectOfTacticCostRoundParams) bool {
 	if params.TacticId <= 0 {
@@ -471,6 +510,45 @@ func BuffEffectOfTacticCostRound(params *BuffEffectOfTacticCostRoundParams) bool
 					hlog.CtxInfof(params.Ctx, "[%s]的【%v】「%v」效果已消失",
 						params.General.BaseInfo.Name,
 						params.TacticId,
+						params.EffectType,
+					)
+
+					//属性加点清理
+					buffEffectDecr(params.Ctx, params.General, params.EffectType, effectParam.EffectValue)
+
+					//执行回调函数
+					if params.CostOverTriggerFunc != nil {
+						params.CostOverTriggerFunc()
+					}
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
+// 正面效果消耗
+func BuffEffectOfWarbookCostRound(params *BuffEffectOfWarbookCostRoundParams) bool {
+	if params.WarbookDetailType <= 0 {
+		return false
+	}
+
+	if effectParams, ok := params.General.BuffEffectHolderMap[params.EffectType]; ok {
+		for idx, effectParam := range effectParams {
+			//找到指定兵书
+			if effectParam.FromWarbook == params.WarbookDetailType {
+				//消耗
+				if effectParam.EffectRound > 0 {
+					effectParam.EffectRound--
+					return true
+				}
+				//清除
+				if effectParam.EffectRound == 0 {
+					params.General.BuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+					hlog.CtxInfof(params.Ctx, "[%s]的【%v】兵书「%v」效果已消失",
+						params.General.BaseInfo.Name,
+						params.WarbookDetailType,
 						params.EffectType,
 					)
 

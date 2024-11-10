@@ -14,6 +14,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
+	warbookExecute "github.com/keycasiter/3g_game/biz/warbook/execute"
 	"github.com/spf13/cast"
 )
 
@@ -186,6 +187,11 @@ func (runCtx *BattleLogicV2Context) handleAbilityAttrAddition(general *vo.Battle
 	general.BaseInfo.AbilityAttr.SpeedBase =
 		general.BaseInfo.AbilityAttr.SpeedBase + general.Addition.AbilityAttr.SpeedBase
 
+}
+
+// 兵书处理
+func (runCtx *BattleLogicV2Context) handleWarBook(general *vo.BattleGeneral) {
+	warbookExecute.NewWarBookExecutor(runCtx.Ctx, general).Execute()
 }
 
 // 武将等级处理
@@ -492,6 +498,9 @@ func (runCtx *BattleLogicV2Context) handleGeneralAddition(team *vo.BattleTeam, g
 	//武将等级加成
 	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 武将等级加成")
 	runCtx.handleGeneralLevel(general)
+	//兵书加成
+	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 兵书加成")
+	runCtx.handleWarBook(general)
 
 	//剧本特殊效果加成
 	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleGeneralAddition 剧本特殊效果加成")

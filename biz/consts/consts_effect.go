@@ -194,6 +194,7 @@ const (
 	BuffEffectType_TacticsAssaultTriggerImprove                       //突击战法发动率提升
 	BuffEffectType_LaunchWeaponDamageImprove                          //造成兵刃伤害增加
 	BuffEffectType_LaunchStrategyDamageImprove                        //造成谋略伤害增加
+	BuffEffectType_ResumeImprove                                      //治疗效果提升
 
 	BuffEffectType_GeneralAttackDamageImprove                           //普通攻击伤害提升
 	BuffEffectType_SufferWeaponDamageDeduce                             //受到兵刃伤害减少

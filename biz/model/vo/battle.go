@@ -35,6 +35,8 @@ type EffectHolderParams struct {
 	MaxEffectTimes int64
 	//来源于哪个战法
 	FromTactic consts.TacticId
+	//来源于哪个兵书
+	FromWarbook consts.WarBookDetailType
 	//是否可以刷新
 	IsSupportRefresh bool
 	//强制普通攻击目标/被谁嘲讽
@@ -53,6 +55,8 @@ type BattleGeneral struct {
 	BaseInfo *po.MetadataGeneral
 	//佩戴战法
 	EquipTactics []*po.Tactics
+	//兵书
+	WarBooks []*po.Warbook
 	//武将对战加成
 	Addition *BattleGeneralAddition
 	//是否主将

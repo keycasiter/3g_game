@@ -68,6 +68,17 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		}
 	}
 
+	//治疗效果提升
+	if effectParams, ok := BuffEffectGet(param.ProduceGeneral, consts.BuffEffectType_ResumeImprove); ok {
+		effectRate := float64(0)
+		for _, param := range effectParams {
+			effectRate += param.EffectRate
+		}
+		param.ResumeNum = cast.ToInt64(cast.ToFloat64(param.ResumeNum) * (1 + effectRate))
+	}
+
+	//治��效果降低
+
 	//治疗效果降低
 	if effectParams, ok := DeBuffEffectGet(param.SufferGeneral, consts.DebuffEffectType_SufferResumeDeduce); ok {
 		effectRate := float64(0)

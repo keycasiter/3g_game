@@ -443,12 +443,14 @@ func buildGenerals(ctx context.Context, generalInfoMap map[int64]*po.General, ge
 	//佩戴战法(自带战法+选择战法)
 	equipTactics := make([]*po.Tactics, 0)
 	//*自带战法
-	equipTactics = append(equipTactics, &po.Tactics{
-		Id:            consts.TacticId(general.BaseInfo.SelfTactic.Id),
-		Name:          fmt.Sprintf("%v", consts.TacticId(general.BaseInfo.SelfTactic.Id)),
-		TacticsSource: consts.TacticsSource(general.BaseInfo.SelfTactic.TacticsSource),
-		Type:          consts.TacticsType(general.BaseInfo.SelfTactic.Type),
-	})
+	if tacticInfoCache, ok := cache.CacheTacticMap[int64(generalInfo.SelfTacticId)]; ok {
+		equipTactics = append(equipTactics, &po.Tactics{
+			Id:            consts.TacticId(tacticInfoCache.Id),
+			Name:          fmt.Sprintf("%v", consts.TacticId(tacticInfoCache.Id)),
+			TacticsSource: consts.TacticsSource(tacticInfoCache.Source),
+			Type:          consts.TacticsType(tacticInfoCache.Type),
+		})
+	}
 	//*选择战法
 	for _, tactic := range general.EquipTactics {
 		equipTactics = append(equipTactics, &po.Tactics{

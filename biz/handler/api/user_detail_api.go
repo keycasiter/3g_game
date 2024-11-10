@@ -16,7 +16,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 	"golang.org/x/sync/errgroup"
 )
 
@@ -151,18 +150,10 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 		HighFreqGeneralList: buildHighFreqGeneralList(highFreqGeneralMap),
 		HighFreqTacticsList: buildHighFreqTacticsList(highFreqTacticMap),
 		HighFreqTeamList:    buildHighFreqTeamList(highFreqTeamMap),
-		WinRate:             handleWinRate(winRate),
+		WinRate:             winRate,
 	}
 
 	c.JSON(hertzconsts.StatusOK, resp)
-}
-
-func handleWinRate(winRate float64) string {
-	winRateStr := cast.ToString(util.Float64Remain(winRate))
-	if len(winRateStr) > 4 {
-		winRateStr = winRateStr[0:4]
-	}
-	return winRateStr
 }
 
 func buildHighFreqGeneralList(m map[int64]int64) []*api.GeneralRecord {

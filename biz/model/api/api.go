@@ -14503,7 +14503,7 @@ type BattleStatisticsInfo struct {
 	//高频使用队伍列表
 	HighFreqTeamList []*TeamRecord `thrift:"HighFreqTeamList,3" form:"HighFreqTeamList" json:"HighFreqTeamList" query:"HighFreqTeamList"`
 	//胜率
-	WinRate string `thrift:"WinRate,50" form:"WinRate" json:"WinRate" query:"WinRate"`
+	WinRate float64 `thrift:"WinRate,50" form:"WinRate" json:"WinRate" query:"WinRate"`
 }
 
 func NewBattleStatisticsInfo() *BattleStatisticsInfo {
@@ -14525,7 +14525,7 @@ func (p *BattleStatisticsInfo) GetHighFreqTeamList() (v []*TeamRecord) {
 	return p.HighFreqTeamList
 }
 
-func (p *BattleStatisticsInfo) GetWinRate() (v string) {
+func (p *BattleStatisticsInfo) GetWinRate() (v float64) {
 	return p.WinRate
 }
 
@@ -14580,7 +14580,7 @@ func (p *BattleStatisticsInfo) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 50:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.DOUBLE {
 				if err = p.ReadField50(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -14687,8 +14687,8 @@ func (p *BattleStatisticsInfo) ReadField3(iprot thrift.TProtocol) error {
 }
 func (p *BattleStatisticsInfo) ReadField50(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field float64
+	if v, err := iprot.ReadDouble(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -14813,10 +14813,10 @@ WriteFieldEndError:
 }
 
 func (p *BattleStatisticsInfo) writeField50(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("WinRate", thrift.STRING, 50); err != nil {
+	if err = oprot.WriteFieldBegin("WinRate", thrift.DOUBLE, 50); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.WinRate); err != nil {
+	if err := oprot.WriteDouble(p.WinRate); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

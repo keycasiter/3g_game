@@ -31,6 +31,8 @@ enum WarbookType {
 	MilitaryForm = 2 // 虚实（紫色兵书）
 	FalsehoodVersusReality = 3 // 军形（蓝色兵书）
 	NineVariations = 4 // 九变（绿色兵书）
+	BeginPlan = 5 // 始计（黄色兵书）
+	UseInterval = 6 // 用间（灰色兵书）
 }
 
 

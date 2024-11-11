@@ -181,6 +181,10 @@ const (
 	WarbookType_FalsehoodVersusReality WarbookType = 3
 	// 九变（绿色兵书）
 	WarbookType_NineVariations WarbookType = 4
+	// 始计（黄色兵书）
+	WarbookType_BeginPlan WarbookType = 5
+	// 用间（灰色兵书）
+	WarbookType_UseInterval WarbookType = 6
 )
 
 func (p WarbookType) String() string {
@@ -195,6 +199,10 @@ func (p WarbookType) String() string {
 		return "FalsehoodVersusReality"
 	case WarbookType_NineVariations:
 		return "NineVariations"
+	case WarbookType_BeginPlan:
+		return "BeginPlan"
+	case WarbookType_UseInterval:
+		return "UseInterval"
 	}
 	return "<UNSET>"
 }
@@ -211,6 +219,10 @@ func WarbookTypeFromString(s string) (WarbookType, error) {
 		return WarbookType_FalsehoodVersusReality, nil
 	case "NineVariations":
 		return WarbookType_NineVariations, nil
+	case "BeginPlan":
+		return WarbookType_BeginPlan, nil
+	case "UseInterval":
+		return WarbookType_UseInterval, nil
 	}
 	return WarbookType(0), fmt.Errorf("not a valid WarbookType string")
 }

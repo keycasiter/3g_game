@@ -9762,6 +9762,10 @@ type GeneralWarBookListRequest struct {
 	GeneralId int64 `thrift:"GeneralId,1" form:"GeneralId" json:"GeneralId" query:"GeneralId"`
 	//兵书类型
 	WarbookType enum.WarbookType `thrift:"WarbookType,2" form:"WarbookType" json:"WarbookType" query:"WarbookType"`
+	//兵书等级
+	Level int64 `thrift:"Level,3" form:"Level" json:"Level" query:"Level"`
+	// 兵书名称
+	Name string `thrift:"Name,4" form:"Name" json:"Name" query:"Name"`
 }
 
 func NewGeneralWarBookListRequest() *GeneralWarBookListRequest {
@@ -9779,9 +9783,19 @@ func (p *GeneralWarBookListRequest) GetWarbookType() (v enum.WarbookType) {
 	return p.WarbookType
 }
 
+func (p *GeneralWarBookListRequest) GetLevel() (v int64) {
+	return p.Level
+}
+
+func (p *GeneralWarBookListRequest) GetName() (v string) {
+	return p.Name
+}
+
 var fieldIDToName_GeneralWarBookListRequest = map[int16]string{
 	1: "GeneralId",
 	2: "WarbookType",
+	3: "Level",
+	4: "Name",
 }
 
 func (p *GeneralWarBookListRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -9814,6 +9828,22 @@ func (p *GeneralWarBookListRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 2:
 			if fieldTypeId == thrift.I32 {
 				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -9870,6 +9900,28 @@ func (p *GeneralWarBookListRequest) ReadField2(iprot thrift.TProtocol) error {
 	p.WarbookType = _field
 	return nil
 }
+func (p *GeneralWarBookListRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Level = _field
+	return nil
+}
+func (p *GeneralWarBookListRequest) ReadField4(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Name = _field
+	return nil
+}
 
 func (p *GeneralWarBookListRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -9883,6 +9935,14 @@ func (p *GeneralWarBookListRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
 			goto WriteFieldError
 		}
 	}
@@ -9935,6 +9995,40 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *GeneralWarBookListRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Level", thrift.I64, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.Level); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *GeneralWarBookListRequest) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("Name", thrift.STRING, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Name); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
 func (p *GeneralWarBookListRequest) String() string {

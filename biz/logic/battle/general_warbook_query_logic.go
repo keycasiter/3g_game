@@ -2,6 +2,8 @@ package battle
 
 import (
 	"context"
+	"strings"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
@@ -10,7 +12,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/cast"
-	"strings"
 )
 
 type GeneralWarBookListLogic struct {
@@ -33,6 +34,7 @@ func (g *GeneralWarBookListLogic) Handle() (api.GeneralWarBookListResponse, erro
 	//查询武将战法
 	generalWarbookList, err := mysql.NewGeneralWarbook().QueryGeneralWarbookList(g.Ctx, &vo.QueryGeneralWarbookCondition{
 		GeneralID: g.Req.GeneralId,
+		Type:      int64(g.Req.WarbookType),
 		OffSet:    0,
 		Limit:     1,
 	})

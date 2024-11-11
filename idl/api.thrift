@@ -339,6 +339,10 @@ struct GeneralWarBookListRequest{
     1: i64 GeneralId
     //兵书类型
     2: enum.WarbookType WarbookType
+    //兵书等级
+    3: i64 Level
+    // 兵书名称
+    4: string Name
 }
 
 struct GeneralWarBookListResponse{

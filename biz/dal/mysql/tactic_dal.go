@@ -3,10 +3,11 @@ package mysql
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
-	"strings"
 )
 
 func (TacticDal) TableName() string {
@@ -42,6 +43,9 @@ func (g *TacticDal) QueryTacticList(ctx context.Context, condition *vo.QueryTact
 	}
 	if len(condition.Sources) > 0 {
 		conn.Where("source in (?)", condition.Sources)
+	}
+	if len(condition.ExcludeSources) > 0 {
+		conn.Where("source not in (?)", condition.ExcludeSources)
 	}
 	if condition.Type > 0 {
 		conn.Where("type = ?", condition.Type)

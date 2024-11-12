@@ -2,6 +2,7 @@ package battle
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
@@ -33,14 +34,15 @@ func (g *TacticListLogic) Handle() (api.TacticListResponse, error) {
 		sources = append(sources, int32(source))
 	}
 	list, err := mysql.NewTactic().QueryTacticList(g.Ctx, &vo.QueryTacticCondition{
-		Id:      g.Req.Id,
-		Name:    g.Req.Name,
-		Quality: int32(g.Req.Quality),
-		Source:  int32(g.Req.Source),
-		Sources: sources,
-		Type:    int32(g.Req.Type),
-		Offset:  util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize),
-		Limit:   int(g.Req.PageSize),
+		Id:             g.Req.Id,
+		Name:           g.Req.Name,
+		Quality:        int32(g.Req.Quality),
+		Source:         int32(g.Req.Source),
+		Sources:        sources,
+		ExcludeSources: []int32{int32(enum.TacticsSource_SelfContained)},
+		Type:           int32(g.Req.Type),
+		Offset:         util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize),
+		Limit:          int(g.Req.PageSize),
 	})
 	if err != nil {
 		hlog.CtxErrorf(g.Ctx, "QueryTacticList err:%v", err)

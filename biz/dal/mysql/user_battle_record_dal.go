@@ -31,7 +31,7 @@ func (g *UserBattleRecordDal) QueryUserBattleRecord(ctx context.Context, uid str
 		conn = conn.Offset(offset).Limit(limit)
 	}
 
-	if err := conn.Order("created_at desc").Find(&userBattleRecords).Error; err != nil {
+	if err := conn.Order("id desc").Find(&userBattleRecords).Error; err != nil {
 		hlog.CtxErrorf(ctx, "QueryUserBattleRecord err:%v", err)
 		return userBattleRecords, err
 	}

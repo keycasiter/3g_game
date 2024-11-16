@@ -8,6 +8,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/jinzhu/copier"
+	"github.com/keycasiter/3g_game/biz/logic/battle"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/kr/pretty"
@@ -35,10 +37,21 @@ func BattleList(ctx context.Context, c *app.RequestContext) {
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
+	//逻辑执行
+	serviceResp, err := battle.NewBattleListLogic(ctx, api.BattleListRequest{
+		Uid:      req.Uid,
+		PageNo:   req.PageNo,
+		PageSize: req.PageSize,
+	}).Handle()
+	if err != nil {
+		hlog.CtxErrorf(ctx, "BattleListLogic Run Err:%v", err)
+		resp.Meta = util.BuildFailMetaWithMsg("未知错误")
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
 
-	////组合resp
-	//copier.Copy(resp, serviceResp)
-	//buildResponse(resp, serviceResp)
+	//组合resp
+	copier.Copy(resp, serviceResp)
 
 	c.JSON(hertzconsts.StatusOK, resp)
 	//日志打印

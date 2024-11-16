@@ -29,7 +29,7 @@ func NewBattleListLogic(ctx context.Context, req api.BattleListRequest) *BattleL
 
 func (g *BattleListLogic) Handle() (api.BattleListResponse, error) {
 
-	list, err := mysql.NewUserBattleRecord().QueryUserBattleRecord(g.Ctx, g.Req.Uid, int(g.Req.PageNo), int(g.Req.PageSize))
+	list, err := mysql.NewUserBattleRecord().QueryUserBattleRecord(g.Ctx, g.Req.Uid, util.PageNoToOffset(g.Req.PageNo, g.Req.PageSize), int(g.Req.PageSize))
 	if err != nil {
 		hlog.CtxErrorf(g.Ctx, "QueryUserBattleRecord err:%v", err)
 		g.Resp.Meta = util.BuildFailMeta()
@@ -41,7 +41,7 @@ func (g *BattleListLogic) Handle() (api.BattleListResponse, error) {
 	for _, record := range list {
 		//反序列化
 		battleRecord := &BattleLogicV2ContextResponse{}
-		util.ParseJsonObj(g.Ctx, &battleRecord, record.BattleRecord)
+		util.ParseJsonObj(g.Ctx, battleRecord, record.BattleRecord)
 
 		resList = append(resList, &api.BattleRecordInfo{
 			BattleResult: enum.BattleResult(battleRecord.BattleResultStatistics.FightingTeam.BattleResult),

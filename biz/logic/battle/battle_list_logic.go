@@ -6,7 +6,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/model/api"
-	"github.com/keycasiter/3g_game/biz/model/enum"
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
@@ -43,17 +42,9 @@ func (g *BattleListLogic) Handle() (api.BattleListResponse, error) {
 		util.ParseJsonObj(g.Ctx, battleRecord, record.BattleRecord)
 
 		resList = append(resList, &api.BattleRecordInfo{
-			BattleResult: enum.BattleResult(battleRecord.BattleResultStatistics.FightingTeam.BattleResult),
-			FightingTeam: &api.TeamBattleStatistics{
-				BattleTeam: &api.BattleTeamStatistics{
-					BattleGenerals: battleRecord.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals,
-				},
-			},
-			EnemyTeam: &api.TeamBattleStatistics{
-				BattleTeam: &api.BattleTeamStatistics{
-					BattleGenerals: battleRecord.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals,
-				},
-			},
+			BattleResult: battleRecord.BattleResultStatistics.FightingTeam.BattleResult,
+			FightingTeam: battleRecord.BattleResultStatistics.FightingTeam,
+			EnemyTeam:    battleRecord.BattleResultStatistics.EnemyTeam,
 		})
 	}
 	g.Resp = api.BattleListResponse{

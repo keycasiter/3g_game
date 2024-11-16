@@ -7579,7 +7579,7 @@ func (p *BattleListRequest) String() string {
 type BattleListResponse struct {
 	Meta *common.Meta `thrift:"Meta,1" form:"Meta" json:"Meta" query:"Meta"`
 	//对战记录列表
-	TacticList []*BattleRecordInfo `thrift:"TacticList,2" form:"TacticList" json:"TacticList" query:"TacticList"`
+	BattleRecordList []*BattleRecordInfo `thrift:"BattleRecordList,2" form:"BattleRecordList" json:"BattleRecordList" query:"BattleRecordList"`
 }
 
 func NewBattleListResponse() *BattleListResponse {
@@ -7598,13 +7598,13 @@ func (p *BattleListResponse) GetMeta() (v *common.Meta) {
 	return p.Meta
 }
 
-func (p *BattleListResponse) GetTacticList() (v []*BattleRecordInfo) {
-	return p.TacticList
+func (p *BattleListResponse) GetBattleRecordList() (v []*BattleRecordInfo) {
+	return p.BattleRecordList
 }
 
 var fieldIDToName_BattleListResponse = map[int16]string{
 	1: "Meta",
-	2: "TacticList",
+	2: "BattleRecordList",
 }
 
 func (p *BattleListResponse) IsSetMeta() bool {
@@ -7703,7 +7703,7 @@ func (p *BattleListResponse) ReadField2(iprot thrift.TProtocol) error {
 	if err := iprot.ReadListEnd(); err != nil {
 		return err
 	}
-	p.TacticList = _field
+	p.BattleRecordList = _field
 	return nil
 }
 
@@ -7757,13 +7757,13 @@ WriteFieldEndError:
 }
 
 func (p *BattleListResponse) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("TacticList", thrift.LIST, 2); err != nil {
+	if err = oprot.WriteFieldBegin("BattleRecordList", thrift.LIST, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.TacticList)); err != nil {
+	if err := oprot.WriteListBegin(thrift.STRUCT, len(p.BattleRecordList)); err != nil {
 		return err
 	}
-	for _, v := range p.TacticList {
+	for _, v := range p.BattleRecordList {
 		if err := v.Write(oprot); err != nil {
 			return err
 		}
@@ -7793,9 +7793,9 @@ type BattleRecordInfo struct {
 	//对战结果
 	BattleResult enum.BattleResult `thrift:"BattleResult,1" form:"BattleResult" json:"BattleResult" query:"BattleResult"`
 	// 出战队伍信息
-	FightingTeam *BattleTeam `thrift:"FightingTeam,2" form:"FightingTeam" json:"FightingTeam" query:"FightingTeam"`
+	FightingTeam *TeamBattleStatistics `thrift:"FightingTeam,2" form:"FightingTeam" json:"FightingTeam" query:"FightingTeam"`
 	// 对战队伍信息
-	EnemyTeam *BattleTeam `thrift:"EnemyTeam,3" form:"EnemyTeam" json:"EnemyTeam" query:"EnemyTeam"`
+	EnemyTeam *TeamBattleStatistics `thrift:"EnemyTeam,3" form:"EnemyTeam" json:"EnemyTeam" query:"EnemyTeam"`
 }
 
 func NewBattleRecordInfo() *BattleRecordInfo {
@@ -7809,18 +7809,18 @@ func (p *BattleRecordInfo) GetBattleResult() (v enum.BattleResult) {
 	return p.BattleResult
 }
 
-var BattleRecordInfo_FightingTeam_DEFAULT *BattleTeam
+var BattleRecordInfo_FightingTeam_DEFAULT *TeamBattleStatistics
 
-func (p *BattleRecordInfo) GetFightingTeam() (v *BattleTeam) {
+func (p *BattleRecordInfo) GetFightingTeam() (v *TeamBattleStatistics) {
 	if !p.IsSetFightingTeam() {
 		return BattleRecordInfo_FightingTeam_DEFAULT
 	}
 	return p.FightingTeam
 }
 
-var BattleRecordInfo_EnemyTeam_DEFAULT *BattleTeam
+var BattleRecordInfo_EnemyTeam_DEFAULT *TeamBattleStatistics
 
-func (p *BattleRecordInfo) GetEnemyTeam() (v *BattleTeam) {
+func (p *BattleRecordInfo) GetEnemyTeam() (v *TeamBattleStatistics) {
 	if !p.IsSetEnemyTeam() {
 		return BattleRecordInfo_EnemyTeam_DEFAULT
 	}
@@ -7925,7 +7925,7 @@ func (p *BattleRecordInfo) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *BattleRecordInfo) ReadField2(iprot thrift.TProtocol) error {
-	_field := NewBattleTeam()
+	_field := NewTeamBattleStatistics()
 	if err := _field.Read(iprot); err != nil {
 		return err
 	}
@@ -7933,7 +7933,7 @@ func (p *BattleRecordInfo) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 func (p *BattleRecordInfo) ReadField3(iprot thrift.TProtocol) error {
-	_field := NewBattleTeam()
+	_field := NewTeamBattleStatistics()
 	if err := _field.Read(iprot); err != nil {
 		return err
 	}

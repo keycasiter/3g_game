@@ -13,12 +13,12 @@ import (
 	"github.com/kr/pretty"
 )
 
-// BattleExecute @Summary 发起模拟对战
-// @Description 发起模拟对战
+// BattleList @Summary 查询模拟对战列表
+// @Description 查询模拟对战列表
 // @Tags 模拟对战
 // @Accept json
 // @Produce json
-// @Router /v1/battle/do [POST]
+// @Router /v1/battle/list [POST]
 func BattleList(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req api.BattleListRequest

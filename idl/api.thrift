@@ -275,16 +275,16 @@ struct BattleListRequest{
 struct BattleListResponse{
     1: common.Meta Meta
     //对战记录列表
-    2: list<BattleRecordInfo> TacticList
+    2: list<BattleRecordInfo> BattleRecordList
 }
 
 struct BattleRecordInfo {
     //对战结果
     1: enum.BattleResult BattleResult
 	// 出战队伍信息
-	2:BattleTeam FightingTeam
+	2:TeamBattleStatistics FightingTeam
 	// 对战队伍信息
-	3:BattleTeam EnemyTeam
+	3:TeamBattleStatistics EnemyTeam
 }
 
 //============= 模拟对战列表 END ==============

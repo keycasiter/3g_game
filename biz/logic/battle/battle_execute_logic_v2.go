@@ -6,7 +6,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/cache"
-	"github.com/keycasiter/3g_game/biz/dal/mysql"
 	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
@@ -81,8 +80,6 @@ func NewBattleLogicV2Context(ctx context.Context, req *BattleLogicV2ContextReque
 		runCtx.processBattleFightingPhase,
 		//对战战报统计数据处理
 		runCtx.processBattleReportStatistics,
-		//记录对战数据
-		runCtx.storeBattleRecord,
 	}
 
 	return runCtx
@@ -528,20 +525,6 @@ func (runCtx *BattleLogicV2Context) handleTeamAddition(team *vo.BattleTeam) {
 	runCtx.handleBuildingTechGroupAddition(team)
 	//兵种-科技加成 TODO
 	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] handleTeamAddition 兵种-科技加成")
-}
-
-func (runCtx *BattleLogicV2Context) storeBattleRecord() {
-	go func() {
-		err := mysql.NewUserBattleRecord().CreateUserBattleRecord(runCtx.Ctx, &po.UserBattleRecord{
-			Uid:          runCtx.Req.Uid,
-			BattleParam:  util.ToJsonString(runCtx.Ctx, runCtx.Req),
-			BattleRecord: util.ToJsonString(runCtx.Ctx, runCtx.Resp),
-		})
-		if err != nil {
-			hlog.CtxErrorf(runCtx.Ctx, "CreateUserBattleRecord err:%v", err)
-			//ignore 不阻塞对战流程
-		}
-	}()
 }
 
 // 对战战报统计数据处理

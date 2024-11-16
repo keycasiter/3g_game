@@ -90,6 +90,20 @@ func BattleDo(ctx context.Context, c *app.RequestContext) {
 	//日志打印
 	jsonStr, _ := jsoniter.Marshal(resp)
 	pretty.Logf("resp:【%s】", jsonStr)
+
+	defer func() {
+		go func() {
+			err := mysql.NewUserBattleRecord().CreateUserBattleRecord(ctx, &po.UserBattleRecord{
+				Uid:          req.Uid,
+				BattleParam:  util.ToJsonString(ctx, req),
+				BattleRecord: util.ToJsonString(ctx, resp),
+			})
+			if err != nil {
+				hlog.CtxErrorf(ctx, "CreateUserBattleRecord err:%v", err)
+				//ignore 不阻塞对战流程
+			}
+		}()
+	}()
 }
 
 func buildResponse(resp *api.BattleDoResponse, serviceResp *battle.BattleLogicV2ContextResponse) {

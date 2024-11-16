@@ -10,7 +10,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
-	jsoniter "github.com/json-iterator/go"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/dal/mysql"
@@ -22,7 +21,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/kr/pretty"
 	"github.com/spf13/cast"
 )
 
@@ -88,21 +86,19 @@ func BattleDo(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(hertzconsts.StatusOK, resp)
 	//日志打印
-	jsonStr, _ := jsoniter.Marshal(resp)
-	pretty.Logf("resp:【%s】", jsonStr)
+	//jsonStr, _ := jsoniter.Marshal(resp)
+	//pretty.Logf("resp:【%s】", jsonStr)
 
 	defer func() {
-		go func() {
-			err := mysql.NewUserBattleRecord().CreateUserBattleRecord(ctx, &po.UserBattleRecord{
-				Uid:          req.Uid,
-				BattleParam:  util.ToJsonString(ctx, req),
-				BattleRecord: util.ToJsonString(ctx, resp),
-			})
-			if err != nil {
-				hlog.CtxErrorf(ctx, "CreateUserBattleRecord err:%v", err)
-				//ignore 不阻塞对战流程
-			}
-		}()
+		err := mysql.NewUserBattleRecord().CreateUserBattleRecord(ctx, &po.UserBattleRecord{
+			Uid:          req.Uid,
+			BattleParam:  util.ToJsonString(ctx, req),
+			BattleRecord: util.ToJsonString(ctx, resp),
+		})
+		if err != nil {
+			hlog.CtxErrorf(ctx, "CreateUserBattleRecord err:%v", err)
+			//ignore 不阻塞对战流程
+		}
 	}()
 }
 

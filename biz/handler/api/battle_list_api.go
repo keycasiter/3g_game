@@ -8,7 +8,6 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	hertzconsts "github.com/cloudwego/hertz/pkg/protocol/consts"
-	"github.com/jinzhu/copier"
 	"github.com/keycasiter/3g_game/biz/logic/battle"
 	api "github.com/keycasiter/3g_game/biz/model/api"
 	"github.com/keycasiter/3g_game/biz/util"
@@ -51,7 +50,8 @@ func BattleList(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//组合resp
-	copier.Copy(resp, serviceResp)
+	//copier.Copy(resp, serviceResp)
+	resp.BattleRecordList = serviceResp.BattleRecordList
 
 	c.JSON(hertzconsts.StatusOK, resp)
 	//日志打印

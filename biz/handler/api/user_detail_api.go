@@ -165,14 +165,14 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 
 func buildWinRate(m map[int64]int64) float64 {
 	winCnt := m[int64(enum.BattleResult_Win)]
+	if winCnt == 0 {
+		return 0
+	}
 	totalCnt := int64(0)
 	for _, v := range m {
 		totalCnt += v
 	}
-	if winCnt == 0 {
-		return 0
-	}
-	return float64(winCnt / totalCnt)
+	return float64(winCnt) / float64(totalCnt)
 }
 
 func buildBattleResultCnt(m map[int64]int64, results []enum.BattleResult) int64 {

@@ -668,6 +668,28 @@ struct GeneralLotteryUserDataQueryInfo{
 }
 //============= 用户卡池抽奖信息查询 END ==============
 
+
+//============= 公告 BEGIN ==============
+struct CommonNoticeRequest{
+}
+
+struct CommonNoticeResponse{
+    1: common.Meta meta
+    2: list<NoticeVo> NoticeList
+}
+
+struct NoticeVo {
+    //公告id
+    1: i64 Id
+    //公告内容
+    2: string Content
+    //url
+    3: string Url
+    //uri
+    4: string Uri
+}
+//============= 公告 END ==============
+
 service ApiService {
     //**模拟对战**
     //模拟对战
@@ -717,6 +739,9 @@ service ApiService {
     UserLoginResponse UserLogin(1:UserLoginRequest request)(api.post="/v1/user/login");
     //用户信息获取接口
     UserInfoDetailResponse UserInfoDetail(1:UserInfoDetailRequest request)(api.get="/v1/user/detail");
+
+    //**公告**
+    CommonNoticeResponse CommonNotice(1:CommonNoticeRequest request)(api.get="/v1/common/notice");
 
     //**jym**
     //账户商品搜索

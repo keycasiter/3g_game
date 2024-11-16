@@ -32,6 +32,10 @@ func Register(r *server.Hertz) {
 			_battle.GET("/list", append(_battlelistMw(), api.BattleList)...)
 		}
 		{
+			_common := _v1.Group("/common", _commonMw()...)
+			_common.GET("/notice", append(_commonnoticeMw(), api.CommonNotice)...)
+		}
+		{
 			_general := _v1.Group("/general", _generalMw()...)
 			_general.GET("/list", append(_generallistMw(), api.GeneralList)...)
 		}

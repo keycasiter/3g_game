@@ -290,3 +290,13 @@ func _accountsearchMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _commonMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _commonnoticeMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

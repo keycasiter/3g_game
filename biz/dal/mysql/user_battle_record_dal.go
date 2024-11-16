@@ -27,7 +27,7 @@ func (g *UserBattleRecordDal) QueryUserBattleRecord(ctx context.Context, uid str
 
 	conn.Where("uid = ?", uid)
 
-	if offset > 0 && limit > 0 {
+	if limit > 0 {
 		conn = conn.Offset(offset).Limit(limit)
 	}
 

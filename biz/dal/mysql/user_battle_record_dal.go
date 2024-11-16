@@ -49,29 +49,32 @@ func (g *UserBattleRecordDal) CreateUserBattleRecord(ctx context.Context, userBa
 }
 
 // 查询用户对战总胜率
-func (g *UserBattleRecordDal) QueryUserBattleWinRate(ctx context.Context, uid int64) (float64, error) {
-	var winRate float64
+func (g *UserBattleRecordDal) QueryUserBattleResult(ctx context.Context, uid int64) (map[int64]int64, error) {
+	type QueryResult struct {
+		Result int64 `json:"result"`
+		Cnt    int64 `json:"cnt"`
+	}
+	resList := make([]*QueryResult, 0)
+	resMap := make(map[int64]int64, 0)
 
-	sql := `select case
-           when sum(case
-                        when json_extract(battle_record, '$.BattleResultStatistics.FightingTeam.BattleResult') = 1
-                            then 1
-                        else 0 end) > 0 then
-                   sum(case
-                           when json_extract(battle_record, '$.BattleResultStatistics.FightingTeam.BattleResult') = 1
-                               then 1
-                           else 0 end) / count(1)
-           else 0 end as win_rate
-			from user_battle_record where uid = %v`
+	sql := `select t.result, count(1) cnt
+from (select json_extract(battle_record, '$.BattleResultStatistics.FightingTeam.BattleResult') as result
+      from user_battle_record
+      where uid = %v) t
+group by t.result`
 	sql = fmt.Sprintf(sql, uid)
 
-	err := DataBase.Raw(sql).Find(&winRate).Error
+	err := DataBase.Raw(sql).Find(&resList).Error
 
 	if err != nil {
 		hlog.CtxErrorf(ctx, "QueryUserBattleRecord err:%v", err)
-		return winRate, err
+		return resMap, err
 	}
-	return winRate, nil
+	for _, vo := range resList {
+		resMap[vo.Result] = vo.Cnt
+	}
+
+	return resMap, nil
 }
 
 // 查询用户高频战法

@@ -85,7 +85,7 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//3.对战数据查询
-	winRate := float64(0)
+	battleResultMap := make(map[int64]int64, 0)
 	highFreqTacticMap := make(map[int64]int64, 0)
 	highFreqGeneralMap := make(map[int64]int64, 0)
 	highFreqTeamMap := make(map[string]int64, 0)
@@ -94,7 +94,7 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 	eg.SetLimit(4)
 	//获取总胜率
 	eg.Go(func() error {
-		winRate, err = mysql.NewUserBattleRecord().QueryUserBattleWinRate(ctx, userInfo.Uid)
+		battleResultMap, err = mysql.NewUserBattleRecord().QueryUserBattleResult(ctx, userInfo.Uid)
 		if err != nil {
 			hlog.CtxErrorf(ctx, "QueryUserBattleWinRate err:%v", err)
 			return err
@@ -150,10 +150,39 @@ func UserInfoDetail(ctx context.Context, c *app.RequestContext) {
 		HighFreqGeneralList: buildHighFreqGeneralList(highFreqGeneralMap),
 		HighFreqTacticsList: buildHighFreqTacticsList(highFreqTacticMap),
 		HighFreqTeamList:    buildHighFreqTeamList(highFreqTeamMap),
-		WinRate:             winRate,
+		WinRate:             buildWinRate(battleResultMap),
+		WinCnt:              buildBattleResultCnt(battleResultMap, []enum.BattleResult{enum.BattleResult_Win}),
+		DrawCnt: buildBattleResultCnt(battleResultMap, []enum.BattleResult{
+			enum.BattleResult_Draw,
+			enum.BattleResult_Advantage_Draw,
+			enum.BattleResult_Inferiority_Draw,
+		}),
+		LoseCnt: buildBattleResultCnt(battleResultMap, []enum.BattleResult{enum.BattleResult_Lose}),
 	}
 
 	c.JSON(hertzconsts.StatusOK, resp)
+}
+
+func buildWinRate(m map[int64]int64) float64 {
+	winCnt := m[int64(enum.BattleResult_Win)]
+	totalCnt := int64(0)
+	for _, v := range m {
+		totalCnt += v
+	}
+	if winCnt == 0 {
+		return 0
+	}
+	return float64(winCnt / totalCnt)
+}
+
+func buildBattleResultCnt(m map[int64]int64, results []enum.BattleResult) int64 {
+	totalCnt := int64(0)
+	for _, result := range results {
+		if cnt, ok := m[int64(result)]; ok {
+			totalCnt += cnt
+		}
+	}
+	return totalCnt
 }
 
 func buildHighFreqGeneralList(m map[int64]int64) []*api.GeneralRecord {

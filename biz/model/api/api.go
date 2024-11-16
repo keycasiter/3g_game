@@ -14808,6 +14808,12 @@ type BattleStatisticsInfo struct {
 	HighFreqTeamList []*TeamRecord `thrift:"HighFreqTeamList,3" form:"HighFreqTeamList" json:"HighFreqTeamList" query:"HighFreqTeamList"`
 	//胜率
 	WinRate float64 `thrift:"WinRate,50" form:"WinRate" json:"WinRate" query:"WinRate"`
+	//胜利次数
+	WinCnt int64 `thrift:"WinCnt,51" form:"WinCnt" json:"WinCnt" query:"WinCnt"`
+	//平局次数
+	DrawCnt int64 `thrift:"DrawCnt,52" form:"DrawCnt" json:"DrawCnt" query:"DrawCnt"`
+	//失败次数
+	LoseCnt int64 `thrift:"LoseCnt,53" form:"LoseCnt" json:"LoseCnt" query:"LoseCnt"`
 }
 
 func NewBattleStatisticsInfo() *BattleStatisticsInfo {
@@ -14833,11 +14839,26 @@ func (p *BattleStatisticsInfo) GetWinRate() (v float64) {
 	return p.WinRate
 }
 
+func (p *BattleStatisticsInfo) GetWinCnt() (v int64) {
+	return p.WinCnt
+}
+
+func (p *BattleStatisticsInfo) GetDrawCnt() (v int64) {
+	return p.DrawCnt
+}
+
+func (p *BattleStatisticsInfo) GetLoseCnt() (v int64) {
+	return p.LoseCnt
+}
+
 var fieldIDToName_BattleStatisticsInfo = map[int16]string{
 	1:  "HighFreqGeneralList",
 	2:  "HighFreqTacticsList",
 	3:  "HighFreqTeamList",
 	50: "WinRate",
+	51: "WinCnt",
+	52: "DrawCnt",
+	53: "LoseCnt",
 }
 
 func (p *BattleStatisticsInfo) Read(iprot thrift.TProtocol) (err error) {
@@ -14886,6 +14907,30 @@ func (p *BattleStatisticsInfo) Read(iprot thrift.TProtocol) (err error) {
 		case 50:
 			if fieldTypeId == thrift.DOUBLE {
 				if err = p.ReadField50(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 51:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField51(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 52:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField52(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 53:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField53(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -15000,6 +15045,39 @@ func (p *BattleStatisticsInfo) ReadField50(iprot thrift.TProtocol) error {
 	p.WinRate = _field
 	return nil
 }
+func (p *BattleStatisticsInfo) ReadField51(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.WinCnt = _field
+	return nil
+}
+func (p *BattleStatisticsInfo) ReadField52(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.DrawCnt = _field
+	return nil
+}
+func (p *BattleStatisticsInfo) ReadField53(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.LoseCnt = _field
+	return nil
+}
 
 func (p *BattleStatisticsInfo) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -15021,6 +15099,18 @@ func (p *BattleStatisticsInfo) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField50(oprot); err != nil {
 			fieldId = 50
+			goto WriteFieldError
+		}
+		if err = p.writeField51(oprot); err != nil {
+			fieldId = 51
+			goto WriteFieldError
+		}
+		if err = p.writeField52(oprot); err != nil {
+			fieldId = 52
+			goto WriteFieldError
+		}
+		if err = p.writeField53(oprot); err != nil {
+			fieldId = 53
 			goto WriteFieldError
 		}
 	}
@@ -15131,6 +15221,57 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 50 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 50 end error: ", p), err)
+}
+
+func (p *BattleStatisticsInfo) writeField51(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("WinCnt", thrift.I64, 51); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.WinCnt); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 51 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 51 end error: ", p), err)
+}
+
+func (p *BattleStatisticsInfo) writeField52(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("DrawCnt", thrift.I64, 52); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.DrawCnt); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 52 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 52 end error: ", p), err)
+}
+
+func (p *BattleStatisticsInfo) writeField53(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("LoseCnt", thrift.I64, 53); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.LoseCnt); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 53 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 53 end error: ", p), err)
 }
 
 func (p *BattleStatisticsInfo) String() string {

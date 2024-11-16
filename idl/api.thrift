@@ -490,6 +490,9 @@ struct BattleStatisticsInfo{
     3: list<TeamRecord> HighFreqTeamList //高频使用队伍列表
 
     50:double WinRate //胜率
+    51:i64 WinCnt //胜利次数
+    52:i64 DrawCnt //平局次数
+    53:i64 LoseCnt //失败次数
 }
 
 struct GeneralRecord{

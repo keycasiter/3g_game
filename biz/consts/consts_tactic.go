@@ -516,10 +516,32 @@ const (
 	DivineEnvoy
 	//进言
 	Introduction
-	//非攻制胜
-	NonOffensiveVictory
 	//疾风骤雨
 	StrongWindAndSwiftRain
+	//非攻制胜
+	NonOffensiveVictory
+	//梳妆掷戟
+	DressingUpAndThrowingHalberds
+	//上兵伐谋
+	ShangbingZhanmou
+	//因利制权
+	ProfitBasedSystemOfPower
+	//众望所归
+	BeThePopularChoice
+	//临危救主
+	TheSaviorInDanger
+	//众志成城
+	OurWillsUniteLikeAFortress
+	//知己知彼
+	KnowYourselfAsWellAsTheEnemy
+	//临锋决敌
+	FacingTheEnemyHeadOn
+	//黄天泰平
+	HuangTiantaiPing
+	//灵机一动
+	AFlashOfWit
+	//解烦卫
+	RelieveAnnoyanceAndGuard
 )
 
 func (b TacticId) String() string {

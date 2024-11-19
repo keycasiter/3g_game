@@ -96,6 +96,122 @@ func GetEnemyOneMaleGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *mod
 	return maleGenerals[hitIdx]
 }
 
+// 找到敌军某个属性值最高的武将
+func GetEnemyOneGeneralByHighestAttr(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams, attr consts.AbilityAttr) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(currentGeneral, tacticsParams)
+
+	var resGeneral *vo.BattleGeneral
+	for _, enemyGeneral := range enemyGenerals {
+		if resGeneral != nil {
+			switch attr {
+			case consts.AbilityAttr_Force:
+				if enemyGeneral.BaseInfo.AbilityAttr.ForceBase > resGeneral.BaseInfo.AbilityAttr.ForceBase {
+					resGeneral = enemyGeneral
+				}
+			case consts.AbilityAttr_Intelligence:
+				if enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase > resGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
+					resGeneral = enemyGeneral
+				}
+			case consts.AbilityAttr_Command:
+				if enemyGeneral.BaseInfo.AbilityAttr.CommandBase > resGeneral.BaseInfo.AbilityAttr.CommandBase {
+					resGeneral = enemyGeneral
+				}
+			case consts.AbilityAttr_Speed:
+				if enemyGeneral.BaseInfo.AbilityAttr.SpeedBase > resGeneral.BaseInfo.AbilityAttr.SpeedBase {
+					resGeneral = enemyGeneral
+				}
+			}
+		}
+	}
+	return resGeneral
+}
+
+// 找到敌军某个属性值最低的武将
+func GetEnemyOneGeneralByLowestAttr(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams, attr consts.AbilityAttr) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(currentGeneral, tacticsParams)
+
+	var resGeneral *vo.BattleGeneral
+	for _, enemyGeneral := range enemyGenerals {
+		if resGeneral != nil {
+			switch attr {
+			case consts.AbilityAttr_Force:
+				if enemyGeneral.BaseInfo.AbilityAttr.ForceBase < resGeneral.BaseInfo.AbilityAttr.ForceBase {
+					resGeneral = enemyGeneral
+				}
+			case consts.AbilityAttr_Intelligence:
+				if enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase < resGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
+					resGeneral = enemyGeneral
+				}
+			case consts.AbilityAttr_Command:
+				if enemyGeneral.BaseInfo.AbilityAttr.CommandBase < resGeneral.BaseInfo.AbilityAttr.CommandBase {
+					resGeneral = enemyGeneral
+				}
+			case consts.AbilityAttr_Speed:
+				if enemyGeneral.BaseInfo.AbilityAttr.SpeedBase < resGeneral.BaseInfo.AbilityAttr.SpeedBase {
+					resGeneral = enemyGeneral
+				}
+			}
+		}
+	}
+	return resGeneral
+}
+
+// 找到敌军兵力最高的武将
+func GetEnemyOneGeneralByHighestSolider(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(currentGeneral, tacticsParams)
+
+	var resGeneral *vo.BattleGeneral
+	for _, enemyGeneral := range enemyGenerals {
+		//不为空则对比
+		if resGeneral != nil {
+			if enemyGeneral.SoldierNum > resGeneral.SoldierNum {
+				resGeneral = enemyGeneral
+			}
+		} else {
+			//为空直接赋值
+			resGeneral = enemyGeneral
+		}
+	}
+	return resGeneral
+}
+
+// 找到敌军某个属性值最高的副将
+func GetEnemyOneViceGeneralHighestAttr(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams, attr consts.AbilityAttr) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralArr(currentGeneral, tacticsParams)
+
+	var resGeneral *vo.BattleGeneral
+	for _, enemyGeneral := range enemyGenerals {
+		//副将
+		if !enemyGeneral.IsMaster {
+			//不为空则对比
+			if resGeneral != nil {
+				switch attr {
+				case consts.AbilityAttr_Force:
+					if enemyGeneral.BaseInfo.AbilityAttr.ForceBase > resGeneral.BaseInfo.AbilityAttr.ForceBase {
+						resGeneral = enemyGeneral
+					}
+				case consts.AbilityAttr_Intelligence:
+					if enemyGeneral.BaseInfo.AbilityAttr.IntelligenceBase > resGeneral.BaseInfo.AbilityAttr.IntelligenceBase {
+						resGeneral = enemyGeneral
+					}
+				case consts.AbilityAttr_Command:
+					if enemyGeneral.BaseInfo.AbilityAttr.CommandBase > resGeneral.BaseInfo.AbilityAttr.CommandBase {
+						resGeneral = enemyGeneral
+					}
+				case consts.AbilityAttr_Speed:
+					if enemyGeneral.BaseInfo.AbilityAttr.SpeedBase > resGeneral.BaseInfo.AbilityAttr.SpeedBase {
+						resGeneral = enemyGeneral
+					}
+				}
+			} else {
+				//为空直接赋值
+				resGeneral = enemyGeneral
+			}
+		}
+	}
+	return resGeneral
+}
+
 // 找到当前执行战法武将的队伍主将
 func GetPairMasterGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	pairGeneralArr := GetPairGeneralArr(currentGeneral, tacticsParams)

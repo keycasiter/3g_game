@@ -1317,6 +1317,39 @@ func (b TacticId) String() string {
 	//镇压黄巾
 	case SuppressYellowScarves:
 		return "镇压黄巾"
+	//梳妆掷戟
+	case DressingUpAndThrowingHalberds:
+		return "梳妆掷戟"
+	//上兵伐谋
+	case ShangbingZhanmou:
+		return "上兵伐谋"
+	//因利制权
+	case ProfitBasedSystemOfPower:
+		return "因利制权"
+	//众望所归
+	case BeThePopularChoice:
+		return "众望所归"
+	//临危救主
+	case TheSaviorInDanger:
+		return "临危救主"
+	//众志成城
+	case OurWillsUniteLikeAFortress:
+		return "众志成城"
+	//知己知彼
+	case KnowYourselfAsWellAsTheEnemy:
+		return "知己知彼"
+	//临锋决敌
+	case FacingTheEnemyHeadOn:
+		return "临锋决敌"
+	//黄天泰平
+	case HuangTiantaiPing:
+		return "黄天泰平"
+	//灵机一动
+	case AFlashOfWit:
+		return "灵机一动"
+	//解烦卫
+	case RelieveAnnoyanceAndGuard:
+		return "解烦卫"
 	}
 	return "未知战法"
 }
@@ -1459,6 +1492,7 @@ func initTacticsMap() {
 	CommandTacticsMap[BenevolentAndVirtuousThroughoutTheWorld] = true
 	CommandTacticsMap[WieldTroopsToSeekVictory] = true
 	CommandTacticsMap[DeliverTheCountryFromDistress] = true
+	CommandTacticsMap[TheSaviorInDanger] = true
 	//阵法
 	TroopsTacticsMap[FrontalVectorArray] = true
 	TroopsTacticsMap[EightGateGoldenLockArray] = true
@@ -1481,6 +1515,10 @@ func initTacticsMap() {
 	ArmTacticsMap[ElephantSoldier] = true
 	//主动
 	ActiveTacticsMap[Introduction] = true
+	ActiveTacticsMap[DressingUpAndThrowingHalberds] = true
+	ActiveTacticsMap[ShangbingZhanmou] = true
+	ActiveTacticsMap[ProfitBasedSystemOfPower] = true
+	ActiveTacticsMap[BeThePopularChoice] = true
 	ActiveTacticsMap[DivineEnvoy] = true
 	ActiveTacticsMap[ShamCastles] = true
 	ActiveTacticsMap[CloseQuarters] = true

@@ -1441,6 +1441,7 @@ func initTacticsMap() {
 	PassiveTacticsMap[JiangdongLittleOverlord] = true
 	//指挥战法
 	CommandTacticsMap[NonOffensiveVictory] = true
+	CommandTacticsMap[OurWillsUniteLikeAFortress] = true
 	CommandTacticsMap[CountryPersonGeneralStyle] = true
 	CommandTacticsMap[CrossingTheRiverInWhiteClothes] = true
 	CommandTacticsMap[TheHeartOfRighteousnessShines] = true

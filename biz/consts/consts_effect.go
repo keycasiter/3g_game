@@ -242,6 +242,8 @@ const (
 	BuffEffectType_TwelveWonderfulStrategies_Prepare                    //十二奇策[预备]
 	BuffEffectType_WaitAtOnesEaseForTheFatigued_Prepare                 //以逸待劳[预备]
 	BuffEffectType_WaitAtOnesEaseForTheFatigued_ImmunityControl         //以逸待劳[几率免疫控制]
+	BuffEffectType_YanMi                                                //严密
+	BuffEffectType_KanPo                                                //看破
 )
 
 func (b BuffEffectType) String() string {
@@ -386,6 +388,9 @@ func (b BuffEffectType) String() string {
 		return "鹰视狼顾[预备]"
 	case BuffEffectType_ClearEyedAndMalicious_ClearEyed_Prepare:
 		return "鹰视狼顾-鹰视[预备]"
+	case BuffEffectType_YanMi:
+		return "严密"
+
 	}
 	return ""
 }

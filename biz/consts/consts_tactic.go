@@ -542,6 +542,34 @@ const (
 	AFlashOfWit
 	//解烦卫
 	RelieveAnnoyanceAndGuard
+	//奉令平虏
+	FengLingPingLu
+	//赴汤蹈火
+	FuTangDaoHuo
+	//威武并昭
+	WeiWuBingZhao
+	//万军夺帅
+	WanJunDuoShuai
+	//舍身救主
+	SheShenJiuZhu
+	//以寡敌众
+	YiGuaDiZhong
+	//虎侯
+	HuHou
+	//渊然难测
+	YuanRanNanCe
+	//至柔动刚
+	ZhiRouDongGang
+	//臻于至善
+	ZhenYuZhiShan
+	//密计诛逆
+	MiJiMouNi
+	//移花接木
+	YiHuaJieMu
+	//蕙质兰心
+	HuiZhiLanXin
+	//功不唐捐
+	GongBuTangJuan
 )
 
 func (b TacticId) String() string {
@@ -1350,6 +1378,48 @@ func (b TacticId) String() string {
 	//解烦卫
 	case RelieveAnnoyanceAndGuard:
 		return "解烦卫"
+	//奉令平虏
+	case FengLingPingLu:
+		return "奉令平虏"
+	//赴汤蹈火
+	case FuTangDaoHuo:
+		return "赴汤蹈火"
+	//威武并昭
+	case WeiWuBingZhao:
+		return "威武并昭"
+	//万军夺帅
+	case WanJunDuoShuai:
+		return "万军夺帅"
+	//舍身救主
+	case SheShenJiuZhu:
+		return "舍身救主"
+	//以寡敌众
+	case YiGuaDiZhong:
+		return "以寡敌众"
+	//虎侯
+	case HuHou:
+		return "虎侯"
+	//渊然难测
+	case YuanRanNanCe:
+		return "渊然难测"
+	//至柔动刚
+	case ZhiRouDongGang:
+		return "至柔动刚"
+	//臻于至善
+	case ZhenYuZhiShan:
+		return "臻于至善"
+	//密计诛逆
+	case MiJiMouNi:
+		return "密计诛逆"
+	//移花接木
+	case YiHuaJieMu:
+		return "移花接木"
+	//蕙质兰心
+	case HuiZhiLanXin:
+		return "蕙质兰心"
+	//功不唐捐
+	case GongBuTangJuan:
+		return "功不唐捐"
 	}
 	return "未知战法"
 }

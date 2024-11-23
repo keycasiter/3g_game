@@ -15,6 +15,13 @@ func Random(min float64, max float64) float64 {
 
 // 根据概率设定返回是否成功
 func GenerateRate(rate float64) bool {
+	if rate <= 0 {
+		return false
+	}
+	if rate >= 1 {
+		return true
+	}
+
 	rand := Random(0, 1)
 	if rand >= 0 && rand <= rate {
 		return true

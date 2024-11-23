@@ -120,7 +120,6 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 					CurrentRound:   tacticsParams.CurrentRound,
 					CurrentGeneral: attackGeneral,
 					AttackGeneral:  attackGeneral,
-					DamageType:     consts.DamageType_Weapon,
 				}
 				f(params)
 			}
@@ -169,6 +168,14 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 				f(params)
 			}
 		}
+		// 舍身救主效果：该效果降低5次后，自身受到伤害时有35%概率（受统率影响）视为2次（可额外触发反击、急救等效果）
+		if _, ok := util.BuffEffectOfTacticGet(sufferGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, consts.SheShenJiuZhu); ok {
+			if sufferGeneral.SufferExecuteGeneralAttackNum+
+				sufferGeneral.SufferExecuteStrategyAttackNum+
+				sufferGeneral.SufferExecuteWeaponAttackNum >= 5 {
+				AttackDamage(tacticsParams, attackGeneral, sufferGeneral, 0)
+			}
+		}
 	}()
 
 	ctx := tacticsParams.Ctx
@@ -186,6 +193,20 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		attackGeneral.BaseInfo.Name,
 		sufferGeneral.BaseInfo.Name,
 	)
+
+	//是否可以规避
+	if effectParams, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
+		rate := float64(0)
+		for _, param := range effectParams {
+			rate += param.EffectRate
+		}
+		if util.GenerateRate(rate) {
+			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效", sufferGeneral.BaseInfo.Name)
+			return
+		} else {
+			hlog.CtxInfof(ctx, "[%s]规避失败", sufferGeneral.BaseInfo.Name)
+		}
+	}
 
 	//抵御效果判断
 	if effectParams, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Defend]; ok {
@@ -240,20 +261,6 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		)
 		AttackDamage(tacticsParams, attackGeneral, sufferGeneral.HelpByGeneral, 0)
 		return
-	}
-
-	//是否可以规避
-	if effectParams, ok := sufferGeneral.BuffEffectHolderMap[consts.BuffEffectType_Evade]; ok {
-		rate := float64(0)
-		for _, param := range effectParams {
-			rate += param.EffectRate
-		}
-		if util.GenerateRate(rate) {
-			hlog.CtxInfof(ctx, "[%s]处于规避状态，本次伤害无效", sufferGeneral.BaseInfo.Name)
-			return
-		} else {
-			hlog.CtxInfof(ctx, "[%s]规避失败", sufferGeneral.BaseInfo.Name)
-		}
 	}
 
 	//伤害计算方式

@@ -499,6 +499,14 @@ func BuffEffectOfTacticCostRound(params *BuffEffectOfTacticCostRoundParams) bool
 		for idx, effectParam := range effectParams {
 			//找到指定战法
 			if effectParam.FromTactic == params.TacticId {
+				//严密状态下：抵御不计算回合
+				if BuffEffectContains(params.General, consts.BuffEffectType_YanMi) {
+					if params.EffectType == consts.BuffEffectType_Defend {
+						hlog.CtxInfof(params.Ctx, "【严密】状态不消耗【抵御】回合")
+						return false
+					}
+				}
+
 				//消耗
 				if effectParam.EffectRound > 0 {
 					effectParam.EffectRound--

@@ -223,6 +223,16 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 		}
 	}
 
+	//看破效果：造成伤害时无视目标一定比例的受到伤害降低效果）
+	if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_KanPo); ok {
+		kanPoEffectRate := float64(0)
+		for _, effectParam := range effectParams {
+			kanPoEffectRate += effectParam.EffectRate
+		}
+
+		deduceEffectRate -= kanPoEffectRate
+	}
+
 	//伤害减免最大90%
 	if deduceEffectRate > 0.9 {
 		deduceEffectRate = 0.9
@@ -586,6 +596,15 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 				AttackGeneral:  attackGeneral,
 			}
 			f(params)
+		}
+	}
+
+	// 舍身救主效果：该效果降低5次后，自身受到伤害时有35%概率（受统率影响）视为2次（可额外触发反击、急救等效果）
+	if _, ok := util.BuffEffectOfTacticGet(sufferGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, consts.SheShenJiuZhu); ok {
+		if sufferGeneral.SufferExecuteGeneralAttackNum+
+			sufferGeneral.SufferExecuteStrategyAttackNum+
+			sufferGeneral.SufferExecuteWeaponAttackNum >= 5 {
+			AttackDamage(tacticsParams, attackGeneral, sufferGeneral, 0)
 		}
 	}
 }

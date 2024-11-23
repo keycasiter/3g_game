@@ -12,7 +12,7 @@ func TestUserBattleRecordDal_QueryUserBattleWinRate(t *testing.T) {
 	conf.InitConfig()
 	InitMysql()
 	ctx := context.Background()
-	winRate, err := NewUserBattleRecord().QueryUserBattleWinRate(ctx, 3268589903)
+	winRate, err := NewUserBattleRecord().QueryUserBattleHighFreqUsedGeneralStatistics(ctx, 3268589903)
 	if err != nil {
 		t.Failed()
 	}

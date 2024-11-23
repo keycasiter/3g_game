@@ -36,7 +36,7 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		panic("ProduceGeneral is nil")
 	}
 	if param.SufferGeneral == nil {
-		panic("SufferGeneral is nil")
+		return param.ResumeNum, param.SufferGeneral.SoldierNum, param.SufferGeneral.SoldierNum
 	}
 	if param.TacticsParams == nil {
 		panic("TacticsParams is nil")

@@ -987,3 +987,15 @@ func IsContainsGeneralTag(generalTags []consts.GeneralTag, generalTag consts.Gen
 	}
 	return false
 }
+
+// 获取敌军速度最高的武将
+func GetEnemyGeneralWhoIsHighestSpeed(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
+	enemyGenerals := GetEnemyGeneralsByGeneral(currentGeneral, params)
+	highestGeneral := enemyGenerals[0]
+	for _, general := range enemyGenerals {
+		if general.BaseInfo.AbilityAttr.SpeedBase > highestGeneral.BaseInfo.AbilityAttr.SpeedBase {
+			highestGeneral = general
+		}
+	}
+	return highestGeneral
+}

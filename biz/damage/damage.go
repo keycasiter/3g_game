@@ -270,6 +270,31 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	} else {
 		//不需要计算，用传入值
 	}
+
+	//普通攻击效果降低
+	if effectParams, ok := util.DeBuffEffectGet(attackGeneral, consts.DebuffEffectType_LaunchGeneralAttackDeduce); ok {
+		effectRate := float64(0)
+		for _, param := range effectParams {
+			effectRate += param.EffectRate
+		}
+		if effectRate >= 1 {
+			effectRate = 1
+		}
+		attackDmg = cast.ToInt64(float64(attackDmg) * (1 - effectRate))
+	}
+
+	//最终伤害降低效果
+	if effectParams, ok := util.DeBuffEffectGet(attackGeneral, consts.DebuffEffectType_LaunchFinalDamageDeduce); ok {
+		effectRate := float64(0)
+		for _, param := range effectParams {
+			effectRate += param.EffectRate
+		}
+		if effectRate >= 1 {
+			effectRate = 1
+		}
+		attackDmg = cast.ToInt64(float64(attackDmg) * (1 - effectRate))
+	}
+
 	tacticsParams.CurrentDamageNum = attackDmg
 
 	//被伤害效果开始触发器

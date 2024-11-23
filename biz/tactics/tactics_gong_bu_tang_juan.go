@@ -3,12 +3,10 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
-	"github.com/keycasiter/3g_game/biz/damage"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
-	"github.com/spf13/cast"
 )
 
 // 功不唐捐
@@ -33,47 +31,30 @@ func (a GongBuTangJuanTactic) Prepare() {
 		a.Name(),
 	)
 
-	// 战斗第2、4、6回合，恢复自身兵力（治疗率288%，受武力影响）并提高自身10%武力；
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+	//战斗中，自身自带主动战法伤害提升30%并获得30%攻心，
+	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_TacticsActiveDamageImprove, &vo.EffectHolderParams{
+		TriggerRate:    0.3,
+		EffectRate:     0.3,
+		FromTactic:     a.Id(),
+		ProduceGeneral: currentGeneral,
+	})
+	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_AttackHeart, &vo.EffectHolderParams{
+		TriggerRate:    0.3,
+		EffectRate:     0.3,
+		FromTactic:     a.Id(),
+		ProduceGeneral: currentGeneral,
+	})
+
+	//战斗第2回合起，自身施加的负面状态有70%概率（受智力影响）不可被驱散
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_DebuffEffect, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
 		triggerRound := params.CurrentRound
 		triggerGeneral := params.CurrentGeneral
 
-		if triggerRound == consts.Battle_Round_Second ||
-			triggerRound == consts.Battle_Round_Fourth ||
-			triggerRound == consts.Battle_Round_Sixth {
-
-			//恢复自身兵力（治疗率288%，受武力影响
-			resumeNum := cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase * 2.88)
-			util.ResumeSoldierNum(&util.ResumeParams{
-				Ctx:            ctx,
-				TacticsParams:  a.tacticsParams,
-				ProduceGeneral: currentGeneral,
-				SufferGeneral:  triggerGeneral,
-				ResumeNum:      resumeNum,
-				TacticId:       a.Id(),
-			})
-			//并提高自身10%武力
-			util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_IncrForce, &vo.EffectHolderParams{
-				EffectRate:     0.1,
-				FromTactic:     a.Id(),
-				ProduceGeneral: currentGeneral,
-			})
-		}
-
-		// 战斗第5回合，对敌军全体造成兵刃伤害（伤害率72%）
-		if triggerRound == consts.Battle_Round_Fifth {
-			enemyGenerals := util.GetEnemyGeneralsByGeneral(triggerGeneral, a.tacticsParams)
-			for _, enemyGeneral := range enemyGenerals {
-				damage.TacticDamage(&damage.TacticDamageParam{
-					TacticsParams:     a.tacticsParams,
-					AttackGeneral:     triggerGeneral,
-					SufferGeneral:     enemyGeneral,
-					DamageType:        consts.DamageType_Weapon,
-					DamageImproveRate: 0.72,
-					TacticId:          a.Id(),
-					TacticName:        a.Name(),
-				})
+		if triggerRound >= consts.Battle_Round_Second {
+			triggerRate := 0.7 + triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
+			if util.GenerateRate(triggerRate) {
+				params.EffectHolderParams.IsAvoidDispel = true
 			}
 		}
 
@@ -86,7 +67,7 @@ func (a GongBuTangJuanTactic) Id() consts.TacticId {
 }
 
 func (a GongBuTangJuanTactic) Name() string {
-	return "以寡敌众"
+	return "功不唐捐"
 }
 
 func (a GongBuTangJuanTactic) TacticsSource() consts.TacticsSource {

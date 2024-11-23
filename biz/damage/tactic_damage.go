@@ -274,6 +274,18 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 	//最终伤害随机值
 	t.damageNum = FluctuateDamage(t.damageNum)
 
+	//最终伤害降低效果
+	if effectParams, ok := util.DeBuffEffectGet(attackGeneral, consts.DebuffEffectType_LaunchFinalDamageDeduce); ok {
+		effectRate := float64(0)
+		for _, param := range effectParams {
+			effectRate += param.EffectRate
+		}
+		if effectRate >= 1 {
+			effectRate = 1
+		}
+		t.damageNum = cast.ToInt64(cast.ToFloat64(t.damageNum) * (1 - effectRate))
+	}
+
 	//特殊战法效果处理
 	//刀出如霆
 	if t.param.TacticId == consts.TheKnifeLikeThunderbolt {

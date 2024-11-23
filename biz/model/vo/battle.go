@@ -47,6 +47,8 @@ type EffectHolderParams struct {
 	ShareResponsibilityForByGeneral *BattleGeneral
 	//效果施加者
 	ProduceGeneral *BattleGeneral
+	//是否不可驱散
+	IsAvoidDispel bool
 }
 
 // 对战武将信息

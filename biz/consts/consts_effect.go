@@ -43,6 +43,8 @@ const (
 	DebuffEffectType_SufferStrategyDamageImprove                             //受到谋略伤害增加
 	DebuffEffectType_LaunchWeaponDamageDeduce                                //造成兵刃伤害减少
 	DebuffEffectType_LaunchStrategyDamageDeduce                              //造成谋略伤害减少
+	DebuffEffectType_LaunchGeneralAttackDeduce                               //造成普通攻击伤害减少
+	DebuffEffectType_LaunchFinalDamageDeduce                                 //造成最终伤害减少
 	DebuffEffectType_SufferResumeDeduce                                      //受到治疗降低
 	DebuffEffectType_CanNotGeneralAttack                                     //无法普通攻击
 	DebuffEffectType_CanNotActiveTactic                                      //无法发动主动战法

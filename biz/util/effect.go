@@ -1344,7 +1344,13 @@ func BuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
 // 负面效果清除
 // @general 要处理的武将
 func DebuffEffectClean(ctx context.Context, general *vo.BattleGeneral) {
-	for effectType, _ := range general.DeBuffEffectHolderMap {
+	for effectType, effectParams := range general.DeBuffEffectHolderMap {
+		//是否不可驱散
+		for _, effectParam := range effectParams {
+			if effectParam.IsAvoidDispel {
+				continue
+			}
+		}
 		//只能清除主动、突击战法效果
 		if _, ok := consts.SupprtCleanDebuffEffectMap[effectType]; !ok {
 			continue

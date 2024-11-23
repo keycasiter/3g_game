@@ -518,4 +518,6 @@ type TacticDamageParam struct {
 	IsBanInterLockedEffect bool
 	//是否无视防御
 	IsIgnoreDefend bool
+	//附加伤害值
+	AppendDamageValue float64
 }

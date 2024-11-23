@@ -801,6 +801,30 @@ func GetPairGeneralWhoIsHighestIntelligence(currentGeneral *vo.BattleGeneral, pa
 	return highestGeneral
 }
 
+// 获取我军速度最高的武将
+func GetPairGeneralWhoIsHighestSpeed(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(currentGeneral, params)
+	highestGeneral := pairGenerals[0]
+	for _, general := range pairGenerals {
+		if general.BaseInfo.AbilityAttr.SpeedBase > highestGeneral.BaseInfo.AbilityAttr.SpeedBase {
+			highestGeneral = general
+		}
+	}
+	return highestGeneral
+}
+
+// 获取我军魅力最高的武将
+func GetPairGeneralWhoIsHighestCharm(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(currentGeneral, params)
+	highestGeneral := pairGenerals[0]
+	for _, general := range pairGenerals {
+		if general.BaseInfo.AbilityAttr.CharmBase > highestGeneral.BaseInfo.AbilityAttr.CharmBase {
+			highestGeneral = general
+		}
+	}
+	return highestGeneral
+}
+
 // 获取统率最低的敌军单体
 func GetEnemyGeneralWhoLowestCommand(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
 	//找到敌军全体

@@ -34,7 +34,7 @@ func (a AFlushOfWitTactic) Name() string {
 }
 
 func (a AFlushOfWitTactic) TacticsSource() consts.TacticsSource {
-	return consts.TacticsSource_SelfContained
+	return consts.TacticsSource_Event
 }
 
 func (a AFlushOfWitTactic) GetTriggerRate() float64 {
@@ -46,7 +46,7 @@ func (a AFlushOfWitTactic) SetTriggerRate(rate float64) {
 }
 
 func (a AFlushOfWitTactic) TacticsType() consts.TacticsType {
-	return consts.TacticsType_Command
+	return consts.TacticsType_Active
 }
 
 func (a AFlushOfWitTactic) SupportArmTypes() []consts.ArmType {

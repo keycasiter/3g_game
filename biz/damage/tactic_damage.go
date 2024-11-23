@@ -272,6 +272,9 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 		t.damageNum = t.damageNum / int64(1+len(pairGenerals))
 	}
 
+	//追加固定值伤害
+	t.damageNum += int64(t.param.AppendDamageValue)
+
 	//****伤害计算兜底****
 	//兜底伤害为负的情况
 	if t.damageNum < 0 {

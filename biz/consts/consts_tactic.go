@@ -563,7 +563,7 @@ const (
 	//臻于至善
 	ZhenYuZhiShan
 	//密计诛逆
-	MiJiMouNi
+	MiJiZhuNi
 	//移花接木
 	YiHuaJieMu
 	//蕙质兰心
@@ -1409,7 +1409,7 @@ func (b TacticId) String() string {
 	case ZhenYuZhiShan:
 		return "臻于至善"
 	//密计诛逆
-	case MiJiMouNi:
+	case MiJiZhuNi:
 		return "密计诛逆"
 	//移花接木
 	case YiHuaJieMu:

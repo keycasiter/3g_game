@@ -315,7 +315,7 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 	}
 
 	//增益属性处理
-	buffEffectIncr(ctx, general, effectType, effectParam.EffectValue)
+	buffEffectIncr(ctx, general, effectType, effectParam.EffectValue, effectParam.EffectRate)
 
 	return &EffectWrapSetResp{
 		IsSuccess: true,
@@ -1159,7 +1159,7 @@ func BuffEffectOfTacticCostRate(params *BuffEffectOfTacticCostRateParams) bool {
 					)
 
 					//减益效果恢复
-					buffEffectIncr(params.Ctx, params.General, params.EffectType, effectParam.EffectValue)
+					buffEffectIncr(params.Ctx, params.General, params.EffectType, effectParam.EffectValue, effectParam.EffectRate)
 
 					//执行回调函数
 					if params.CostOverTriggerFunc != nil {
@@ -1173,27 +1173,37 @@ func BuffEffectOfTacticCostRate(params *BuffEffectOfTacticCostRateParams) bool {
 	return false
 }
 
-func buffEffectIncr(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, effectValue int64) {
+func buffEffectIncr(ctx context.Context, general *vo.BattleGeneral, effectType consts.BuffEffectType, effectValue int64, effectRate float64) {
 	//属性加点效果设置
 	switch effectType {
 	case consts.BuffEffectType_IncrForce:
 		general.BaseInfo.AbilityAttr.ForceBase += cast.ToFloat64(effectValue)
+		general.BaseInfo.AbilityAttr.ForceBase += cast.ToFloat64(general.BaseInfo.AbilityAttr.ForceBase * effectRate)
 		hlog.CtxInfof(ctx, "[%s]的武力提高了%.2d",
 			general.BaseInfo.Name,
 			effectValue)
 	case consts.BuffEffectType_IncrIntelligence:
 		general.BaseInfo.AbilityAttr.IntelligenceBase += cast.ToFloat64(effectValue)
+		general.BaseInfo.AbilityAttr.IntelligenceBase += cast.ToFloat64(general.BaseInfo.AbilityAttr.IntelligenceBase * effectRate)
 		hlog.CtxInfof(ctx, "[%s]的智力提高了%.2d",
 			general.BaseInfo.Name,
 			effectValue)
 	case consts.BuffEffectType_IncrCommand:
 		general.BaseInfo.AbilityAttr.CommandBase += cast.ToFloat64(effectValue)
+		general.BaseInfo.AbilityAttr.CommandBase += cast.ToFloat64(general.BaseInfo.AbilityAttr.CommandBase * effectRate)
 		hlog.CtxInfof(ctx, "[%s]的统率提高了%.2d",
 			general.BaseInfo.Name,
 			effectValue)
 	case consts.BuffEffectType_IncrSpeed:
 		general.BaseInfo.AbilityAttr.SpeedBase += cast.ToFloat64(effectValue)
+		general.BaseInfo.AbilityAttr.SpeedBase += cast.ToFloat64(general.BaseInfo.AbilityAttr.SpeedBase * effectRate)
 		hlog.CtxInfof(ctx, "[%s]的速度提高了%.2d",
+			general.BaseInfo.Name,
+			effectValue)
+	case consts.BuffEffectType_Charming:
+		general.BaseInfo.AbilityAttr.CharmBase += cast.ToFloat64(effectValue)
+		general.BaseInfo.AbilityAttr.CharmBase += cast.ToFloat64(general.BaseInfo.AbilityAttr.CharmBase * effectRate)
+		hlog.CtxInfof(ctx, "[%s]的魅力提高了%.2d",
 			general.BaseInfo.Name,
 			effectValue)
 	}

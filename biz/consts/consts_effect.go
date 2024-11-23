@@ -205,6 +205,7 @@ const (
 	BuffEffectType_IncrIntelligence                                     //增加智力
 	BuffEffectType_IncrCommand                                          //增加统率
 	BuffEffectType_IncrSpeed                                            //增加速度
+	BuffEffectType_IncrCharm                                            //增加魅力
 	BuffEffectType_EmergencyTreatment                                   //急救
 	BuffEffectType_Charming                                             //魅惑
 	BuffEffectType_AppeaseArmyAndPeople_Prepare                         //抚辑军民「预备」

@@ -46,7 +46,7 @@ func (a KnowYourselfAsWellAsTheEnemyTactic) Prepare() {
 					EffectRound: 1,
 					FromTactic:  a.Id(),
 				}).IsSuccess {
-					util.TacticsTriggerWrapRegister(general, consts.BattleAction_EndAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 						revokeResp := &vo.TacticsTriggerResult{}
 						revokeGeneral := params.CurrentGeneral
 						util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
@@ -64,7 +64,7 @@ func (a KnowYourselfAsWellAsTheEnemyTactic) Prepare() {
 					EffectRound: 1,
 					FromTactic:  a.Id(),
 				}).IsSuccess {
-					util.TacticsTriggerWrapRegister(general, consts.BattleAction_EndAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					util.TacticsTriggerWrapRegister(general, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 						revokeResp := &vo.TacticsTriggerResult{}
 						revokeGeneral := params.CurrentGeneral
 						util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{

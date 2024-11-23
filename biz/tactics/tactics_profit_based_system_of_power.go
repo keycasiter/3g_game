@@ -71,7 +71,7 @@ func (a ProfitBasedSystemOfPowerTactic) Prepare() {
 			FromTactic:     a.Id(),
 			ProduceGeneral: currentGeneral,
 		}).IsSuccess {
-			util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_EndAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				revokeResp := &vo.TacticsTriggerResult{}
 				revokeGeneral := params.CurrentGeneral
 

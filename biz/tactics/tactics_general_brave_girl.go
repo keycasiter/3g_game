@@ -128,7 +128,7 @@ func (g GeneralBraveGirlTactic) Execute() {
 				ProduceGeneral: currentGeneral,
 			}).IsSuccess {
 				//消失效果
-				util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_EndAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 					revokeResp := &vo.TacticsTriggerResult{}
 
 					util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
@@ -150,7 +150,7 @@ func (g GeneralBraveGirlTactic) Execute() {
 				ProduceGeneral: currentGeneral,
 			}).IsSuccess {
 				//消失效果
-				util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_EndAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 					revokeResp := &vo.TacticsTriggerResult{}
 
 					util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{

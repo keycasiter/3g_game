@@ -46,7 +46,7 @@ func (t TigerIdiotTactic) Prepare() {
 			ProduceGeneral: triggerGeneral,
 			LockingTarget:  enemyGeneral,
 		}).IsSuccess {
-			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_EndAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				revokeResp := &vo.TacticsTriggerResult{}
 				revokeGeneral := params.CurrentGeneral
 

@@ -3,8 +3,11 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
+	"github.com/spf13/cast"
 )
 
 // 蕙质兰心
@@ -30,6 +33,63 @@ func (a HuiZhiLanXinTactic) Prepare() {
 		currentGeneral.BaseInfo.Name,
 		a.Name(),
 	)
+
+	// 战斗中，我军全体统率提升20（受各自智力影响）
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, a.tacticsParams)
+	for _, general := range pairGenerals {
+		util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{
+			EffectValue:    cast.ToInt64(20 * (1 + general.BaseInfo.AbilityAttr.IntelligenceBase/100/100)),
+			FromTactic:     a.Id(),
+			ProduceGeneral: currentGeneral,
+		})
+		//且自身获得7层兰心效果，每层使自身造成和受到伤害降低10%；
+		util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_LanXin, &vo.EffectHolderParams{
+			EffectTimes:    7,
+			MaxEffectTimes: 7,
+			FromTactic:     a.Id(),
+			ProduceGeneral: currentGeneral,
+		})
+	}
+	// 自身受到伤害时，消耗1层兰心效果并有50%概率（受智力影响）治疗我军单体（治疗率222%，受智力影响）
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+		triggerResp := &vo.TacticsTriggerResult{}
+		triggerGeneral := params.CurrentGeneral
+
+		util.BuffEffectOfTacticCostTime(&util.BuffEffectOfTacticCostTimeParams{
+			Ctx:        ctx,
+			General:    triggerGeneral,
+			EffectType: consts.BuffEffectType_LanXin,
+			TacticId:   a.Id(),
+			CostTimes:  1,
+		})
+
+		triggerRate := 0.5 + triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
+		if util.GenerateRate(triggerRate) {
+			pairGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, a.tacticsParams)
+			util.ResumeSoldierNum(&util.ResumeParams{
+				Ctx:            ctx,
+				TacticsParams:  a.tacticsParams,
+				ProduceGeneral: triggerGeneral,
+				SufferGeneral:  pairGeneral,
+				ResumeNum:      cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.22),
+				TacticId:       a.Id(),
+			})
+		}
+
+		// 兰心首次降至4层时，敌我全体造成的兵刃伤害降低20%（受智力影响）
+		if util.BuffEffectGetCount(triggerGeneral, consts.BuffEffectType_LanXin) == 4 {
+			allGenerals := util.GetAllGenerals(a.tacticsParams)
+			for _, general := range allGenerals {
+				util.DebuffEffectWrapSet(ctx, general, consts.DebuffEffectType_LaunchWeaponDamageDeduce, &vo.EffectHolderParams{
+					EffectRate:     0.2 + triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100,
+					FromTactic:     a.Id(),
+					ProduceGeneral: triggerGeneral,
+				})
+			}
+		}
+
+		return triggerResp
+	})
 }
 
 func (a HuiZhiLanXinTactic) Id() consts.TacticId {

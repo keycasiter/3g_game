@@ -2,6 +2,7 @@ package model
 
 import (
 	"context"
+
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 )
@@ -27,6 +28,8 @@ type TacticsParams struct {
 	CurrentSufferGeneral *vo.BattleGeneral
 	// 当前伤害量
 	CurrentDamageNum int64
+	// 当前治疗量
+	CurrentResumeNum int64
 	// 当前对战执行动作
 	CurrentBattleAction consts.BattleAction
 

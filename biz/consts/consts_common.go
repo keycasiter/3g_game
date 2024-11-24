@@ -440,7 +440,8 @@ const (
 	BattleAction_SufferDebuffEffectEnd   //被施加负面效果结束
 	BattleAction_SufferBuffEffect        //被施加正面效果开始
 	BattleAction_SufferBuffEffectEnd     //被施加正面效果结束
-	BattleAction_SufferResume            //被恢复兵力
+	BattleAction_SufferResume            //被恢复兵力开始
+	BattleAction_SufferResumeEnd         //被恢复兵力结束
 )
 
 func (action BattleAction) String() string {

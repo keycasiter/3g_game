@@ -197,6 +197,7 @@ const (
 	BuffEffectType_LaunchWeaponDamageImprove                          //造成兵刃伤害增加
 	BuffEffectType_LaunchStrategyDamageImprove                        //造成谋略伤害增加
 	BuffEffectType_ResumeImprove                                      //治疗效果提升
+	BuffEffectType_SufferResumeImprove                                //受到治疗效果提升
 
 	BuffEffectType_GeneralAttackDamageImprove                           //普通攻击伤害提升
 	BuffEffectType_SufferWeaponDamageDeduce                             //受到兵刃伤害减少
@@ -246,6 +247,7 @@ const (
 	BuffEffectType_WaitAtOnesEaseForTheFatigued_ImmunityControl         //以逸待劳[几率免疫控制]
 	BuffEffectType_YanMi                                                //严密
 	BuffEffectType_KanPo                                                //看破
+	BuffEffectType_LanXin                                               //兰心效果
 )
 
 func (b BuffEffectType) String() string {

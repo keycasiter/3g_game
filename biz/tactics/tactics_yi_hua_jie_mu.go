@@ -3,8 +3,10 @@ package tactics
 import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
+	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
+	"github.com/keycasiter/3g_game/biz/util"
 )
 
 // 移花接木
@@ -66,6 +68,76 @@ func (a YiHuaJieMuTactic) Execute() {
 		currentGeneral.BaseInfo.Name,
 		a.Name(),
 	)
+
+	// 使敌我全体受到治疗提升18%（受自身最高属性影响）
+	pairGenerals := util.GetPairGeneralArr(currentGeneral, a.tacticsParams)
+	_, val := util.GetGeneralHighestAttr(currentGeneral)
+
+	for _, pairGeneral := range pairGenerals {
+		if util.BuffEffectWrapSet(ctx, pairGeneral, consts.BuffEffectType_SufferResumeImprove, &vo.EffectHolderParams{
+			EffectRate:     0.18 + val/100/100,
+			EffectRound:    1,
+			FromTactic:     a.Id(),
+			ProduceGeneral: currentGeneral,
+		}).IsSuccess {
+			util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+				triggerResp := &vo.TacticsTriggerResult{}
+				triggerGeneral := params.CurrentGeneral
+
+				util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+					Ctx:        ctx,
+					General:    triggerGeneral,
+					EffectType: consts.BuffEffectType_SufferResumeImprove,
+					TacticId:   a.Id(),
+				})
+
+				return triggerResp
+			})
+		}
+	}
+
+	//并将敌军全体受到治疗的26%（受自身最高属性影响）转移到自身，持续1回合
+	enemyGenerals := util.GetEnemyGeneralsByGeneral(currentGeneral, a.tacticsParams)
+	for _, general := range enemyGenerals {
+		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferResume, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+			triggerResp := &vo.TacticsTriggerResult{}
+			triggerGeneral := params.CurrentGeneral
+
+			if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_SufferResumeDeduce, &vo.EffectHolderParams{
+				EffectRate:     0.26 + val/100/100,
+				EffectRound:    1,
+				FromTactic:     a.Id(),
+				ProduceGeneral: currentGeneral,
+			}).IsSuccess {
+				//转移到自己身上
+				util.ResumeSoldierNum(&util.ResumeParams{
+					Ctx:            ctx,
+					TacticsParams:  a.tacticsParams,
+					ProduceGeneral: currentGeneral,
+					SufferGeneral:  currentGeneral,
+					ResumeNum:      a.tacticsParams.CurrentResumeNum,
+					TacticId:       a.Id(),
+				})
+
+				//注销消失效果
+				util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					revokeResp := &vo.TacticsTriggerResult{}
+					revokeGeneral := params.CurrentGeneral
+
+					util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    revokeGeneral,
+						EffectType: consts.DebuffEffectType_SufferResumeDeduce,
+						TacticId:   a.Id(),
+					})
+
+					return revokeResp
+				})
+			}
+
+			return triggerResp
+		})
+	}
 }
 
 func (a YiHuaJieMuTactic) IsTriggerPrepare() bool {

@@ -28,6 +28,19 @@ type ResumeParams struct {
 // @general 当前武将
 // @resumeNum 恢复兵力
 func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSoldierNum int64) {
+	defer func() {
+		//恢复结束触发器
+		if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferResumeEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					SufferResumeGeneral: param.SufferGeneral,
+					CurrentResume:       param.ResumeNum,
+				}
+				f(params)
+			}
+		}
+	}()
+
 	//参数校验
 	if param.ResumeNum == 0 {
 		return param.ResumeNum, param.SufferGeneral.SoldierNum, param.SufferGeneral.SoldierNum
@@ -57,7 +70,7 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		return 0, param.SufferGeneral.SoldierNum, param.SufferGeneral.SoldierNum
 	}
 
-	//恢复触发器
+	//恢复开始触发器
 	if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferResume]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
@@ -99,6 +112,8 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 
 		param.SufferGeneral.SoldierNum += param.ResumeNum
 	}
+
+	param.TacticsParams.CurrentResumeNum = param.ResumeNum
 
 	//统计
 	param.ProduceGeneral.TacticAccumulateTriggerMap[param.TacticId] += 1

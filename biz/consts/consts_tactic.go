@@ -570,6 +570,8 @@ const (
 	HuiZhiLanXin
 	//功不唐捐
 	GongBuTangJuan
+	//飞熊军
+	FeiXiongJun
 )
 
 func (b TacticId) String() string {

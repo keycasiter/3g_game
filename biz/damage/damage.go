@@ -283,6 +283,26 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		attackDmg = cast.ToInt64(float64(attackDmg) * (1 - effectRate))
 	}
 
+	//兰心效果:每层使自身造成和受到伤害降低10%
+	if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_LanXin); ok {
+		effectTimes := int64(0)
+		for _, param := range effectParams {
+			effectTimes += param.EffectTimes
+		}
+		effectRate := cast.ToFloat64(effectTimes) * 0.1
+
+		attackDmg = cast.ToInt64(float64(attackDmg) * (1 - effectRate))
+	}
+	if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_LanXin); ok {
+		effectTimes := int64(0)
+		for _, param := range effectParams {
+			effectTimes += param.EffectTimes
+		}
+		effectRate := cast.ToFloat64(effectTimes) * 0.1
+
+		attackDmg = cast.ToInt64(float64(attackDmg) * (1 - effectRate))
+	}
+
 	//最终伤害降低效果
 	if effectParams, ok := util.DeBuffEffectGet(attackGeneral, consts.DebuffEffectType_LaunchFinalDamageDeduce); ok {
 		effectRate := float64(0)

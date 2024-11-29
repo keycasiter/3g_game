@@ -433,31 +433,22 @@ func buildBattleDoRequest(ctx context.Context, req api.BattleDoRequest) *battle.
 	for _, general := range req.EnemyTeam.BattleGenerals {
 		generalIds = append(generalIds, general.BaseInfo.Id)
 	}
-	generals, err := mysql.NewGeneral().QueryGeneralList(ctx, &vo.QueryGeneralCondition{
-		Ids:    generalIds,
-		Offset: 0,
-		Limit:  len(generalIds),
-	})
-	if err != nil {
-		hlog.CtxErrorf(ctx, "QueryGeneralList err:%v", err)
-		return nil
-	}
 	//整理成map
 	generalInfoMap := make(map[int64]*po.General, 0)
-	for _, general := range generals {
-		generalInfoMap[general.Id] = general
+	for _, generalId := range generalIds {
+		generalInfoMap[generalId] = cache.CacheGeneralMap[generalId]
 	}
 
 	//我方信息
 	fightingTeamGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range req.FightingTeam.BattleGenerals {
-		fightingTeamGenerals = buildGenerals(ctx, generalInfoMap, general, fightingTeamGenerals)
+		fightingTeamGenerals = buildGenerals(ctx, generalInfoMap, general, req.FightingTeam.TeamType, fightingTeamGenerals)
 	}
 
 	//敌方信息
 	enemyTeamGenerals := make([]*vo.BattleGeneral, 0)
 	for _, general := range req.EnemyTeam.BattleGenerals {
-		enemyTeamGenerals = buildGenerals(ctx, generalInfoMap, general, enemyTeamGenerals)
+		enemyTeamGenerals = buildGenerals(ctx, generalInfoMap, general, req.EnemyTeam.TeamType, enemyTeamGenerals)
 	}
 
 	//组装
@@ -483,24 +474,25 @@ func buildBattleDoRequest(ctx context.Context, req api.BattleDoRequest) *battle.
 	return serviceReq
 }
 
-func buildGenerals(ctx context.Context, generalInfoMap map[int64]*po.General, general *api.BattleGeneral, fightingTeamGenerals []*vo.BattleGeneral) []*vo.BattleGeneral {
-	//我方武将信息（从db获取）
+func buildGenerals(ctx context.Context, generalInfoMap map[int64]*po.General, general *api.BattleGeneral, teamType enum.TeamType, teamGenerals []*vo.BattleGeneral) []*vo.BattleGeneral {
+	//1. 我方武将信息（从db获取）
 	generalInfo := &po.General{}
 	if info, ok := generalInfoMap[general.BaseInfo.Id]; ok {
 		generalInfo = info
 	} else {
 		panic(any(fmt.Sprintf("武将信息不存在:%d", general.BaseInfo.Id)))
 	}
-	//武将标签
-	generalTags := make([]consts.GeneralTag, 0)
-	generalTagsArr := []string{}
-	util.ParseJsonObj(ctx, &generalTagsArr, generalInfo.Tag)
-	for _, tag := range generalTagsArr {
-		generalTags = append(generalTags, consts.GeneralTag(cast.ToInt(tag)))
-	}
-	//佩戴战法(自带战法+选择战法)
+
+	//2. 佩戴战法(自带战法+选择战法)
 	equipTactics := make([]*po.Tactics, 0)
-	//*选择战法
+	//*自带战法(从db获取)
+	equipTactics = append(equipTactics, &po.Tactics{
+		Id:            consts.TacticId(generalInfo.SelfTacticId),
+		Name:          cache.CacheTacticMap[int64(generalInfo.SelfTacticId)].Name,
+		TacticsSource: consts.TacticsSource(cache.CacheTacticMap[int64(generalInfo.SelfTacticId)].Source),
+		Type:          consts.TacticsType(cache.CacheTacticMap[int64(generalInfo.SelfTacticId)].Type),
+	})
+	//*选择战法（从参数获取）
 	for _, tactic := range general.EquipTactics {
 		equipTactics = append(equipTactics, &po.Tactics{
 			Id:            consts.TacticId(tactic.Id),
@@ -509,7 +501,8 @@ func buildGenerals(ctx context.Context, generalInfoMap map[int64]*po.General, ge
 			Type:          consts.TacticsType(tactic.Type),
 		})
 	}
-	//兵书
+
+	//*兵书（从参数获取）
 	warbooks := make([]*po.Warbook, 0)
 	for _, warbook := range general.WarBooks {
 		warbookCache := cache.CacheWarBookMap[warbook.Id]
@@ -522,27 +515,30 @@ func buildGenerals(ctx context.Context, generalInfoMap map[int64]*po.General, ge
 		})
 	}
 
-	//武将信息
-	fightingTeamGenerals = append(fightingTeamGenerals, &vo.BattleGeneral{
+	//*武将信息（从db/参数获取）
+	baseInfo := &po.MetadataGeneral{
+		//ID，从参数获取
+		Id: general.BaseInfo.Id,
+		//姓名，从db获取
+		Name:   generalInfo.Name,
+		Gender: consts.Gender(generalInfo.Gender),
+		//阵营，从db获取
+		Group: consts.Group(generalInfo.Group),
+		//标签，从db获取
+		GeneralTag: buildGeneralTags(ctx, generalInfo),
+		//能力值，从db获取
+		AbilityAttr: buildAbilityAttr(ctx, generalInfo),
+		//兵种适性，从参数获取
+		ArmsAttr: buildArmsAttr(general),
+		//我军/敌军，从参数获取
+		GeneralBattleType: buildGeneralBattleType(teamType),
+		//本局对战唯一ID，系统每次生成
+		UniqueId: util.GenerateUUID(),
+	}
+
+	teamGenerals = append(teamGenerals, &vo.BattleGeneral{
 		//基础信息
-		BaseInfo: &po.MetadataGeneral{
-			//ID，从参数获取
-			Id: general.BaseInfo.Id,
-			//姓名，从db获取
-			Name: generalInfo.Name,
-			//阵营，从db获取
-			Group: consts.Group(generalInfo.Group),
-			//标签，从db获取
-			GeneralTag: generalTags,
-			//能力值，从db获取
-			AbilityAttr: buildAbilityAttr(ctx, generalInfo),
-			//兵种适性，从参数获取
-			ArmsAttr: buildArmsAttr(general),
-			//我军/敌军，从参数获取
-			GeneralBattleType: consts.GeneralBattleType(general.BaseInfo.GeneralBattleType),
-			//本局对战唯一ID，系统每次生成
-			UniqueId: util.GenerateUUID(),
-		},
+		BaseInfo: baseInfo,
 		//战法
 		EquipTactics: equipTactics,
 		//兵书
@@ -568,9 +564,29 @@ func buildGenerals(ctx context.Context, generalInfoMap map[int64]*po.General, ge
 		//原始兵力，从参数获取
 		InitSoldierNum: general.SoldierNum,
 	})
-	return fightingTeamGenerals
+	return teamGenerals
 }
 
+func buildGeneralBattleType(teamType enum.TeamType) consts.GeneralBattleType {
+	if teamType == enum.TeamType_Fighting {
+		return consts.GeneralBattleType_Fighting
+	} else {
+		return consts.GeneralBattleType_Enemy
+	}
+}
+
+// 武将标签
+func buildGeneralTags(ctx context.Context, generalInfo *po.General) []consts.GeneralTag {
+	generalTags := make([]consts.GeneralTag, 0)
+	generalTagsArr := []string{}
+	util.ParseJsonObj(ctx, &generalTagsArr, generalInfo.Tag)
+	for _, tag := range generalTagsArr {
+		generalTags = append(generalTags, consts.GeneralTag(cast.ToInt(tag)))
+	}
+	return generalTags
+}
+
+// 科技效果
 func makeBuildingTechGroupAddition(team *api.BattleTeam) vo.BuildingTechGroupAddition {
 	if team.BuildingTechGroupAddition == nil {
 		return vo.BuildingTechGroupAddition{}
@@ -583,6 +599,7 @@ func makeBuildingTechGroupAddition(team *api.BattleTeam) vo.BuildingTechGroupAdd
 	}
 }
 
+// 武将标签
 func makeGeneralTag(tags []consts.GeneralTag) []enum.GeneralTag {
 	resList := make([]enum.GeneralTag, 0)
 	for _, tag := range tags {
@@ -591,6 +608,7 @@ func makeGeneralTag(tags []consts.GeneralTag) []enum.GeneralTag {
 	return resList
 }
 
+// 科技属性加点
 func makeBuildingTechAttrAddition(team *api.BattleTeam) vo.BuildingTechAttrAddition {
 	if team.BuildingTechAttrAddition == nil {
 		return vo.BuildingTechAttrAddition{}
@@ -604,6 +622,7 @@ func makeBuildingTechAttrAddition(team *api.BattleTeam) vo.BuildingTechAttrAddit
 	}
 }
 
+// 兵种适性
 func buildArmsAttr(general *api.BattleGeneral) *po.ArmsAttr {
 	return &po.ArmsAttr{
 		Cavalry:   consts.ArmsAbility(cast.ToString(general.BaseInfo.ArmsAttr.Cavalry)),
@@ -614,6 +633,7 @@ func buildArmsAttr(general *api.BattleGeneral) *po.ArmsAttr {
 	}
 }
 
+// 武将属性
 func buildAbilityAttr(ctx context.Context, generalInfo *po.General) *po.AbilityAttr {
 	attr := &po.AbilityAttrString{}
 	util.ParseJsonObj(ctx, attr, generalInfo.AbilityAttr)

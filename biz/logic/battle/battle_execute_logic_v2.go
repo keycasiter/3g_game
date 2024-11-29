@@ -7,7 +7,6 @@ import (
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/dal/cache"
 	"github.com/keycasiter/3g_game/biz/damage"
-	"github.com/keycasiter/3g_game/biz/model/po"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
@@ -70,8 +69,6 @@ func NewBattleLogicV2Context(ctx context.Context, req *BattleLogicV2ContextReque
 
 	//注入方法执行顺序
 	runCtx.Funcs = []func(){
-		//初始化元数据
-		runCtx.initMetadata,
 		//构建对战战法数据
 		runCtx.buildBattleRoundParams,
 		//对战准备阶段处理
@@ -94,73 +91,6 @@ func (runCtx *BattleLogicV2Context) Run() (*BattleLogicV2ContextResponse, error)
 		}
 	}
 	return runCtx.Resp, nil
-}
-
-func (runCtx *BattleLogicV2Context) initMetadata() {
-	hlog.CtxDebugf(runCtx.Ctx, "[BattleLogicV2Context] initMetadata...")
-	//从数据库拉取阵容武将属性补充
-	runCtx.fillGeneralDataByGeneralId()
-}
-
-func (runCtx *BattleLogicV2Context) fillGeneralDataByGeneralId() {
-	allGenerals := append(runCtx.Req.FightingTeam.BattleGenerals, runCtx.Req.EnemyTeam.BattleGenerals...)
-	allGeneralIds := make([]int64, 0)
-	for _, general := range allGenerals {
-		allGeneralIds = append(allGeneralIds, general.BaseInfo.Id)
-	}
-
-	for _, general := range allGenerals {
-		if generalDb, ok := cache.CacheGeneralMap[general.BaseInfo.Id]; ok {
-			general.BaseInfo.Id = generalDb.Id
-			general.BaseInfo.Name = generalDb.Name
-			general.BaseInfo.Group = consts.Group(generalDb.Group)
-			general.BaseInfo.UniqueId = util.GenerateUUID()
-
-			//自带战法
-			tacticId := consts.TacticId(generalDb.SelfTacticId)
-			if tacticCache, ok := cache.CacheTacticMap[int64(generalDb.SelfTacticId)]; ok {
-				selfTactic := &po.Tactics{
-					Id:            tacticId,
-					Name:          tacticCache.Name,
-					TacticsSource: consts.TacticsSource(tacticCache.Source),
-					Type:          consts.GetTacticType(tacticId),
-				}
-				equipTactics := make([]*po.Tactics, 0)
-				equipTactics = append(equipTactics, selfTactic)
-				equipTactics = append(equipTactics, general.EquipTactics...)
-				general.EquipTactics = equipTactics
-			}
-
-			//属性
-			abilityAttr := &po.AbilityAttrString{}
-			util.ParseJsonObj(runCtx.Ctx, abilityAttr, generalDb.AbilityAttr)
-			general.BaseInfo.AbilityAttr = &po.AbilityAttr{
-				ForceBase:        cast.ToFloat64(abilityAttr.ForceBase),
-				ForceRate:        cast.ToFloat64(abilityAttr.ForceRate),
-				IntelligenceBase: cast.ToFloat64(abilityAttr.IntelligenceBase),
-				IntelligenceRate: cast.ToFloat64(abilityAttr.IntelligenceRate),
-				CharmBase:        cast.ToFloat64(abilityAttr.CharmBase),
-				CharmRate:        cast.ToFloat64(abilityAttr.CharmRate),
-				CommandBase:      cast.ToFloat64(abilityAttr.CommandBase),
-				CommandRate:      cast.ToFloat64(abilityAttr.CommandRate),
-				PoliticsBase:     cast.ToFloat64(abilityAttr.PoliticsBase),
-				PoliticsRate:     cast.ToFloat64(abilityAttr.PoliticsRate),
-				SpeedBase:        cast.ToFloat64(abilityAttr.SpeedBase),
-				SpeedRate:        cast.ToFloat64(abilityAttr.SpeedRate),
-			}
-
-			//兵种适性
-			armsAttr := &po.ArmsAttr{}
-			util.ParseJsonObj(runCtx.Ctx, &armsAttr, generalDb.ArmAttr)
-			general.BaseInfo.ArmsAttr = &po.ArmsAttr{
-				Cavalry:   armsAttr.Cavalry,
-				Mauler:    armsAttr.Mauler,
-				Archers:   armsAttr.Archers,
-				Spearman:  armsAttr.Spearman,
-				Apparatus: armsAttr.Apparatus,
-			}
-		}
-	}
 }
 
 // 属性加点处理
@@ -676,16 +606,19 @@ func (runCtx *BattleLogicV2Context) processBattleFightingPhase() {
 	//最多8回合
 	currentRound := consts.Battle_Round_Unknow
 	for i := 0; i < int(consts.Battle_Round_Eighth); i++ {
-		//回合剩余兵力
-		runCtx.handleRoundRemainSoliderNum()
-
+		//回合开始判断回合停止标签
 		if runCtx.BattleRoundEndFlag {
 			break
 		}
-		//对战回合增加
+		//重置每回合的中间数据
+		runCtx.TacticsParams.CurrentResumeNum = 0
+		runCtx.TacticsParams.CurrentDamageNum = 0
+		//对战回合增加、设置
 		currentRound++
-		//对战回合设置
 		runCtx.TacticsParams.CurrentRound = currentRound
+
+		//回合剩余兵力
+		runCtx.handleRoundRemainSoliderNum()
 
 		//对战回合处理
 		runCtx.processBattleFightingRound(currentRound)
@@ -771,7 +704,8 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 				params := &vo.TacticsTriggerParams{
 					CurrentRound:   currentRound,
 					CurrentGeneral: currentGeneral,
-					CurrentDamage:  0,
+					CurrentDamage:  tacticsParams.CurrentDamageNum,
+					CurrentResume:  tacticsParams.CurrentResumeNum,
 				}
 				f(params)
 			}

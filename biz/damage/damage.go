@@ -94,6 +94,62 @@ func FluctuateDamage(dmg int64) int64 {
 // @attack 攻击武将
 // @suffer 被攻击武将
 func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGeneral, sufferGeneral *vo.BattleGeneral, attackDmg int64) {
+	//被伤害效果开始触发器
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferGeneralAttack]; ok {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: sufferGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	//兵刃伤害开始触发器
+	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferWeaponDamage]; ok {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: sufferGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	//「伤害开始」触发器
+	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_Damage]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	//「兵刃伤害开始」触发器
+	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_WeaponDamage]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+	//「遭受伤害开始」触发器
+	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				CurrentRound:   tacticsParams.CurrentRound,
+				CurrentGeneral: attackGeneral,
+				AttackGeneral:  attackGeneral,
+			}
+			f(params)
+		}
+	}
+
 	defer func() {
 		//统计上报
 		util.AttackReport(tacticsParams,
@@ -316,62 +372,6 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	}
 
 	tacticsParams.CurrentDamageNum = attackDmg
-
-	//被伤害效果开始触发器
-	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferGeneralAttack]; ok {
-		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: sufferGeneral,
-				AttackGeneral:  attackGeneral,
-			}
-			f(params)
-		}
-	}
-	//兵刃伤害开始触发器
-	if funcs, ok := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferWeaponDamage]; ok {
-		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: sufferGeneral,
-				AttackGeneral:  attackGeneral,
-			}
-			f(params)
-		}
-	}
-	//「伤害开始」触发器
-	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_Damage]; okk {
-		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
-			}
-			f(params)
-		}
-	}
-	//「兵刃伤害开始」触发器
-	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_WeaponDamage]; okk {
-		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
-			}
-			f(params)
-		}
-	}
-	//「遭受伤害开始」触发器
-	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; okk {
-		for _, f := range funcs {
-			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
-			}
-			f(params)
-		}
-	}
 
 	//hlog.CtxInfof(ctx, "兵力基础伤害:%d ,武力/防御差:%.2f , 最终伤害:%d , 攻击者武力:%.2f , 防守者统率:%.2f , 造成+受到兵刃伤害增加:%.2f%% , 造成+受到兵刃伤害减少:%.2f%% , 最终增减伤率:%.2f",
 	//	int64(numDmg), atkDefDmg, attackDmg, atk, def, inc*100, dec*100, incDecRate)

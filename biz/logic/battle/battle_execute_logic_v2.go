@@ -10,6 +10,7 @@ import (
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	"github.com/keycasiter/3g_game/biz/tactics"
 	"github.com/keycasiter/3g_game/biz/tactics/execute"
+	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
 	warbookExecute "github.com/keycasiter/3g_game/biz/warbook/execute"
@@ -112,7 +113,7 @@ func (runCtx *BattleLogicV2Context) handleAbilityAttrAddition(general *vo.Battle
 
 // 兵书处理
 func (runCtx *BattleLogicV2Context) handleWarBook(general *vo.BattleGeneral) {
-	warbookExecute.NewWarBookExecutor(runCtx.Ctx, general).Execute()
+	warbookExecute.NewWarBookExecutor(runCtx.Ctx, general, runCtx.TacticsParams).Execute()
 }
 
 // 武将等级处理
@@ -344,8 +345,35 @@ func (runCtx *BattleLogicV2Context) handlePreparePhaseTactic(tacticsParams *mode
 					0,
 					0,
 				)
+
+				//触发「发动被动战法开始」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_PassiveTactic]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   consts.Battle_Round_Prepare,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
+						}
+						f(params)
+					}
+				}
+
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
+
+				//触发「发动被动战法结束」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_PassiveTacticEnd]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   consts.Battle_Round_Prepare,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
+						}
+						f(params)
+					}
+				}
 			}
 			//2.阵法
 			if _, ok := consts.TroopsTacticsMap[tactic.Id]; ok {
@@ -364,8 +392,35 @@ func (runCtx *BattleLogicV2Context) handlePreparePhaseTactic(tacticsParams *mode
 					0,
 					0,
 				)
+
+				//触发「发动阵法开始」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_TroopsTactic]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   consts.Battle_Round_Prepare,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
+						}
+						f(params)
+					}
+				}
+
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
+
+				//触发「发动阵法结束」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_TroopsTacticEnd]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   consts.Battle_Round_Prepare,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
+						}
+						f(params)
+					}
+				}
 			}
 			//3.兵种
 			if _, ok := consts.ArmTacticsMap[tactic.Id]; ok {
@@ -384,8 +439,34 @@ func (runCtx *BattleLogicV2Context) handlePreparePhaseTactic(tacticsParams *mode
 					0,
 					0,
 				)
+
+				//触发「发动兵种开始」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_ArmTactic]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   consts.Battle_Round_Prepare,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
+						}
+						f(params)
+					}
+				}
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
+
+				//触发「发动兵种结束」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_ArmTacticEnd]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   consts.Battle_Round_Prepare,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
+						}
+						f(params)
+					}
+				}
 			}
 			//4.指挥
 			if _, ok := consts.CommandTacticsMap[tactic.Id]; ok {
@@ -404,8 +485,34 @@ func (runCtx *BattleLogicV2Context) handlePreparePhaseTactic(tacticsParams *mode
 					0,
 					0,
 				)
+				//触发「发动指挥战法开始」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_CommandTactic]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   consts.Battle_Round_Prepare,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
+						}
+						f(params)
+					}
+				}
+
 				//战法执行
 				execute.TacticsExecute(runCtx.Ctx, tacticHandler)
+
+				//触发「发动指挥战法结束」触发器
+				if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_CommandTacticEnd]; okk {
+					for _, f := range funcs {
+						params := &vo.TacticsTriggerParams{
+							CurrentRound:   consts.Battle_Round_Prepare,
+							CurrentGeneral: currentGeneral,
+							CurrentDamage:  0,
+							CurrentTactic:  tacticHandler,
+						}
+						f(params)
+					}
+				}
 			}
 		}
 	}
@@ -856,12 +963,6 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 					goto AttactTacticFlag
 				}
 
-				//2.2 触发兵书效果
-				//TODO
-				//2.3 触发战法效果
-				//负面效果
-				//增益效果
-
 				//找到普攻目标
 				sufferGeneral := util.GetEnemyOneGeneral(currentGeneral, tacticsParams)
 				tacticsParams.CurrentSufferGeneral = sufferGeneral
@@ -869,9 +970,10 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 				if funcs, ok := currentGeneral.TacticsTriggerMap[consts.BattleAction_Attack]; ok {
 					for _, f := range funcs {
 						params := &vo.TacticsTriggerParams{
-							CurrentRound:   currentRound,
-							CurrentGeneral: currentGeneral,
-							AttackGeneral:  currentGeneral,
+							CurrentRound:        currentRound,
+							CurrentGeneral:      currentGeneral,
+							AttackGeneral:       currentGeneral,
+							SufferAttackGeneral: sufferGeneral,
 						}
 						f(params)
 					}
@@ -916,14 +1018,28 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 						handler := tactics.TacticsHandlerMap[tactic.Id]
 						tacticHandler := handler.Init(tacticsParams)
 						//发动率判断
-						if !util.GenerateRate(tacticHandler.GetTriggerRate()) {
+						triggerRate := runCtx.getAssaultTriggerRate(tacticHandler, currentGeneral)
+						if !util.GenerateRate(triggerRate) {
 							continue
+						}
+
+						//触发「发动突击战法开始」触发器
+						if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_AssaultTactic]; okk {
+							for _, f := range funcs {
+								params := &vo.TacticsTriggerParams{
+									CurrentRound:   currentRound,
+									CurrentGeneral: currentGeneral,
+									CurrentDamage:  0,
+									CurrentTactic:  tacticHandler,
+								}
+								f(params)
+							}
 						}
 
 						//战法执行
 						execute.TacticsExecute(runCtx.Ctx, tacticHandler)
 
-						//触发「发动主动战法后」触发器
+						//触发「发动突击战法后」触发器
 						if funcs, okk := currentGeneral.TacticsTriggerMap[consts.BattleAction_AssaultTacticEnd]; okk {
 							for _, f := range funcs {
 								params := &vo.TacticsTriggerParams{
@@ -966,6 +1082,15 @@ func (runCtx *BattleLogicV2Context) processBattleFightingRound(currentRound cons
 	}
 
 exitFlag:
+}
+
+// 获取突击战法触发率
+func (runCtx *BattleLogicV2Context) getAssaultTriggerRate(tacticHandler _interface.Tactics, currentGeneral *vo.BattleGeneral) float64 {
+	triggerRate := tacticHandler.GetTriggerRate()
+	improveRate, _ := util.BuffEffectGetAggrTriggerRate(currentGeneral, consts.BuffEffectType_TacticsAssaultTriggerImprove)
+	decrRate, _ := util.DeBuffEffectGetAggrTriggerRate(currentGeneral, consts.DebuffEffectType_TacticsAssaultTriggerDecr)
+	triggerRate += improveRate - decrRate
+	return triggerRate
 }
 
 // 战法执行前置处理器
@@ -1064,6 +1189,15 @@ func (runCtx *BattleLogicV2Context) buildBattleRoundParams() {
 		}
 		if general.RoundRemainSoliderNum == nil {
 			general.RoundRemainSoliderNum = map[consts.BattlePhase]map[consts.BattleRound]int64{}
+		}
+		if general.WarbookAccumulateResumeMap == nil {
+			general.WarbookAccumulateResumeMap = map[consts.WarBookDetailType]int64{}
+		}
+		if general.WarbookAccumulateTriggerMap == nil {
+			general.WarbookAccumulateTriggerMap = map[consts.WarBookDetailType]int64{}
+		}
+		if general.WarbookAccumulateDamageMap == nil {
+			general.WarbookAccumulateDamageMap = map[consts.WarBookDetailType]int64{}
 		}
 	}
 

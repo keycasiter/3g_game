@@ -22,6 +22,8 @@ type ResumeParams struct {
 	ResumeNum int64
 	//战法ID
 	TacticId consts.TacticId
+	//兵书
+	WarBookType consts.WarBookDetailType
 }
 
 // 恢复兵力结算
@@ -51,11 +53,8 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 	if param.SufferGeneral == nil {
 		return param.ResumeNum, param.SufferGeneral.SoldierNum, param.SufferGeneral.SoldierNum
 	}
-	if param.TacticsParams == nil {
-		panic("TacticsParams is nil")
-	}
-	if param.TacticId == 0 {
-		panic("TacticId is nil")
+	if param.TacticId == 0 || param.WarBookType == 0 {
+		panic("TacticId or WarbookId is nil")
 	}
 
 	//效果判定
@@ -113,20 +112,30 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		param.SufferGeneral.SoldierNum += param.ResumeNum
 	}
 
-	param.TacticsParams.CurrentResumeNum = param.ResumeNum
+	if param.TacticsParams != nil {
+		param.TacticsParams.CurrentResumeNum = param.ResumeNum
+	}
 
 	//统计
-	param.ProduceGeneral.TacticAccumulateTriggerMap[param.TacticId] += 1
-	param.ProduceGeneral.TacticAccumulateResumeMap[param.TacticId] = param.ResumeNum
+	if param.TacticId > 0 {
+		param.ProduceGeneral.TacticAccumulateTriggerMap[param.TacticId] += 1
+		param.ProduceGeneral.TacticAccumulateResumeMap[param.TacticId] = param.ResumeNum
+	}
+	if param.WarBookType > 0 {
+		param.ProduceGeneral.WarbookAccumulateTriggerMap[param.WarBookType] += 1
+		param.ProduceGeneral.WarbookAccumulateResumeMap[param.WarBookType] = param.ResumeNum
+	}
 	param.ProduceGeneral.AccumulateTotalResumeNum += param.ResumeNum
 
-	TacticReport(param.TacticsParams,
-		param.ProduceGeneral.BaseInfo.UniqueId,
-		int64(param.TacticId),
-		1,
-		0,
-		finalResumeNum,
-	)
+	if param.TacticsParams != nil {
+		TacticReport(param.TacticsParams,
+			param.ProduceGeneral.BaseInfo.UniqueId,
+			int64(param.TacticId),
+			1,
+			0,
+			finalResumeNum,
+		)
+	}
 
 	hlog.CtxInfof(param.Ctx, "[%s]恢复了兵力%d(%d↗%d)",
 		param.SufferGeneral.BaseInfo.Name,

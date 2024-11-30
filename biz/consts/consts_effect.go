@@ -67,6 +67,7 @@ const (
 
 	DebuffEffectType_TacticsActiveTriggerDecr  //主动战法发动率降低
 	DebuffEffectType_TacticsPassiveTriggerDecr //被动战法发动率降低
+	DebuffEffectType_TacticsAssaultTriggerDecr // 突击战法发动率降低
 
 	DebuffEffectType_CleverStrategyAndShrewdTactic //神机妙算
 	DebuffEffectType_InterlockedStratagems         //铁索连环
@@ -192,6 +193,7 @@ const (
 	BuffEffectType_TacticsActiveTriggerNoSelfImprove                  //主动战法[非自带]发动率提升
 	BuffEffectType_TacticsActiveWithSelfDamageImprove                 //主动战法[自带]伤害提升
 	BuffEffectType_TacticsActiveDamageImprove                         //主动战法伤害提升
+	BuffEffectType_TacticsAssaultDamageImprove                        //突击战法伤害提升
 	BuffEffectType_TacticsPassiveTriggerImprove                       //被动战法发动率提升
 	BuffEffectType_TacticsAssaultTriggerImprove                       //突击战法发动率提升
 	BuffEffectType_LaunchWeaponDamageImprove                          //造成兵刃伤害增加
@@ -200,6 +202,7 @@ const (
 	BuffEffectType_SufferResumeImprove                                //受到治疗效果提升
 
 	BuffEffectType_GeneralAttackDamageImprove                           //普通攻击伤害提升
+	BuffEffectType_SufferGeneralAttackDamageDeduce                      //普通攻击伤害提升
 	BuffEffectType_SufferWeaponDamageDeduce                             //受到兵刃伤害减少
 	BuffEffectType_SufferStrategyDamageDeduce                           //受到谋略伤害减少
 	BuffEffectType_SufferActiveTacticDamageDeduce                       //受到[主动战法]伤害减少
@@ -248,6 +251,7 @@ const (
 	BuffEffectType_YanMi                                                //严密
 	BuffEffectType_KanPo                                                //看破
 	BuffEffectType_LanXin                                               //兰心效果
+	BuffEffectType_SufferGramArmDamageDeduce                            //遭受克制兵种减少
 )
 
 func (b BuffEffectType) String() string {

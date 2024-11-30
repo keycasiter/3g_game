@@ -164,7 +164,10 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 	if effectParam.ProduceGeneral != nil {
 		if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_BuffEffect]; okk {
 			for _, f := range funcs {
-				params := &vo.TacticsTriggerParams{}
+				params := &vo.TacticsTriggerParams{
+					BuffEffect:         effectType,
+					EffectHolderParams: effectParam,
+				}
 				f(params)
 			}
 		}
@@ -400,6 +403,23 @@ func BuffEffectOfTacticGet(general *vo.BattleGeneral, effectType consts.BuffEffe
 	return nil, false
 }
 
+// 正面效果获取
+func BuffEffectOfWarBookGet(general *vo.BattleGeneral, effectType consts.BuffEffectType, warbookType consts.WarBookDetailType) ([]*vo.EffectHolderParams, bool) {
+	res := make([]*vo.EffectHolderParams, 0)
+	if effectParams, ok := general.BuffEffectHolderMap[effectType]; ok {
+		//按兵书获取效果
+		if warbookType > 0 {
+			for _, effectParam := range effectParams {
+				if effectParam.FromWarbook == warbookType {
+					res = append(res, effectParam)
+				}
+			}
+			return res, true
+		}
+	}
+	return nil, false
+}
+
 // 获取增益效果总次数
 func BuffEffectGetCount(general *vo.BattleGeneral, effectType consts.BuffEffectType) int64 {
 	times := int64(0)
@@ -429,6 +449,18 @@ func BuffEffectGetAggrEffectRate(general *vo.BattleGeneral, effectType consts.Bu
 			effectRate += effectParam.EffectRate
 		}
 		return effectRate, true
+	}
+	return 0, false
+}
+
+// 获取触发效果(汇总)
+func BuffEffectGetAggrTriggerRate(general *vo.BattleGeneral, effectType consts.BuffEffectType) (float64, bool) {
+	triggerRate := float64(0)
+	if v, ok := general.BuffEffectHolderMap[effectType]; ok {
+		for _, effectParam := range v {
+			triggerRate += effectParam.TriggerRate
+		}
+		return triggerRate, true
 	}
 	return 0, false
 }
@@ -761,6 +793,7 @@ func DebuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectT
 		if funcs, okk := effectParam.ProduceGeneral.TacticsTriggerMap[consts.BattleAction_DebuffEffect]; okk {
 			for _, f := range funcs {
 				params := &vo.TacticsTriggerParams{
+					DebuffEffect:       effectType,
 					EffectHolderParams: effectParam,
 				}
 				f(params)
@@ -1010,6 +1043,58 @@ func DeBuffEffectOfTacticIsDeplete(general *vo.BattleGeneral, effectType consts.
 			if effectParam.FromTactic == tacticId {
 				//可用次数是否为0
 				if effectParam.EffectTimes == 0 {
+					return true
+				}
+			}
+		}
+	}
+	return false
+}
+
+type DeBuffEffectOfWarbookCostRoundParams struct {
+	//上下文
+	Ctx context.Context
+	//操作武将
+	General *vo.BattleGeneral
+	//负面效果
+	EffectType consts.DebuffEffectType
+	//关联兵书
+	WarbookDetailType consts.WarBookDetailType
+	//效果消耗完成回调函数
+	CostOverTriggerFunc func()
+}
+
+// 负面效果消耗
+func DeBuffEffectOfWarbookCostRound(params *DeBuffEffectOfWarbookCostRoundParams) bool {
+	if params.WarbookDetailType <= 0 {
+		return false
+	}
+
+	if effectParams, ok := params.General.DeBuffEffectHolderMap[params.EffectType]; ok {
+		for idx, effectParam := range effectParams {
+			//找到指定兵书
+			if effectParam.FromWarbook == params.WarbookDetailType {
+				//消耗
+				if effectParam.EffectRound > 0 {
+					effectParam.EffectRound--
+					return true
+				}
+				//清除
+				if effectParam.EffectRound == 0 {
+					params.General.DeBuffEffectHolderMap[params.EffectType] = append(effectParams[:idx], effectParams[idx+1:]...)
+					hlog.CtxInfof(params.Ctx, "[%s]的【%v】兵书「%v」效果已消失",
+						params.General.BaseInfo.Name,
+						params.WarbookDetailType,
+						params.EffectType,
+					)
+
+					//属性加点清理
+					debuffEffectIncr(params.Ctx, params.General, params.EffectType, effectParam.EffectValue)
+
+					//执行回调函数
+					if params.CostOverTriggerFunc != nil {
+						params.CostOverTriggerFunc()
+					}
 					return true
 				}
 			}
@@ -1504,4 +1589,24 @@ func IsCanEvade(ctx context.Context, general *vo.BattleGeneral) bool {
 		}
 	}
 	return false
+}
+
+// 获取触发效果(汇总)
+func DeBuffEffectGetAggrTriggerRate(general *vo.BattleGeneral, effectType consts.DebuffEffectType) (float64, bool) {
+	triggerRate := float64(0)
+	if v, ok := general.DeBuffEffectHolderMap[effectType]; ok {
+		for _, effectParam := range v {
+			triggerRate += effectParam.TriggerRate
+		}
+		return triggerRate, true
+	}
+	return 0, false
+}
+
+func IsContinuousBuffEffectType(effectType consts.BuffEffectType) bool {
+	return continuousBuffEffectMap[effectType]
+}
+
+func IsContinuousDeffEffectType(effectType consts.DebuffEffectType) bool {
+	return continuousDebuffEffectMap[effectType]
 }

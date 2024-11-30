@@ -158,8 +158,16 @@ func (t *TacticDamageLogic) damageEffectHandler() {
 		}
 	}
 	//主动战法伤害提升
-	if consts.ActiveTacticsMap[attackGeneral.EquipTactics[0].Id] {
+	if consts.ActiveTacticsMap[param.TacticId] {
 		if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_TacticsActiveDamageImprove); ok {
+			for _, effectParam := range effectParams {
+				improveDmgRate += effectParam.EffectRate
+			}
+		}
+	}
+	//突击战法伤害提升
+	if consts.AssaultTacticsMap[param.TacticId] {
+		if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_TacticsAssaultDamageImprove); ok {
 			for _, effectParam := range effectParams {
 				improveDmgRate += effectParam.EffectRate
 			}
@@ -413,9 +421,10 @@ func (t *TacticDamageLogic) triggerPreHandler() {
 	if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_Damage]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}

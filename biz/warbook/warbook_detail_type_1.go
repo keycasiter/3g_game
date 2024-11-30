@@ -5,6 +5,7 @@ import (
 
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
+	"github.com/keycasiter/3g_game/biz/tactics/model"
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
@@ -13,7 +14,7 @@ import (
 type WarBookDetailType_1 struct {
 }
 
-func (w *WarBookDetailType_1) Handle(ctx context.Context, general *vo.BattleGeneral) {
+func (w *WarBookDetailType_1) Handle(ctx context.Context, general *vo.BattleGeneral, tacticParams *model.TacticsParams) {
 	for i := 0; i < int(general.Addition.GeneralStarLevel); i++ {
 		//兵刃伤害
 		util.BuffEffectWrapSet(ctx, general, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{

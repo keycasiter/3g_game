@@ -120,9 +120,10 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_Damage]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -237,6 +238,17 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	ctx := tacticsParams.Ctx
 	defSoldierNum := sufferGeneral.SoldierNum
 
+	//普通攻击提升效果
+	if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_GeneralAttackDamageImprove); ok {
+		effectRate := float64(0)
+		for _, param := range effectParams {
+			effectRate += param.EffectRate
+		}
+		if effectRate >= 1 {
+			effectRate = 1
+		}
+		attackDmg = cast.ToInt64(float64(attackDmg) * (1 + effectRate))
+	}
 	//虎痴效果
 	if effectParams, ok := util.BuffEffectGet(attackGeneral, consts.BuffEffectType_TigerIdiot_Locked); ok {
 		if len(effectParams) > 0 {
@@ -329,6 +341,17 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 
 	//普通攻击效果降低
 	if effectParams, ok := util.DeBuffEffectGet(attackGeneral, consts.DebuffEffectType_LaunchGeneralAttackDeduce); ok {
+		effectRate := float64(0)
+		for _, param := range effectParams {
+			effectRate += param.EffectRate
+		}
+		if effectRate >= 1 {
+			effectRate = 1
+		}
+		attackDmg = cast.ToInt64(float64(attackDmg) * (1 - effectRate))
+	}
+	//遭受普通攻击降低效果
+	if effectParams, ok := util.BuffEffectGet(sufferGeneral, consts.BuffEffectType_SufferGeneralAttackDamageDeduce); ok {
 		effectRate := float64(0)
 		for _, param := range effectParams {
 			effectRate += param.EffectRate

@@ -422,8 +422,8 @@ func GetEnemyOneGeneralNotSelfByGeneral(general *vo.BattleGeneral, tacticsParams
 
 func GetEnemyGeneralsNotSelfByGeneral(general *vo.BattleGeneral, tacticsParams *model.TacticsParams) []*vo.BattleGeneral {
 	enemyGenerals := make([]*vo.BattleGeneral, 0)
-	currentGeneralId := general.BaseInfo.UniqueId
-	if _, ok := tacticsParams.FightingGeneralMap[currentGeneralId]; !ok {
+	currentUniqueId := general.BaseInfo.UniqueId
+	if _, ok := tacticsParams.FightingGeneralMap[currentUniqueId]; ok {
 		for _, each := range tacticsParams.FightingGeneralMap {
 			if each.BaseInfo.UniqueId == general.BaseInfo.UniqueId {
 				continue
@@ -431,7 +431,7 @@ func GetEnemyGeneralsNotSelfByGeneral(general *vo.BattleGeneral, tacticsParams *
 			enemyGenerals = append(enemyGenerals, each)
 		}
 	}
-	if _, ok := tacticsParams.EnemyGeneralMap[currentGeneralId]; !ok {
+	if _, ok := tacticsParams.EnemyGeneralMap[currentUniqueId]; ok {
 		for _, each := range tacticsParams.EnemyGeneralMap {
 			if each.BaseInfo.UniqueId == general.BaseInfo.UniqueId {
 				continue
@@ -658,6 +658,24 @@ func GetMostForcePairGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *mo
 		}
 	}
 	return mostForceGeneral
+}
+
+// 获取我军一个有负面状态的武将
+func GetOnePairGeneralWhoHasDebuff(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
+	pairGenerals := GetPairGeneralArr(currentGeneral, tacticsParams)
+	debuffGenerals := make([]*vo.BattleGeneral, 0)
+	for _, general := range pairGenerals {
+		if DeBuffEffectContainsCheck(general) {
+			debuffGenerals = append(debuffGenerals, general)
+		}
+	}
+	if len(debuffGenerals) == 0 {
+		return nil
+	}
+
+	hitIdx := GenerateHitOneIdx(len(debuffGenerals))
+
+	return debuffGenerals[hitIdx]
 }
 
 // 获取我军智力最高的武将

@@ -82,6 +82,13 @@ type BattleGeneral struct {
 	//战法发动统计
 	TacticAccumulateTriggerMap map[consts.TacticId]int64
 
+	//兵书伤害统计
+	WarbookAccumulateDamageMap map[consts.WarBookDetailType]int64
+	//兵书治疗统计
+	WarbookAccumulateResumeMap map[consts.WarBookDetailType]int64
+	//兵书发动统计
+	WarbookAccumulateTriggerMap map[consts.WarBookDetailType]int64
+
 	//被谁援护
 	HelpByGeneral *BattleGeneral `json:"-"`
 	//被谁嘲讽
@@ -131,6 +138,8 @@ type TacticsTriggerParams struct {
 	CurrentGeneral *BattleGeneral
 	//当前发起攻击的武将
 	AttackGeneral *BattleGeneral
+	//当前被攻击的武将
+	SufferAttackGeneral *BattleGeneral
 	//当前发起恢复的武将
 	ResumeGeneral *BattleGeneral
 	//当前被恢复的武将

@@ -433,9 +433,10 @@ func (t *TacticDamageLogic) triggerPreHandler() {
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamage]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -447,9 +448,10 @@ func (t *TacticDamageLogic) triggerPreHandler() {
 	if funcs, okk := attackGeneral.TacticsTriggerMap[battleAction]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -461,9 +463,10 @@ func (t *TacticDamageLogic) triggerPreHandler() {
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[sufferBattleAction]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -471,9 +474,10 @@ func (t *TacticDamageLogic) triggerPreHandler() {
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_Tactic]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -481,9 +485,10 @@ func (t *TacticDamageLogic) triggerPreHandler() {
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferTactic]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -503,9 +508,10 @@ func (t *TacticDamageLogic) triggerPreHandler() {
 	if funcs, ok := sufferGeneral.TacticsTriggerMap[action]; ok {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: sufferGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      sufferGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -529,9 +535,10 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 	if funcs, okk := attackGeneral.TacticsTriggerMap[consts.BattleAction_DamageEnd]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -540,10 +547,11 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferDamageEnd]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
-				DamageType:     damageType,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
+				DamageType:          damageType,
 			}
 			f(params)
 		}
@@ -551,9 +559,10 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_TacticEnd]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -562,9 +571,10 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferTacticEnd]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -577,9 +587,10 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 	if funcs, okk := attackGeneral.TacticsTriggerMap[battleAction]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -591,9 +602,10 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 	if funcs, okk := sufferGeneral.TacticsTriggerMap[sufferBattleAction]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: attackGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      attackGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}
@@ -612,9 +624,10 @@ func (t *TacticDamageLogic) triggerPostHandler() {
 	if funcs, ok := sufferGeneral.TacticsTriggerMap[action]; ok {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
-				CurrentRound:   tacticsParams.CurrentRound,
-				CurrentGeneral: sufferGeneral,
-				AttackGeneral:  attackGeneral,
+				CurrentRound:        tacticsParams.CurrentRound,
+				CurrentGeneral:      sufferGeneral,
+				AttackGeneral:       attackGeneral,
+				SufferAttackGeneral: sufferGeneral,
 			}
 			f(params)
 		}

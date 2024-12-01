@@ -107,3 +107,6 @@ func (b BendTheBowAndDrinkTheFeathersTactic) Execute() {
 func (b BendTheBowAndDrinkTheFeathersTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BendTheBowAndDrinkTheFeathersTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

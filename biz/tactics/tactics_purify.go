@@ -143,3 +143,6 @@ func (p PurifyTactic) Execute() {
 func (p PurifyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a PurifyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

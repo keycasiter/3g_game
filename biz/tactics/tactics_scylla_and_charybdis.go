@@ -92,3 +92,6 @@ func (s ScyllaAndCharybdisTactic) Execute() {
 func (s ScyllaAndCharybdisTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ScyllaAndCharybdisTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

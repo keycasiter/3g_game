@@ -158,3 +158,6 @@ func (d DustpanFormationTactic) Execute() {
 func (d DustpanFormationTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DustpanFormationTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -135,3 +135,6 @@ func (c CleverPlanAndCleverPlanTactic) SupportArmTypes() []consts.ArmType {
 func (c CleverPlanAndCleverPlanTactic) Execute() {
 
 }
+
+func (a CleverPlanAndCleverPlanTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

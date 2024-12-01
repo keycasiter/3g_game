@@ -93,3 +93,6 @@ func (t TakeByStormTactic) Execute() {
 func (t TakeByStormTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TakeByStormTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

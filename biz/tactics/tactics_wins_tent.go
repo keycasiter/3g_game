@@ -93,3 +93,6 @@ func (w WinsTentTactic) Execute() {
 func (w WinsTentTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WinsTentTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

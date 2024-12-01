@@ -132,3 +132,6 @@ func (f FlamesFlyingInTheWindTactic) Execute() {
 func (f FlamesFlyingInTheWindTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FlamesFlyingInTheWindTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

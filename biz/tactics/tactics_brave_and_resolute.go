@@ -105,3 +105,6 @@ func (b BraveAndResoluteTactic) Execute() {
 func (b BraveAndResoluteTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BraveAndResoluteTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

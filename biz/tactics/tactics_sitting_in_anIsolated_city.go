@@ -86,3 +86,6 @@ func (s SittingInAnIsolatedCityTactic) Execute() {
 func (s SittingInAnIsolatedCityTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SittingInAnIsolatedCityTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

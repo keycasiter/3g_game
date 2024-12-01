@@ -139,3 +139,6 @@ func (e EliminateItAndDrawFromItTactic) Execute() {
 func (e EliminateItAndDrawFromItTactic) IsTriggerPrepare() bool {
 	return e.isTriggerPrepare
 }
+
+func (a EliminateItAndDrawFromItTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

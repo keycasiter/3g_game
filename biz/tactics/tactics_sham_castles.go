@@ -9,9 +9,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//疑城
-//主动 75%
-//使自己免疫混乱，并提高68点武力，持续2回合
+// 疑城
+// 主动 75%
+// 使自己免疫混乱，并提高68点武力，持续2回合
 type ShamCastlesTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -112,4 +112,7 @@ func (s ShamCastlesTactic) Execute() {
 
 func (s ShamCastlesTactic) IsTriggerPrepare() bool {
 	return false
+}
+
+func (a ShamCastlesTactic) SetTriggerPrepare(triggerPrepare bool) {
 }

@@ -193,3 +193,6 @@ func (a AggregateStoneIntoGoldTactic) Execute() {
 func (a AggregateStoneIntoGoldTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a AggregateStoneIntoGoldTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

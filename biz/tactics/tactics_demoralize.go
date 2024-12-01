@@ -9,8 +9,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//挫锐
-//战斗前3回合，使敌军单体进入虚弱状态，造成伤害时有65%几率无法造成伤害
+// 挫锐
+// 战斗前3回合，使敌军单体进入虚弱状态，造成伤害时有65%几率无法造成伤害
 type DemoralizeTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -95,4 +95,7 @@ func (d DemoralizeTactic) SupportArmTypes() []consts.ArmType {
 
 func (d DemoralizeTactic) Execute() {
 	return
+}
+
+func (a DemoralizeTactic) SetTriggerPrepare(triggerPrepare bool) {
 }

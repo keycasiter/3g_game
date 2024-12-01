@@ -118,3 +118,6 @@ func (a HuHouTactic) Execute() {
 func (a HuHouTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HuHouTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

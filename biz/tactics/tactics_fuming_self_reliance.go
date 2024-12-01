@@ -195,3 +195,6 @@ func (f FumingSelfRelianceTactic) Execute() {
 func (f FumingSelfRelianceTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FumingSelfRelianceTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

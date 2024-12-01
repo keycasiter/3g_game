@@ -112,3 +112,6 @@ func (h HaveVerbalBattleWithSomebodyTactic) Execute() {
 func (h HaveVerbalBattleWithSomebodyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HaveVerbalBattleWithSomebodyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -119,3 +119,6 @@ func (t ThousandsOfMilesOfSupportTactic) Execute() {
 func (t ThousandsOfMilesOfSupportTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ThousandsOfMilesOfSupportTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -95,3 +95,6 @@ func (t TengjiaSoldierTactic) Execute() {
 func (t TengjiaSoldierTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TengjiaSoldierTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -151,3 +151,6 @@ func (t ThreeDaysOfSeparationTactic) SupportArmTypes() []consts.ArmType {
 		consts.ArmType_Apparatus,
 	}
 }
+
+func (a ThreeDaysOfSeparationTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -128,3 +128,6 @@ func (c CleverStrategyAndShrewdTacticsTactic) SupportArmTypes() []consts.ArmType
 func (c CleverStrategyAndShrewdTacticsTactic) Execute() {
 	return
 }
+
+func (a CleverStrategyAndShrewdTacticsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

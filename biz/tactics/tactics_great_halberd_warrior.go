@@ -112,3 +112,6 @@ func (g GreatHalberdWarriorTactic) Execute() {
 func (g GreatHalberdWarriorTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a GreatHalberdWarriorTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -109,3 +109,6 @@ func (t ToCureOnesSpeedTactic) Execute() {
 func (t ToCureOnesSpeedTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ToCureOnesSpeedTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

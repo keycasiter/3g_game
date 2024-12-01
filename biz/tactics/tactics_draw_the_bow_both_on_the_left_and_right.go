@@ -124,3 +124,6 @@ func (d DrawTheBowBothOnTheLeftAndRightTactic) Execute() {
 func (d DrawTheBowBothOnTheLeftAndRightTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DrawTheBowBothOnTheLeftAndRightTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

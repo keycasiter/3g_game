@@ -29,4 +29,6 @@ type Tactics interface {
 	Execute()
 	//是否需要发动准备
 	IsTriggerPrepare() bool
+	//设置是否发动准备
+	SetTriggerPrepare(isTriggerPrepare bool)
 }

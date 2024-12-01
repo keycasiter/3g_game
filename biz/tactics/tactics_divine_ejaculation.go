@@ -101,3 +101,6 @@ func (d DivineEjaculationTactic) Execute() {
 func (d DivineEjaculationTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DivineEjaculationTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

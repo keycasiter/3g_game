@@ -79,3 +79,6 @@ func (w WieldTroopsToSeekVictoryTactic) Execute() {
 func (w WieldTroopsToSeekVictoryTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WieldTroopsToSeekVictoryTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

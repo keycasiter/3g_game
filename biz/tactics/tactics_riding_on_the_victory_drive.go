@@ -94,3 +94,6 @@ func (r RidingOnTheVictoryDriveTactic) Execute() {
 func (r RidingOnTheVictoryDriveTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RidingOnTheVictoryDriveTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -96,3 +96,6 @@ func (g GatheringOfTroopsTactic) Execute() {
 func (g GatheringOfTroopsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a GatheringOfTroopsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -122,3 +122,6 @@ func (d DefensiveBarrierTactic) Execute() {
 func (d DefensiveBarrierTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DefensiveBarrierTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

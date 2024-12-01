@@ -68,10 +68,11 @@ const (
 	WarBookDetailType_48 WarBookDetailType = 48 //励军
 	WarBookDetailType_49 WarBookDetailType = 49 //救主
 	WarBookDetailType_50 WarBookDetailType = 50 //散仙
-	WarBookDetailType_51 WarBookDetailType = 51 //百战
-	WarBookDetailType_52 WarBookDetailType = 52 //疾战突围
-	WarBookDetailType_53 WarBookDetailType = 53 //谋定后动
+	WarBookDetailType_52 WarBookDetailType = 52 //百战
+	WarBookDetailType_53 WarBookDetailType = 53 //疾战突围
+	WarBookDetailType_54 WarBookDetailType = 54 //谋定后动
 	//始计
+	WarBookDetailType_55 WarBookDetailType = 55 //始计
 	WarBookDetailType_57 WarBookDetailType = 57 //洞若观火
 	WarBookDetailType_58 WarBookDetailType = 58 //神清气净
 	WarBookDetailType_59 WarBookDetailType = 59 //应机立新
@@ -80,12 +81,12 @@ const (
 	WarBookDetailType_62 WarBookDetailType = 62 //归心
 	WarBookDetailType_63 WarBookDetailType = 63 //枕戈坐甲
 	WarBookDetailType_64 WarBookDetailType = 64 //三军之众
-	WarBookDetailType_65 WarBookDetailType = 65 //应机立断
 	WarBookDetailType_66 WarBookDetailType = 66 //锤炼
 	WarBookDetailType_67 WarBookDetailType = 67 //统军
 	WarBookDetailType_71 WarBookDetailType = 71 //乐善好施
 	WarBookDetailType_72 WarBookDetailType = 72 //锐利
 	//用间
+	WarBookDetailType_56 WarBookDetailType = 56 //用间
 	WarBookDetailType_68 WarBookDetailType = 68 //兵行诡道
 	WarBookDetailType_69 WarBookDetailType = 69 //以直报怨
 	WarBookDetailType_70 WarBookDetailType = 70 //以退为进
@@ -96,6 +97,7 @@ const (
 	WarBookDetailType_77 WarBookDetailType = 77 //善战
 	WarBookDetailType_78 WarBookDetailType = 78 //分利
 	WarBookDetailType_79 WarBookDetailType = 79 //精准
+	WarBookDetailType_80 WarBookDetailType = 80 //出奇制胜
 )
 
 func (w WarBookDetailType) String() string {
@@ -200,12 +202,16 @@ func (w WarBookDetailType) String() string {
 		return "救主"
 	case WarBookDetailType_50:
 		return "散仙"
-	case WarBookDetailType_51:
-		return "百战"
 	case WarBookDetailType_52:
-		return "疾战突围"
+		return "百战"
 	case WarBookDetailType_53:
+		return "疾战突围"
+	case WarBookDetailType_54:
 		return "谋定后动"
+	case WarBookDetailType_55:
+		return "始计"
+	case WarBookDetailType_56:
+		return "用间"
 	case WarBookDetailType_57:
 		return "洞若观火"
 	case WarBookDetailType_58:
@@ -222,8 +228,6 @@ func (w WarBookDetailType) String() string {
 		return "枕戈坐甲"
 	case WarBookDetailType_64:
 		return "三军之众"
-	case WarBookDetailType_65:
-		return "应机立断"
 	case WarBookDetailType_66:
 		return "锤炼"
 	case WarBookDetailType_67:

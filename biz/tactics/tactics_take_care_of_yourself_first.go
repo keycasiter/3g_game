@@ -107,3 +107,6 @@ func (t TakeCareOfYourselfFirstTactic) Execute() {
 func (t TakeCareOfYourselfFirstTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TakeCareOfYourselfFirstTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -109,3 +109,6 @@ func (h HaveSucceededInCarryingOutAnAssignmentTactic) Execute() {
 func (h HaveSucceededInCarryingOutAnAssignmentTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HaveSucceededInCarryingOutAnAssignmentTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

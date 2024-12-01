@@ -126,3 +126,6 @@ func (s StrikeItsLazyReturnTactic) Execute() {
 func (s StrikeItsLazyReturnTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a StrikeItsLazyReturnTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

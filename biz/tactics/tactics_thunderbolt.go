@@ -111,3 +111,6 @@ func (t ThunderboltTactic) Execute() {
 func (t ThunderboltTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ThunderboltTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

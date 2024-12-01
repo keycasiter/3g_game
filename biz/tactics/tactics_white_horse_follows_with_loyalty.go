@@ -120,3 +120,6 @@ func (w WhiteHorseFollowsWithLoyaltyTactic) Execute() {
 func (w WhiteHorseFollowsWithLoyaltyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WhiteHorseFollowsWithLoyaltyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

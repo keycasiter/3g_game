@@ -109,3 +109,6 @@ func (h HumilityTactic) Execute() {
 func (h HumilityTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HumilityTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

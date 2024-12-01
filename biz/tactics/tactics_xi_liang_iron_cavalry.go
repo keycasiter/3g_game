@@ -102,3 +102,6 @@ func (x XiLiangIronCavalryTactic) Execute() {
 func (x XiLiangIronCavalryTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a XiLiangIronCavalryTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

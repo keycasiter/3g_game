@@ -61,3 +61,6 @@ func (e ElephantSoldierTactic) Execute() {
 func (e ElephantSoldierTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ElephantSoldierTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

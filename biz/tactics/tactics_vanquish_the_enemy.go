@@ -111,3 +111,6 @@ func (v VanquishTheEnemyTactic) Execute() {
 func (v VanquishTheEnemyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a VanquishTheEnemyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

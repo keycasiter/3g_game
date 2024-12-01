@@ -140,3 +140,6 @@ func (e ExcitingArmyAttackCampTactic) Execute() {
 func (e ExcitingArmyAttackCampTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ExcitingArmyAttackCampTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -128,3 +128,6 @@ func (a ProfitBasedSystemOfPowerTactic) Execute() {
 func (a ProfitBasedSystemOfPowerTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ProfitBasedSystemOfPowerTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

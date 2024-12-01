@@ -124,3 +124,6 @@ func (w WuDangFlyArmyTactic) SupportArmTypes() []consts.ArmType {
 func (w WuDangFlyArmyTactic) Execute() {
 	return
 }
+
+func (a WuDangFlyArmyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -9,8 +9,8 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//庐江上甲
-//提高自身44点统率，并为友军单体分担40%伤害，持续2回合
+// 庐江上甲
+// 提高自身44点统率，并为友军单体分担40%伤害，持续2回合
 type LuJiangRiverOverArmouredTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -99,4 +99,7 @@ func (l LuJiangRiverOverArmouredTactic) Execute() {
 
 func (l LuJiangRiverOverArmouredTactic) IsTriggerPrepare() bool {
 	return false
+}
+
+func (a LuJiangRiverOverArmouredTactic) SetTriggerPrepare(triggerPrepare bool) {
 }

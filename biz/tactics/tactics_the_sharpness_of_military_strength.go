@@ -6,9 +6,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//兵锋
-//使自己及友军单体进入连击（每回合可以普通攻击2次）状态，持续1回合
-//35%
+// 兵锋
+// 使自己及友军单体进入连击（每回合可以普通攻击2次）状态，持续1回合
+// 35%
 type TheSharpnessOfMilitaryStrengthTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -63,4 +63,7 @@ func (t TheSharpnessOfMilitaryStrengthTactic) Execute() {
 
 func (t TheSharpnessOfMilitaryStrengthTactic) IsTriggerPrepare() bool {
 	return false
+}
+
+func (a TheSharpnessOfMilitaryStrengthTactic) SetTriggerPrepare(triggerPrepare bool) {
 }

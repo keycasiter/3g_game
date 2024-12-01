@@ -94,3 +94,6 @@ func (j JinfanArmyHundredFeathersTactic) Execute() {
 func (j JinfanArmyHundredFeathersTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a JinfanArmyHundredFeathersTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

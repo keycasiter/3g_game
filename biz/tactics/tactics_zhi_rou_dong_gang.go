@@ -229,3 +229,6 @@ func (a ZhiRouDongGangTactic) Execute() {
 func (a ZhiRouDongGangTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ZhiRouDongGangTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

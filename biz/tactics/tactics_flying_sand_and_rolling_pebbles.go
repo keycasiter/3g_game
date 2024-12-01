@@ -196,3 +196,6 @@ func (f FlyingSandAndRollingPebblesTactic) Execute() {
 func (f FlyingSandAndRollingPebblesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FlyingSandAndRollingPebblesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

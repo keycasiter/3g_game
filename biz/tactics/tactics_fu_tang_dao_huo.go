@@ -112,3 +112,6 @@ func (a FuTangDaoHuoTactic) Execute() {
 func (a FuTangDaoHuoTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FuTangDaoHuoTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

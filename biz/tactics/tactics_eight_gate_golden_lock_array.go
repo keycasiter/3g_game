@@ -143,3 +143,6 @@ func (e EightGateGoldenLockArrayTactic) SupportArmTypes() []consts.ArmType {
 func (e EightGateGoldenLockArrayTactic) Execute() {
 	return
 }
+
+func (a EightGateGoldenLockArrayTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

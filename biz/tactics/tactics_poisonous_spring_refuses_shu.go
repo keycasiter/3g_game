@@ -233,3 +233,6 @@ func (p PoisonousSpringRefusesShuTactic) Execute() {
 func (p PoisonousSpringRefusesShuTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a PoisonousSpringRefusesShuTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

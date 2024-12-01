@@ -176,3 +176,6 @@ func (n NanManQuKuiTactic) Execute() {
 func (n NanManQuKuiTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a NanManQuKuiTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

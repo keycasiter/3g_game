@@ -130,3 +130,6 @@ func (h HoldTheArmyWithDeterminationAndDeterminationTactic) Execute() {
 func (h HoldTheArmyWithDeterminationAndDeterminationTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HoldTheArmyWithDeterminationAndDeterminationTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -132,3 +132,6 @@ func (a HuiZhiLanXinTactic) Execute() {
 func (a HuiZhiLanXinTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HuiZhiLanXinTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

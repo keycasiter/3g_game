@@ -137,3 +137,6 @@ func (t TwelveWonderfulStrategiesTactic) Execute() {
 func (t TwelveWonderfulStrategiesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TwelveWonderfulStrategiesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

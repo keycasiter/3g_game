@@ -131,3 +131,6 @@ func (v VigorousAndWalkTactic) Execute() {
 func (v VigorousAndWalkTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a VigorousAndWalkTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -119,3 +119,6 @@ func (s StrongWindAndSwiftRainTactic) Execute() {
 func (s StrongWindAndSwiftRainTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a StrongWindAndSwiftRainTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

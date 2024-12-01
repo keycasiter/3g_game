@@ -217,3 +217,6 @@ func (b BraveAmbitionTactic) SupportArmTypes() []consts.ArmType {
 func (b BraveAmbitionTactic) Execute() {
 	return
 }
+
+func (a BraveAmbitionTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

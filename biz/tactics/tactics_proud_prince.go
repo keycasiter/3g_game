@@ -227,3 +227,6 @@ func (p ProudPrinceTactic) Execute() {
 func (p ProudPrinceTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ProudPrinceTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

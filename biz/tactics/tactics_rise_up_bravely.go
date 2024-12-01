@@ -125,3 +125,6 @@ func (r RiseUpBravelyTactic) Execute() {
 func (r RiseUpBravelyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RiseUpBravelyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

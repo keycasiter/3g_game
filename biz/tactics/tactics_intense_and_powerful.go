@@ -182,3 +182,6 @@ func (i IntenseAndPowerfulTactic) Execute() {
 func (i IntenseAndPowerfulTactic) IsTriggerPrepare() bool {
 	return i.isTriggerPrepare
 }
+
+func (a IntenseAndPowerfulTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

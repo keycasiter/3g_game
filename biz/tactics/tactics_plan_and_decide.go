@@ -105,3 +105,6 @@ func (p PlanAndDecideTactic) Execute() {
 func (p PlanAndDecideTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a PlanAndDecideTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

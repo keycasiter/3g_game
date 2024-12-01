@@ -109,3 +109,6 @@ func (w WorkOutMeasuresToSuitLocalConditionsTactic) Execute() {
 func (w WorkOutMeasuresToSuitLocalConditionsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WorkOutMeasuresToSuitLocalConditionsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

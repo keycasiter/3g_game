@@ -159,3 +159,6 @@ func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) Execute() {
 func (b BreakingThroughTheFormationAndDestroyingTheFirmTactic) IsTriggerPrepare() bool {
 	return b.isTriggerPrepare
 }
+
+func (a BreakingThroughTheFormationAndDestroyingTheFirmTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -105,3 +105,6 @@ func (s SelfHealingTactic) Execute() {
 func (s SelfHealingTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SelfHealingTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

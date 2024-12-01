@@ -153,3 +153,6 @@ func (s SoundOfTheWindAndTheCryOfTheStorkTactic) Execute() {
 func (s SoundOfTheWindAndTheCryOfTheStorkTactic) IsTriggerPrepare() bool {
 	return s.isTriggerPrepare
 }
+
+func (a SoundOfTheWindAndTheCryOfTheStorkTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

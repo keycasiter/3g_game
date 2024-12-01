@@ -156,3 +156,6 @@ func (p PromiseToKeepWithoutSurrenderTactic) Execute() {
 func (p PromiseToKeepWithoutSurrenderTactic) IsTriggerPrepare() bool {
 	return p.isTriggerPrepare
 }
+
+func (a PromiseToKeepWithoutSurrenderTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

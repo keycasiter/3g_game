@@ -411,7 +411,8 @@ const (
 	BattleAction_DebuffEffectEnd                       //施加负面效果结束
 	BattleAction_BuffEffect                            //施加正面效果开始
 	BattleAction_BuffEffectEnd                         //施加正面效果结束
-	BattleAction_Resume                                //恢复兵力
+	BattleAction_Resume                                //恢复兵力开始
+	BattleAction_ResumeEnd                             //恢复兵力结束
 
 	//遭受伤害
 	BattleAction_SufferTactic            //遭受战法攻击开始

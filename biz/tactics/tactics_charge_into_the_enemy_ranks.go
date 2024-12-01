@@ -147,3 +147,6 @@ func (c ChargeIntoTheEnemyRanksTactic) Execute() {
 func (c ChargeIntoTheEnemyRanksTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ChargeIntoTheEnemyRanksTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

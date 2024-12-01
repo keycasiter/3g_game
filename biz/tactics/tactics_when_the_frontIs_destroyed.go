@@ -105,3 +105,6 @@ func (w WhenTheFrontIsDestroyedTactic) Execute() {
 func (w WhenTheFrontIsDestroyedTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WhenTheFrontIsDestroyedTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

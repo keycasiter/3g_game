@@ -147,3 +147,6 @@ func (c CorporealIronWallTactic) Execute() {
 func (c CorporealIronWallTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a CorporealIronWallTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

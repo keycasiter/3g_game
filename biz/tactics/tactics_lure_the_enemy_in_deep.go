@@ -164,3 +164,6 @@ func (l LureTheEnemyInDeepTactic) Execute() {
 func (l LureTheEnemyInDeepTactic) IsTriggerPrepare() bool {
 	return l.isTriggerPrepare
 }
+
+func (a LureTheEnemyInDeepTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -185,3 +185,6 @@ func (i InterlockedStratagemsTactic) Execute() {
 		return triggerResp
 	})
 }
+
+func (a InterlockedStratagemsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

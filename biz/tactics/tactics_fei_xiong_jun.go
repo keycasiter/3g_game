@@ -230,3 +230,6 @@ func (a FeiXiongJunTactic) Execute() {
 func (a FeiXiongJunTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FeiXiongJunTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

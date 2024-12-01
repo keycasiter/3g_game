@@ -141,3 +141,6 @@ func (s StealingLuckAndRidingPetsTactic) Execute() {
 func (s StealingLuckAndRidingPetsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a StealingLuckAndRidingPetsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -119,3 +119,6 @@ func (i InfantryCitySelfDefenseTactic) Execute() {
 func (i InfantryCitySelfDefenseTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a InfantryCitySelfDefenseTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -129,3 +129,6 @@ func (t ThePostureOfAPhoenixWithAChickAndASweetPotatoTactic) Execute() {
 func (t ThePostureOfAPhoenixWithAChickAndASweetPotatoTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ThePostureOfAPhoenixWithAChickAndASweetPotatoTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

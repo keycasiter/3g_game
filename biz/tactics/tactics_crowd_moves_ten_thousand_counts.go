@@ -148,3 +148,6 @@ func (c CrowdMovesTenThousandCountsTactic) Execute() {
 func (c CrowdMovesTenThousandCountsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a CrowdMovesTenThousandCountsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -165,3 +165,6 @@ func (a YuanRanNanCeTactic) Execute() {
 func (a YuanRanNanCeTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a YuanRanNanCeTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -208,3 +208,6 @@ func (e EstablishingNameThroughGenerationsTactic) Execute() {
 func (e EstablishingNameThroughGenerationsTactic) IsTriggerPrepare() bool {
 	return e.isTriggerPrepare
 }
+
+func (a EstablishingNameThroughGenerationsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

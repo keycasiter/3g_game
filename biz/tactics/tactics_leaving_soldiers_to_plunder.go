@@ -106,3 +106,6 @@ func (l LeavingSoldiersToPlunderTactic) Execute() {
 func (l LeavingSoldiersToPlunderTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a LeavingSoldiersToPlunderTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

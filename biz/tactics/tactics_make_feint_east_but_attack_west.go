@@ -139,3 +139,6 @@ func (m MakeFeintToTheEastButAttackInTheWestTactic) Execute() {
 func (m MakeFeintToTheEastButAttackInTheWestTactic) IsTriggerPrepare() bool {
 	return m.isTriggerPrepare
 }
+
+func (a MakeFeintToTheEastButAttackInTheWestTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -64,3 +64,6 @@ func (b BraveAndBattleWiseTactic) Execute() {
 func (b BraveAndBattleWiseTactic) IsTriggerPrepare() bool {
 	return b.isTriggerPrepare
 }
+
+func (a BraveAndBattleWiseTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

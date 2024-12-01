@@ -110,3 +110,6 @@ func (j JiangdongTigerTactic) Execute() {
 func (j JiangdongTigerTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a JiangdongTigerTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

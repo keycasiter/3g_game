@@ -124,3 +124,6 @@ func (t TraitorInTroubledTimesTactic) SupportArmTypes() []consts.ArmType {
 		consts.ArmType_Apparatus,
 	}
 }
+
+func (a TraitorInTroubledTimesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

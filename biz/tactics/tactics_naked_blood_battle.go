@@ -164,3 +164,6 @@ func (n NakedBloodBattleTactic) Execute() {
 func (n NakedBloodBattleTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a NakedBloodBattleTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

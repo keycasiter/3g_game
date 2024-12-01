@@ -134,3 +134,6 @@ func (g GoldenPillSecretTechniqueTactic) Execute() {
 func (g GoldenPillSecretTechniqueTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a GoldenPillSecretTechniqueTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

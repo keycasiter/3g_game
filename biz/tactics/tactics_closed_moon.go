@@ -126,3 +126,6 @@ func (c ClosedMoonTactic) Execute() {
 func (c ClosedMoonTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ClosedMoonTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -94,3 +94,6 @@ func (o OverwhelmingAllDirectionsTactic) Execute() {
 func (o OverwhelmingAllDirectionsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a OverwhelmingAllDirectionsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

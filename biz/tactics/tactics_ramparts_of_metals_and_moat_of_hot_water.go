@@ -160,3 +160,6 @@ func (r RampartsOfMetalsAndAMoatOfHotWaterTactic) Execute() {
 func (r RampartsOfMetalsAndAMoatOfHotWaterTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RampartsOfMetalsAndAMoatOfHotWaterTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

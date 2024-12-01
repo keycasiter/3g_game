@@ -163,3 +163,6 @@ func (i InjuryOnOneselfTactic) Execute() {
 func (i InjuryOnOneselfTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a InjuryOnOneselfTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

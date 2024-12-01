@@ -163,3 +163,6 @@ func (l LectureFieldTactic) SupportArmTypes() []consts.ArmType {
 func (l LectureFieldTactic) Execute() {
 
 }
+
+func (a LectureFieldTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

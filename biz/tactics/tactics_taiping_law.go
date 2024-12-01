@@ -135,3 +135,6 @@ func (t TaipingLawTactic) SupportArmTypes() []consts.ArmType {
 func (t TaipingLawTactic) Execute() {
 	return
 }
+
+func (a TaipingLawTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

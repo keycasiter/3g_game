@@ -144,3 +144,6 @@ func (q QingZhouSoldierTactic) Execute() {
 func (q QingZhouSoldierTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a QingZhouSoldierTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

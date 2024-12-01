@@ -202,3 +202,6 @@ func (s SuppressChokesAndPreventRefusalsTactic) SupportArmTypes() []consts.ArmTy
 		consts.ArmType_Apparatus,
 	}
 }
+
+func (a SuppressChokesAndPreventRefusalsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

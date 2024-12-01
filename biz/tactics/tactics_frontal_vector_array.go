@@ -113,3 +113,6 @@ func (f FrontalVectorArrayTactic) SupportArmTypes() []consts.ArmType {
 func (f FrontalVectorArrayTactic) Execute() {
 	return
 }
+
+func (a FrontalVectorArrayTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

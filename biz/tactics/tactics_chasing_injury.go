@@ -95,3 +95,6 @@ func (c ChasingInjuryTactic) Execute() {
 func (c ChasingInjuryTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ChasingInjuryTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

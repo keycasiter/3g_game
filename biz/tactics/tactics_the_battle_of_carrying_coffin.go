@@ -118,3 +118,6 @@ func (t TheBattleOfCarryingCoffinTactic) Execute() {
 func (t TheBattleOfCarryingCoffinTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TheBattleOfCarryingCoffinTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -94,3 +94,6 @@ func (s SlaughterMeatOnTableTactic) Execute() {
 func (s SlaughterMeatOnTableTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SlaughterMeatOnTableTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

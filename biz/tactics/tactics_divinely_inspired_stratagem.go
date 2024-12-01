@@ -152,3 +152,6 @@ func (d DivinelyInspiredStratagemTactic) Execute() {
 func (d DivinelyInspiredStratagemTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DivinelyInspiredStratagemTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

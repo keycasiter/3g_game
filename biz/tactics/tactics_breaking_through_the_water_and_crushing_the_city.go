@@ -176,3 +176,6 @@ func (b BreakingThroughTheWaterAndCrushingTheCityTactic) tacticTrigger(currentGe
 		}
 	}
 }
+
+func (a BreakingThroughTheWaterAndCrushingTheCityTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

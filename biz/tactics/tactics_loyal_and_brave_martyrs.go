@@ -200,3 +200,6 @@ func (l LoyalAndBraveMartyrsTactic) Execute() {
 func (l LoyalAndBraveMartyrsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a LoyalAndBraveMartyrsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

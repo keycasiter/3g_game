@@ -143,3 +143,6 @@ func (a WeiWuBingZhaoTactic) Execute() {
 func (a WeiWuBingZhaoTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WeiWuBingZhaoTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

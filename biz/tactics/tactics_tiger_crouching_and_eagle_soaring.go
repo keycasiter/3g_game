@@ -124,3 +124,6 @@ func (t TigerCrouchingAndEagleSoaringTactic) Execute() {
 func (t TigerCrouchingAndEagleSoaringTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TigerCrouchingAndEagleSoaringTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

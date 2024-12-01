@@ -212,3 +212,6 @@ func (f FireJointVentureTactic) Execute() {
 func (f FireJointVentureTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FireJointVentureTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

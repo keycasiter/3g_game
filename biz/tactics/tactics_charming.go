@@ -140,3 +140,6 @@ func (c CharmingTactic) SupportArmTypes() []consts.ArmType {
 		consts.ArmType_Apparatus,
 	}
 }
+
+func (a CharmingTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

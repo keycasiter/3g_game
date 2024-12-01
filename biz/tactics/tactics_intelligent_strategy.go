@@ -124,3 +124,6 @@ func (i IntelligentStrategyTactic) Execute() {
 func (i IntelligentStrategyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a IntelligentStrategyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

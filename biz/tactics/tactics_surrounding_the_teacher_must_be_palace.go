@@ -168,3 +168,6 @@ func (s SurroundingTheTeacherMustBePalaceTactic) Execute() {
 func (s SurroundingTheTeacherMustBePalaceTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SurroundingTheTeacherMustBePalaceTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

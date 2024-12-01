@@ -136,3 +136,6 @@ func (a AnnihilateInOneFellSwoopTactic) Execute() {
 func (a AnnihilateInOneFellSwoopTactic) IsTriggerPrepare() bool {
 	return a.isTriggerPrepare
 }
+
+func (a AnnihilateInOneFellSwoopTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

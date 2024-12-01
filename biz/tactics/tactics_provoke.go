@@ -97,3 +97,6 @@ func (p ProvokeTactic) Execute() {
 func (p ProvokeTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ProvokeTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

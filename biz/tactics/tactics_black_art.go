@@ -153,3 +153,6 @@ func (b BlackArtTactic) Execute() {
 func (b BlackArtTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BlackArtTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

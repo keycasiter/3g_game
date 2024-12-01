@@ -165,3 +165,6 @@ func (h HelpingThePoorAndGivingGenerouslyTactic) Execute() {
 func (h HelpingThePoorAndGivingGenerouslyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HelpingThePoorAndGivingGenerouslyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

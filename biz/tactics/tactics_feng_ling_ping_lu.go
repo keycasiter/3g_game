@@ -148,3 +148,6 @@ func (a FengLingPingLuTactic) Execute() {
 func (a FengLingPingLuTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FengLingPingLuTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

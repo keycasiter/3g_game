@@ -144,3 +144,6 @@ func (b BlazingWildfireTactic) Execute() {
 		}
 	}
 }
+
+func (a BlazingWildfireTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

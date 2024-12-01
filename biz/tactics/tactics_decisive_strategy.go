@@ -131,3 +131,6 @@ func (d DecisiveStrategyTactic) Execute() {
 func (d DecisiveStrategyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DecisiveStrategyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

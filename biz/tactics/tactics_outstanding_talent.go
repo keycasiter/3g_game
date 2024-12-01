@@ -105,3 +105,6 @@ func (o OutstandingTalentTactic) Execute() {
 func (o OutstandingTalentTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a OutstandingTalentTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

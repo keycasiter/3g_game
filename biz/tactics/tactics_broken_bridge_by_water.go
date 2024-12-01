@@ -212,3 +212,6 @@ func (b BrokenBridgeByWaterTactic) Execute() {
 func (b BrokenBridgeByWaterTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BrokenBridgeByWaterTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

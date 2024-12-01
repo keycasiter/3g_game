@@ -115,3 +115,6 @@ func (a OurWillsUniteLikeAFortressTactic) Execute() {
 func (a OurWillsUniteLikeAFortressTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a OurWillsUniteLikeAFortressTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

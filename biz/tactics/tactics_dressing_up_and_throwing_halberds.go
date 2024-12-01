@@ -114,3 +114,6 @@ func (d DressingUpAndThrowingHalberdsTactic) Execute() {
 func (d DressingUpAndThrowingHalberdsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DressingUpAndThrowingHalberdsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

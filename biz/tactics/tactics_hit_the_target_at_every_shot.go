@@ -130,3 +130,6 @@ func (h HitTheTargetAtEveryShotTactic) Execute() {
 func (h HitTheTargetAtEveryShotTactic) IsTriggerPrepare() bool {
 	return h.isTriggerPrepare
 }
+
+func (a HitTheTargetAtEveryShotTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

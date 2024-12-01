@@ -129,3 +129,6 @@ func (i IronHorseDriveTactic) Execute() {
 func (i IronHorseDriveTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a IronHorseDriveTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -133,3 +133,6 @@ func (a AncientEvilComesTactic) Execute() {
 func (a AncientEvilComesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a AncientEvilComesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

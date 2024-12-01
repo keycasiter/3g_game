@@ -214,3 +214,6 @@ func (d DeliverTheCountryFromDistressTactic) Execute() {
 func (d DeliverTheCountryFromDistressTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DeliverTheCountryFromDistressTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

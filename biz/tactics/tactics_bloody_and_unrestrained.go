@@ -84,3 +84,6 @@ func (b BloodyAndUnrestrainedTactic) Execute() {
 func (b BloodyAndUnrestrainedTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BloodyAndUnrestrainedTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

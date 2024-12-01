@@ -142,3 +142,6 @@ func (a MiJiZhuNiTactic) Execute() {
 func (a MiJiZhuNiTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a MiJiZhuNiTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

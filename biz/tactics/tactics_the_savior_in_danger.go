@@ -135,3 +135,6 @@ func (a TheSaviorInDangerTactic) Execute() {
 func (a TheSaviorInDangerTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TheSaviorInDangerTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

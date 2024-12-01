@@ -93,3 +93,6 @@ func (h HiddenMysteryTactic) Execute() {
 func (h HiddenMysteryTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HiddenMysteryTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

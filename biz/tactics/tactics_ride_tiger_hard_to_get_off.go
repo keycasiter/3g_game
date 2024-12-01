@@ -141,3 +141,6 @@ func (r RideTigerHardToGetOffTactic) Execute() {
 func (r RideTigerHardToGetOffTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RideTigerHardToGetOffTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

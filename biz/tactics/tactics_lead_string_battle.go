@@ -99,3 +99,6 @@ func (l LeadStringBattleTactic) Execute() {
 func (l LeadStringBattleTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a LeadStringBattleTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

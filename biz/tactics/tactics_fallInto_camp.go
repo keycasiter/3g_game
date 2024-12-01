@@ -116,3 +116,6 @@ func (f FallIntoCampTactic) Execute() {
 func (f FallIntoCampTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FallIntoCampTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

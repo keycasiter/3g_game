@@ -89,3 +89,6 @@ func (d ShangbingZhanmouTactic) Execute() {
 func (d ShangbingZhanmouTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ShangbingZhanmouTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

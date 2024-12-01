@@ -142,3 +142,6 @@ func (a WanJunDuoShuaiTactic) Execute() {
 func (a WanJunDuoShuaiTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WanJunDuoShuaiTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

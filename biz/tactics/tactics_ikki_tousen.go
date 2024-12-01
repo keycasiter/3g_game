@@ -92,3 +92,6 @@ func (i IkkiTousenTactic) Execute() {
 func (i IkkiTousenTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a IkkiTousenTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

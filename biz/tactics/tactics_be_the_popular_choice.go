@@ -120,3 +120,6 @@ func (a BeThePopularChoiceTactic) Execute() {
 func (a BeThePopularChoiceTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BeThePopularChoiceTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

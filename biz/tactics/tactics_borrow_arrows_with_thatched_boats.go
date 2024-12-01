@@ -162,3 +162,6 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 	}
 	return
 }
+
+func (a BorrowArrowsWithThatchedBoatsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

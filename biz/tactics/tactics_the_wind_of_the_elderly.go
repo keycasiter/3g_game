@@ -83,3 +83,6 @@ func (t TheWindOfTheElderlyTactic) SupportArmTypes() []consts.ArmType {
 
 func (t TheWindOfTheElderlyTactic) Execute() {
 }
+
+func (a TheWindOfTheElderlyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

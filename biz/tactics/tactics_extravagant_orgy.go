@@ -147,3 +147,6 @@ func (e ExtravagantOrgyTactic) Execute() {
 func (e ExtravagantOrgyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ExtravagantOrgyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

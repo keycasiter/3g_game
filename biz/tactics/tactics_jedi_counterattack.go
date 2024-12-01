@@ -110,3 +110,6 @@ func (j JediCounterattackTactic) Execute() {
 func (j JediCounterattackTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a JediCounterattackTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

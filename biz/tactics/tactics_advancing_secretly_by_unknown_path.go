@@ -141,3 +141,6 @@ func (a AdvancingSecretlyByUnknownPathTactic) Execute() {
 func (a AdvancingSecretlyByUnknownPathTactic) IsTriggerPrepare() bool {
 	return a.isTriggerPrepare
 }
+
+func (a AdvancingSecretlyByUnknownPathTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

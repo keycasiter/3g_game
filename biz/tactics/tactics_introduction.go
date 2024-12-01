@@ -9,9 +9,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/util"
 )
 
-//进言
-//主动 35%
-//使友军单体主动战法发动几率提高8%，并提高40点智力，持续2回合
+// 进言
+// 主动 35%
+// 使友军单体主动战法发动几率提高8%，并提高40点智力，持续2回合
 type IntroductionTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -118,4 +118,7 @@ func (i IntroductionTactic) Execute() {
 
 func (i IntroductionTactic) IsTriggerPrepare() bool {
 	return false
+}
+
+func (a IntroductionTactic) SetTriggerPrepare(triggerPrepare bool) {
 }

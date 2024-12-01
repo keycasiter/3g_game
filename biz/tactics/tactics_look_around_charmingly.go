@@ -176,3 +176,6 @@ func (l LookAroundCharminglyTactic) Execute() {
 func (l LookAroundCharminglyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a LookAroundCharminglyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

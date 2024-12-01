@@ -117,3 +117,6 @@ func (h HiddenDragonArrayTactic) Execute() {
 func (h HiddenDragonArrayTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HiddenDragonArrayTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

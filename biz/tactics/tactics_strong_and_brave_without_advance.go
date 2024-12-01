@@ -156,3 +156,6 @@ func (s StrongAndBraveWithoutAdvanceTactic) Execute() {
 func (s StrongAndBraveWithoutAdvanceTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a StrongAndBraveWithoutAdvanceTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -107,3 +107,6 @@ func (b BeFullyEquippedForTactic) Execute() {
 func (b BeFullyEquippedForTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BeFullyEquippedForTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

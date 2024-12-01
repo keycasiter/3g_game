@@ -143,3 +143,6 @@ func (w WuFengArrayTactic) Execute() {
 func (w WuFengArrayTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WuFengArrayTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

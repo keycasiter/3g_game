@@ -120,3 +120,6 @@ func (r RaidInFormationTactic) Execute() {
 func (r RaidInFormationTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RaidInFormationTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

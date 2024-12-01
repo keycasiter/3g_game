@@ -102,3 +102,6 @@ func (b BowWaistConcubineTactic) Execute() {
 func (b BowWaistConcubineTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BowWaistConcubineTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -125,3 +125,6 @@ func (g GallantTactic) SupportArmTypes() []consts.ArmType {
 func (g GallantTactic) Execute() {
 	return
 }
+
+func (a GallantTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -102,3 +102,6 @@ func (a GongBuTangJuanTactic) Execute() {
 func (a GongBuTangJuanTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a GongBuTangJuanTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -104,3 +104,6 @@ func (p PeerlessOrMatchlessBraveryOrValourTactic) Execute() {
 func (p PeerlessOrMatchlessBraveryOrValourTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a PeerlessOrMatchlessBraveryOrValourTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -119,3 +119,6 @@ func (b BreakingThroughTheArmyAndWinningVictoriesTactic) Execute() {
 func (b BreakingThroughTheArmyAndWinningVictoriesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BreakingThroughTheArmyAndWinningVictoriesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

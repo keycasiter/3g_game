@@ -139,3 +139,6 @@ func (m MarchIntoTactic) Execute() {
 func (m MarchIntoTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a MarchIntoTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

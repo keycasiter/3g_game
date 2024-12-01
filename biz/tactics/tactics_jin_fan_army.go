@@ -156,3 +156,6 @@ func (j JinFanArmyTactic) Execute() {
 func (j JinFanArmyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a JinFanArmyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

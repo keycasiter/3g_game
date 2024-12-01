@@ -94,3 +94,6 @@ func (m MilitaryStrategyForFormAircraftTactic) Execute() {
 func (m MilitaryStrategyForFormAircraftTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a MilitaryStrategyForFormAircraftTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

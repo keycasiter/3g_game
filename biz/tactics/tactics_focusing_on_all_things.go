@@ -153,3 +153,6 @@ func (f FocusingOnAllThingsTactic) Execute() {
 func (f FocusingOnAllThingsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FocusingOnAllThingsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -31,8 +31,18 @@ type ResumeParams struct {
 // @resumeNum 恢复兵力
 func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSoldierNum int64) {
 	defer func() {
-		//恢复结束触发器
+		//受到恢复结束触发器
 		if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferResumeEnd]; okk {
+			for _, f := range funcs {
+				params := &vo.TacticsTriggerParams{
+					SufferResumeGeneral: param.SufferGeneral,
+					CurrentResume:       param.ResumeNum,
+				}
+				f(params)
+			}
+		}
+		//恢复结束触发器
+		if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_ResumeEnd]; okk {
 			for _, f := range funcs {
 				params := &vo.TacticsTriggerParams{
 					SufferResumeGeneral: param.SufferGeneral,
@@ -53,7 +63,7 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 	if param.SufferGeneral == nil {
 		return param.ResumeNum, param.SufferGeneral.SoldierNum, param.SufferGeneral.SoldierNum
 	}
-	if param.TacticId == 0 || param.WarBookType == 0 {
+	if param.TacticId == 0 && param.WarBookType == 0 {
 		panic("TacticId or WarbookId is nil")
 	}
 
@@ -69,8 +79,18 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		return 0, param.SufferGeneral.SoldierNum, param.SufferGeneral.SoldierNum
 	}
 
-	//恢复开始触发器
+	//受到恢复开始触发器
 	if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferResume]; okk {
+		for _, f := range funcs {
+			params := &vo.TacticsTriggerParams{
+				SufferResumeGeneral: param.SufferGeneral,
+				CurrentResume:       param.ResumeNum,
+			}
+			f(params)
+		}
+	}
+	//恢复结束触发器
+	if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_Resume]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
 				SufferResumeGeneral: param.SufferGeneral,

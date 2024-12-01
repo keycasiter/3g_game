@@ -140,3 +140,6 @@ func (r RefinedStrategiesTactic) Execute() {
 func (r RefinedStrategiesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RefinedStrategiesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

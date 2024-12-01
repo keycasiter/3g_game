@@ -2,6 +2,7 @@ package tactics
 
 import (
 	"context"
+
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/model/vo"
 	_interface "github.com/keycasiter/3g_game/biz/tactics/interface"
@@ -124,4 +125,7 @@ func (a AweInspiringTactic) executeTactic(ctx context.Context, enemyGeneral *vo.
 
 func (a AweInspiringTactic) IsTriggerPrepare() bool {
 	return false
+}
+
+func (a AweInspiringTactic) SetTriggerPrepare(triggerPrepare bool) {
 }

@@ -114,3 +114,6 @@ func (u UndercurrentSurgeTactic) Execute() {
 func (u UndercurrentSurgeTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a UndercurrentSurgeTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -144,3 +144,6 @@ func (n NeverRetreatFromDeadBattleTactic) Execute() {
 func (n NeverRetreatFromDeadBattleTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a NeverRetreatFromDeadBattleTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

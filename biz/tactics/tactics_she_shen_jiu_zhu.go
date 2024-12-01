@@ -108,3 +108,6 @@ func (a SheShenJiuZhuTactic) Execute() {
 func (a SheShenJiuZhuTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SheShenJiuZhuTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

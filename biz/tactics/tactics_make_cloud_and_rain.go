@@ -165,3 +165,6 @@ func (m MakeCloudAndRainTactic) Execute() {
 func (m MakeCloudAndRainTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a MakeCloudAndRainTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

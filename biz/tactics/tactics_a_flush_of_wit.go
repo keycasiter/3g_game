@@ -137,3 +137,6 @@ func (a AFlushOfWitTactic) Execute() {
 func (a AFlushOfWitTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a AFlushOfWitTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

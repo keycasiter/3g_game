@@ -149,3 +149,6 @@ func (t TenThousandArrowsShotAtOnceTactic) Execute() {
 func (t TenThousandArrowsShotAtOnceTactic) IsTriggerPrepare() bool {
 	return t.isTriggerPrepare
 }
+
+func (a TenThousandArrowsShotAtOnceTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

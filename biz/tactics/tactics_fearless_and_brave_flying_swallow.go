@@ -91,3 +91,6 @@ func (f FearlessAndBraveFlyingSwallowTactic) Execute() {
 func (f FearlessAndBraveFlyingSwallowTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FearlessAndBraveFlyingSwallowTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

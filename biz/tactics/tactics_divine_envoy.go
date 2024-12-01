@@ -141,3 +141,6 @@ func (d DivineEnvoyTactic) Execute() {
 func (d DivineEnvoyTactic) IsTriggerPrepare() bool {
 	return d.isTriggerPrepare
 }
+
+func (a DivineEnvoyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

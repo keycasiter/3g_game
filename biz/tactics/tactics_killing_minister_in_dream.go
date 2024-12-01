@@ -125,3 +125,6 @@ func (k KillingMinisterInDreamTactic) SupportArmTypes() []consts.ArmType {
 func (k KillingMinisterInDreamTactic) Execute() {
 
 }
+
+func (a KillingMinisterInDreamTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

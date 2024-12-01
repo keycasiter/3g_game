@@ -77,3 +77,6 @@ func (a AvoidTheSolidAndStrikeTheWeakTactic) Execute() {
 func (a AvoidTheSolidAndStrikeTheWeakTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a AvoidTheSolidAndStrikeTheWeakTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

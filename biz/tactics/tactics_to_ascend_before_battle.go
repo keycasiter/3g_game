@@ -108,3 +108,6 @@ func (t ToAscendBeforeBattleTactic) Execute() {
 func (t ToAscendBeforeBattleTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ToAscendBeforeBattleTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

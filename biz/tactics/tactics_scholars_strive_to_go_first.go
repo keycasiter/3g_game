@@ -103,3 +103,6 @@ func (s ScholarsStriveToGoFirstTactic) Execute() {
 func (s ScholarsStriveToGoFirstTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ScholarsStriveToGoFirstTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

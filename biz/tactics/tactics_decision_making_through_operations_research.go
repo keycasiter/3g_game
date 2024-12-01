@@ -118,3 +118,6 @@ func (d DecisionMakingThroughOperationsResearchTactic) Execute() {
 func (d DecisionMakingThroughOperationsResearchTactic) IsTriggerPrepare() bool {
 	return d.isTriggerPrepare
 }
+
+func (a DecisionMakingThroughOperationsResearchTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

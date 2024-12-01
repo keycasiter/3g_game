@@ -97,3 +97,6 @@ func (h HundredStrategiesAndManyStrategiesTactic) Execute() {
 func (h HundredStrategiesAndManyStrategiesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HundredStrategiesAndManyStrategiesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

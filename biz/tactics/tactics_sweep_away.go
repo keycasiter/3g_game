@@ -95,3 +95,6 @@ func (s SweepAwayTactic) Execute() {
 func (s SweepAwayTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SweepAwayTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

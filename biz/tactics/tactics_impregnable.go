@@ -141,3 +141,6 @@ func (i ImpregnableTactic) Execute() {
 func (i ImpregnableTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ImpregnableTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

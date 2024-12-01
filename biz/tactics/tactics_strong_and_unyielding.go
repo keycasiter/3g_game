@@ -103,3 +103,6 @@ func (s StrongAndUnyieldingTactic) Execute() {
 func (s StrongAndUnyieldingTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a StrongAndUnyieldingTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

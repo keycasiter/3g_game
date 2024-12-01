@@ -106,3 +106,6 @@ func (t ToSpreadRumorsAndProclaimPowerTactic) Execute() {
 func (t ToSpreadRumorsAndProclaimPowerTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ToSpreadRumorsAndProclaimPowerTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

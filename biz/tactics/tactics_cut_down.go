@@ -78,3 +78,6 @@ func (c CutDownTactic) Execute() {
 func (c CutDownTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a CutDownTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

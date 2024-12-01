@@ -127,3 +127,6 @@ func (f FakeBooksAlternateWithEachOtherTactic) Execute() {
 func (f FakeBooksAlternateWithEachOtherTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FakeBooksAlternateWithEachOtherTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

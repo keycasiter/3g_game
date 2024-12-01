@@ -130,3 +130,6 @@ func (s ShockingFourRealmsTactic) Execute() {
 func (s ShockingFourRealmsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ShockingFourRealmsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

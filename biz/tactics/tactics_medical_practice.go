@@ -132,3 +132,6 @@ func (m MedicalPracticeTactic) Execute() {
 func (m MedicalPracticeTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a MedicalPracticeTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

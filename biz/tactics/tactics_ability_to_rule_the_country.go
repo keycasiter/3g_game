@@ -163,3 +163,5 @@ func (a AbilityToRuleTheCountryTactic) Execute() {
 func (a AbilityToRuleTheCountryTactic) IsTriggerPrepare() bool {
 	return false
 }
+func (a AbilityToRuleTheCountryTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

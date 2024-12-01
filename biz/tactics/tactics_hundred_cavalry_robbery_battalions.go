@@ -95,3 +95,6 @@ func (h HundredCavalryRobberyBattalionsTactic) Execute() {
 func (h HundredCavalryRobberyBattalionsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HundredCavalryRobberyBattalionsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

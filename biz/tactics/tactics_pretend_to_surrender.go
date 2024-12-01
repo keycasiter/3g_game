@@ -141,3 +141,6 @@ func (p PretendToSurrenderTactic) Execute() {
 func (p PretendToSurrenderTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a PretendToSurrenderTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -173,3 +173,6 @@ func (t ThreePotentialArrayTactic) Execute() {
 func (t ThreePotentialArrayTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ThreePotentialArrayTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

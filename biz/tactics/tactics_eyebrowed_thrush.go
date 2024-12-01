@@ -80,3 +80,6 @@ func (e EyebrowedThrushTactic) Execute() {
 func (e EyebrowedThrushTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a EyebrowedThrushTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

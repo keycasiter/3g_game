@@ -153,3 +153,6 @@ func (t ThunderStruckTactic) Execute() {
 func (t ThunderStruckTactic) IsTriggerPrepare() bool {
 	return t.isTriggerPrepare
 }
+
+func (a ThunderStruckTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

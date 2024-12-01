@@ -118,3 +118,6 @@ func (t TravelingAloneToFightTactic) Execute() {
 func (t TravelingAloneToFightTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TravelingAloneToFightTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

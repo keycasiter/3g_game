@@ -153,3 +153,6 @@ func (b BenevolentAndVirtuousThroughoutTheWorldTactic) Execute() {
 func (b BenevolentAndVirtuousThroughoutTheWorldTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BenevolentAndVirtuousThroughoutTheWorldTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

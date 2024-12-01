@@ -155,3 +155,6 @@ func (b BeautyWhichOverthrowsStatesAndCitiesTactic) Execute() {
 func (b BeautyWhichOverthrowsStatesAndCitiesTactic) IsTriggerPrepare() bool {
 	return b.isTriggerPrepare
 }
+
+func (a BeautyWhichOverthrowsStatesAndCitiesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

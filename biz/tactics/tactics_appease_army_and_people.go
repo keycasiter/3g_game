@@ -193,3 +193,6 @@ func (a AppeaseArmyAndPeopleTactic) SupportArmTypes() []consts.ArmType {
 		consts.ArmType_Apparatus,
 	}
 }
+
+func (a AppeaseArmyAndPeopleTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

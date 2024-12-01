@@ -107,3 +107,6 @@ func (t ToKeepAndBeFirmTactic) SupportArmTypes() []consts.ArmType {
 func (t ToKeepAndBeFirmTactic) Execute() {
 	return
 }
+
+func (a ToKeepAndBeFirmTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

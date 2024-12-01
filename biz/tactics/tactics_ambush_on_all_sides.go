@@ -161,3 +161,6 @@ func (a AmbushOnAllSidesTactic) Execute() {
 func (a AmbushOnAllSidesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a AmbushOnAllSidesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -174,3 +174,6 @@ func (m MachineStrategyVerticalAndHorizontalTactic) Execute() {
 func (m MachineStrategyVerticalAndHorizontalTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a MachineStrategyVerticalAndHorizontalTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

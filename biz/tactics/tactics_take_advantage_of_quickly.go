@@ -104,3 +104,6 @@ func (t TakeAdvantageOfQuicklyTactic) Execute() {
 func (t TakeAdvantageOfQuicklyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TakeAdvantageOfQuicklyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

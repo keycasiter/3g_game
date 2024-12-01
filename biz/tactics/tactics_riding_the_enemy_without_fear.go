@@ -157,3 +157,6 @@ func (r RidingTheEnemyWithoutFearTactic) Execute() {
 func (r RidingTheEnemyWithoutFearTactic) IsTriggerPrepare() bool {
 	return r.isTriggerPrepare
 }
+
+func (a RidingTheEnemyWithoutFearTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

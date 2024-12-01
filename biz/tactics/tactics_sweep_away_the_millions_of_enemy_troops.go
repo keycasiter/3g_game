@@ -110,3 +110,6 @@ func (s SweepAwayTheMillionsOfEnemyTroopsTactic) Execute() {
 func (s SweepAwayTheMillionsOfEnemyTroopsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SweepAwayTheMillionsOfEnemyTroopsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

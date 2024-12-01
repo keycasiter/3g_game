@@ -108,3 +108,6 @@ func (t ToBurnBarracksTactic) Execute() {
 func (t ToBurnBarracksTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ToBurnBarracksTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -106,3 +106,6 @@ func (t TigerIdiotTactic) Execute() {
 func (t TigerIdiotTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TigerIdiotTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

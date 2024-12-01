@@ -140,3 +140,6 @@ func (b BraveSpearHeroicPoseTactic) Execute() {
 func (b BraveSpearHeroicPoseTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BraveSpearHeroicPoseTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

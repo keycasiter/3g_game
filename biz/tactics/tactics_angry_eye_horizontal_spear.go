@@ -118,3 +118,6 @@ func (a AngryEyeHorizontalSpearTactic) Execute() {
 func (a AngryEyeHorizontalSpearTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a AngryEyeHorizontalSpearTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

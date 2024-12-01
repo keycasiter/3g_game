@@ -117,3 +117,6 @@ func (p PoisonedWineTactic) Execute() {
 func (p PoisonedWineTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a PoisonedWineTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

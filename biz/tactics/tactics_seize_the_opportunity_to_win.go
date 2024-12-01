@@ -214,3 +214,6 @@ func (s SeizeTheOpportunityToWinTactic) Execute() {
 func (s SeizeTheOpportunityToWinTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SeizeTheOpportunityToWinTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

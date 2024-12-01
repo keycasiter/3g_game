@@ -135,3 +135,6 @@ func (t TakeBySurpriseTactic) Execute() {
 func (t TakeBySurpriseTactic) IsTriggerPrepare() bool {
 	return t.isTriggerPrepare
 }
+
+func (a TakeBySurpriseTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

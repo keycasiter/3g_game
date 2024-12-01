@@ -149,3 +149,6 @@ func (i InChaosNotConfusedTactic) Execute() {
 func (i InChaosNotConfusedTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a InChaosNotConfusedTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

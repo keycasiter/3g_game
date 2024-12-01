@@ -99,3 +99,6 @@ func (w WindAssistedFireTactic) Execute() {
 func (w WindAssistedFireTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WindAssistedFireTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -104,3 +104,6 @@ func (b BloodBladeBattleTactic) Execute() {
 func (b BloodBladeBattleTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BloodBladeBattleTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

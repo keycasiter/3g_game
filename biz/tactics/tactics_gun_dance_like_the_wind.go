@@ -178,3 +178,6 @@ func (g GunDanceLikeTheWindTactic) Execute() {
 func (g GunDanceLikeTheWindTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a GunDanceLikeTheWindTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

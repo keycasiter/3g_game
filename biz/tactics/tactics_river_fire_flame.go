@@ -119,3 +119,6 @@ func (r RiverFireFlameTactic) Execute() {
 func (r RiverFireFlameTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RiverFireFlameTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

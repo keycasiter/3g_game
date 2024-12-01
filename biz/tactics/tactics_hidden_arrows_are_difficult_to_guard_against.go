@@ -169,3 +169,6 @@ func (h HiddenArrowsAreDifficultToGuardAgainstTactic) Execute() {
 func (h HiddenArrowsAreDifficultToGuardAgainstTactic) IsTriggerPrepare() bool {
 	return h.isTriggerPrepare
 }
+
+func (a HiddenArrowsAreDifficultToGuardAgainstTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

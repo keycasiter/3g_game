@@ -108,3 +108,6 @@ func (t TheBraveLeadTheWayTactic) Execute() {
 func (t TheBraveLeadTheWayTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TheBraveLeadTheWayTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

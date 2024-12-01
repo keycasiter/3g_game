@@ -128,3 +128,6 @@ func (a ZhenYuZhiShanTactic) Execute() {
 func (a ZhenYuZhiShanTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ZhenYuZhiShanTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

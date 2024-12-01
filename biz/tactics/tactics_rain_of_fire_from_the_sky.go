@@ -151,3 +151,6 @@ func (r RainOfFireFromTheSkyTactic) Execute() {
 func (r RainOfFireFromTheSkyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RainOfFireFromTheSkyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

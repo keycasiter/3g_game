@@ -160,3 +160,6 @@ func (l LowerBannersAndMuffleDrumsTactic) Execute() {
 		return triggerResp
 	})
 }
+
+func (a LowerBannersAndMuffleDrumsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

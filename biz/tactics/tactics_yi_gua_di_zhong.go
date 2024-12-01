@@ -122,3 +122,6 @@ func (a YiGuaDiZhongTactic) Execute() {
 func (a YiGuaDiZhongTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a YiGuaDiZhongTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

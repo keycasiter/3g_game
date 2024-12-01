@@ -187,3 +187,6 @@ func (o OpportunityIdentificationFirstTactic) Execute() {
 func (o OpportunityIdentificationFirstTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a OpportunityIdentificationFirstTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

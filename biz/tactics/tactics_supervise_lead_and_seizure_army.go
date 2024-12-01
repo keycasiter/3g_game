@@ -137,3 +137,6 @@ func (s SuperviseLeadAndSeizureArmyTactic) Execute() {
 func (s SuperviseLeadAndSeizureArmyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SuperviseLeadAndSeizureArmyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

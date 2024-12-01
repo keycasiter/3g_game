@@ -112,3 +112,6 @@ func (b BeAdeptWithBothPenAndSwordTactic) Execute() {
 func (b BeAdeptWithBothPenAndSwordTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BeAdeptWithBothPenAndSwordTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

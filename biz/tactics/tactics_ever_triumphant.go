@@ -118,3 +118,6 @@ func (e EverTriumphantTactic) Execute() {
 func (e EverTriumphantTactic) IsTriggerPrepare() bool {
 	return e.isTriggerPrepare
 }
+
+func (a EverTriumphantTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

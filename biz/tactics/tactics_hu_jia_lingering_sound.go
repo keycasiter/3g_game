@@ -186,3 +186,6 @@ func (h HuJiaLingeringSoundTactic) Execute() {
 func (h HuJiaLingeringSoundTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HuJiaLingeringSoundTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

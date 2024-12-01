@@ -159,3 +159,6 @@ func (s SuppressYellowScarvesTactic) Execute() {
 func (s SuppressYellowScarvesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SuppressYellowScarvesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

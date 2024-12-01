@@ -147,3 +147,6 @@ func (a HuangTianTaiPingTactic) Execute() {
 func (a HuangTianTaiPingTactic) IsTriggerPrepare() bool {
 	return a.isTriggerPrepare
 }
+
+func (a HuangTianTaiPingTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

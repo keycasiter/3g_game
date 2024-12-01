@@ -131,3 +131,6 @@ func (r RepelForeignAggressionTactic) Execute() {
 func (r RepelForeignAggressionTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RepelForeignAggressionTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

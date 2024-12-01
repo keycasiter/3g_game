@@ -94,3 +94,6 @@ func (c CurettageTactic) SupportArmTypes() []consts.ArmType {
 		consts.ArmType_Apparatus,
 	}
 }
+
+func (a CurettageTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

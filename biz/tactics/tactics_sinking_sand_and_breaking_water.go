@@ -161,3 +161,6 @@ func (s SinkingSandAndBreakingWaterTactic) Execute() {
 func (s SinkingSandAndBreakingWaterTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SinkingSandAndBreakingWaterTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

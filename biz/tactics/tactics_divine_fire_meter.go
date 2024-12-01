@@ -120,3 +120,6 @@ func (d DivineFireMeterTactic) Execute() {
 func (d DivineFireMeterTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DivineFireMeterTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

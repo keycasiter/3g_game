@@ -261,3 +261,6 @@ func (s SeizeTheSoulTactic) Execute() {
 		})
 	}
 }
+
+func (a SeizeTheSoulTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

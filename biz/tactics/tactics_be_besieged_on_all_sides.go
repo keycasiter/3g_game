@@ -151,3 +151,6 @@ func (b BeBesiegedOnAllSidesTactic) Execute() {
 func (b BeBesiegedOnAllSidesTactic) IsTriggerPrepare() bool {
 	return b.isTriggerPrepare
 }
+
+func (a BeBesiegedOnAllSidesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

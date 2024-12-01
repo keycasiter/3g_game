@@ -72,3 +72,6 @@ func (b BeQuickInDebatingOpportunitiesTactic) Execute() {
 func (b BeQuickInDebatingOpportunitiesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BeQuickInDebatingOpportunitiesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

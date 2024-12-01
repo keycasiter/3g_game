@@ -124,3 +124,6 @@ func (s SittingIntheSoutheastTactic) Execute() {
 func (s SittingIntheSoutheastTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SittingIntheSoutheastTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

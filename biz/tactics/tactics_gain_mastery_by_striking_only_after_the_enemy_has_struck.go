@@ -95,3 +95,6 @@ func (g GainMasteryByStrikingOnlyAfterTheEnemyHasStruckTactic) Execute() {
 func (g GainMasteryByStrikingOnlyAfterTheEnemyHasStruckTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a GainMasteryByStrikingOnlyAfterTheEnemyHasStruckTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

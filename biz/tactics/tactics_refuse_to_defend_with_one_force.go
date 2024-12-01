@@ -113,3 +113,6 @@ func (r RefuseToDefendWithOneForceTactic) Execute() {
 func (r RefuseToDefendWithOneForceTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RefuseToDefendWithOneForceTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

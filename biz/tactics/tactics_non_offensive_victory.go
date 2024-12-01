@@ -103,3 +103,6 @@ func (n NonOffensiveVictoryTactic) Execute() {
 func (n NonOffensiveVictoryTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a NonOffensiveVictoryTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

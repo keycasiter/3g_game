@@ -132,3 +132,6 @@ func (f ForetellLikeProphetTactic) Execute() {
 func (f ForetellLikeProphetTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ForetellLikeProphetTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

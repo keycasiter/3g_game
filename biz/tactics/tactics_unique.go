@@ -80,3 +80,6 @@ func (u UniqueTactic) Execute() {
 func (u UniqueTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a UniqueTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -136,3 +136,6 @@ func (t TenWinsAndTenLossesTactic) Execute() {
 func (t TenWinsAndTenLossesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TenWinsAndTenLossesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

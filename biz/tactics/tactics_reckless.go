@@ -114,3 +114,6 @@ func (r RecklessTactic) Execute() {
 func (r RecklessTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RecklessTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

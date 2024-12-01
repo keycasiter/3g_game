@@ -102,3 +102,6 @@ func (g GhostGodThunderForceTactic) Execute() {
 func (g GhostGodThunderForceTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a GhostGodThunderForceTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

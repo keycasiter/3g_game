@@ -125,3 +125,6 @@ func (s SleepOnTheBrushwoodAndTasteTheGallTactic) Execute() {
 func (s SleepOnTheBrushwoodAndTasteTheGallTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SleepOnTheBrushwoodAndTasteTheGallTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

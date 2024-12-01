@@ -164,3 +164,6 @@ func (c CountryPersonGeneralStyleTactic) Execute() {
 func (c CountryPersonGeneralStyleTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a CountryPersonGeneralStyleTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

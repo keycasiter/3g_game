@@ -142,3 +142,6 @@ func (a KnowYourselfAsWellAsTheEnemyTactic) Execute() {
 func (a KnowYourselfAsWellAsTheEnemyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a KnowYourselfAsWellAsTheEnemyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

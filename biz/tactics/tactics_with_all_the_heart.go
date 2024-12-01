@@ -175,3 +175,6 @@ func (w WithAllTheHeartTactic) Execute() {
 func (w WithAllTheHeartTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WithAllTheHeartTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

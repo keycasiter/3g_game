@@ -104,3 +104,6 @@ func (v ViolentAndHeartlessTactic) Execute() {
 func (v ViolentAndHeartlessTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ViolentAndHeartlessTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

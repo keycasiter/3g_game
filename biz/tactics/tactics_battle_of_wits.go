@@ -112,3 +112,6 @@ func (b BattleOfWitsTactic) Execute() {
 func (b BattleOfWitsTactic) IsTriggerPrepare() bool {
 	return b.isTriggerPrepare
 }
+
+func (a BattleOfWitsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

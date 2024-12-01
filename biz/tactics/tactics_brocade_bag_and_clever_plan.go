@@ -166,3 +166,6 @@ func (b BrocadeBagAndCleverPlanTactic) Execute() {
 func (b BrocadeBagAndCleverPlanTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BrocadeBagAndCleverPlanTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

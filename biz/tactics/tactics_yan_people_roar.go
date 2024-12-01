@@ -131,3 +131,6 @@ func (y YanPeopleRoarTactic) Execute() {
 func (y YanPeopleRoarTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a YanPeopleRoarTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

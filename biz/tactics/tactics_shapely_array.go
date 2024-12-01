@@ -170,3 +170,6 @@ func (s ShapelyArrayTactic) Execute() {
 func (s ShapelyArrayTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ShapelyArrayTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

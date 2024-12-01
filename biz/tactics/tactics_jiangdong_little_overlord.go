@@ -131,3 +131,6 @@ func (j JiangdongLittleOverlordTactic) Execute() {
 func (j JiangdongLittleOverlordTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a JiangdongLittleOverlordTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

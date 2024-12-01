@@ -243,3 +243,6 @@ func (g GeneralBraveGirlTactic) Execute() {
 func (g GeneralBraveGirlTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a GeneralBraveGirlTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

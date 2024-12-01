@@ -99,3 +99,6 @@ func (g GatherTheCrowdAndStrikeTactic) Execute() {
 func (g GatherTheCrowdAndStrikeTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a GatherTheCrowdAndStrikeTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

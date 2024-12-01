@@ -110,3 +110,6 @@ func (c CloseQuartersTactic) Execute() {
 func (c CloseQuartersTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a CloseQuartersTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

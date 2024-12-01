@@ -114,3 +114,6 @@ func (f RelieveAnnoyanceAndGuardTactic) Execute() {
 func (f RelieveAnnoyanceAndGuardTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a RelieveAnnoyanceAndGuardTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

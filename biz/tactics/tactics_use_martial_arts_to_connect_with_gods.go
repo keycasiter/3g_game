@@ -162,3 +162,6 @@ func (u UseMartialArtsToConnectWithGodsTactic) SupportArmTypes() []consts.ArmTyp
 func (u UseMartialArtsToConnectWithGodsTactic) Execute() {
 	return
 }
+
+func (a UseMartialArtsToConnectWithGodsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

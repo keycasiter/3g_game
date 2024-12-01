@@ -145,3 +145,6 @@ func (b BecomeFamousAndFearInspiringThroughoutChinaTactic) Execute() {
 func (b BecomeFamousAndFearInspiringThroughoutChinaTactic) IsTriggerPrepare() bool {
 	return b.isTriggerPrepare
 }
+
+func (a BecomeFamousAndFearInspiringThroughoutChinaTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

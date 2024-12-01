@@ -163,3 +163,6 @@ func (h HighWoodenPaddlesConnectedToTheCampTactic) Execute() {
 func (h HighWoodenPaddlesConnectedToTheCampTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a HighWoodenPaddlesConnectedToTheCampTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

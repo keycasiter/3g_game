@@ -161,3 +161,6 @@ func (c CloudGatheringShadowFromTactic) Execute() {
 func (c CloudGatheringShadowFromTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a CloudGatheringShadowFromTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

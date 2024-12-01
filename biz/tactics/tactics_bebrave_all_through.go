@@ -105,3 +105,6 @@ func (b BebraveAllThroughTactic) Execute() {
 func (b BebraveAllThroughTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a BebraveAllThroughTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

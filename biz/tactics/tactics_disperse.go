@@ -95,3 +95,6 @@ func (d DisperseTactic) Execute() {
 func (d DisperseTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DisperseTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

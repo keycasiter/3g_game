@@ -101,3 +101,6 @@ func (t TemperamentSurpassesTheThreeArmiesTactic) Execute() {
 func (t TemperamentSurpassesTheThreeArmiesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TemperamentSurpassesTheThreeArmiesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

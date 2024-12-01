@@ -114,3 +114,6 @@ func (a FacingTheEnemyHeadOnTactic) Execute() {
 func (a FacingTheEnemyHeadOnTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FacingTheEnemyHeadOnTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

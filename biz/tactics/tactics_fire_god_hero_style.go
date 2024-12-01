@@ -184,3 +184,6 @@ func (f FireGodHeroStyleTactic) Execute() {
 func (f FireGodHeroStyleTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FireGodHeroStyleTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

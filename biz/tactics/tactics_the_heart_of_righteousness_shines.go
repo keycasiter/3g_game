@@ -6,9 +6,9 @@ import (
 	"github.com/keycasiter/3g_game/biz/tactics/model"
 )
 
-//义心昭烈
-//战斗中，自身造成治疗效果时，使目标受到主动战法伤害降低14%（受智力影响），持续1回合，
-//当自身兵力首次低于40%时，使我军全体受到伤害时会分摊50%伤害，持续1回合
+// 义心昭烈
+// 战斗中，自身造成治疗效果时，使目标受到主动战法伤害降低14%（受智力影响），持续1回合，
+// 当自身兵力首次低于40%时，使我军全体受到伤害时会分摊50%伤害，持续1回合
 type TheHeartOfRighteousnessShinesTactic struct {
 	tacticsParams *model.TacticsParams
 	triggerRate   float64
@@ -63,4 +63,7 @@ func (t TheHeartOfRighteousnessShinesTactic) Execute() {
 
 func (t TheHeartOfRighteousnessShinesTactic) IsTriggerPrepare() bool {
 	return false
+}
+
+func (a TheHeartOfRighteousnessShinesTactic) SetTriggerPrepare(triggerPrepare bool) {
 }

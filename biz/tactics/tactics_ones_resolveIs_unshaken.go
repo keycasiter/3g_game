@@ -147,3 +147,6 @@ func (o OnesResolveIsUnshakenTactic) Execute() {
 func (o OnesResolveIsUnshakenTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a OnesResolveIsUnshakenTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

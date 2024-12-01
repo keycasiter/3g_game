@@ -181,3 +181,6 @@ func (t ThousandMileWalkingSingleRiderTactic) Execute() {
 func (t ThousandMileWalkingSingleRiderTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ThousandMileWalkingSingleRiderTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

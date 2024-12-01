@@ -284,3 +284,6 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 func (w WaitAtOnesEaseForTheFatiguedTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WaitAtOnesEaseForTheFatiguedTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

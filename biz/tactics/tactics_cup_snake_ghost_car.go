@@ -136,3 +136,6 @@ func (c CupSnakeGhostCarTactic) Execute() {
 func (c CupSnakeGhostCarTactic) IsTriggerPrepare() bool {
 	return c.isTriggerPrepare
 }
+
+func (a CupSnakeGhostCarTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -125,3 +125,6 @@ func (t TigerGuardArmyTactic) Execute() {
 func (t TigerGuardArmyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TigerGuardArmyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

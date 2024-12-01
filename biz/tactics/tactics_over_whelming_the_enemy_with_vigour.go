@@ -95,3 +95,6 @@ func (o OverwhelmingTheEnemyWithVigourTactic) SupportArmTypes() []consts.ArmType
 func (o OverwhelmingTheEnemyWithVigourTactic) Execute() {
 	return
 }
+
+func (a OverwhelmingTheEnemyWithVigourTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

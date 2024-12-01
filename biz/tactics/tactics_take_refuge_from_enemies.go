@@ -130,3 +130,6 @@ func (t TakeRefugeFromEnemiesTactic) SupportArmTypes() []consts.ArmType {
 func (t TakeRefugeFromEnemiesTactic) Execute() {
 
 }
+
+func (a TakeRefugeFromEnemiesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

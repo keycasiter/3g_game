@@ -144,3 +144,6 @@ func (f FrustrationAndAngerAttackTactic) Execute() {
 func (f FrustrationAndAngerAttackTactic) IsTriggerPrepare() bool {
 	return f.isTriggerPrepare
 }
+
+func (a FrustrationAndAngerAttackTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

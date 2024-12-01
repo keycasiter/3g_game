@@ -101,3 +101,6 @@ func (f FallingPhoenixTactic) Execute() {
 func (f FallingPhoenixTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FallingPhoenixTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

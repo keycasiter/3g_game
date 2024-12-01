@@ -176,3 +176,6 @@ func (t TheKnifeLikeThunderboltTactic) Execute() {
 func (t TheKnifeLikeThunderboltTactic) IsTriggerPrepare() bool {
 	return t.isTriggerPrepare
 }
+
+func (a TheKnifeLikeThunderboltTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

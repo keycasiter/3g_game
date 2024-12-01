@@ -88,3 +88,6 @@ func (s SpecialSoldierPassRoadTactic) Execute() {
 func (s SpecialSoldierPassRoadTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a SpecialSoldierPassRoadTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -158,3 +158,6 @@ func (t ToSeizeThePowerOfGroupOfHeroesTactic) Execute() {
 func (t ToSeizeThePowerOfGroupOfHeroesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ToSeizeThePowerOfGroupOfHeroesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -162,3 +162,6 @@ func (t TheLionFliesFastTactic) Execute() {
 func (t TheLionFliesFastTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TheLionFliesFastTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

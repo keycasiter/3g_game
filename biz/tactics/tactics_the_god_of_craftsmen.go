@@ -241,3 +241,6 @@ func (t TheGodOfCraftsmenTactic) Execute() {
 func (t TheGodOfCraftsmenTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TheGodOfCraftsmenTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -143,3 +143,6 @@ func (a YiHuaJieMuTactic) Execute() {
 func (a YiHuaJieMuTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a YiHuaJieMuTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

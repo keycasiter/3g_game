@@ -157,3 +157,6 @@ func (t TheSkyIsBlazingTactic) SupportArmTypes() []consts.ArmType {
 		consts.ArmType_Apparatus,
 	}
 }
+
+func (a TheSkyIsBlazingTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

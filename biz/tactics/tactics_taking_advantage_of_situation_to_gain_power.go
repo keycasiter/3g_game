@@ -107,3 +107,6 @@ func (t TakingAdvantageOfTheSituationToGainPowerTactic) Execute() {
 func (t TakingAdvantageOfTheSituationToGainPowerTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a TakingAdvantageOfTheSituationToGainPowerTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

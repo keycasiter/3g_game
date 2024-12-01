@@ -79,3 +79,6 @@ func (d DressTactic) Execute() {
 func (d DressTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a DressTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

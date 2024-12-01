@@ -127,3 +127,6 @@ func (p PullingSwordsAndChoppingEnemiesTactic) Execute() {
 func (p PullingSwordsAndChoppingEnemiesTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a PullingSwordsAndChoppingEnemiesTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

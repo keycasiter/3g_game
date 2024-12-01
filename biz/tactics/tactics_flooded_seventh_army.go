@@ -203,3 +203,6 @@ func (f FloodedSeventhArmyTactic) Execute() {
 func (f FloodedSeventhArmyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a FloodedSeventhArmyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

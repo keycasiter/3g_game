@@ -101,3 +101,6 @@ func (w WhiteArmyTactic) Execute() {
 func (w WhiteArmyTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a WhiteArmyTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

@@ -44,6 +44,8 @@ const (
 	DebuffEffectType_LaunchWeaponDamageDeduce                                //造成兵刃伤害减少
 	DebuffEffectType_LaunchStrategyDamageDeduce                              //造成谋略伤害减少
 	DebuffEffectType_LaunchGeneralAttackDeduce                               //造成普通攻击伤害减少
+	DebuffEffectType_EnhanceWeaponDeduce                                     //会心伤害减少
+	DebuffEffectType_EnhanceStrategyDeduce                                   //奇谋伤害减少
 	DebuffEffectType_LaunchFinalDamageDeduce                                 //造成最终伤害减少
 	DebuffEffectType_SufferResumeDeduce                                      //受到治疗降低
 	DebuffEffectType_CanNotGeneralAttack                                     //无法普通攻击
@@ -170,36 +172,38 @@ type BuffEffectType int
 
 const (
 	//效果施加
-	BuffEffectType_Unknow                              BuffEffectType = iota
-	BuffEffectType_Evade                                              //规避
-	BuffEffectType_EnhanceWeapon                                      //会心
-	BuffEffectType_AttackHeart                                        //攻心
-	BuffEffectType_EnhanceStrategy                                    //奇谋
-	BuffEffectType_GroupAttack                                        //群攻
-	BuffEffectType_FirstAttack                                        //先攻
-	BuffEffectType_Rest                                               //休整
-	BuffEffectType_Defend                                             //抵御
-	BuffEffectType_ContinuousAttack                                   //连击
-	BuffEffectType_StrikeBack                                         //反击
-	BuffEffectType_Defection                                          //倒戈
-	BuffEffectType_ShareResponsibilityFor                             //分担
-	BuffEffectType_Insight                                            //洞察
-	BuffEffectType_FightHard                                          //酣斗
-	BuffEffectType_MustHit                                            //必中
-	BuffEffectType_BreakFormation                                     //破阵
-	BuffEffectType_TacticsActiveTriggerImprove                        //主动战法发动率提升
-	BuffEffectType_TacticsActiveTriggerWithSelfImprove                //主动战法[自带]发动率提升
-	BuffEffectType_TacticsActiveTriggerPrepareImprove                 //主动战法[准备战法]发动率提升
-	BuffEffectType_TacticsActiveTriggerNoSelfImprove                  //主动战法[非自带]发动率提升
-	BuffEffectType_TacticsActiveWithSelfDamageImprove                 //主动战法[自带]伤害提升
-	BuffEffectType_TacticsActiveDamageImprove                         //主动战法伤害提升
-	BuffEffectType_TacticsAssaultDamageImprove                        //突击战法伤害提升
-	BuffEffectType_TacticsPassiveTriggerImprove                       //被动战法发动率提升
-	BuffEffectType_TacticsAssaultTriggerImprove                       //突击战法发动率提升
-	BuffEffectType_LaunchWeaponDamageImprove                          //造成兵刃伤害增加
-	BuffEffectType_LaunchStrategyDamageImprove                        //造成谋略伤害增加
-	BuffEffectType_ResumeImprove                                      //治疗效果提升
-	BuffEffectType_SufferResumeImprove                                //受到治疗效果提升
+	BuffEffectType_Unknow                               BuffEffectType = iota
+	BuffEffectType_Evade                                               //规避
+	BuffEffectType_EnhanceWeapon                                       //会心
+	BuffEffectType_AttackHeart                                         //攻心
+	BuffEffectType_EnhanceStrategy                                     //奇谋
+	BuffEffectType_GroupAttack                                         //群攻
+	BuffEffectType_FirstAttack                                         //先攻
+	BuffEffectType_Rest                                                //休整
+	BuffEffectType_Defend                                              //抵御
+	BuffEffectType_ContinuousAttack                                    //连击
+	BuffEffectType_StrikeBack                                          //反击
+	BuffEffectType_Defection                                           //倒戈
+	BuffEffectType_ShareResponsibilityFor                              //分担
+	BuffEffectType_Insight                                             //洞察
+	BuffEffectType_FightHard                                           //酣斗
+	BuffEffectType_MustHit                                             //必中
+	BuffEffectType_BreakFormation                                      //破阵
+	BuffEffectType_TacticsActiveTriggerImprove                         //主动战法发动率提升
+	BuffEffectType_TacticsActiveTriggerWithSelfImprove                 //主动战法[自带]发动率提升
+	BuffEffectType_TacticsActiveTriggerPrepareImprove                  //主动战法[准备战法]发动率提升
+	BuffEffectType_TacticsActiveTriggerNoSelfImprove                   //主动战法[非自带]发动率提升
+	BuffEffectType_TacticsActiveWithSelfDamageImprove                  //主动战法[自带]伤害提升
+	BuffEffectType_TacticsActiveDamageImprove                          //主动战法伤害提升
+	BuffEffectType_TacticsAssaultDamageImprove                         //突击战法伤害提升
+	BuffEffectType_TacticsPassiveTriggerImprove                        //被动战法发动率提升
+	BuffEffectType_TacticsAssaultTriggerWithSelfImprove                //突击战法[自带]发动率提升
+	BuffEffectType_TacticsAssaultTriggerImprove                        //突击战法发动率提升
+	BuffEffectType_LaunchWeaponDamageImprove                           //造成兵刃伤害增加
+	BuffEffectType_LaunchStrategyDamageImprove                         //造成谋略伤害增加
+	BuffEffectType_ResumeImprove                                       //治疗效果提升
+	BuffEffectType_SufferResumeImprove                                 //受到治疗效果提升
+	BuffEffectType_SufferContinuousDamageDeduce                        //受到持续性伤害降低
 
 	BuffEffectType_GeneralAttackDamageImprove                           //普通攻击伤害提升
 	BuffEffectType_SufferGeneralAttackDamageDeduce                      //普通攻击伤害提升
@@ -252,6 +256,7 @@ const (
 	BuffEffectType_KanPo                                                //看破
 	BuffEffectType_LanXin                                               //兰心效果
 	BuffEffectType_SufferGramArmDamageDeduce                            //遭受克制兵种减少
+	BuffEffectType_ContinuousDamageImprove                              //持续性伤害提升
 )
 
 func (b BuffEffectType) String() string {

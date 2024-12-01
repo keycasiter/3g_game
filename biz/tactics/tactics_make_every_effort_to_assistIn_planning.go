@@ -119,3 +119,6 @@ func (m MakeEveryEffortToAssistInPlanningTactic) Execute() {
 func (m MakeEveryEffortToAssistInPlanningTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a MakeEveryEffortToAssistInPlanningTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

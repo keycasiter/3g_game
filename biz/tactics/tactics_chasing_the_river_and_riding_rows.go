@@ -162,3 +162,6 @@ func (c ChasingTheRiverAndRidingRowsTactic) Execute() {
 func (c ChasingTheRiverAndRidingRowsTactic) IsTriggerPrepare() bool {
 	return false
 }
+
+func (a ChasingTheRiverAndRidingRowsTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

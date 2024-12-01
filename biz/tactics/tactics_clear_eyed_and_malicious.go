@@ -172,3 +172,6 @@ func (c ClearEyedAndMaliciousTactic) Execute() {
 func (c ClearEyedAndMaliciousTactic) Name() string {
 	return "鹰视狼顾"
 }
+
+func (a ClearEyedAndMaliciousTactic) SetTriggerPrepare(triggerPrepare bool) {
+}

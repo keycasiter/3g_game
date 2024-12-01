@@ -147,7 +147,7 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 	}
 	param.ProduceGeneral.AccumulateTotalResumeNum += param.ResumeNum
 
-	if param.TacticsParams != nil {
+	if param.TacticsParams != nil && param.TacticId > 0 {
 		TacticReport(param.TacticsParams,
 			param.ProduceGeneral.BaseInfo.UniqueId,
 			int64(param.TacticId),

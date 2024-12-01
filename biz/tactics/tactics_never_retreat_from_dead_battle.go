@@ -45,7 +45,7 @@ func (n NeverRetreatFromDeadBattleTactic) Prepare() {
 	//自身受到伤害时，有80%概率获得一层蓄威效果，可积攒20层；
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 
 		if util.GenerateRate(0.8) {
 			util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_AccumulatePower, &vo.EffectHolderParams{
@@ -62,12 +62,13 @@ func (n NeverRetreatFromDeadBattleTactic) Prepare() {
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_AttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
 		triggerGeneral := params.CurrentGeneral
+		sufferGeneral := params.SufferAttackGeneral
 		triggerRate := 0.5 + triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100/100
 		triggerMaxCnt := 5
 
 		for {
 			if util.GenerateRate(triggerRate) {
-				n.costAccumulatePowerHandler(ctx, currentGeneral, triggerGeneral)
+				n.costAccumulatePowerHandler(ctx, triggerGeneral, sufferGeneral)
 				// 触发后可继续判定，每次触发后几率降低8%，每次普攻后最多触发5次
 				triggerRate -= 0.08
 				triggerMaxCnt--
@@ -83,17 +84,17 @@ func (n NeverRetreatFromDeadBattleTactic) Prepare() {
 	})
 }
 
-func (n NeverRetreatFromDeadBattleTactic) costAccumulatePowerHandler(ctx context.Context, currentGeneral *vo.BattleGeneral, triggerGeneral *vo.BattleGeneral) {
+func (n NeverRetreatFromDeadBattleTactic) costAccumulatePowerHandler(ctx context.Context, currentGeneral *vo.BattleGeneral, sufferAttackGeneral *vo.BattleGeneral) {
 	if util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
 		Ctx:        ctx,
 		General:    currentGeneral,
 		EffectType: consts.BuffEffectType_AccumulatePower,
 		TacticId:   n.Id(),
 	}) {
-		enemyGeneral := util.GetEnemyOneGeneralByGeneral(triggerGeneral, n.tacticsParams)
+		enemyGeneral := util.GetEnemyOneGeneralByGeneral(sufferAttackGeneral, n.tacticsParams)
 		damage.TacticDamage(&damage.TacticDamageParam{
 			TacticsParams:     n.tacticsParams,
-			AttackGeneral:     triggerGeneral,
+			AttackGeneral:     currentGeneral,
 			SufferGeneral:     enemyGeneral,
 			DamageType:        consts.DamageType_Weapon,
 			DamageImproveRate: 1.3,

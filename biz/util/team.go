@@ -604,7 +604,7 @@ func GetEnemyGeneralsOneOrTwoArr(currentGeneral *vo.BattleGeneral, tacticsParams
 func GetPairMaxLossSoldierNumGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	pairGenerals := GetPairGeneralArr(currentGeneral, tacticsParams)
 	if pairGenerals == nil || len(pairGenerals) == 0 {
-		return tacticsParams.CurrentGeneral
+		return nil
 	}
 
 	//找到我方损失兵力最多的我军单体

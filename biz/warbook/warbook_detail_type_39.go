@@ -22,7 +22,7 @@ func (w *WarBookDetailType_39) Handle(ctx context.Context, general *vo.BattleGen
 		sufferResumeGeneral := params.SufferResumeGeneral
 
 		maxLossGeneral := util.GetPairMaxLossSoldierNumGeneral(triggerGeneral, tacticParams)
-		if maxLossGeneral.BaseInfo.UniqueId == sufferResumeGeneral.BaseInfo.UniqueId {
+		if maxLossGeneral != nil && maxLossGeneral.BaseInfo.UniqueId == sufferResumeGeneral.BaseInfo.UniqueId {
 			//谋略
 			if util.BuffEffectWrapSet(ctx, sufferResumeGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
 				EffectRate:     0.12,

@@ -1,8 +1,6 @@
 package tactics
 
 import (
-	"fmt"
-
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/damage"
@@ -34,26 +32,21 @@ func (c CrowdMovesTenThousandCountsTactic) Prepare() {
 		currentGeneral.BaseInfo.Name,
 		c.Name(),
 	)
-	util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_CrowdMovesTenThousandCounts_Prepare, &vo.EffectHolderParams{
-		EffectRate: 1.0,
-		FromTactic: c.Id(),
-	})
 
 	//受到普通攻击时，有45%概率对攻击来源造成兵刃伤害（伤害率140%），并使其下一次造成的伤害伤减少40%
-	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
 
 		//概率攻击
 		if util.GenerateRate(0.45) {
 			damage.TacticDamage(&damage.TacticDamageParam{
 				TacticsParams:     c.tacticsParams,
-				AttackGeneral:     currentGeneral,
+				AttackGeneral:     params.SufferAttackGeneral,
 				SufferGeneral:     params.AttackGeneral,
 				DamageType:        consts.DamageType_Weapon,
 				DamageImproveRate: 1.4,
 				TacticId:          c.Id(),
 				TacticName:        c.Name(),
-				EffectName:        fmt.Sprintf("%v", consts.BuffEffectType_CrowdMovesTenThousandCounts_Prepare),
 			})
 
 			//施加效果

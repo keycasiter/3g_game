@@ -85,11 +85,12 @@ func (n NeverRetreatFromDeadBattleTactic) Prepare() {
 }
 
 func (n NeverRetreatFromDeadBattleTactic) costAccumulatePowerHandler(ctx context.Context, currentGeneral *vo.BattleGeneral, sufferAttackGeneral *vo.BattleGeneral) {
-	if util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
+	if util.BuffEffectOfTacticCostTime(&util.BuffEffectOfTacticCostTimeParams{
 		Ctx:        ctx,
 		General:    currentGeneral,
 		EffectType: consts.BuffEffectType_AccumulatePower,
 		TacticId:   n.Id(),
+		CostTimes:  1,
 	}) {
 		enemyGeneral := util.GetEnemyOneGeneralByGeneral(sufferAttackGeneral, n.tacticsParams)
 		damage.TacticDamage(&damage.TacticDamageParam{

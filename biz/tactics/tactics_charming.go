@@ -52,7 +52,8 @@ func (c CharmingTactic) Prepare() {
 	// 持续1回合，自身为女性时，触发几率额外受智力影响
 	//效果施加
 	if util.BuffEffectWrapSet(ctx, currentGeneral, consts.BuffEffectType_Charming, &vo.EffectHolderParams{
-		FromTactic: c.Id(),
+		FromTactic:     c.Id(),
+		ProduceGeneral: currentGeneral,
 	}).IsSuccess {
 		//触发效果注册
 		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
@@ -63,7 +64,7 @@ func (c CharmingTactic) Prepare() {
 			triggerRate := 0.45
 			//自身为女性时，触发几率额外受智力影响
 			if triggerGeneral.BaseInfo.Gender == consts.Gender_Female {
-				triggerRate += triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100.00
+				triggerRate += triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase / 100 / 100
 			}
 			if !util.GenerateRate(triggerRate) {
 				hlog.CtxInfof(ctx, "[%s]执行来自[%s]【%s】的「魅惑」效果因几率没有生效",
@@ -72,42 +73,38 @@ func (c CharmingTactic) Prepare() {
 					c.Name(),
 				)
 				return triggerResp
-			} else {
-				hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「魅惑」效果",
-					triggerGeneral.BaseInfo.Name,
-					c.Name(),
-				)
-				//进入混乱（攻击和战法无差别选择目标）、计穷（无法发动主动战法）、虚弱（无法造成伤害）状态的一种
-				debuffs := []consts.DebuffEffectType{
-					consts.DebuffEffectType_Chaos,
-					consts.DebuffEffectType_NoStrategy,
-					consts.DebuffEffectType_PoorHealth,
-				}
-				hitIdx := util.GenerateHitOneIdx(len(debuffs))
-				debuff := debuffs[hitIdx]
+			}
 
-				if util.DebuffEffectWrapSet(ctx, attackGeneral, debuff, &vo.EffectHolderParams{
-					EffectRound: 1,
-					FromTactic:  c.Id(),
-				}).IsSuccess {
-					//效果注册
-					util.TacticsTriggerWrapRegister(attackGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-						revokeGeneral := params.CurrentGeneral
-						revokeResp := &vo.TacticsTriggerResult{}
-						//效果消耗
-						util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
-							Ctx:        ctx,
-							General:    revokeGeneral,
-							EffectType: debuff,
-							TacticId:   c.Id(),
-						})
-						//效果移除
-						if util.DeBuffEffectOfTacticIsDeplete(revokeGeneral, debuff, c.Id()) {
-							util.DebuffEffectWrapRemove(ctx, revokeGeneral, debuff, c.Id())
-						}
-						return revokeResp
+			hlog.CtxInfof(ctx, "[%s]执行来自【%s】的「魅惑」效果",
+				triggerGeneral.BaseInfo.Name,
+				c.Name(),
+			)
+			//进入混乱（攻击和战法无差别选择目标）、计穷（无法发动主动战法）、虚弱（无法造成伤害）状态的一种
+			debuffs := []consts.DebuffEffectType{
+				consts.DebuffEffectType_Chaos,
+				consts.DebuffEffectType_NoStrategy,
+				consts.DebuffEffectType_PoorHealth,
+			}
+			hitIdx := util.GenerateHitOneIdx(len(debuffs))
+			debuff := debuffs[hitIdx]
+
+			if util.DebuffEffectWrapSet(ctx, attackGeneral, debuff, &vo.EffectHolderParams{
+				EffectRound: 1,
+				FromTactic:  c.Id(),
+			}).IsSuccess {
+				//效果注册
+				util.TacticsTriggerWrapRegister(attackGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
+					revokeGeneral := params.CurrentGeneral
+					revokeResp := &vo.TacticsTriggerResult{}
+					//效果消耗
+					util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
+						Ctx:        ctx,
+						General:    revokeGeneral,
+						EffectType: debuff,
+						TacticId:   c.Id(),
 					})
-				}
+					return revokeResp
+				})
 			}
 
 			return triggerResp

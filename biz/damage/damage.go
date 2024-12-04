@@ -156,6 +156,10 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 	}
 
 	defer func() {
+		if r := recover(); r != nil {
+			panic("Recovered in defer")
+		}
+
 		//统计上报
 		util.AttackReport(tacticsParams,
 			attackGeneral.BaseInfo.UniqueId,
@@ -472,6 +476,7 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 
 	if sufferGeneral.SoldierNum == 0 {
 		hlog.CtxInfof(ctx, "[%s]武将兵力为0，无法再战", sufferGeneral.BaseInfo.Name)
+		//panic("武将兵力为0，无法再战")
 	}
 }
 

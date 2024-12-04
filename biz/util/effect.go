@@ -303,11 +303,21 @@ func BuffEffectWrapSet(ctx context.Context, general *vo.BattleGeneral, effectTyp
 			effectParam,
 		}
 	}
-	hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已施加",
-		general.BaseInfo.Name,
-		effectParam.FromTactic,
-		effectType,
-	)
+
+	if effectParam.FromTactic > 0 {
+		hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已施加",
+			general.BaseInfo.Name,
+			effectParam.FromTactic,
+			effectType,
+		)
+	}
+	if effectParam.FromWarbook > 0 {
+		hlog.CtxInfof(ctx, "[%s]来自【%v】「%v」效果已施加",
+			general.BaseInfo.Name,
+			effectParam.FromWarbook,
+			effectType,
+		)
+	}
 
 	//分担伤害
 	if effectType == consts.BuffEffectType_ShareResponsibilityFor {
@@ -392,12 +402,16 @@ func BuffEffectOfTacticGet(general *vo.BattleGeneral, effectType consts.BuffEffe
 	if effectParams, ok := general.BuffEffectHolderMap[effectType]; ok {
 		//按战法Id获取效果
 		if tacticId > 0 {
+			isExist := false
 			for _, effectParam := range effectParams {
 				if effectParam.FromTactic == tacticId {
+					isExist = true
 					res = append(res, effectParam)
 				}
 			}
-			return res, true
+			if isExist {
+				return res, true
+			}
 		}
 	}
 	return nil, false
@@ -1386,12 +1400,16 @@ func DeBuffEffectOfTacticGet(general *vo.BattleGeneral, effectType consts.Debuff
 	if effectParams, ok := general.DeBuffEffectHolderMap[effectType]; ok {
 		//按战法Id获取效果
 		if tacticId > 0 {
+			isExist := false
 			for _, effectParam := range effectParams {
 				if effectParam.FromTactic == tacticId {
+					isExist = true
 					res = append(res, effectParam)
 				}
 			}
-			return res, true
+			if isExist {
+				return res, true
+			}
 		}
 	}
 	return nil, false

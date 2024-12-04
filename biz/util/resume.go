@@ -35,6 +35,8 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferResumeEnd]; okk {
 			for _, f := range funcs {
 				params := &vo.TacticsTriggerParams{
+					CurrentGeneral:      param.ProduceGeneral,
+					ResumeGeneral:       param.ProduceGeneral,
 					SufferResumeGeneral: param.SufferGeneral,
 					CurrentResume:       param.ResumeNum,
 				}
@@ -45,6 +47,8 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_ResumeEnd]; okk {
 			for _, f := range funcs {
 				params := &vo.TacticsTriggerParams{
+					CurrentGeneral:      param.ProduceGeneral,
+					ResumeGeneral:       param.ProduceGeneral,
 					SufferResumeGeneral: param.SufferGeneral,
 					CurrentResume:       param.ResumeNum,
 				}
@@ -83,16 +87,20 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 	if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_SufferResume]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
+				CurrentGeneral:      param.ProduceGeneral,
+				ResumeGeneral:       param.ProduceGeneral,
 				SufferResumeGeneral: param.SufferGeneral,
 				CurrentResume:       param.ResumeNum,
 			}
 			f(params)
 		}
 	}
-	//恢复结束触发器
+	//恢复开始触发器
 	if funcs, okk := param.SufferGeneral.TacticsTriggerMap[consts.BattleAction_Resume]; okk {
 		for _, f := range funcs {
 			params := &vo.TacticsTriggerParams{
+				CurrentGeneral:      param.ProduceGeneral,
+				ResumeGeneral:       param.ProduceGeneral,
 				SufferResumeGeneral: param.SufferGeneral,
 				CurrentResume:       param.ResumeNum,
 			}
@@ -157,12 +165,24 @@ func ResumeSoldierNum(param *ResumeParams) (finalResumeNum, originNum, finalSold
 		)
 	}
 
-	hlog.CtxInfof(param.Ctx, "[%s]恢复了兵力%d(%d↗%d)",
-		param.SufferGeneral.BaseInfo.Name,
-		finalResumeNum,
-		originNum,
-		finalSoldierNum,
-	)
+	if param.TacticId > 0 {
+		hlog.CtxInfof(param.Ctx, "[%s]由于【%v】恢复了兵力%d(%d↗%d)",
+			param.SufferGeneral.BaseInfo.Name,
+			param.TacticId,
+			finalResumeNum,
+			originNum,
+			finalSoldierNum,
+		)
+	}
+	if param.WarBookType > 0 {
+		hlog.CtxInfof(param.Ctx, "[%s]由于【%v】恢复了兵力%d(%d↗%d)",
+			param.SufferGeneral.BaseInfo.Name,
+			param.WarBookType,
+			finalResumeNum,
+			originNum,
+			finalSoldierNum,
+		)
+	}
 
 	return
 }

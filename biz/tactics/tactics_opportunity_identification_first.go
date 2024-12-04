@@ -75,7 +75,7 @@ func (o OpportunityIdentificationFirstTactic) Prepare() {
 			triggerGeneral := params.CurrentGeneral
 			attackGeneral := params.AttackGeneral
 
-			if cast.ToFloat64(o.tacticsParams.CurrentDamageNum/triggerGeneral.SoldierNum) > 0.06 {
+			if triggerGeneral.SoldierNum >= 100 && cast.ToFloat64(o.tacticsParams.CurrentDamageNum/triggerGeneral.SoldierNum) > 0.06 {
 				//消耗一次警戒
 				if util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
 					Ctx:        ctx,

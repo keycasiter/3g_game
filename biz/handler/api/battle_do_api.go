@@ -137,8 +137,8 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 				BattleGenerals:        makeBattleGenerals(serviceResp.BattleResultStatistics.FightingTeam),
 				SoliderNum:            makeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
 				RemainNum:             makeRemainNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
-				KillSoliderNum:        makeKillSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
-				ResumeSoliderNum:      makeResumeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.BattleTeam.BattleGenerals),
+				KillSoliderNum:        makeKillSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
+				ResumeSoliderNum:      makeResumeSoliderNum(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
 				RoundKillSoliderNum:   makeRoundKillSolider(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
 				RoundResumeSoliderNum: makeRoundResumeSolider(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
 				RoundRemainSoliderNum: makeRoundRemainSolider(serviceResp.BattleResultStatistics.FightingTeam.GeneralBattleStatisticsList),
@@ -153,8 +153,8 @@ func makeBattleResultStatistics(serviceResp *battle.BattleLogicV2ContextResponse
 				BattleGenerals:        makeBattleGenerals(serviceResp.BattleResultStatistics.EnemyTeam),
 				SoliderNum:            makeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
 				RemainNum:             makeRemainNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
-				KillSoliderNum:        makeKillSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
-				ResumeSoliderNum:      makeResumeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.BattleTeam.BattleGenerals),
+				KillSoliderNum:        makeKillSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
+				ResumeSoliderNum:      makeResumeSoliderNum(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
 				RoundKillSoliderNum:   makeRoundKillSolider(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
 				RoundResumeSoliderNum: makeRoundResumeSolider(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
 				RoundRemainSoliderNum: makeRoundRemainSolider(serviceResp.BattleResultStatistics.EnemyTeam.GeneralBattleStatisticsList),
@@ -345,24 +345,36 @@ func makeRemainNum(battleGenerals []*vo.BattleGeneral) int64 {
 	return teamRemainNum
 }
 
-func makeKillSoliderNum(battleGenerals []*vo.BattleGeneral) int64 {
+func makeKillSoliderNum(battleGenerals []*model.GeneralBattleStatistics) int64 {
 	teamKillSoliderNum := int64(0)
 	for _, general := range battleGenerals {
-		teamKillSoliderNum += general.AccumulateTotalDamageNum
+		//战法
+		for _, statistics := range general.TacticStatisticsList {
+			teamKillSoliderNum += statistics.KillSoliderNum
+		}
+		//普攻
+		teamKillSoliderNum += general.GeneralAttackStatistics.KillSoliderNum
 	}
 	return teamKillSoliderNum
 }
 
-func makeResumeSoliderNum(battleGenerals []*vo.BattleGeneral) int64 {
+func makeResumeSoliderNum(battleGenerals []*model.GeneralBattleStatistics) int64 {
 	teamResumeSoliderNum := int64(0)
 	for _, general := range battleGenerals {
-		teamResumeSoliderNum += general.AccumulateTotalResumeNum
+		//战法
+		for _, statistics := range general.TacticStatisticsList {
+			teamResumeSoliderNum += statistics.ResumeSoliderNum
+		}
+		//普攻
+		teamResumeSoliderNum += general.GeneralAttackStatistics.ResumeSoliderNum
 	}
 	return teamResumeSoliderNum
 }
 
 func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api.BattleGeneralStatistics {
 	resList := make([]*api.BattleGeneralStatistics, 0)
+
+	generalStatisticsList := teamBattleStatistics.GeneralBattleStatisticsList
 	for idx, general := range teamBattleStatistics.BattleTeam.BattleGenerals {
 		resList = append(resList, &api.BattleGeneralStatistics{
 			BaseInfo: &api.MetadataGeneral{
@@ -377,13 +389,37 @@ func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api
 			IsMaster:                general.IsMaster,
 			SoldierNum:              general.InitSoldierNum,
 			RemainNum:               general.SoldierNum,
-			KillSoliderNum:          general.AccumulateTotalDamageNum,
-			ResumeSoliderNum:        general.AccumulateTotalResumeNum,
+			KillSoliderNum:          makeGeneralKillSoliderNum(generalStatisticsList[idx]),
+			ResumeSoliderNum:        makeGeneralResumeSoliderNum(generalStatisticsList[idx]),
 			RoundRemainSoliderNum:   makeGeneralRoundRemainSoliderNum(general.RoundRemainSoliderNum),
 			GeneralBattleStatistics: makeGeneralBattleStatistics(teamBattleStatistics.GeneralBattleStatisticsList, idx),
 		})
 	}
 	return resList
+}
+
+func makeGeneralResumeSoliderNum(generalBattleStatistics *model.GeneralBattleStatistics) int64 {
+	generalResumeNum := int64(0)
+	//战法
+	for _, tactic := range generalBattleStatistics.TacticStatisticsList {
+		generalResumeNum += tactic.ResumeSoliderNum
+	}
+	//普攻
+	generalResumeNum += generalBattleStatistics.GeneralAttackStatistics.ResumeSoliderNum
+
+	return generalResumeNum
+}
+
+func makeGeneralKillSoliderNum(generalBattleStatistics *model.GeneralBattleStatistics) int64 {
+	generalKillNum := int64(0)
+	//战法
+	for _, tactic := range generalBattleStatistics.TacticStatisticsList {
+		generalKillNum += tactic.KillSoliderNum
+	}
+	//普攻
+	generalKillNum += generalBattleStatistics.GeneralAttackStatistics.KillSoliderNum
+
+	return generalKillNum
 }
 
 func makeGeneralRoundRemainSoliderNum(roundRemainSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64) map[enum.BattlePhase]map[enum.BattleRound]int64 {

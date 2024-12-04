@@ -462,14 +462,21 @@ func AttackDamage(tacticsParams *model.TacticsParams, attackGeneral *vo.BattleGe
 		remainSoldierNum = sufferGeneral.SoldierNum
 	}
 
-	//统计数据
+	//**统计数据**
+	//执行普攻次数
 	attackGeneral.ExecuteGeneralAttackNum++
+	//执行兵刃攻击次数
 	attackGeneral.ExecuteWeaponAttackNum++
+	//累计总伤害
 	attackGeneral.AccumulateTotalDamageNum += finalDmg
+	//累计普攻伤害
 	attackGeneral.AccumulateAttackDamageNum += finalDmg
 
+	//被普攻次数
 	sufferGeneral.SufferExecuteGeneralAttackNum++
+	//被兵刃攻击次数
 	sufferGeneral.SufferExecuteWeaponAttackNum++
+	//累计损失兵力
 	sufferGeneral.LossSoldierNum += finalDmg
 
 	hlog.CtxInfof(ctx, "[%s]损失了兵力%d(%d↘%d)", sufferGeneral.BaseInfo.Name, finalDmg, defSoldierNum, remainSoldierNum)

@@ -20,7 +20,9 @@ func (w *WarBookDetailType_45) Handle(ctx context.Context, general *vo.BattleGen
 		triggerGeneral := params.CurrentGeneral
 
 		lowestSoliderNumGeneral := util.GetPairLowestSoldierNumGeneral(tacticParams, triggerGeneral)
-
+		if lowestSoliderNumGeneral == nil {
+			return triggerResp
+		}
 		if lowestSoliderNumGeneral.BaseInfo.UniqueId == triggerGeneral.BaseInfo.UniqueId {
 			//兵刃
 			util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_SufferWeaponDamageDeduce, &vo.EffectHolderParams{

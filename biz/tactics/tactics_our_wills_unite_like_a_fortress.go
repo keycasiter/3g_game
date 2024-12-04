@@ -49,6 +49,9 @@ func (a OurWillsUniteLikeAFortressTactic) Prepare() {
 
 		//治疗我军兵力最低武将（治疗率96%，受智力影响）
 		lowestSoliderGeneral := util.GetPairLowestSoldierNumGeneral(a.tacticsParams, currentGeneral)
+		if lowestSoliderGeneral == nil {
+			return triggerResp
+		}
 		resumeNum := triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 0.96
 		util.ResumeSoldierNum(&util.ResumeParams{
 			Ctx:            ctx,

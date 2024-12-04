@@ -98,7 +98,9 @@ func (a WanJunDuoShuaiTactic) Execute() {
 
 	// 使敌军速度最快的武将速度降低85%，并有45几率使其进入遇袭、破坏、禁疗、计穷、缴械状态，每种状态独立判定，持续2回合，该战法发动后会进入1回合冷却
 	enemeyHighestSpeedGeneral := util.GetEnemyGeneralWhoIsHighestSpeed(currentGeneral, a.tacticsParams)
-
+	if enemeyHighestSpeedGeneral == nil {
+		return
+	}
 	//使敌军速度最快的武将速度降低85%
 	if util.DebuffEffectWrapSet(ctx, enemeyHighestSpeedGeneral, consts.DebuffEffectType_DecrSpeed, &vo.EffectHolderParams{
 		EffectRate:     0.85,

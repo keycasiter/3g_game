@@ -58,9 +58,11 @@ func (w WuFengArrayTactic) Prepare() {
 	}
 
 	viceGenerals := util.GetPairViceGenerals(currentGeneral, w.tacticsParams)
+	if len(viceGenerals) == 0 {
+		return
+	}
 	highGeneral := util.GetHighestArmAbilityGeneral(viceGenerals, armType)
 	lowGeneral := util.GetLowestArmAbilityGeneral(viceGenerals, armType)
-
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
 		triggerGeneral := params.CurrentGeneral
@@ -68,34 +70,40 @@ func (w WuFengArrayTactic) Prepare() {
 
 		// 战斗中，奇数回合使兵种适性较低的副将恢复我军单体兵力（治疗率184%）
 		if triggeRound%2 != 0 {
-			pairGeneral := util.GetPairOneGeneral(w.tacticsParams, triggerGeneral)
-			resumeNum := cast.ToInt64(lowGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.84)
-			util.ResumeSoldierNum(&util.ResumeParams{
-				Ctx:            ctx,
-				TacticsParams:  w.tacticsParams,
-				ProduceGeneral: lowGeneral,
-				SufferGeneral:  pairGeneral,
-				ResumeNum:      resumeNum,
-				TacticId:       w.Id(),
-			})
+			if lowGeneral != nil {
+				pairGeneral := util.GetPairOneGeneral(w.tacticsParams, triggerGeneral)
+				if pairGeneral != nil {
+					resumeNum := cast.ToInt64(lowGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 1.84)
+					util.ResumeSoldierNum(&util.ResumeParams{
+						Ctx:            ctx,
+						TacticsParams:  w.tacticsParams,
+						ProduceGeneral: lowGeneral,
+						SufferGeneral:  pairGeneral,
+						ResumeNum:      resumeNum,
+						TacticId:       w.Id(),
+					})
+				}
+			}
 		} else {
-			// 偶数回合使兵种适性较高的副将造成伤害提高15%（可叠加）
-			//兵刃伤害
-			util.BuffEffectWrapSet(ctx, highGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{
-				EffectRate:     0.15,
-				EffectTimes:    1,
-				MaxEffectTimes: consts.INT64_MAX,
-				FromTactic:     w.Id(),
-				ProduceGeneral: highGeneral,
-			})
-			//谋略伤害
-			util.BuffEffectWrapSet(ctx, highGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove, &vo.EffectHolderParams{
-				EffectRate:     0.15,
-				EffectTimes:    1,
-				MaxEffectTimes: consts.INT64_MAX,
-				FromTactic:     w.Id(),
-				ProduceGeneral: highGeneral,
-			})
+			if highGeneral != nil {
+				// 偶数回合使兵种适性较高的副将造成伤害提高15%（可叠加）
+				//兵刃伤害
+				util.BuffEffectWrapSet(ctx, highGeneral, consts.BuffEffectType_LaunchWeaponDamageImprove, &vo.EffectHolderParams{
+					EffectRate:     0.15,
+					EffectTimes:    1,
+					MaxEffectTimes: consts.INT64_MAX,
+					FromTactic:     w.Id(),
+					ProduceGeneral: highGeneral,
+				})
+				//谋略伤害
+				util.BuffEffectWrapSet(ctx, highGeneral, consts.BuffEffectType_LaunchStrategyDamageImprove, &vo.EffectHolderParams{
+					EffectRate:     0.15,
+					EffectTimes:    1,
+					MaxEffectTimes: consts.INT64_MAX,
+					FromTactic:     w.Id(),
+					ProduceGeneral: highGeneral,
+				})
+			}
 		}
 
 		return triggerResp

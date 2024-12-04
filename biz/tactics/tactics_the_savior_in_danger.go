@@ -66,6 +66,9 @@ func (a TheSaviorInDangerTactic) Prepare() {
 						})
 						// 并使我军兵力最低单体受到谋略伤害降低12%（受速度影响），可叠加，持续1回合
 						lowestSoliderGeneral := util.GetPairLowestSoldierNumGeneral(a.tacticsParams, triggerGeneral)
+						if lowestSoliderGeneral == nil {
+							return triggerResp
+						}
 						if util.BuffEffectWrapSet(ctx, lowestSoliderGeneral, consts.BuffEffectType_SufferStrategyDamageDeduce, &vo.EffectHolderParams{
 							EffectRate:     0.12 + triggerGeneral.BaseInfo.AbilityAttr.SpeedBase/100/100,
 							EffectTimes:    1,

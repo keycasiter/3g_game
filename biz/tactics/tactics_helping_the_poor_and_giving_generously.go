@@ -66,7 +66,9 @@ func (h HelpingThePoorAndGivingGenerouslyTactic) Prepare() {
 		//并使其受到的兵刃伤害和谋略伤害降低26%（受智力影响），持续1回合
 		if triggerRound >= consts.Battle_Round_Third && triggerRound <= consts.Battle_Round_Fifth {
 			lowestSoliderGeneral := util.GetPairLowestSoldierNumGeneral(h.tacticsParams, triggerGeneral)
-
+			if lowestSoliderGeneral == nil {
+				return triggerResp
+			}
 			resumeNum := cast.ToInt64(currentGeneral.BaseInfo.AbilityAttr.IntelligenceBase * 2.84)
 			util.ResumeSoldierNum(&util.ResumeParams{
 				Ctx:            ctx,

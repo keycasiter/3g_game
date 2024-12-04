@@ -76,6 +76,9 @@ func (d DustpanFormationTactic) Prepare() {
 
 		//并使我军随机副将受到兵刃伤害降低18%，另一名副将受到谋略伤害降低18%
 		pairGenerals := util.GetPairViceGenerals(currentGeneral, d.tacticsParams)
+		if len(pairGenerals) == 0 {
+			return triggerResp
+		}
 
 		//效果二选一随机
 		buffEffects := []consts.BuffEffectType{}

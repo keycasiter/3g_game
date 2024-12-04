@@ -40,6 +40,9 @@ func GetPairGeneralArr(currentGeneral *vo.BattleGeneral, tacticsParams *model.Ta
 
 // 找到兵力最低武将
 func GetLowestSoliderNumGeneral(generals []*vo.BattleGeneral) *vo.BattleGeneral {
+	if len(generals) == 0 {
+		return nil
+	}
 	lowestGeneral := generals[0]
 	for _, general := range generals {
 		if general.SoldierNum < lowestGeneral.SoldierNum {
@@ -948,6 +951,9 @@ func GetHighestArmAbilityGeneral(generals []*vo.BattleGeneral, armType consts.Ar
 
 // 获取兵种适性较低武将
 func GetLowestArmAbilityGeneral(generals []*vo.BattleGeneral, armType consts.ArmType) *vo.BattleGeneral {
+	if len(generals) == 0 {
+		return nil
+	}
 	lowestGeneral := generals[0]
 	for _, general := range generals {
 		switch armType {
@@ -1018,6 +1024,9 @@ func IsContainsGeneralTag(generalTags []consts.GeneralTag, generalTag consts.Gen
 // 获取敌军速度最高的武将
 func GetEnemyGeneralWhoIsHighestSpeed(currentGeneral *vo.BattleGeneral, params *model.TacticsParams) *vo.BattleGeneral {
 	enemyGenerals := GetEnemyGeneralsByGeneral(currentGeneral, params)
+	if len(enemyGenerals) == 0 {
+		return nil
+	}
 	highestGeneral := enemyGenerals[0]
 	for _, general := range enemyGenerals {
 		if general.BaseInfo.AbilityAttr.SpeedBase > highestGeneral.BaseInfo.AbilityAttr.SpeedBase {

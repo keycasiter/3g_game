@@ -45,7 +45,13 @@ func (n NonOffensiveVictoryTactic) Prepare() {
 
 		if triggerRound >= consts.Battle_Round_Third {
 			pairGenerals := util.GetPairGeneralArr(currentGeneral, n.tacticsParams)
+			if len(pairGenerals) == 0 {
+				return triggerResp
+			}
 			lowSoliderNumGeneral := util.GetLowestSoliderNumGeneral(pairGenerals)
+			if lowSoliderNumGeneral == nil {
+				return triggerResp
+			}
 			resumeNum := cast.ToInt64(cast.ToFloat64(damageNum)*0.1) + cast.ToInt64(triggerGeneral.BaseInfo.AbilityAttr.ForceBase/100)
 
 			util.ResumeSoldierNum(&util.ResumeParams{

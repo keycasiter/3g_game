@@ -1286,7 +1286,7 @@ func (b TacticId) String() string {
 		return "狮子奋迅"
 	//火神英风
 	case FireGodHeroStyle:
-		return "FireGodHeroStyle"
+		return "火神英风"
 	//累世立名
 	case EstablishingNameThroughGenerations:
 		return "累世立名"

@@ -183,14 +183,6 @@ func AttackReport(tacticParams *model.TacticsParams, generalUniqueId string, tri
 			}
 			attackStatistics.RoundKillSoliderNum[tacticParams.CurrentPhase] = m
 		}
-		if m, ok := attackStatistics.RoundResumeSoliderNum[tacticParams.CurrentPhase]; ok {
-			if cnt, okk := m[tacticParams.CurrentRound]; okk {
-				m[tacticParams.CurrentRound] = cnt + resumeSoliderNum
-			} else {
-				m[tacticParams.CurrentRound] = resumeSoliderNum
-			}
-			attackStatistics.RoundResumeSoliderNum[tacticParams.CurrentPhase] = m
-		}
 	} else {
 		tacticParams.BattleAttackStatisticsMap[generalUniqueId] = &model.TacticStatistics{
 			TriggerTimes:          triggerTimes,

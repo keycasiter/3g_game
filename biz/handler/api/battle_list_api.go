@@ -55,5 +55,5 @@ func BattleList(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(hertzconsts.StatusOK, resp)
 	//日志打印
-	pretty.Logf("resp:%s", util.ToJsonString(ctx, resp))
+	pretty.Logf("resp uid:%v length:%v", req.Uid, len(serviceResp.BattleRecordList))
 }

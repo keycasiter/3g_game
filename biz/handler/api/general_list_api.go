@@ -36,7 +36,7 @@ func GeneralList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	hlog.CtxInfof(ctx, "GeneralQuery Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "GeneralQuery Resp length:%s", len(resp.GeneralList))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

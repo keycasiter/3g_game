@@ -37,7 +37,7 @@ func SpecialTechList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	hlog.CtxInfof(ctx, "SpecialTechList Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "SpecialTechList Resp length:%v", len(resp.SpecialTechList))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

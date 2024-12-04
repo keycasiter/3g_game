@@ -37,7 +37,7 @@ func RecTeamList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	hlog.CtxInfof(ctx, "RecTeamList Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "RecTeamList Resp length:%v", len(resp.RecTeamGeneralList))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

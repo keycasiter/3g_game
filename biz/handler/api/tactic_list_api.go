@@ -38,7 +38,7 @@ func TacticList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	hlog.CtxInfof(ctx, "TacticList Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "TacticList Resp length:%v", len(resp.TacticList))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

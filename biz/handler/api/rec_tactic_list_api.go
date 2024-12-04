@@ -30,7 +30,7 @@ func RecTacticList(ctx context.Context, c *app.RequestContext) {
 
 	hlog.CtxInfof(ctx, "RecTacticList Req:%s", util.ToJsonString(ctx, req))
 
-	hlog.CtxInfof(ctx, "RecTacticList Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "RecTacticList Resp length:%v", len(resp.RecTacticList))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

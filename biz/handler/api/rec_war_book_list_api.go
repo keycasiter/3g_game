@@ -37,7 +37,7 @@ func RecWarBookList(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	hlog.CtxInfof(ctx, "RecWarBookList Resp:%s", util.ToJsonString(ctx, resp))
+	hlog.CtxInfof(ctx, "RecWarBookList Resp length:%v", len(resp.WarBookMapList))
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

@@ -1511,7 +1511,17 @@ func initTacticsMap() {
 	PassiveTacticsMap[DivineFireMeter] = true
 	PassiveTacticsMap[ChasingTheRiverAndRidingRows] = true
 	PassiveTacticsMap[JiangdongLittleOverlord] = true
+	PassiveTacticsMap[WeiWuBingZhao] = true
+	PassiveTacticsMap[SheShenJiuZhu] = true
+	PassiveTacticsMap[YiGuaDiZhong] = true
+	PassiveTacticsMap[ZhenYuZhiShan] = true
+	PassiveTacticsMap[HuiZhiLanXin] = true
+	PassiveTacticsMap[GongBuTangJuan] = true
 	//指挥战法
+	CommandTacticsMap[MiJiZhuNi] = true
+	CommandTacticsMap[ZhiRouDongGang] = true
+	CommandTacticsMap[YuanRanNanCe] = true
+	CommandTacticsMap[HuHou] = true
 	CommandTacticsMap[NonOffensiveVictory] = true
 	CommandTacticsMap[OurWillsUniteLikeAFortress] = true
 	CommandTacticsMap[CountryPersonGeneralStyle] = true
@@ -1566,6 +1576,9 @@ func initTacticsMap() {
 	CommandTacticsMap[WieldTroopsToSeekVictory] = true
 	CommandTacticsMap[DeliverTheCountryFromDistress] = true
 	CommandTacticsMap[TheSaviorInDanger] = true
+	CommandTacticsMap[KnowYourselfAsWellAsTheEnemy] = true
+	CommandTacticsMap[FengLingPingLu] = true
+	CommandTacticsMap[FuTangDaoHuo] = true
 	//阵法
 	TroopsTacticsMap[FrontalVectorArray] = true
 	TroopsTacticsMap[EightGateGoldenLockArray] = true
@@ -1576,6 +1589,7 @@ func initTacticsMap() {
 	TroopsTacticsMap[ThreePotentialArray] = true
 	TroopsTacticsMap[WuFengArray] = true
 	//兵种
+	ArmTacticsMap[WanJunDuoShuai] = true
 	ArmTacticsMap[XiLiangIronCavalry] = true
 	ArmTacticsMap[WuDangFlyArmy] = true
 	ArmTacticsMap[GreatHalberdWarrior] = true
@@ -1586,7 +1600,13 @@ func initTacticsMap() {
 	ArmTacticsMap[WhiteArmy] = true
 	ArmTacticsMap[WhiteHorseFollowsWithLoyalty] = true
 	ArmTacticsMap[ElephantSoldier] = true
+	ArmTacticsMap[RelieveAnnoyanceAndGuard] = true
+	ArmTacticsMap[FeiXiongJun] = true
 	//主动
+	ActiveTacticsMap[YiHuaJieMu] = true
+	ActiveTacticsMap[AFlashOfWit] = true
+	ActiveTacticsMap[HuangTiantaiPing] = true
+	ActiveTacticsMap[FacingTheEnemyHeadOn] = true
 	ActiveTacticsMap[Introduction] = true
 	ActiveTacticsMap[DressingUpAndThrowingHalberds] = true
 	ActiveTacticsMap[ShangbingZhanmou] = true

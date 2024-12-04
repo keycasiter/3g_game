@@ -527,4 +527,56 @@ func initTacticsHandler() {
 	TacticsHandlerMap[consts.ClosedMoon] = &ClosedMoonTactic{}
 	//苦肉计
 	TacticsHandlerMap[consts.InjuryOnOneself] = &InjuryOnOneselfTactic{}
+	//梳妆掷戟
+	TacticsHandlerMap[consts.DressingUpAndThrowingHalberds] = &DressingUpAndThrowingHalberdsTactic{}
+	//上兵伐谋
+	TacticsHandlerMap[consts.ShangbingZhanmou] = &ShangbingZhanmouTactic{}
+	//因利制权
+	TacticsHandlerMap[consts.ProfitBasedSystemOfPower] = &ProfitBasedSystemOfPowerTactic{}
+	//众望所归
+	TacticsHandlerMap[consts.BeThePopularChoice] = &BeThePopularChoiceTactic{}
+	//临危救主
+	TacticsHandlerMap[consts.TheSaviorInDanger] = &TheSaviorInDangerTactic{}
+	//众志成城
+	TacticsHandlerMap[consts.OurWillsUniteLikeAFortress] = &OurWillsUniteLikeAFortressTactic{}
+	//知己知彼
+	TacticsHandlerMap[consts.KnowYourselfAsWellAsTheEnemy] = &KnowYourselfAsWellAsTheEnemyTactic{}
+	//临锋决敌
+	TacticsHandlerMap[consts.FacingTheEnemyHeadOn] = &FacingTheEnemyHeadOnTactic{}
+	//黄天泰平
+	TacticsHandlerMap[consts.HuangTiantaiPing] = &HuangTianTaiPingTactic{}
+	//灵机一动
+	TacticsHandlerMap[consts.AFlashOfWit] = &AFlushOfWitTactic{}
+	//解烦卫
+	TacticsHandlerMap[consts.RelieveAnnoyanceAndGuard] = &RelieveAnnoyanceAndGuardTactic{}
+	//奉令平虏
+	TacticsHandlerMap[consts.FengLingPingLu] = &FengLingPingLuTactic{}
+	//赴汤蹈火
+	TacticsHandlerMap[consts.FuTangDaoHuo] = &FuTangDaoHuoTactic{}
+	//威武并昭
+	TacticsHandlerMap[consts.WeiWuBingZhao] = &WeiWuBingZhaoTactic{}
+	//万军夺帅
+	TacticsHandlerMap[consts.WanJunDuoShuai] = &WanJunDuoShuaiTactic{}
+	//舍身救主
+	TacticsHandlerMap[consts.SheShenJiuZhu] = &SheShenJiuZhuTactic{}
+	//以寡敌众
+	TacticsHandlerMap[consts.YiGuaDiZhong] = &YiGuaDiZhongTactic{}
+	//虎侯
+	TacticsHandlerMap[consts.HuHou] = &HuHouTactic{}
+	//渊然难测
+	TacticsHandlerMap[consts.YuanRanNanCe] = &YuanRanNanCeTactic{}
+	//至柔动刚
+	TacticsHandlerMap[consts.ZhiRouDongGang] = &ZhiRouDongGangTactic{}
+	//臻于至善
+	TacticsHandlerMap[consts.ZhenYuZhiShan] = &ZhenYuZhiShanTactic{}
+	//密计诛逆
+	TacticsHandlerMap[consts.MiJiZhuNi] = &MiJiZhuNiTactic{}
+	//移花接木
+	TacticsHandlerMap[consts.YiHuaJieMu] = &YiHuaJieMuTactic{}
+	//蕙质兰心
+	TacticsHandlerMap[consts.HuiZhiLanXin] = &HuiZhiLanXinTactic{}
+	//功不唐捐
+	TacticsHandlerMap[consts.GongBuTangJuan] = &GongBuTangJuanTactic{}
+	//飞熊军
+	TacticsHandlerMap[consts.FeiXiongJun] = &FeiXiongJunTactic{}
 }

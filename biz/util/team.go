@@ -319,6 +319,9 @@ func GetPairOneGeneral(tacticsParams *model.TacticsParams, general *vo.BattleGen
 func GetPairOneGeneralNotSelf(tacticsParams *model.TacticsParams, general *vo.BattleGeneral) *vo.BattleGeneral {
 	//找到我军
 	pairGeneralArrs := GetPairGeneralsNotSelf(tacticsParams, general)
+	if len(pairGeneralArrs) == 0 {
+		return nil
+	}
 	//随机1个人
 	totalNum := len(pairGeneralArrs)
 	hitIdx := GenerateHitOneIdx(totalNum)
@@ -369,6 +372,9 @@ func GetPairGeneralsNotSelf(tacticsParams *model.TacticsParams, general *vo.Batt
 func GetEnemyOneGeneral(currentGeneral *vo.BattleGeneral, tacticsParams *model.TacticsParams) *vo.BattleGeneral {
 	//找到敌军
 	enemyGeneralArr := GetEnemyGeneralArr(currentGeneral, tacticsParams)
+	if len(enemyGeneralArr) == 0 {
+		return nil
+	}
 	//随机1个人
 	totalNum := len(enemyGeneralArr)
 	hitIdx := GenerateHitOneIdx(totalNum)
@@ -577,7 +583,10 @@ func GetEnemyGeneralsOneOrTwoMap(currentGeneral *vo.BattleGeneral, tacticsParams
 	enemyGeneralMap := make(map[string]*vo.BattleGeneral, 0)
 
 	if GenerateRate(0.5) {
-		enemyGeneralArr = append(enemyGeneralArr, GetEnemyOneGeneral(currentGeneral, tacticsParams))
+		one := GetEnemyOneGeneral(currentGeneral, tacticsParams)
+		if one != nil {
+			enemyGeneralArr = append(enemyGeneralArr, one)
+		}
 	} else {
 		enemyGeneralArr = append(enemyGeneralArr, GetEnemyGeneralsTwoArr(currentGeneral, tacticsParams)...)
 	}

@@ -74,6 +74,9 @@ func (c CloseQuartersTactic) Execute() {
 	//使敌军单体降低30点统率，持续1回合，并对其造成一次兵刃攻击（伤害率210%）
 	//找到敌军单体
 	enemyGeneral := util.GetEnemyOneGeneral(currentGeneral, c.tacticsParams)
+	if enemyGeneral == nil {
+		return
+	}
 
 	//施加效果
 	if util.DebuffEffectWrapSet(ctx, enemyGeneral, consts.DebuffEffectType_DecrCommand, &vo.EffectHolderParams{

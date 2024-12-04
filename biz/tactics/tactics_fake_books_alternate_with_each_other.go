@@ -89,6 +89,9 @@ func (f FakeBooksAlternateWithEachOtherTactic) Execute() {
 	if util.DeBuffEffectContains(enemeyGeneral, consts.DebuffEffectType_Chaos) {
 		//找到该目标友军
 		enemyPairGeneral := util.GetPairOneGeneralNotSelf(f.tacticsParams, enemeyGeneral)
+		if enemyPairGeneral == nil {
+			return
+		}
 		attrType, _ := util.GetGeneralHighestBetweenForceOrIntelligence(enemeyGeneral)
 
 		//伤害类型

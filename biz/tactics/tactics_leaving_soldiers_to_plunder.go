@@ -71,6 +71,9 @@ func (l LeavingSoldiersToPlunderTactic) Execute() {
 	)
 	// 对敌军单体造成兵刃攻击（伤害率172%）及震慑状态（无法行动），持续1回合
 	enemyGeneral := util.GetEnemyOneGeneral(currentGeneral, l.tacticsParams)
+	if enemyGeneral == nil {
+		return
+	}
 	//伤害
 	damage.TacticDamage(&damage.TacticDamageParam{
 		TacticsParams:     l.tacticsParams,

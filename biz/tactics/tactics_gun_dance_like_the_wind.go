@@ -92,7 +92,9 @@ func (g GunDanceLikeTheWindTactic) Execute() {
 	if pairGeneral == nil {
 		pairGeneral = util.GetPairOneGeneralNotSelf(g.tacticsParams, currentGeneral)
 	}
-	generals = append(generals, pairGeneral)
+	if pairGeneral != nil {
+		generals = append(generals, pairGeneral)
+	}
 
 	for _, general := range generals {
 		//施加效果

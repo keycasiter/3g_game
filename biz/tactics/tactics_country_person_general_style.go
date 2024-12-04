@@ -34,7 +34,9 @@ func (c CountryPersonGeneralStyleTactic) Prepare() {
 	// 战斗前3回合，使自己及友军单体获得先攻和必中状态，造成兵刃伤害和谋略伤害提升20%（受速度影响）
 	effectGenerals := make([]*vo.BattleGeneral, 0)
 	pairGeneral := util.GetPairOneGeneralNotSelf(c.tacticsParams, currentGeneral)
-	effectGenerals = append(effectGenerals, pairGeneral)
+	if pairGeneral != nil {
+		effectGenerals = append(effectGenerals, pairGeneral)
+	}
 	effectGenerals = append(effectGenerals, currentGeneral)
 
 	for _, general := range effectGenerals {

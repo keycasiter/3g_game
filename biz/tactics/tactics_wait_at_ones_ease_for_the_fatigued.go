@@ -92,7 +92,7 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 		}).IsSuccess {
 			util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_SufferDamage, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				revokeResp := &vo.TacticsTriggerResult{}
-				revokeGeneral := params.CurrentGeneral
+				revokeGeneral := params.SufferAttackGeneral
 
 				times := util.BuffEffectGetCount(revokeGeneral, consts.BuffEffectType_WaitAtOnesEaseForTheFatigued_Prepare)
 				switch times {

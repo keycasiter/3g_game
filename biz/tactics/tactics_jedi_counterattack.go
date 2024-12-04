@@ -34,7 +34,7 @@ func (j JediCounterattackTactic) Prepare() {
 	)
 	//战斗中，自己每次受到兵刃伤害后，武力提升6点，最大叠加10次；第5回合时，根据叠加次数对敌军全体造成兵刃伤害（伤害率120%，每次提高14%伤害率）
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 		triggerRound := params.CurrentRound
 		triggerResp := &vo.TacticsTriggerResult{}
 

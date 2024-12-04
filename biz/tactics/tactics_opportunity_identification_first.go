@@ -72,7 +72,7 @@ func (o OpportunityIdentificationFirstTactic) Prepare() {
 	for _, general := range allPairGenerals {
 		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferDamage, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
+			triggerGeneral := params.SufferAttackGeneral
 			attackGeneral := params.AttackGeneral
 
 			if triggerGeneral.SoldierNum >= 100 && cast.ToFloat64(o.tacticsParams.CurrentDamageNum/triggerGeneral.SoldierNum) > 0.06 {

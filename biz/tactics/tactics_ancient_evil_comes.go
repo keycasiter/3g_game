@@ -46,7 +46,7 @@ func (a AncientEvilComesTactic) Prepare() {
 
 	util.TacticsTriggerWrapRegister(masterGeneral, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 		attackGeneral := params.AttackGeneral
 
 		hlog.CtxInfof(ctx, "[%s]执行来自[%s]的「%v」效果",

@@ -64,7 +64,7 @@ func (c CorporealIronWallTactic) Prepare() {
 		}).IsSuccess {
 			util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				revokeResp := &vo.TacticsTriggerResult{}
-				revokeGeneral := params.CurrentGeneral
+				revokeGeneral := params.SufferAttackGeneral
 				if cast.ToFloat64(util.DivInt64(revokeGeneral.LossSoldierNum, revokeGeneral.SoldierNum)) < 0.7 {
 					util.BuffEffectOfTacticCostTime(&util.BuffEffectOfTacticCostTimeParams{
 						Ctx:        ctx,
@@ -88,7 +88,7 @@ func (c CorporealIronWallTactic) Prepare() {
 		}).IsSuccess {
 			util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				revokeResp := &vo.TacticsTriggerResult{}
-				revokeGeneral := params.CurrentGeneral
+				revokeGeneral := params.SufferAttackGeneral
 
 				if cast.ToFloat64(util.DivInt64(revokeGeneral.LossSoldierNum, revokeGeneral.SoldierNum)) < 0.7 {
 					util.BuffEffectOfTacticCostTime(&util.BuffEffectOfTacticCostTimeParams{

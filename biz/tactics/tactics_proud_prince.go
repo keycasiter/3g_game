@@ -49,7 +49,7 @@ func (p ProudPrinceTactic) Prepare() {
 	for _, enemeyGeneral := range allEnemeyGenerals {
 		util.TacticsTriggerWrapRegister(enemeyGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
+			triggerGeneral := params.SufferAttackGeneral
 
 			if util.DeBuffEffectOfTacticCostRound(&util.DebuffEffectOfTacticCostRoundParams{
 				Ctx:        ctx,

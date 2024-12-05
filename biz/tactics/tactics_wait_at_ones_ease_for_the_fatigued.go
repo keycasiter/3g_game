@@ -115,7 +115,7 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 						}).IsSuccess {
 							util.TacticsTriggerWrapRegister(revokeGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 								triggerResp := &vo.TacticsTriggerResult{}
-								triggerGeneral := params.CurrentGeneral
+								triggerGeneral := params.SufferAttackGeneral
 
 								util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
 									Ctx:        ctx,
@@ -136,7 +136,7 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 						}).IsSuccess {
 							util.TacticsTriggerWrapRegister(revokeGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 								triggerResp := &vo.TacticsTriggerResult{}
-								triggerGeneral := params.CurrentGeneral
+								triggerGeneral := params.SufferAttackGeneral
 
 								util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
 									Ctx:        ctx,
@@ -168,7 +168,7 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 						}).IsSuccess {
 							util.TacticsTriggerWrapRegister(revokeGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 								triggerResp := &vo.TacticsTriggerResult{}
-								triggerGeneral := params.CurrentGeneral
+								triggerGeneral := params.SufferAttackGeneral
 
 								util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
 									Ctx:        ctx,
@@ -189,7 +189,7 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 						}).IsSuccess {
 							util.TacticsTriggerWrapRegister(revokeGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 								triggerResp := &vo.TacticsTriggerResult{}
-								triggerGeneral := params.CurrentGeneral
+								triggerGeneral := params.SufferAttackGeneral
 
 								util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
 									Ctx:        ctx,
@@ -221,7 +221,7 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 						}).IsSuccess {
 							util.TacticsTriggerWrapRegister(revokeGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 								triggerResp := &vo.TacticsTriggerResult{}
-								triggerGeneral := params.CurrentGeneral
+								triggerGeneral := params.SufferAttackGeneral
 
 								util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
 									Ctx:        ctx,
@@ -242,7 +242,7 @@ func (w WaitAtOnesEaseForTheFatiguedTactic) Execute() {
 						}).IsSuccess {
 							util.TacticsTriggerWrapRegister(revokeGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 								triggerResp := &vo.TacticsTriggerResult{}
-								triggerGeneral := params.CurrentGeneral
+								triggerGeneral := params.SufferAttackGeneral
 
 								util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
 									Ctx:        ctx,

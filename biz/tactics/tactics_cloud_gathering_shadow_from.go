@@ -40,7 +40,7 @@ func (c CloudGatheringShadowFromTactic) Prepare() {
 	// 战斗中，自身即将受到普通攻击时，有50%概率（受武力影响）使武力最高的友军单体获得反击效果（伤害率100%）和急救状态受到伤害时有30%概率恢复自身兵力（治疗率100%，受武力影响），持续1回合，随后使该友军为自己承担此次普通攻击
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 
 		triggerRate := 0.5
 		triggerRate += triggerGeneral.BaseInfo.AbilityAttr.ForceBase / 100 / 100
@@ -55,7 +55,7 @@ func (c CloudGatheringShadowFromTactic) Prepare() {
 			}).IsSuccess {
 				util.TacticsTriggerWrapRegister(highPairGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 					revokeResp := &vo.TacticsTriggerResult{}
-					revokeGeneral := params.CurrentGeneral
+					revokeGeneral := params.SufferAttackGeneral
 					attackGeneral := params.AttackGeneral
 
 					if util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
@@ -88,7 +88,7 @@ func (c CloudGatheringShadowFromTactic) Prepare() {
 			}).IsSuccess {
 				util.TacticsTriggerWrapRegister(highPairGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 					revokeResp := &vo.TacticsTriggerResult{}
-					revokeGeneral := params.CurrentGeneral
+					revokeGeneral := params.SufferAttackGeneral
 
 					if util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{
 						Ctx:        ctx,

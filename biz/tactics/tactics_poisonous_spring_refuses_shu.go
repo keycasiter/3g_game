@@ -162,7 +162,7 @@ func (p PoisonousSpringRefusesShuTactic) Execute() {
 	for _, general := range allEnemyGenerals {
 		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
+			triggerGeneral := params.SufferAttackGeneral
 
 			if util.DeBuffEffectContains(triggerGeneral, consts.DebuffEffectType_StrongMethysis) {
 				effectTimes := int64(0)

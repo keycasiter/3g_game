@@ -48,7 +48,7 @@ func (r RideTigerHardToGetOffTactic) Prepare() {
 		}).IsSuccess {
 			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				triggerResp := &vo.TacticsTriggerResult{}
-				triggerGeneral := params.CurrentGeneral
+				triggerGeneral := params.SufferAttackGeneral
 				triggerRound := params.CurrentRound
 
 				if !util.BuffEffectContains(triggerGeneral, consts.BuffEffectType_RideTigerHardToGetOff_Prepare) {

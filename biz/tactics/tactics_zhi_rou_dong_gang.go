@@ -47,7 +47,7 @@ func (a ZhiRouDongGangTactic) Prepare() {
 	// 自身受到伤害时有50%概率（受智力影响）偷取伤害来源10点属性（智力、统率、速度随机一种，受智力影响，可叠加，持续5回合）
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 
 		triggerRate := 0.5 + triggerGeneral.BaseInfo.AbilityAttr.IntelligenceBase/100/100
 		if util.GenerateRate(triggerRate) {

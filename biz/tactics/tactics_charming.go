@@ -57,7 +57,7 @@ func (c CharmingTactic) Prepare() {
 	}).IsSuccess {
 		//触发效果注册
 		util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerGeneral := params.CurrentGeneral
+			triggerGeneral := params.SufferAttackGeneral
 			triggerResp := &vo.TacticsTriggerResult{}
 			attackGeneral := params.AttackGeneral
 			//有45%几率

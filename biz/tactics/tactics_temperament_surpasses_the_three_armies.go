@@ -37,7 +37,7 @@ func (t TemperamentSurpassesTheThreeArmiesTactic) Prepare() {
 	//受到普通攻击时对攻击者进行一次反击（伤害率52%），自身为副将时，伤害率提升至74%
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 		attackGeneral := params.AttackGeneral
 
 		dmgRate := 0.52

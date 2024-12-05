@@ -43,7 +43,7 @@ func (q QingZhouSoldierTactic) Prepare() {
 	for _, pairGeneral := range pairGenerals {
 		util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
+			triggerGeneral := params.SufferAttackGeneral
 			triggerRound := params.CurrentRound
 			attackGeneral := params.AttackGeneral
 

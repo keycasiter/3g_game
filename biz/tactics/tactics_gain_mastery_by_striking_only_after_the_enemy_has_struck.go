@@ -36,7 +36,7 @@ func (g GainMasteryByStrikingOnlyAfterTheEnemyHasStruckTactic) Prepare() {
 
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 
 		attackGeneral := params.AttackGeneral
 

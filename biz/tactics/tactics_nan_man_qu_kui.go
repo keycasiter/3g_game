@@ -107,7 +107,7 @@ func (n NanManQuKuiTactic) Prepare() {
 	// 自身受到7次普通攻击后会进入1回合震慑（无法行动）状态；
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 
 		if triggerGeneral.SufferExecuteGeneralAttackNum == 7 {
 			if util.DebuffEffectWrapSet(ctx, triggerGeneral, consts.DebuffEffectType_Awe, &vo.EffectHolderParams{

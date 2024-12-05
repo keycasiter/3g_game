@@ -108,7 +108,7 @@ func (t ThousandMileWalkingSingleRiderTactic) Prepare() {
 					//在此期间，自身受到普通攻击时，对攻击者进行一次反击（伤害率238%），每回合最多触发1次
 					util.TacticsTriggerWrapRegister(triggerGeneral, consts.BattleAction_SufferGeneralAttackEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 						tResp := &vo.TacticsTriggerResult{}
-						tGeneral := params.CurrentGeneral
+						tGeneral := params.SufferAttackGeneral
 						tRound := params.CurrentRound
 						attackGeneral := params.AttackGeneral
 

@@ -146,7 +146,7 @@ func (s SuppressChokesAndPreventRefusalsTactic) Prepare() {
 				FromTactic: s.Id(),
 			}).IsSuccess {
 				util.TacticsTriggerWrapRegister(viceGeneral, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-					triggerGeneral := params.CurrentGeneral
+					triggerGeneral := params.SufferAttackGeneral
 					attackGeneral := params.AttackGeneral
 
 					if !util.BuffEffectContains(triggerGeneral, consts.BuffEffectType_SuppressChokesAndPreventRefusals_Prepare) {

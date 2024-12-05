@@ -121,13 +121,14 @@ func (p PromiseToKeepWithoutSurrenderTactic) Execute() {
 			util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferStrategyDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 				round := params.CurrentRound
 				resp := &vo.TacticsTriggerResult{}
+				cGeneral := params.SufferAttackGeneral
 
 				if round <= triggerRound+1 {
-					enemyMasterGeneral := util.GetEnemyMasterGeneral(currentGeneral, p.tacticsParams)
+					enemyMasterGeneral := util.GetEnemyMasterGeneral(cGeneral, p.tacticsParams)
 					if util.DebuffEffectWrapSet(ctx, enemyMasterGeneral, consts.DebuffEffectType_NoStrategy, &vo.EffectHolderParams{
 						EffectRound:    2,
 						FromTactic:     p.Id(),
-						ProduceGeneral: currentGeneral,
+						ProduceGeneral: cGeneral,
 					}).IsSuccess {
 						util.TacticsTriggerWrapRegister(enemyMasterGeneral, consts.BattleAction_BeginAction, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 							revokeResp := &vo.TacticsTriggerResult{}

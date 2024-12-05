@@ -41,7 +41,7 @@ func (s StrongAndUnyieldingTactic) Prepare() {
 	})
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferWeaponDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 
 		if util.GenerateRate(0.4) {
 			//找到敌军2人

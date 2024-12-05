@@ -93,7 +93,7 @@ func (c ChasingTheRiverAndRidingRowsTactic) Prepare() {
 	// 受到伤害时，有60%概率对敌军单体造成对应类型的伤害（伤害率50%，受对应属性影响）
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 		dmgType := params.DamageType
 
 		if util.GenerateRate(0.6) {

@@ -119,7 +119,7 @@ func (b BorrowArrowsWithThatchedBoatsTactic) Execute() {
 		}).IsSuccess {
 			//注册触发效果
 			util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-				triggerGeneral := params.CurrentGeneral
+				triggerGeneral := params.SufferAttackGeneral
 				triggerResp := &vo.TacticsTriggerResult{}
 				//效果消耗
 				if util.BuffEffectOfTacticCostRound(&util.BuffEffectOfTacticCostRoundParams{

@@ -53,7 +53,7 @@ func (a HuiZhiLanXinTactic) Prepare() {
 	// 自身受到伤害时，消耗1层兰心效果并有50%概率（受智力影响）治疗我军单体（治疗率222%，受智力影响）
 	util.TacticsTriggerWrapRegister(currentGeneral, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 
 		util.BuffEffectOfTacticCostTime(&util.BuffEffectOfTacticCostTimeParams{
 			Ctx:        ctx,

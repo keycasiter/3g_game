@@ -39,7 +39,7 @@ func (a YuanRanNanCeTactic) Prepare() {
 	for _, pairGeneral := range pairGenerals {
 		util.TacticsTriggerWrapRegister(pairGeneral, consts.BattleAction_SufferGeneralAttack, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 			triggerResp := &vo.TacticsTriggerResult{}
-			triggerGeneral := params.CurrentGeneral
+			triggerGeneral := params.SufferAttackGeneral
 			triggerRound := params.CurrentRound
 
 			triggerRate := 0.5

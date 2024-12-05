@@ -21,7 +21,7 @@ func (w *WarBookDetailType_78) Handle(ctx context.Context, general *vo.BattleGen
 	//受到兵刃伤害
 	util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferWeaponDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 
 		//统率提升
 		util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_IncrCommand, &vo.EffectHolderParams{
@@ -38,7 +38,7 @@ func (w *WarBookDetailType_78) Handle(ctx context.Context, general *vo.BattleGen
 	//受到谋略伤害
 	util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferStrategyDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
 		triggerResp := &vo.TacticsTriggerResult{}
-		triggerGeneral := params.CurrentGeneral
+		triggerGeneral := params.SufferAttackGeneral
 
 		//智力提升
 		util.BuffEffectWrapSet(ctx, triggerGeneral, consts.BuffEffectType_IncrIntelligence, &vo.EffectHolderParams{

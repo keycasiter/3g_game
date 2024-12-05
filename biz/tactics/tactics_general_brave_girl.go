@@ -169,7 +169,7 @@ func (g GeneralBraveGirlTactic) Execute() {
 
 		//虎嗔效果
 		util.TacticsTriggerWrapRegister(general, consts.BattleAction_SufferDamageEnd, func(params *vo.TacticsTriggerParams) *vo.TacticsTriggerResult {
-			triggerGeneral := g.tacticsParams.CurrentSufferGeneral
+			triggerGeneral := params.SufferAttackGeneral
 			triggerResp := &vo.TacticsTriggerResult{}
 
 			//虎嗔计数

@@ -573,29 +573,30 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 	for _, general := range runCtx.Req.FightingTeam.BattleGenerals {
 		//战法统计
 		tacticStatisticsList := make([]*model.TacticStatistics, 0)
-		if tacticStatisticsMap, ok := runCtx.TacticsParams.BattleTacticStatisticsMap[general.BaseInfo.UniqueId]; ok {
-			for _, tactic := range general.EquipTactics {
-				if tacticStatistics, okk := tacticStatisticsMap[int64(tactic.Id)]; okk {
-					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
-						TacticId:              tacticStatistics.TacticId,
-						TacticName:            tacticStatistics.TacticName,
-						TriggerTimes:          tacticStatistics.TriggerTimes,
-						KillSoliderNum:        tacticStatistics.KillSoliderNum,
-						ResumeSoliderNum:      tacticStatistics.ResumeSoliderNum,
-						RoundTriggerTimes:     tacticStatistics.RoundTriggerTimes,
-						RoundKillSoliderNum:   tacticStatistics.RoundKillSoliderNum,
-						RoundResumeSoliderNum: tacticStatistics.RoundResumeSoliderNum,
-					})
-				} else {
-					tacticCache, okk := cache.CacheTacticMap[int64(tactic.Id)]
-					if !okk {
-						continue
-					}
-					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
-						TacticId:   tacticCache.Id,
-						TacticName: tacticCache.Name,
-					})
+		tacticStatisticsMap, ok := runCtx.TacticsParams.BattleTacticStatisticsMap[general.BaseInfo.UniqueId]
+
+		for _, tactic := range general.EquipTactics {
+			tacticStatistics, okk := tacticStatisticsMap[int64(tactic.Id)]
+			if ok && okk {
+				tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
+					TacticId:              tacticStatistics.TacticId,
+					TacticName:            tacticStatistics.TacticName,
+					TriggerTimes:          tacticStatistics.TriggerTimes,
+					KillSoliderNum:        tacticStatistics.KillSoliderNum,
+					ResumeSoliderNum:      tacticStatistics.ResumeSoliderNum,
+					RoundTriggerTimes:     tacticStatistics.RoundTriggerTimes,
+					RoundKillSoliderNum:   tacticStatistics.RoundKillSoliderNum,
+					RoundResumeSoliderNum: tacticStatistics.RoundResumeSoliderNum,
+				})
+			} else {
+				tacticCache, okkk := cache.CacheTacticMap[int64(tactic.Id)]
+				if !okkk {
+					continue
 				}
+				tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
+					TacticId:   tacticCache.Id,
+					TacticName: tacticCache.Name,
+				})
 			}
 		}
 		//普攻统计
@@ -621,29 +622,30 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 	for _, general := range runCtx.Req.EnemyTeam.BattleGenerals {
 		//战法统计
 		tacticStatisticsList := make([]*model.TacticStatistics, 0)
-		if tacticStatisticsMap, ok := runCtx.TacticsParams.BattleTacticStatisticsMap[general.BaseInfo.UniqueId]; ok {
-			for _, tactic := range general.EquipTactics {
-				if tacticStatistics, okk := tacticStatisticsMap[int64(tactic.Id)]; okk {
-					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
-						TacticId:              tacticStatistics.TacticId,
-						TacticName:            tacticStatistics.TacticName,
-						TriggerTimes:          tacticStatistics.TriggerTimes,
-						KillSoliderNum:        tacticStatistics.KillSoliderNum,
-						ResumeSoliderNum:      tacticStatistics.ResumeSoliderNum,
-						RoundTriggerTimes:     tacticStatistics.RoundTriggerTimes,
-						RoundKillSoliderNum:   tacticStatistics.RoundKillSoliderNum,
-						RoundResumeSoliderNum: tacticStatistics.RoundResumeSoliderNum,
-					})
-				} else {
-					tacticCache, okkk := cache.CacheTacticMap[int64(tactic.Id)]
-					if !okkk {
-						continue
-					}
-					tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
-						TacticId:   tacticCache.Id,
-						TacticName: tacticCache.Name,
-					})
+		tacticStatisticsMap, ok := runCtx.TacticsParams.BattleTacticStatisticsMap[general.BaseInfo.UniqueId]
+
+		for _, tactic := range general.EquipTactics {
+			tacticStatistics, okk := tacticStatisticsMap[int64(tactic.Id)]
+			if ok && okk {
+				tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
+					TacticId:              tacticStatistics.TacticId,
+					TacticName:            tacticStatistics.TacticName,
+					TriggerTimes:          tacticStatistics.TriggerTimes,
+					KillSoliderNum:        tacticStatistics.KillSoliderNum,
+					ResumeSoliderNum:      tacticStatistics.ResumeSoliderNum,
+					RoundTriggerTimes:     tacticStatistics.RoundTriggerTimes,
+					RoundKillSoliderNum:   tacticStatistics.RoundKillSoliderNum,
+					RoundResumeSoliderNum: tacticStatistics.RoundResumeSoliderNum,
+				})
+			} else {
+				tacticCache, okkk := cache.CacheTacticMap[int64(tactic.Id)]
+				if !okkk {
+					continue
 				}
+				tacticStatisticsList = append(tacticStatisticsList, &model.TacticStatistics{
+					TacticId:   tacticCache.Id,
+					TacticName: tacticCache.Name,
+				})
 			}
 		}
 		//普攻统计

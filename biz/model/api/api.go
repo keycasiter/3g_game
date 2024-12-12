@@ -7113,7 +7113,7 @@ type EffectHolderParams struct {
 	//来源于哪个战法
 	FromTactic string `thrift:"FromTactic,7" form:"FromTactic" json:"FromTactic" query:"FromTactic"`
 	//来源于哪个兵书
-	FromWarbook enum.WarbookType `thrift:"FromWarbook,8" form:"FromWarbook" json:"FromWarbook" query:"FromWarbook"`
+	FromWarbook string `thrift:"FromWarbook,8" form:"FromWarbook" json:"FromWarbook" query:"FromWarbook"`
 	//是否可以刷新
 	IsSupportRefresh bool `thrift:"IsSupportRefresh,9" form:"IsSupportRefresh" json:"IsSupportRefresh" query:"IsSupportRefresh"`
 	//是否不可驱散
@@ -7155,7 +7155,7 @@ func (p *EffectHolderParams) GetFromTactic() (v string) {
 	return p.FromTactic
 }
 
-func (p *EffectHolderParams) GetFromWarbook() (v enum.WarbookType) {
+func (p *EffectHolderParams) GetFromWarbook() (v string) {
 	return p.FromWarbook
 }
 
@@ -7256,7 +7256,7 @@ func (p *EffectHolderParams) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 8:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -7387,11 +7387,11 @@ func (p *EffectHolderParams) ReadField7(iprot thrift.TProtocol) error {
 }
 func (p *EffectHolderParams) ReadField8(iprot thrift.TProtocol) error {
 
-	var _field enum.WarbookType
-	if v, err := iprot.ReadI32(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = enum.WarbookType(v)
+		_field = v
 	}
 	p.FromWarbook = _field
 	return nil
@@ -7604,10 +7604,10 @@ WriteFieldEndError:
 }
 
 func (p *EffectHolderParams) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("FromWarbook", thrift.I32, 8); err != nil {
+	if err = oprot.WriteFieldBegin("FromWarbook", thrift.STRING, 8); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(int32(p.FromWarbook)); err != nil {
+	if err := oprot.WriteString(p.FromWarbook); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

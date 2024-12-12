@@ -259,7 +259,7 @@ struct EffectHolderParams {
 	//来源于哪个战法
 	7:string FromTactic
 	//来源于哪个兵书
-	8:enum.WarbookType FromWarbook
+	8:string FromWarbook
 	//是否可以刷新
 	9:bool IsSupportRefresh
 	//是否不可驱散

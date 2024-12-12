@@ -129,13 +129,13 @@ struct BattleGeneralStatistics {
     //回合普攻杀敌数
     18:map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundAttackKillSoliderNum
     //增益效果变量 map<效果,容器属性>
-    19:map<i64,list<EffectHolderParams>> BuffEffectHolderMap
+    19:map<string,list<EffectHolderParams>> BuffEffectHolderMap
     //减益效果变量 map<效果,容器属性>
-    20:map<i64,list<EffectHolderParams>> DeBuffEffectHolderMap
+    20:map<string,list<EffectHolderParams>> DeBuffEffectHolderMap
     //增益效果次数
-    21:map<i64,i64> BuffEffectCountMap
+    21:map<string,i64> BuffEffectCountMap
     //减益效果次数
-    22:map<i64,i64> DeBuffEffectCountMap
+    22:map<string,i64> DeBuffEffectCountMap
     //普通攻击次数
     23:i64 ExecuteGeneralAttackNum
     //被普通攻击次数

@@ -2353,13 +2353,13 @@ type BattleGeneralStatistics struct {
 	//回合普攻杀敌数
 	RoundAttackKillSoliderNum map[enum.BattlePhase]map[enum.BattleRound]int64 `thrift:"RoundAttackKillSoliderNum,18" form:"RoundAttackKillSoliderNum" json:"RoundAttackKillSoliderNum" query:"RoundAttackKillSoliderNum"`
 	//增益效果变量 map<效果,容器属性>
-	BuffEffectHolderMap map[int64][]*EffectHolderParams `thrift:"BuffEffectHolderMap,19" form:"BuffEffectHolderMap" json:"BuffEffectHolderMap" query:"BuffEffectHolderMap"`
+	BuffEffectHolderMap map[string][]*EffectHolderParams `thrift:"BuffEffectHolderMap,19" form:"BuffEffectHolderMap" json:"BuffEffectHolderMap" query:"BuffEffectHolderMap"`
 	//减益效果变量 map<效果,容器属性>
-	DeBuffEffectHolderMap map[int64][]*EffectHolderParams `thrift:"DeBuffEffectHolderMap,20" form:"DeBuffEffectHolderMap" json:"DeBuffEffectHolderMap" query:"DeBuffEffectHolderMap"`
+	DeBuffEffectHolderMap map[string][]*EffectHolderParams `thrift:"DeBuffEffectHolderMap,20" form:"DeBuffEffectHolderMap" json:"DeBuffEffectHolderMap" query:"DeBuffEffectHolderMap"`
 	//增益效果次数
-	BuffEffectCountMap map[int64]int64 `thrift:"BuffEffectCountMap,21" form:"BuffEffectCountMap" json:"BuffEffectCountMap" query:"BuffEffectCountMap"`
+	BuffEffectCountMap map[string]int64 `thrift:"BuffEffectCountMap,21" form:"BuffEffectCountMap" json:"BuffEffectCountMap" query:"BuffEffectCountMap"`
 	//减益效果次数
-	DeBuffEffectCountMap map[int64]int64 `thrift:"DeBuffEffectCountMap,22" form:"DeBuffEffectCountMap" json:"DeBuffEffectCountMap" query:"DeBuffEffectCountMap"`
+	DeBuffEffectCountMap map[string]int64 `thrift:"DeBuffEffectCountMap,22" form:"DeBuffEffectCountMap" json:"DeBuffEffectCountMap" query:"DeBuffEffectCountMap"`
 	//普通攻击次数
 	ExecuteGeneralAttackNum int64 `thrift:"ExecuteGeneralAttackNum,23" form:"ExecuteGeneralAttackNum" json:"ExecuteGeneralAttackNum" query:"ExecuteGeneralAttackNum"`
 	//被普通攻击次数
@@ -2457,19 +2457,19 @@ func (p *BattleGeneralStatistics) GetRoundAttackKillSoliderNum() (v map[enum.Bat
 	return p.RoundAttackKillSoliderNum
 }
 
-func (p *BattleGeneralStatistics) GetBuffEffectHolderMap() (v map[int64][]*EffectHolderParams) {
+func (p *BattleGeneralStatistics) GetBuffEffectHolderMap() (v map[string][]*EffectHolderParams) {
 	return p.BuffEffectHolderMap
 }
 
-func (p *BattleGeneralStatistics) GetDeBuffEffectHolderMap() (v map[int64][]*EffectHolderParams) {
+func (p *BattleGeneralStatistics) GetDeBuffEffectHolderMap() (v map[string][]*EffectHolderParams) {
 	return p.DeBuffEffectHolderMap
 }
 
-func (p *BattleGeneralStatistics) GetBuffEffectCountMap() (v map[int64]int64) {
+func (p *BattleGeneralStatistics) GetBuffEffectCountMap() (v map[string]int64) {
 	return p.BuffEffectCountMap
 }
 
-func (p *BattleGeneralStatistics) GetDeBuffEffectCountMap() (v map[int64]int64) {
+func (p *BattleGeneralStatistics) GetDeBuffEffectCountMap() (v map[string]int64) {
 	return p.DeBuffEffectCountMap
 }
 
@@ -3203,10 +3203,10 @@ func (p *BattleGeneralStatistics) ReadField19(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make(map[int64][]*EffectHolderParams, size)
+	_field := make(map[string][]*EffectHolderParams, size)
 	for i := 0; i < size; i++ {
-		var _key int64
-		if v, err := iprot.ReadI64(); err != nil {
+		var _key string
+		if v, err := iprot.ReadString(); err != nil {
 			return err
 		} else {
 			_key = v
@@ -3244,10 +3244,10 @@ func (p *BattleGeneralStatistics) ReadField20(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make(map[int64][]*EffectHolderParams, size)
+	_field := make(map[string][]*EffectHolderParams, size)
 	for i := 0; i < size; i++ {
-		var _key int64
-		if v, err := iprot.ReadI64(); err != nil {
+		var _key string
+		if v, err := iprot.ReadString(); err != nil {
 			return err
 		} else {
 			_key = v
@@ -3285,10 +3285,10 @@ func (p *BattleGeneralStatistics) ReadField21(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make(map[int64]int64, size)
+	_field := make(map[string]int64, size)
 	for i := 0; i < size; i++ {
-		var _key int64
-		if v, err := iprot.ReadI64(); err != nil {
+		var _key string
+		if v, err := iprot.ReadString(); err != nil {
 			return err
 		} else {
 			_key = v
@@ -3314,10 +3314,10 @@ func (p *BattleGeneralStatistics) ReadField22(iprot thrift.TProtocol) error {
 	if err != nil {
 		return err
 	}
-	_field := make(map[int64]int64, size)
+	_field := make(map[string]int64, size)
 	for i := 0; i < size; i++ {
-		var _key int64
-		if v, err := iprot.ReadI64(); err != nil {
+		var _key string
+		if v, err := iprot.ReadString(); err != nil {
 			return err
 		} else {
 			_key = v
@@ -3956,11 +3956,11 @@ func (p *BattleGeneralStatistics) writeField19(oprot thrift.TProtocol) (err erro
 	if err = oprot.WriteFieldBegin("BuffEffectHolderMap", thrift.MAP, 19); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteMapBegin(thrift.I64, thrift.LIST, len(p.BuffEffectHolderMap)); err != nil {
+	if err := oprot.WriteMapBegin(thrift.STRING, thrift.LIST, len(p.BuffEffectHolderMap)); err != nil {
 		return err
 	}
 	for k, v := range p.BuffEffectHolderMap {
-		if err := oprot.WriteI64(k); err != nil {
+		if err := oprot.WriteString(k); err != nil {
 			return err
 		}
 		if err := oprot.WriteListBegin(thrift.STRUCT, len(v)); err != nil {
@@ -3992,11 +3992,11 @@ func (p *BattleGeneralStatistics) writeField20(oprot thrift.TProtocol) (err erro
 	if err = oprot.WriteFieldBegin("DeBuffEffectHolderMap", thrift.MAP, 20); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteMapBegin(thrift.I64, thrift.LIST, len(p.DeBuffEffectHolderMap)); err != nil {
+	if err := oprot.WriteMapBegin(thrift.STRING, thrift.LIST, len(p.DeBuffEffectHolderMap)); err != nil {
 		return err
 	}
 	for k, v := range p.DeBuffEffectHolderMap {
-		if err := oprot.WriteI64(k); err != nil {
+		if err := oprot.WriteString(k); err != nil {
 			return err
 		}
 		if err := oprot.WriteListBegin(thrift.STRUCT, len(v)); err != nil {
@@ -4028,11 +4028,11 @@ func (p *BattleGeneralStatistics) writeField21(oprot thrift.TProtocol) (err erro
 	if err = oprot.WriteFieldBegin("BuffEffectCountMap", thrift.MAP, 21); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteMapBegin(thrift.I64, thrift.I64, len(p.BuffEffectCountMap)); err != nil {
+	if err := oprot.WriteMapBegin(thrift.STRING, thrift.I64, len(p.BuffEffectCountMap)); err != nil {
 		return err
 	}
 	for k, v := range p.BuffEffectCountMap {
-		if err := oprot.WriteI64(k); err != nil {
+		if err := oprot.WriteString(k); err != nil {
 			return err
 		}
 		if err := oprot.WriteI64(v); err != nil {
@@ -4056,11 +4056,11 @@ func (p *BattleGeneralStatistics) writeField22(oprot thrift.TProtocol) (err erro
 	if err = oprot.WriteFieldBegin("DeBuffEffectCountMap", thrift.MAP, 22); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteMapBegin(thrift.I64, thrift.I64, len(p.DeBuffEffectCountMap)); err != nil {
+	if err := oprot.WriteMapBegin(thrift.STRING, thrift.I64, len(p.DeBuffEffectCountMap)); err != nil {
 		return err
 	}
 	for k, v := range p.DeBuffEffectCountMap {
-		if err := oprot.WriteI64(k); err != nil {
+		if err := oprot.WriteString(k); err != nil {
 			return err
 		}
 		if err := oprot.WriteI64(v); err != nil {

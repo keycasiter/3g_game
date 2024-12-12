@@ -412,24 +412,24 @@ func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api
 	return resList
 }
 
-func makeBuffEffectCountMap(m map[consts.BuffEffectType]int64) map[int64]int64 {
-	resultMap := make(map[int64]int64, 0)
+func makeBuffEffectCountMap(m map[consts.BuffEffectType]int64) map[string]int64 {
+	resultMap := make(map[string]int64, 0)
 	for k, v := range m {
-		resultMap[int64(k)] = v
+		resultMap[k.String()] = v
 	}
 	return resultMap
 }
 
-func makeDeBuffEffectCountMap(m map[consts.DebuffEffectType]int64) map[int64]int64 {
-	resultMap := make(map[int64]int64, 0)
+func makeDeBuffEffectCountMap(m map[consts.DebuffEffectType]int64) map[string]int64 {
+	resultMap := make(map[string]int64, 0)
 	for k, v := range m {
-		resultMap[int64(k)] = v
+		resultMap[k.String()] = v
 	}
 	return resultMap
 }
 
-func makeBuffEffectHolderMap(BuffEffectHolderMap map[consts.BuffEffectType][]*vo.EffectHolderParams) map[int64][]*api.EffectHolderParams {
-	resultMap := make(map[int64][]*api.EffectHolderParams, 0)
+func makeBuffEffectHolderMap(BuffEffectHolderMap map[consts.BuffEffectType][]*vo.EffectHolderParams) map[string][]*api.EffectHolderParams {
+	resultMap := make(map[string][]*api.EffectHolderParams, 0)
 	for effectType, params := range BuffEffectHolderMap {
 		newArr := make([]*api.EffectHolderParams, 0)
 		for _, param := range params {
@@ -447,19 +447,19 @@ func makeBuffEffectHolderMap(BuffEffectHolderMap map[consts.BuffEffectType][]*vo
 			},
 			)
 		}
-		arr, ok := resultMap[int64(effectType)]
+		arr, ok := resultMap[(effectType).String()]
 		if ok {
 			arr = append(arr, newArr...)
-			resultMap[int64(effectType)] = arr
+			resultMap[(effectType).String()] = arr
 		} else { //不存在
-			resultMap[int64(effectType)] = newArr
+			resultMap[(effectType).String()] = newArr
 		}
 	}
 	return resultMap
 }
 
-func makeDeBuffEffectHolderMap(deBuffEffectHolderMap map[consts.DebuffEffectType][]*vo.EffectHolderParams) map[int64][]*api.EffectHolderParams {
-	resultMap := make(map[int64][]*api.EffectHolderParams, 0)
+func makeDeBuffEffectHolderMap(deBuffEffectHolderMap map[consts.DebuffEffectType][]*vo.EffectHolderParams) map[string][]*api.EffectHolderParams {
+	resultMap := make(map[string][]*api.EffectHolderParams, 0)
 	for effectType, params := range deBuffEffectHolderMap {
 		newArr := make([]*api.EffectHolderParams, 0)
 		for _, param := range params {
@@ -477,12 +477,12 @@ func makeDeBuffEffectHolderMap(deBuffEffectHolderMap map[consts.DebuffEffectType
 			},
 			)
 		}
-		arr, ok := resultMap[int64(effectType)]
+		arr, ok := resultMap[effectType.String()]
 		if ok {
 			arr = append(arr, newArr...)
-			resultMap[int64(effectType)] = arr
+			resultMap[effectType.String()] = arr
 		} else { //不存在
-			resultMap[int64(effectType)] = newArr
+			resultMap[effectType.String()] = newArr
 		}
 	}
 	return resultMap

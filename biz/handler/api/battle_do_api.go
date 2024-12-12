@@ -391,11 +391,11 @@ func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api
 			RemainNum:                 general.SoldierNum,
 			KillSoliderNum:            makeGeneralKillSoliderNum(generalStatisticsList[idx]),
 			ResumeSoliderNum:          makeGeneralResumeSoliderNum(generalStatisticsList[idx]),
-			RoundRemainSoliderNum:     makeGeneralRoundMap(general.RoundRemainSoliderNum),
-			RoundKillSoliderNum:       makeGeneralRoundMap(general.RoundKillSoliderNum),
-			RoundTacticKillSoliderNum: makeGeneralRoundMap(general.RoundTacticKillSoliderNum),
-			RoundAttackKillSoliderNum: makeGeneralRoundMap(general.RoundAttackKillSoliderNum),
-			RoundResumeSoliderNum:     makeGeneralRoundMap(general.RoundResumeSoliderNum),
+			RoundRemainSoliderNum:     makeGeneralRoundMap(generalStatisticsList[idx].RoundRemainSoliderNum),
+			RoundKillSoliderNum:       makeGeneralRoundMap(generalStatisticsList[idx].RoundKillSoliderNum),
+			RoundTacticKillSoliderNum: makeGeneralRoundMap(generalStatisticsList[idx].RoundTacticKillSoliderNum),
+			RoundAttackKillSoliderNum: makeGeneralRoundMap(generalStatisticsList[idx].RoundAttackKillSoliderNum),
+			RoundResumeSoliderNum:     makeGeneralRoundMap(generalStatisticsList[idx].RoundResumeSoliderNum),
 			GeneralBattleStatistics:   makeGeneralBattleStatistics(teamBattleStatistics.GeneralBattleStatisticsList, idx),
 		})
 	}

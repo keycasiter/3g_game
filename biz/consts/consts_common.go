@@ -530,3 +530,13 @@ func (action BattleAction) String() string {
 	}
 	return ""
 }
+
+// 对战回合数据类型
+type BattleRoundDataType int
+
+const (
+	BattleRoundDataType_Resume     BattleRoundDataType = 1 // 回合恢复
+	BattleRoundDataType_Kill       BattleRoundDataType = 2 // 回合杀敌
+	BattleRoundDataType_AttackKill BattleRoundDataType = 3 // 回合普攻杀敌
+	BattleRoundDataType_TacticKill BattleRoundDataType = 4 // 回合战法杀敌
+)

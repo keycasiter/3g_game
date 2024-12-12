@@ -35,6 +35,14 @@ type GeneralBattleStatistics struct {
 
 	//回合剩余兵力
 	RoundRemainSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
+	//回合恢复
+	RoundResumeSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
+	//回合杀敌
+	RoundKillSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
+	//回合战法杀敌
+	RoundTacticKillSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
+	//回合普攻杀敌
+	RoundAttackKillSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
 }
 
 type TacticStatistics struct {
@@ -55,10 +63,6 @@ type TacticStatistics struct {
 	RoundTriggerTimes map[consts.BattlePhase]map[consts.BattleRound]int64
 	//回合杀敌
 	RoundKillSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
-	//回合战法杀敌
-	RoundTacticKillSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
-	//回合普攻杀敌
-	RoundAttackKillSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
 	//回合救援
 	RoundResumeSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64
 }

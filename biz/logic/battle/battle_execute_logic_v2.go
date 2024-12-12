@@ -608,14 +608,16 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 			generalAttackStatistics.RoundTriggerTimes = attackStatistics.RoundTriggerTimes
 			generalAttackStatistics.RoundKillSoliderNum = attackStatistics.RoundKillSoliderNum
 			generalAttackStatistics.RoundResumeSoliderNum = attackStatistics.RoundResumeSoliderNum
-			generalAttackStatistics.RoundTacticKillSoliderNum = attackStatistics.RoundTacticKillSoliderNum
-			generalAttackStatistics.RoundAttackKillSoliderNum = attackStatistics.RoundAttackKillSoliderNum
 		}
 
 		fightingGeneralsStatisticsList = append(fightingGeneralsStatisticsList, &model.GeneralBattleStatistics{
-			TacticStatisticsList:    tacticStatisticsList,
-			GeneralAttackStatistics: generalAttackStatistics,
-			RoundRemainSoliderNum:   general.RoundRemainSoliderNum,
+			TacticStatisticsList:      tacticStatisticsList,
+			GeneralAttackStatistics:   generalAttackStatistics,
+			RoundRemainSoliderNum:     general.RoundRemainSoliderNum,
+			RoundResumeSoliderNum:     makeSoliderNumMap(consts.BattleRoundDataType_Resume, tacticStatisticsList, generalAttackStatistics),
+			RoundKillSoliderNum:       makeSoliderNumMap(consts.BattleRoundDataType_Kill, tacticStatisticsList, generalAttackStatistics),
+			RoundTacticKillSoliderNum: makeSoliderNumMap(consts.BattleRoundDataType_TacticKill, tacticStatisticsList, generalAttackStatistics),
+			RoundAttackKillSoliderNum: makeSoliderNumMap(consts.BattleRoundDataType_AttackKill, tacticStatisticsList, generalAttackStatistics),
 		})
 	}
 
@@ -662,9 +664,13 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 		}
 
 		enemyGeneralsStatisticsList = append(enemyGeneralsStatisticsList, &model.GeneralBattleStatistics{
-			TacticStatisticsList:    tacticStatisticsList,
-			GeneralAttackStatistics: generalAttackStatistics,
-			RoundRemainSoliderNum:   general.RoundRemainSoliderNum,
+			TacticStatisticsList:      tacticStatisticsList,
+			GeneralAttackStatistics:   generalAttackStatistics,
+			RoundRemainSoliderNum:     general.RoundRemainSoliderNum,
+			RoundResumeSoliderNum:     makeSoliderNumMap(consts.BattleRoundDataType_Resume, tacticStatisticsList, generalAttackStatistics),
+			RoundKillSoliderNum:       makeSoliderNumMap(consts.BattleRoundDataType_Kill, tacticStatisticsList, generalAttackStatistics),
+			RoundTacticKillSoliderNum: makeSoliderNumMap(consts.BattleRoundDataType_TacticKill, tacticStatisticsList, generalAttackStatistics),
+			RoundAttackKillSoliderNum: makeSoliderNumMap(consts.BattleRoundDataType_AttackKill, tacticStatisticsList, generalAttackStatistics),
 		})
 	}
 
@@ -694,6 +700,66 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 	battleProcessStatistics := make(map[consts.BattlePhase]map[consts.BattleRound][]string, 0)
 
 	runCtx.Resp.BattleProcessStatistics = battleProcessStatistics
+}
+
+func makeSoliderNumMap(battleRoundDataType consts.BattleRoundDataType, tacticsStatistics []*model.TacticStatistics, attackStatistics *model.TacticStatistics) map[consts.BattlePhase]map[consts.BattleRound]int64 {
+	soliderNumMap := make(map[consts.BattlePhase]map[consts.BattleRound]int64, 0)
+	tacticList := make([]*model.TacticStatistics, 0)
+	switch battleRoundDataType {
+	case consts.BattleRoundDataType_Resume:
+		//恢复只有战法
+		tacticList = append(tacticList, tacticsStatistics...)
+	case consts.BattleRoundDataType_Kill:
+		//总杀敌有战法和普攻
+		tacticList = append(tacticList, tacticsStatistics...)
+		tacticList = append(tacticList, attackStatistics)
+	case consts.BattleRoundDataType_AttackKill:
+		//普攻
+		tacticList = append(tacticList, attackStatistics)
+	case consts.BattleRoundDataType_TacticKill:
+		//战法
+		tacticList = append(tacticList, tacticsStatistics...)
+	}
+
+	for _, tactic := range tacticList {
+		//获取数据
+		data := make(map[consts.BattlePhase]map[consts.BattleRound]int64, 0)
+		switch battleRoundDataType {
+		case consts.BattleRoundDataType_Resume:
+			data = tactic.RoundResumeSoliderNum
+		case consts.BattleRoundDataType_Kill:
+			data = tactic.RoundKillSoliderNum
+		case consts.BattleRoundDataType_AttackKill:
+			data = tactic.RoundKillSoliderNum
+		case consts.BattleRoundDataType_TacticKill:
+			data = tactic.RoundKillSoliderNum
+		}
+
+		//遍历数据
+		for phase, m := range data {
+			//判断对战阶段
+			if _m, ok := soliderNumMap[phase]; ok { //存在
+				//遍历不同阶段回合
+				for round, num := range m {
+					if _num, okk := _m[round]; okk {
+						_m[round] = _num + num
+					} else {
+						_m[round] = num
+					}
+				}
+				soliderNumMap[phase] = _m
+			} else { //不存在
+				newM := make(map[consts.BattleRound]int64, 0)
+				soliderNumMap[phase] = newM
+				for round, num := range m {
+					newM[round] = num
+				}
+				soliderNumMap[phase] = newM
+			}
+		}
+	}
+	return soliderNumMap
+
 }
 
 func (runCtx *BattleLogicV2Context) makeGeneralInfos(battleGenerals []*vo.BattleGeneral) []*vo.BattleGeneral {

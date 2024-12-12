@@ -2352,6 +2352,26 @@ type BattleGeneralStatistics struct {
 	RoundTacticKillSoliderNum map[enum.BattlePhase]map[enum.BattleRound]int64 `thrift:"RoundTacticKillSoliderNum,17" form:"RoundTacticKillSoliderNum" json:"RoundTacticKillSoliderNum" query:"RoundTacticKillSoliderNum"`
 	//回合普攻杀敌数
 	RoundAttackKillSoliderNum map[enum.BattlePhase]map[enum.BattleRound]int64 `thrift:"RoundAttackKillSoliderNum,18" form:"RoundAttackKillSoliderNum" json:"RoundAttackKillSoliderNum" query:"RoundAttackKillSoliderNum"`
+	//增益效果变量 map<效果,容器属性>
+	BuffEffectHolderMap map[int64][]*EffectHolderParams `thrift:"BuffEffectHolderMap,19" form:"BuffEffectHolderMap" json:"BuffEffectHolderMap" query:"BuffEffectHolderMap"`
+	//减益效果变量 map<效果,容器属性>
+	DeBuffEffectHolderMap map[int64][]*EffectHolderParams `thrift:"DeBuffEffectHolderMap,20" form:"DeBuffEffectHolderMap" json:"DeBuffEffectHolderMap" query:"DeBuffEffectHolderMap"`
+	//增益效果次数
+	BuffEffectCountMap map[int64]int64 `thrift:"BuffEffectCountMap,21" form:"BuffEffectCountMap" json:"BuffEffectCountMap" query:"BuffEffectCountMap"`
+	//减益效果次数
+	DeBuffEffectCountMap map[int64]int64 `thrift:"DeBuffEffectCountMap,22" form:"DeBuffEffectCountMap" json:"DeBuffEffectCountMap" query:"DeBuffEffectCountMap"`
+	//普通攻击次数
+	ExecuteGeneralAttackNum int64 `thrift:"ExecuteGeneralAttackNum,23" form:"ExecuteGeneralAttackNum" json:"ExecuteGeneralAttackNum" query:"ExecuteGeneralAttackNum"`
+	//被普通攻击次数
+	SufferExecuteGeneralAttackNum int64 `thrift:"SufferExecuteGeneralAttackNum,24" form:"SufferExecuteGeneralAttackNum" json:"SufferExecuteGeneralAttackNum" query:"SufferExecuteGeneralAttackNum"`
+	//兵刃攻击次数
+	ExecuteWeaponAttackNum int64 `thrift:"ExecuteWeaponAttackNum,25" form:"ExecuteWeaponAttackNum" json:"ExecuteWeaponAttackNum" query:"ExecuteWeaponAttackNum"`
+	//谋略攻击次数
+	ExecuteStrategyAttackNum int64 `thrift:"ExecuteStrategyAttackNum,26" form:"ExecuteStrategyAttackNum" json:"ExecuteStrategyAttackNum" query:"ExecuteStrategyAttackNum"`
+	//被兵刃攻击次数
+	SufferExecuteWeaponAttackNum int64 `thrift:"SufferExecuteWeaponAttackNum,27" form:"SufferExecuteWeaponAttackNum" json:"SufferExecuteWeaponAttackNum" query:"SufferExecuteWeaponAttackNum"`
+	//被谋略攻击次数
+	SufferExecuteStrategyAttackNum int64 `thrift:"SufferExecuteStrategyAttackNum,28" form:"SufferExecuteStrategyAttackNum" json:"SufferExecuteStrategyAttackNum" query:"SufferExecuteStrategyAttackNum"`
 	//***对战数据***
 	GeneralBattleStatistics *GeneralBattleStatistics `thrift:"GeneralBattleStatistics,99" form:"GeneralBattleStatistics" json:"GeneralBattleStatistics" query:"GeneralBattleStatistics"`
 }
@@ -2437,6 +2457,46 @@ func (p *BattleGeneralStatistics) GetRoundAttackKillSoliderNum() (v map[enum.Bat
 	return p.RoundAttackKillSoliderNum
 }
 
+func (p *BattleGeneralStatistics) GetBuffEffectHolderMap() (v map[int64][]*EffectHolderParams) {
+	return p.BuffEffectHolderMap
+}
+
+func (p *BattleGeneralStatistics) GetDeBuffEffectHolderMap() (v map[int64][]*EffectHolderParams) {
+	return p.DeBuffEffectHolderMap
+}
+
+func (p *BattleGeneralStatistics) GetBuffEffectCountMap() (v map[int64]int64) {
+	return p.BuffEffectCountMap
+}
+
+func (p *BattleGeneralStatistics) GetDeBuffEffectCountMap() (v map[int64]int64) {
+	return p.DeBuffEffectCountMap
+}
+
+func (p *BattleGeneralStatistics) GetExecuteGeneralAttackNum() (v int64) {
+	return p.ExecuteGeneralAttackNum
+}
+
+func (p *BattleGeneralStatistics) GetSufferExecuteGeneralAttackNum() (v int64) {
+	return p.SufferExecuteGeneralAttackNum
+}
+
+func (p *BattleGeneralStatistics) GetExecuteWeaponAttackNum() (v int64) {
+	return p.ExecuteWeaponAttackNum
+}
+
+func (p *BattleGeneralStatistics) GetExecuteStrategyAttackNum() (v int64) {
+	return p.ExecuteStrategyAttackNum
+}
+
+func (p *BattleGeneralStatistics) GetSufferExecuteWeaponAttackNum() (v int64) {
+	return p.SufferExecuteWeaponAttackNum
+}
+
+func (p *BattleGeneralStatistics) GetSufferExecuteStrategyAttackNum() (v int64) {
+	return p.SufferExecuteStrategyAttackNum
+}
+
 var BattleGeneralStatistics_GeneralBattleStatistics_DEFAULT *GeneralBattleStatistics
 
 func (p *BattleGeneralStatistics) GetGeneralBattleStatistics() (v *GeneralBattleStatistics) {
@@ -2463,6 +2523,16 @@ var fieldIDToName_BattleGeneralStatistics = map[int16]string{
 	16: "RoundResumeSoliderNum",
 	17: "RoundTacticKillSoliderNum",
 	18: "RoundAttackKillSoliderNum",
+	19: "BuffEffectHolderMap",
+	20: "DeBuffEffectHolderMap",
+	21: "BuffEffectCountMap",
+	22: "DeBuffEffectCountMap",
+	23: "ExecuteGeneralAttackNum",
+	24: "SufferExecuteGeneralAttackNum",
+	25: "ExecuteWeaponAttackNum",
+	26: "ExecuteStrategyAttackNum",
+	27: "SufferExecuteWeaponAttackNum",
+	28: "SufferExecuteStrategyAttackNum",
 	99: "GeneralBattleStatistics",
 }
 
@@ -2620,6 +2690,86 @@ func (p *BattleGeneralStatistics) Read(iprot thrift.TProtocol) (err error) {
 		case 18:
 			if fieldTypeId == thrift.MAP {
 				if err = p.ReadField18(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 19:
+			if fieldTypeId == thrift.MAP {
+				if err = p.ReadField19(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 20:
+			if fieldTypeId == thrift.MAP {
+				if err = p.ReadField20(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 21:
+			if fieldTypeId == thrift.MAP {
+				if err = p.ReadField21(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 22:
+			if fieldTypeId == thrift.MAP {
+				if err = p.ReadField22(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 23:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField23(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 24:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField24(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 25:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField25(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 26:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField26(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 27:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField27(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 28:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField28(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -3048,6 +3198,212 @@ func (p *BattleGeneralStatistics) ReadField18(iprot thrift.TProtocol) error {
 	p.RoundAttackKillSoliderNum = _field
 	return nil
 }
+func (p *BattleGeneralStatistics) ReadField19(iprot thrift.TProtocol) error {
+	_, _, size, err := iprot.ReadMapBegin()
+	if err != nil {
+		return err
+	}
+	_field := make(map[int64][]*EffectHolderParams, size)
+	for i := 0; i < size; i++ {
+		var _key int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_key = v
+		}
+		_, size, err := iprot.ReadListBegin()
+		if err != nil {
+			return err
+		}
+		_val := make([]*EffectHolderParams, 0, size)
+		values := make([]EffectHolderParams, size)
+		for i := 0; i < size; i++ {
+			_elem := &values[i]
+			_elem.InitDefault()
+
+			if err := _elem.Read(iprot); err != nil {
+				return err
+			}
+
+			_val = append(_val, _elem)
+		}
+		if err := iprot.ReadListEnd(); err != nil {
+			return err
+		}
+
+		_field[_key] = _val
+	}
+	if err := iprot.ReadMapEnd(); err != nil {
+		return err
+	}
+	p.BuffEffectHolderMap = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField20(iprot thrift.TProtocol) error {
+	_, _, size, err := iprot.ReadMapBegin()
+	if err != nil {
+		return err
+	}
+	_field := make(map[int64][]*EffectHolderParams, size)
+	for i := 0; i < size; i++ {
+		var _key int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_key = v
+		}
+		_, size, err := iprot.ReadListBegin()
+		if err != nil {
+			return err
+		}
+		_val := make([]*EffectHolderParams, 0, size)
+		values := make([]EffectHolderParams, size)
+		for i := 0; i < size; i++ {
+			_elem := &values[i]
+			_elem.InitDefault()
+
+			if err := _elem.Read(iprot); err != nil {
+				return err
+			}
+
+			_val = append(_val, _elem)
+		}
+		if err := iprot.ReadListEnd(); err != nil {
+			return err
+		}
+
+		_field[_key] = _val
+	}
+	if err := iprot.ReadMapEnd(); err != nil {
+		return err
+	}
+	p.DeBuffEffectHolderMap = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField21(iprot thrift.TProtocol) error {
+	_, _, size, err := iprot.ReadMapBegin()
+	if err != nil {
+		return err
+	}
+	_field := make(map[int64]int64, size)
+	for i := 0; i < size; i++ {
+		var _key int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_key = v
+		}
+
+		var _val int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_val = v
+		}
+
+		_field[_key] = _val
+	}
+	if err := iprot.ReadMapEnd(); err != nil {
+		return err
+	}
+	p.BuffEffectCountMap = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField22(iprot thrift.TProtocol) error {
+	_, _, size, err := iprot.ReadMapBegin()
+	if err != nil {
+		return err
+	}
+	_field := make(map[int64]int64, size)
+	for i := 0; i < size; i++ {
+		var _key int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_key = v
+		}
+
+		var _val int64
+		if v, err := iprot.ReadI64(); err != nil {
+			return err
+		} else {
+			_val = v
+		}
+
+		_field[_key] = _val
+	}
+	if err := iprot.ReadMapEnd(); err != nil {
+		return err
+	}
+	p.DeBuffEffectCountMap = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField23(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ExecuteGeneralAttackNum = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField24(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.SufferExecuteGeneralAttackNum = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField25(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ExecuteWeaponAttackNum = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField26(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.ExecuteStrategyAttackNum = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField27(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.SufferExecuteWeaponAttackNum = _field
+	return nil
+}
+func (p *BattleGeneralStatistics) ReadField28(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.SufferExecuteStrategyAttackNum = _field
+	return nil
+}
 func (p *BattleGeneralStatistics) ReadField99(iprot thrift.TProtocol) error {
 	_field := NewGeneralBattleStatistics()
 	if err := _field.Read(iprot); err != nil {
@@ -3126,6 +3482,46 @@ func (p *BattleGeneralStatistics) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField18(oprot); err != nil {
 			fieldId = 18
+			goto WriteFieldError
+		}
+		if err = p.writeField19(oprot); err != nil {
+			fieldId = 19
+			goto WriteFieldError
+		}
+		if err = p.writeField20(oprot); err != nil {
+			fieldId = 20
+			goto WriteFieldError
+		}
+		if err = p.writeField21(oprot); err != nil {
+			fieldId = 21
+			goto WriteFieldError
+		}
+		if err = p.writeField22(oprot); err != nil {
+			fieldId = 22
+			goto WriteFieldError
+		}
+		if err = p.writeField23(oprot); err != nil {
+			fieldId = 23
+			goto WriteFieldError
+		}
+		if err = p.writeField24(oprot); err != nil {
+			fieldId = 24
+			goto WriteFieldError
+		}
+		if err = p.writeField25(oprot); err != nil {
+			fieldId = 25
+			goto WriteFieldError
+		}
+		if err = p.writeField26(oprot); err != nil {
+			fieldId = 26
+			goto WriteFieldError
+		}
+		if err = p.writeField27(oprot); err != nil {
+			fieldId = 27
+			goto WriteFieldError
+		}
+		if err = p.writeField28(oprot); err != nil {
+			fieldId = 28
 			goto WriteFieldError
 		}
 		if err = p.writeField99(oprot); err != nil {
@@ -3554,6 +3950,236 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 18 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 18 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField19(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("BuffEffectHolderMap", thrift.MAP, 19); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteMapBegin(thrift.I64, thrift.LIST, len(p.BuffEffectHolderMap)); err != nil {
+		return err
+	}
+	for k, v := range p.BuffEffectHolderMap {
+		if err := oprot.WriteI64(k); err != nil {
+			return err
+		}
+		if err := oprot.WriteListBegin(thrift.STRUCT, len(v)); err != nil {
+			return err
+		}
+		for _, v := range v {
+			if err := v.Write(oprot); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteMapEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 19 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 19 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField20(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("DeBuffEffectHolderMap", thrift.MAP, 20); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteMapBegin(thrift.I64, thrift.LIST, len(p.DeBuffEffectHolderMap)); err != nil {
+		return err
+	}
+	for k, v := range p.DeBuffEffectHolderMap {
+		if err := oprot.WriteI64(k); err != nil {
+			return err
+		}
+		if err := oprot.WriteListBegin(thrift.STRUCT, len(v)); err != nil {
+			return err
+		}
+		for _, v := range v {
+			if err := v.Write(oprot); err != nil {
+				return err
+			}
+		}
+		if err := oprot.WriteListEnd(); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteMapEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 20 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 20 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField21(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("BuffEffectCountMap", thrift.MAP, 21); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteMapBegin(thrift.I64, thrift.I64, len(p.BuffEffectCountMap)); err != nil {
+		return err
+	}
+	for k, v := range p.BuffEffectCountMap {
+		if err := oprot.WriteI64(k); err != nil {
+			return err
+		}
+		if err := oprot.WriteI64(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteMapEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 21 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 21 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField22(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("DeBuffEffectCountMap", thrift.MAP, 22); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteMapBegin(thrift.I64, thrift.I64, len(p.DeBuffEffectCountMap)); err != nil {
+		return err
+	}
+	for k, v := range p.DeBuffEffectCountMap {
+		if err := oprot.WriteI64(k); err != nil {
+			return err
+		}
+		if err := oprot.WriteI64(v); err != nil {
+			return err
+		}
+	}
+	if err := oprot.WriteMapEnd(); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 22 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 22 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField23(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ExecuteGeneralAttackNum", thrift.I64, 23); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.ExecuteGeneralAttackNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 23 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 23 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField24(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("SufferExecuteGeneralAttackNum", thrift.I64, 24); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.SufferExecuteGeneralAttackNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 24 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 24 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField25(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ExecuteWeaponAttackNum", thrift.I64, 25); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.ExecuteWeaponAttackNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 25 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 25 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField26(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("ExecuteStrategyAttackNum", thrift.I64, 26); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.ExecuteStrategyAttackNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 26 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 26 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField27(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("SufferExecuteWeaponAttackNum", thrift.I64, 27); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.SufferExecuteWeaponAttackNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 27 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 27 end error: ", p), err)
+}
+
+func (p *BattleGeneralStatistics) writeField28(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("SufferExecuteStrategyAttackNum", thrift.I64, 28); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.SufferExecuteStrategyAttackNum); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 28 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 28 end error: ", p), err)
 }
 
 func (p *BattleGeneralStatistics) writeField99(oprot thrift.TProtocol) (err error) {
@@ -6468,6 +7094,571 @@ func (p *BattleDoResponse) String() string {
 		return "<nil>"
 	}
 	return fmt.Sprintf("BattleDoResponse(%+v)", *p)
+
+}
+
+type EffectHolderParams struct {
+	//触发率
+	TriggerRate float64 `thrift:"TriggerRate,1" form:"TriggerRate" json:"TriggerRate" query:"TriggerRate"`
+	//影响数值
+	EffectValue int64 `thrift:"EffectValue,2" form:"EffectValue" json:"EffectValue" query:"EffectValue"`
+	//影响百分比
+	EffectRate float64 `thrift:"EffectRate,3" form:"EffectRate" json:"EffectRate" query:"EffectRate"`
+	//影响回合
+	EffectRound enum.BattleRound `thrift:"EffectRound,4" form:"EffectRound" json:"EffectRound" query:"EffectRound"`
+	//影响次数
+	EffectTimes int64 `thrift:"EffectTimes,5" form:"EffectTimes" json:"EffectTimes" query:"EffectTimes"`
+	//最大影响次数
+	MaxEffectTimes int64 `thrift:"MaxEffectTimes,6" form:"MaxEffectTimes" json:"MaxEffectTimes" query:"MaxEffectTimes"`
+	//来源于哪个战法
+	FromTactic int64 `thrift:"FromTactic,7" form:"FromTactic" json:"FromTactic" query:"FromTactic"`
+	//来源于哪个兵书
+	FromWarbook enum.WarbookType `thrift:"FromWarbook,8" form:"FromWarbook" json:"FromWarbook" query:"FromWarbook"`
+	//是否可以刷新
+	IsSupportRefresh bool `thrift:"IsSupportRefresh,9" form:"IsSupportRefresh" json:"IsSupportRefresh" query:"IsSupportRefresh"`
+	//是否不可驱散
+	IsAvoidDispel bool `thrift:"IsAvoidDispel,10" form:"IsAvoidDispel" json:"IsAvoidDispel" query:"IsAvoidDispel"`
+}
+
+func NewEffectHolderParams() *EffectHolderParams {
+	return &EffectHolderParams{}
+}
+
+func (p *EffectHolderParams) InitDefault() {
+}
+
+func (p *EffectHolderParams) GetTriggerRate() (v float64) {
+	return p.TriggerRate
+}
+
+func (p *EffectHolderParams) GetEffectValue() (v int64) {
+	return p.EffectValue
+}
+
+func (p *EffectHolderParams) GetEffectRate() (v float64) {
+	return p.EffectRate
+}
+
+func (p *EffectHolderParams) GetEffectRound() (v enum.BattleRound) {
+	return p.EffectRound
+}
+
+func (p *EffectHolderParams) GetEffectTimes() (v int64) {
+	return p.EffectTimes
+}
+
+func (p *EffectHolderParams) GetMaxEffectTimes() (v int64) {
+	return p.MaxEffectTimes
+}
+
+func (p *EffectHolderParams) GetFromTactic() (v int64) {
+	return p.FromTactic
+}
+
+func (p *EffectHolderParams) GetFromWarbook() (v enum.WarbookType) {
+	return p.FromWarbook
+}
+
+func (p *EffectHolderParams) GetIsSupportRefresh() (v bool) {
+	return p.IsSupportRefresh
+}
+
+func (p *EffectHolderParams) GetIsAvoidDispel() (v bool) {
+	return p.IsAvoidDispel
+}
+
+var fieldIDToName_EffectHolderParams = map[int16]string{
+	1:  "TriggerRate",
+	2:  "EffectValue",
+	3:  "EffectRate",
+	4:  "EffectRound",
+	5:  "EffectTimes",
+	6:  "MaxEffectTimes",
+	7:  "FromTactic",
+	8:  "FromWarbook",
+	9:  "IsSupportRefresh",
+	10: "IsAvoidDispel",
+}
+
+func (p *EffectHolderParams) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.DOUBLE {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.DOUBLE {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 5:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 6:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField6(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 7:
+			if fieldTypeId == thrift.I64 {
+				if err = p.ReadField7(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 8:
+			if fieldTypeId == thrift.I32 {
+				if err = p.ReadField8(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 9:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 10:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField10(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_EffectHolderParams[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *EffectHolderParams) ReadField1(iprot thrift.TProtocol) error {
+
+	var _field float64
+	if v, err := iprot.ReadDouble(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.TriggerRate = _field
+	return nil
+}
+func (p *EffectHolderParams) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.EffectValue = _field
+	return nil
+}
+func (p *EffectHolderParams) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field float64
+	if v, err := iprot.ReadDouble(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.EffectRate = _field
+	return nil
+}
+func (p *EffectHolderParams) ReadField4(iprot thrift.TProtocol) error {
+
+	var _field enum.BattleRound
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		_field = enum.BattleRound(v)
+	}
+	p.EffectRound = _field
+	return nil
+}
+func (p *EffectHolderParams) ReadField5(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.EffectTimes = _field
+	return nil
+}
+func (p *EffectHolderParams) ReadField6(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.MaxEffectTimes = _field
+	return nil
+}
+func (p *EffectHolderParams) ReadField7(iprot thrift.TProtocol) error {
+
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.FromTactic = _field
+	return nil
+}
+func (p *EffectHolderParams) ReadField8(iprot thrift.TProtocol) error {
+
+	var _field enum.WarbookType
+	if v, err := iprot.ReadI32(); err != nil {
+		return err
+	} else {
+		_field = enum.WarbookType(v)
+	}
+	p.FromWarbook = _field
+	return nil
+}
+func (p *EffectHolderParams) ReadField9(iprot thrift.TProtocol) error {
+
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.IsSupportRefresh = _field
+	return nil
+}
+func (p *EffectHolderParams) ReadField10(iprot thrift.TProtocol) error {
+
+	var _field bool
+	if v, err := iprot.ReadBool(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.IsAvoidDispel = _field
+	return nil
+}
+
+func (p *EffectHolderParams) Write(oprot thrift.TProtocol) (err error) {
+
+	var fieldId int16
+	if err = oprot.WriteStructBegin("EffectHolderParams"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
+			goto WriteFieldError
+		}
+		if err = p.writeField7(oprot); err != nil {
+			fieldId = 7
+			goto WriteFieldError
+		}
+		if err = p.writeField8(oprot); err != nil {
+			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
+			goto WriteFieldError
+		}
+		if err = p.writeField10(oprot); err != nil {
+			fieldId = 10
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("TriggerRate", thrift.DOUBLE, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteDouble(p.TriggerRate); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("EffectValue", thrift.I64, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.EffectValue); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("EffectRate", thrift.DOUBLE, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteDouble(p.EffectRate); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField4(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("EffectRound", thrift.I32, 4); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(int32(p.EffectRound)); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("EffectTimes", thrift.I64, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.EffectTimes); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField6(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("MaxEffectTimes", thrift.I64, 6); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.MaxEffectTimes); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField7(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("FromTactic", thrift.I64, 7); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.FromTactic); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField8(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("FromWarbook", thrift.I32, 8); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI32(int32(p.FromWarbook)); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField9(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("IsSupportRefresh", thrift.BOOL, 9); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.IsSupportRefresh); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) writeField10(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("IsAvoidDispel", thrift.BOOL, 10); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteBool(p.IsAvoidDispel); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 10 end error: ", p), err)
+}
+
+func (p *EffectHolderParams) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("EffectHolderParams(%+v)", *p)
 
 }
 

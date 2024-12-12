@@ -128,6 +128,26 @@ struct BattleGeneralStatistics {
     17:map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundTacticKillSoliderNum
     //回合普攻杀敌数
     18:map<enum.BattlePhase,map<enum.BattleRound,i64>> RoundAttackKillSoliderNum
+    //增益效果变量 map<效果,容器属性>
+    19:map<i64,list<EffectHolderParams>> BuffEffectHolderMap
+    //减益效果变量 map<效果,容器属性>
+    20:map<i64,list<EffectHolderParams>> DeBuffEffectHolderMap
+    //增益效果次数
+    21:map<i64,i64> BuffEffectCountMap
+    //减益效果次数
+    22:map<i64,i64> DeBuffEffectCountMap
+    //普通攻击次数
+    23:i64 ExecuteGeneralAttackNum
+    //被普通攻击次数
+    24:i64 SufferExecuteGeneralAttackNum
+    //兵刃攻击次数
+    25:i64 ExecuteWeaponAttackNum
+    //谋略攻击次数
+    26:i64 ExecuteStrategyAttackNum
+    //被兵刃攻击次数
+    27:i64 SufferExecuteWeaponAttackNum
+    //被谋略攻击次数
+    28:i64 SufferExecuteStrategyAttackNum
 
     //***对战数据***
     99: GeneralBattleStatistics GeneralBattleStatistics
@@ -221,6 +241,29 @@ struct BattleDoResponse {
   2: BattleResultStatistics BattleResultStatistics
   //对战过程数据 map<战斗阶段,map<战斗回合,战报内容list>>
   3: map<i64,map<i64,list<string>>> BattleProcessStatistics
+}
+
+struct EffectHolderParams {
+	//触发率
+	1: double TriggerRate
+	//影响数值
+	2: i64 EffectValue
+	//影响百分比
+	3: double EffectRate
+	//影响回合
+	4: enum.BattleRound EffectRound
+	//影响次数
+	5:i64 EffectTimes
+	//最大影响次数
+	6:i64 MaxEffectTimes
+	//来源于哪个战法
+	7:i64 FromTactic
+	//来源于哪个兵书
+	8:enum.WarbookType FromWarbook
+	//是否可以刷新
+	9:bool IsSupportRefresh
+	//是否不可驱散
+	10:bool IsAvoidDispel
 }
 
 //对战数据统计

@@ -386,20 +386,106 @@ func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api
 				AbilityAttr: makeAbilityAttr(general),
 				ArmsAttr:    makeArmsAttr(general),
 			},
-			IsMaster:                  general.IsMaster,
-			SoldierNum:                general.InitSoldierNum,
-			RemainNum:                 general.SoldierNum,
-			KillSoliderNum:            makeGeneralKillSoliderNum(generalStatisticsList[idx]),
-			ResumeSoliderNum:          makeGeneralResumeSoliderNum(generalStatisticsList[idx]),
-			RoundRemainSoliderNum:     makeGeneralRoundMap(generalStatisticsList[idx].RoundRemainSoliderNum),
-			RoundKillSoliderNum:       makeGeneralRoundMap(generalStatisticsList[idx].RoundKillSoliderNum),
-			RoundTacticKillSoliderNum: makeGeneralRoundMap(generalStatisticsList[idx].RoundTacticKillSoliderNum),
-			RoundAttackKillSoliderNum: makeGeneralRoundMap(generalStatisticsList[idx].RoundAttackKillSoliderNum),
-			RoundResumeSoliderNum:     makeGeneralRoundMap(generalStatisticsList[idx].RoundResumeSoliderNum),
-			GeneralBattleStatistics:   makeGeneralBattleStatistics(teamBattleStatistics.GeneralBattleStatisticsList, idx),
+			IsMaster:                       general.IsMaster,
+			SoldierNum:                     general.InitSoldierNum,
+			RemainNum:                      general.SoldierNum,
+			KillSoliderNum:                 makeGeneralKillSoliderNum(generalStatisticsList[idx]),
+			ResumeSoliderNum:               makeGeneralResumeSoliderNum(generalStatisticsList[idx]),
+			RoundRemainSoliderNum:          makeGeneralRoundMap(generalStatisticsList[idx].RoundRemainSoliderNum),
+			RoundKillSoliderNum:            makeGeneralRoundMap(generalStatisticsList[idx].RoundKillSoliderNum),
+			RoundResumeSoliderNum:          makeGeneralRoundMap(generalStatisticsList[idx].RoundResumeSoliderNum),
+			RoundTacticKillSoliderNum:      makeGeneralRoundMap(generalStatisticsList[idx].RoundTacticKillSoliderNum),
+			RoundAttackKillSoliderNum:      makeGeneralRoundMap(generalStatisticsList[idx].RoundAttackKillSoliderNum),
+			BuffEffectHolderMap:            makeBuffEffectHolderMap(general.BuffEffectHolderMap),
+			DeBuffEffectHolderMap:          makeDeBuffEffectHolderMap(general.DeBuffEffectHolderMap),
+			BuffEffectCountMap:             makeBuffEffectCountMap(general.BuffEffectCountMap),
+			DeBuffEffectCountMap:           makeDeBuffEffectCountMap(general.DeBuffEffectCountMap),
+			ExecuteGeneralAttackNum:        general.ExecuteGeneralAttackNum,
+			SufferExecuteGeneralAttackNum:  general.SufferExecuteGeneralAttackNum,
+			ExecuteWeaponAttackNum:         general.ExecuteWeaponAttackNum,
+			ExecuteStrategyAttackNum:       general.ExecuteStrategyAttackNum,
+			SufferExecuteWeaponAttackNum:   general.SufferExecuteWeaponAttackNum,
+			SufferExecuteStrategyAttackNum: general.SufferExecuteStrategyAttackNum,
+			GeneralBattleStatistics:        makeGeneralBattleStatistics(teamBattleStatistics.GeneralBattleStatisticsList, idx),
 		})
 	}
 	return resList
+}
+
+func makeBuffEffectCountMap(m map[consts.BuffEffectType]int64) map[int64]int64 {
+	resultMap := make(map[int64]int64, 0)
+	for k, v := range m {
+		resultMap[int64(k)] = v
+	}
+	return resultMap
+}
+
+func makeDeBuffEffectCountMap(m map[consts.DebuffEffectType]int64) map[int64]int64 {
+	resultMap := make(map[int64]int64, 0)
+	for k, v := range m {
+		resultMap[int64(k)] = v
+	}
+	return resultMap
+}
+
+func makeBuffEffectHolderMap(BuffEffectHolderMap map[consts.BuffEffectType][]*vo.EffectHolderParams) map[int64][]*api.EffectHolderParams {
+	resultMap := make(map[int64][]*api.EffectHolderParams, 0)
+	for effectType, params := range BuffEffectHolderMap {
+		newArr := make([]*api.EffectHolderParams, 0)
+		for _, param := range params {
+			newArr = append(newArr, &api.EffectHolderParams{
+				TriggerRate:      param.TriggerRate,
+				EffectValue:      param.EffectValue,
+				EffectRate:       param.EffectRate,
+				EffectRound:      enum.BattleRound(param.EffectRound),
+				EffectTimes:      param.EffectTimes,
+				MaxEffectTimes:   param.MaxEffectTimes,
+				FromTactic:       int64(param.FromTactic),
+				FromWarbook:      enum.WarbookType(param.FromWarbook),
+				IsSupportRefresh: param.IsSupportRefresh,
+				IsAvoidDispel:    param.IsAvoidDispel,
+			},
+			)
+		}
+		arr, ok := resultMap[int64(effectType)]
+		if ok {
+			arr = append(arr, newArr...)
+			resultMap[int64(effectType)] = arr
+		} else { //不存在
+			resultMap[int64(effectType)] = newArr
+		}
+	}
+	return resultMap
+}
+
+func makeDeBuffEffectHolderMap(deBuffEffectHolderMap map[consts.DebuffEffectType][]*vo.EffectHolderParams) map[int64][]*api.EffectHolderParams {
+	resultMap := make(map[int64][]*api.EffectHolderParams, 0)
+	for effectType, params := range deBuffEffectHolderMap {
+		newArr := make([]*api.EffectHolderParams, 0)
+		for _, param := range params {
+			newArr = append(newArr, &api.EffectHolderParams{
+				TriggerRate:      param.TriggerRate,
+				EffectValue:      param.EffectValue,
+				EffectRate:       param.EffectRate,
+				EffectRound:      enum.BattleRound(param.EffectRound),
+				EffectTimes:      param.EffectTimes,
+				MaxEffectTimes:   param.MaxEffectTimes,
+				FromTactic:       int64(param.FromTactic),
+				FromWarbook:      enum.WarbookType(param.FromWarbook),
+				IsSupportRefresh: param.IsSupportRefresh,
+				IsAvoidDispel:    param.IsAvoidDispel,
+			},
+			)
+		}
+		arr, ok := resultMap[int64(effectType)]
+		if ok {
+			arr = append(arr, newArr...)
+			resultMap[int64(effectType)] = arr
+		} else { //不存在
+			resultMap[int64(effectType)] = newArr
+		}
+	}
+	return resultMap
 }
 
 func makeGeneralResumeSoliderNum(generalBattleStatistics *model.GeneralBattleStatistics) int64 {

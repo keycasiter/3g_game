@@ -386,13 +386,17 @@ func makeBattleGenerals(teamBattleStatistics *model.TeamBattleStatistics) []*api
 				AbilityAttr: makeAbilityAttr(general),
 				ArmsAttr:    makeArmsAttr(general),
 			},
-			IsMaster:                general.IsMaster,
-			SoldierNum:              general.InitSoldierNum,
-			RemainNum:               general.SoldierNum,
-			KillSoliderNum:          makeGeneralKillSoliderNum(generalStatisticsList[idx]),
-			ResumeSoliderNum:        makeGeneralResumeSoliderNum(generalStatisticsList[idx]),
-			RoundRemainSoliderNum:   makeGeneralRoundRemainSoliderNum(general.RoundRemainSoliderNum),
-			GeneralBattleStatistics: makeGeneralBattleStatistics(teamBattleStatistics.GeneralBattleStatisticsList, idx),
+			IsMaster:                  general.IsMaster,
+			SoldierNum:                general.InitSoldierNum,
+			RemainNum:                 general.SoldierNum,
+			KillSoliderNum:            makeGeneralKillSoliderNum(generalStatisticsList[idx]),
+			ResumeSoliderNum:          makeGeneralResumeSoliderNum(generalStatisticsList[idx]),
+			RoundRemainSoliderNum:     makeGeneralRoundMap(general.RoundRemainSoliderNum),
+			RoundKillSoliderNum:       makeGeneralRoundMap(general.RoundKillSoliderNum),
+			RoundTacticKillSoliderNum: makeGeneralRoundMap(general.RoundTacticKillSoliderNum),
+			RoundAttackKillSoliderNum: makeGeneralRoundMap(general.RoundAttackKillSoliderNum),
+			RoundResumeSoliderNum:     makeGeneralRoundMap(general.RoundResumeSoliderNum),
+			GeneralBattleStatistics:   makeGeneralBattleStatistics(teamBattleStatistics.GeneralBattleStatisticsList, idx),
 		})
 	}
 	return resList
@@ -422,9 +426,9 @@ func makeGeneralKillSoliderNum(generalBattleStatistics *model.GeneralBattleStati
 	return generalKillNum
 }
 
-func makeGeneralRoundRemainSoliderNum(roundRemainSoliderNum map[consts.BattlePhase]map[consts.BattleRound]int64) map[enum.BattlePhase]map[enum.BattleRound]int64 {
+func makeGeneralRoundMap(round map[consts.BattlePhase]map[consts.BattleRound]int64) map[enum.BattlePhase]map[enum.BattleRound]int64 {
 	resultMap := make(map[enum.BattlePhase]map[enum.BattleRound]int64, 0)
-	for phase, round2CntMap := range roundRemainSoliderNum {
+	for phase, round2CntMap := range round {
 		if round2CntMapOld, ok := resultMap[enum.BattlePhase(phase)]; ok {
 			for round, cnt := range round2CntMap {
 				cntOld, _ := round2CntMapOld[enum.BattleRound(round)]

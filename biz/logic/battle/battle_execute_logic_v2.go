@@ -608,6 +608,8 @@ func (runCtx *BattleLogicV2Context) processBattleReportStatistics() {
 			generalAttackStatistics.RoundTriggerTimes = attackStatistics.RoundTriggerTimes
 			generalAttackStatistics.RoundKillSoliderNum = attackStatistics.RoundKillSoliderNum
 			generalAttackStatistics.RoundResumeSoliderNum = attackStatistics.RoundResumeSoliderNum
+			generalAttackStatistics.RoundTacticKillSoliderNum = attackStatistics.RoundTacticKillSoliderNum
+			generalAttackStatistics.RoundAttackKillSoliderNum = attackStatistics.RoundAttackKillSoliderNum
 		}
 
 		fightingGeneralsStatisticsList = append(fightingGeneralsStatisticsList, &model.GeneralBattleStatistics{

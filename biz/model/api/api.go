@@ -7111,7 +7111,7 @@ type EffectHolderParams struct {
 	//最大影响次数
 	MaxEffectTimes int64 `thrift:"MaxEffectTimes,6" form:"MaxEffectTimes" json:"MaxEffectTimes" query:"MaxEffectTimes"`
 	//来源于哪个战法
-	FromTactic int64 `thrift:"FromTactic,7" form:"FromTactic" json:"FromTactic" query:"FromTactic"`
+	FromTactic string `thrift:"FromTactic,7" form:"FromTactic" json:"FromTactic" query:"FromTactic"`
 	//来源于哪个兵书
 	FromWarbook enum.WarbookType `thrift:"FromWarbook,8" form:"FromWarbook" json:"FromWarbook" query:"FromWarbook"`
 	//是否可以刷新
@@ -7151,7 +7151,7 @@ func (p *EffectHolderParams) GetMaxEffectTimes() (v int64) {
 	return p.MaxEffectTimes
 }
 
-func (p *EffectHolderParams) GetFromTactic() (v int64) {
+func (p *EffectHolderParams) GetFromTactic() (v string) {
 	return p.FromTactic
 }
 
@@ -7248,7 +7248,7 @@ func (p *EffectHolderParams) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 7:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -7376,8 +7376,8 @@ func (p *EffectHolderParams) ReadField6(iprot thrift.TProtocol) error {
 }
 func (p *EffectHolderParams) ReadField7(iprot thrift.TProtocol) error {
 
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -7587,10 +7587,10 @@ WriteFieldEndError:
 }
 
 func (p *EffectHolderParams) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("FromTactic", thrift.I64, 7); err != nil {
+	if err = oprot.WriteFieldBegin("FromTactic", thrift.STRING, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.FromTactic); err != nil {
+	if err := oprot.WriteString(p.FromTactic); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

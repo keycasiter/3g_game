@@ -257,7 +257,7 @@ struct EffectHolderParams {
 	//最大影响次数
 	6:i64 MaxEffectTimes
 	//来源于哪个战法
-	7:i64 FromTactic
+	7:string FromTactic
 	//来源于哪个兵书
 	8:enum.WarbookType FromWarbook
 	//是否可以刷新

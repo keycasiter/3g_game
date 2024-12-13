@@ -506,6 +506,7 @@ struct UserLoginRequest{
     1: string Code
     2: string NickName
     3: string AvatarUrl
+    4: string PhoneCode
 }
 
 struct UserLoginResponse{

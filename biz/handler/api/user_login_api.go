@@ -27,6 +27,10 @@ type GetUserOpenIdResponse struct {
 	ErrMsg     string `json:"errmsg"`
 }
 
+type GetUserPhoneNumberResponse struct {
+	PhoneNumber string `json:"phone_info"`
+}
+
 // UserInfoDetail @Summary 用户登录
 // @Description 用户登录
 // @Tags 用户
@@ -59,6 +63,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
+	hlog.CtxInfof(ctx, "GetUserWxOpenId Resp:%s", util.ToJsonString(ctx, urlResp))
 	defer urlResp.Body.Close()
 	body, err := ioutil.ReadAll(urlResp.Body)
 	if err != nil {
@@ -75,7 +80,6 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 		c.JSON(hertzconsts.StatusOK, resp)
 		return
 	}
-	hlog.CtxInfof(ctx, "GetUserWxOpenId Resp:%s", util.ToJsonString(ctx, respObj))
 	if respObj.OpenId == "" {
 		hlog.CtxErrorf(ctx, "openId is empty")
 		resp.Meta = util.BuildFailMetaWithMsg("微信openId为空")
@@ -83,7 +87,39 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	//2.注册逻辑
+	//2.解析用户手机号
+	hlog.CtxInfof(ctx, "GetUserPhoneNumber Req:%s", util.ToJsonString(ctx, req))
+	requestPhoneNumberUrl := fmt.Sprintf(conf.GetConfig().Wexin.GetPhoneNumberUrl,
+		conf.GetConfig().Wexin.AppId,
+		conf.GetConfig().Wexin.Secret,
+		req.Code,
+	)
+	getPhoneNumberUrlResp, err := http.Get(requestPhoneNumberUrl)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "Http Get URL:%s err:%v", requestPhoneNumberUrl, err)
+		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("err:%v", err))
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
+	hlog.CtxInfof(ctx, "GetUserPhoneNumber Resp:%s", util.ToJsonString(ctx, getPhoneNumberUrlResp))
+	defer getPhoneNumberUrlResp.Body.Close()
+	phoneBody, err := ioutil.ReadAll(getPhoneNumberUrlResp.Body)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "Http Get URL:%s err:%v", requestPhoneNumberUrl, err)
+		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("err:%v", err))
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
+	phoneRespObj := &GetUserPhoneNumberResponse{}
+	err = json.Unmarshal(phoneBody, phoneRespObj)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "parse Object err:%v", err)
+		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("parse Object err:%v", err))
+		c.JSON(hertzconsts.StatusOK, resp)
+		return
+	}
+
+	//3.注册逻辑
 	isExist, userInfo, err := mysql.NewUserInfo().CheckUserInfo(ctx, respObj.OpenId)
 	if err != nil {
 		hlog.CtxErrorf(ctx, "CheckUserInfo err:%v", err)

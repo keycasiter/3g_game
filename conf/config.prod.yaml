@@ -18,7 +18,8 @@ Mongodb:
 Wexin:
   AppId: "wx6d8a318f20ba48f1"
   Secret: "24195480c108ffbb965c47770000774f"
-  GetUserOpenIdApiTemplateUrl : "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
+  GetUserOpenIdApiTemplateUrl: "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code"
+  GetPhoneNumberUrl: "https://api.weixin.qq.com/wxa/business/getuserphonenumber?appid=%s&secret=%s&code=%s"
 
 Neo4j:
   DbUri: "localhost:7687"

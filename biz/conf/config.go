@@ -2,12 +2,13 @@ package conf
 
 import (
 	"context"
+	"os"
+	"path/filepath"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/consts"
 	"github.com/keycasiter/3g_game/biz/util"
 	"github.com/spf13/viper"
-	"os"
-	"path/filepath"
 )
 
 type config struct {
@@ -40,6 +41,7 @@ type wexin struct {
 	AppId                       string `yaml:"AppId"`
 	Secret                      string `yaml:"Secret"`
 	GetUserOpenIdApiTemplateUrl string `yaml:"GetUserOpenIdApiTemplateUrl"`
+	GetPhoneNumberUrl           string `yaml:"GetPhoneNumberUrl"`
 }
 
 type mysql struct {

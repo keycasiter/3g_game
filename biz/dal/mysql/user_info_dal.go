@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/keycasiter/3g_game/biz/model/po"
 )
@@ -28,15 +29,15 @@ func (g *UserInfoDal) QueryUserInfo(ctx context.Context, wxOpenId string) (*po.U
 	return userInfo, nil
 }
 
-func (g *UserInfoDal) CheckUserInfo(ctx context.Context, wxOpenId string) (bool, error) {
+func (g *UserInfoDal) CheckUserInfo(ctx context.Context, wxOpenId string) (bool, *po.UserInfo, error) {
 	userInfo := &po.UserInfo{}
 	conn := DataBase.Model(&po.UserInfo{})
 
 	if err := conn.Where("wx_open_id = ?", wxOpenId).Find(&userInfo).Error; err != nil {
 		hlog.CtxErrorf(ctx, "CheckUserInfo err:%v", err)
-		return false, err
+		return false, nil, err
 	}
-	return userInfo.WxOpenId != "", nil
+	return userInfo.WxOpenId != "", userInfo, nil
 }
 
 func (g *UserInfoDal) CreateUserInfo(ctx context.Context, userInfo *po.UserInfo) error {

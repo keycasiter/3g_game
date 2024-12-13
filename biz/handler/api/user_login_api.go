@@ -84,7 +84,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	}
 
 	//2.注册逻辑
-	isExist, err := mysql.NewUserInfo().CheckUserInfo(ctx, respObj.OpenId)
+	isExist, userInfo, err := mysql.NewUserInfo().CheckUserInfo(ctx, respObj.OpenId)
 	if err != nil {
 		hlog.CtxErrorf(ctx, "CheckUserInfo err:%v", err)
 		resp.Meta = util.BuildFailMetaWithMsg(fmt.Sprintf("检测用户失败 err:%v", err))
@@ -92,8 +92,8 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	//不存在则注册
-	uid := util.GenerateUID()
 	if !isExist {
+		uid := util.GenerateUID()
 		nowTime := time.Now()
 		err := mysql.NewUserInfo().CreateUserInfo(ctx, &po.UserInfo{
 			Uid:       uid,
@@ -110,15 +110,23 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 			c.JSON(hertzconsts.StatusOK, resp)
 			return
 		}
-	}
 
-	//组装resp
-	resp.UserInfo = &api.UserInfo{}
-	resp.UserInfo.Uid = uid
-	resp.UserInfo.WxOpenId = respObj.OpenId
-	resp.UserInfo.NickName = req.NickName
-	resp.UserInfo.AvatarUrl = req.AvatarUrl
-	resp.UserInfo.Level = int64(consts.UserLevel_Common)
+		resp.UserInfo = &api.UserInfo{}
+		resp.UserInfo.Uid = uid
+		resp.UserInfo.WxOpenId = respObj.OpenId
+		resp.UserInfo.NickName = req.NickName
+		resp.UserInfo.AvatarUrl = req.AvatarUrl
+		resp.UserInfo.Level = int64(consts.UserLevel_Common)
+	} else {
+		//存在
+
+		resp.UserInfo = &api.UserInfo{}
+		resp.UserInfo.Uid = userInfo.Uid
+		resp.UserInfo.WxOpenId = userInfo.WxOpenId
+		resp.UserInfo.NickName = userInfo.NickName
+		resp.UserInfo.AvatarUrl = userInfo.AvatarUrl
+		resp.UserInfo.Level = int64(userInfo.Level)
+	}
 
 	c.JSON(hertzconsts.StatusOK, resp)
 }

@@ -92,7 +92,7 @@ func UserLogin(ctx context.Context, c *app.RequestContext) {
 	requestPhoneNumberUrl := fmt.Sprintf(conf.GetConfig().Wexin.GetPhoneNumberUrl,
 		conf.GetConfig().Wexin.AppId,
 		conf.GetConfig().Wexin.Secret,
-		req.Code,
+		req.PhoneCode,
 	)
 	getPhoneNumberUrlResp, err := http.Get(requestPhoneNumberUrl)
 	if err != nil {
